@@ -7,8 +7,16 @@ module.exports = {
   },
   plugins: ['@typescript-eslint/eslint-plugin'],
   extends: [
+    'eslint:recommended',
+    'airbnb',
     'plugin:@typescript-eslint/recommended',
-    'plugin:prettier/recommended',
+    'plugin:import/recommended',
+    'plugin:import/typescript',
+    'plugin:node/recommended',
+    'plugin:mocha/recommended',
+    'plugin:react/recommended',
+    'plugin:unused-imports',
+    'prettier # this actually turns OFF all prettier rules running via eslint',
   ],
   root: true,
   env: {
@@ -21,5 +29,8 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-unused-vars': 'off',
+    'unused-imports/no-unused-imports': 'error',
+    'unused-imports/no-unused-imports-ts': 'error',
   },
 };
