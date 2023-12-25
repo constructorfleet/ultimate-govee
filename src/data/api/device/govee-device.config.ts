@@ -1,6 +1,10 @@
-import { FactoryProvider } from '@nestjs/common';
+import { registerAs } from '@nestjs/config';
+import { goveeAuthenticatedHeaders } from '../utils';
 
-export const GoveeDeviceConfig = 'Configuration.Govee.Device';
-export type GoveeDeviceConfig = {};
+const deviceListUrl = 'https://app2.govee.com/device/rest/devices/v1/list';
 
-export const GoveeDeviceConfiguration: FactoryProvider = {};
+export const GoveeDeviceConfigKey = 'Configuration.Govee.Device';
+export const GoveeDeviceConfig = registerAs(GoveeDeviceConfigKey, () => ({
+  deviceListUrl,
+  headers: goveeAuthenticatedHeaders,
+}));

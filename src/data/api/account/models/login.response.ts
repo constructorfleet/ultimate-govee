@@ -3,7 +3,7 @@ import { GoveeAPIResponse } from '../../govee-api.models';
 export type ClientData = {
   A: string;
   B: string;
-  topic?: string;
+  topic: string;
   token: string;
   refreshToken: string;
   tokenExpireCycle: number;

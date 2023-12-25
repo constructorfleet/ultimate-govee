@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { GoveeProductService } from './govee-product.service';
-import { GoveeProductConfiguration } from './govee-product.config';
-import { GoveeConfigModule } from 'src/config/govee-config..module';
+import { GoveeProductConfig } from './govee-product.config';
 
 @Module({
-  imports: [GoveeConfigModule],
-  providers: [GoveeProductConfiguration, GoveeProductService],
+  imports: [ConfigModule.forFeature(GoveeProductConfig)],
+  providers: [GoveeProductService],
   exports: [GoveeProductService],
 })
 export class GoveeProductModule {}

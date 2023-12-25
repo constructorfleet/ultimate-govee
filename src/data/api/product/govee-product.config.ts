@@ -1,19 +1,9 @@
-import { FactoryProvider } from '@nestjs/common';
-import { GoveeAPIConfig } from '../govee-api.config';
+import { registerAs } from '@nestjs/config';
 
-const skuListUrl = '/bi/rest/devices/v3/skus';
+const skuListUrl = 'https://app2.govee.com/bi/rest/devices/v3/skus';
 
-export const GoveeProductConfig = 'Configuration.Govee.Product';
-export type GoveeProductConfig = {
-  skuListUrl: string;
-  storageDirectory: string;
-};
+export const GoveeProductConfigKey = 'Configuration.Govee.Product';
 
-export const GoveeProductConfiguration: FactoryProvider = {
-  provide: GoveeProductConfig,
-  inject: [GoveeAPIConfig],
-  useFactory: (apiConfig: GoveeAPIConfig): GoveeProductConfig => ({
-    skuListUrl: `${apiConfig.baseAppUrl}${skuListUrl}`,
-    storageDirectory: apiConfig.storageDirectory,
-  }),
-};
+export const GoveeProductConfig = registerAs(GoveeProductConfigKey, () => ({
+  skuListUrl,
+}));

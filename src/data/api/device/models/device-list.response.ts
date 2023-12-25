@@ -23,11 +23,29 @@ export type DeviceSettings = {
   deviceName: string;
   sku: string;
   waterShortage?: number;
+  battery?: number;
+  humMax?: number;
+  humMin?: number;
+  humCali?: number;
+  humWarning?: boolean;
+  temMax?: number;
+  temMin?: number;
+  temCali?: number;
+  temWarning?: boolean;
+  uploadRate?: number;
+  bdType?: number;
+  mcuSoftVersion?: string;
+  mcuHardVersion?: string;
+  time?: number;
 };
 
 export type DeviceData = {
   online: boolean;
   isOnOff?: number;
+  bind?: boolean;
+  tem?: number;
+  hum?: number;
+  lastTime?: number;
 };
 
 export type DeviceExternalResources = {
@@ -42,6 +60,7 @@ export type DeviceExtensionProperties = {
   deviceSettings: string;
   lastDeviceData: string;
   extResources: string;
+  subDevice: string;
 };
 
 export type Device = {
@@ -55,9 +74,9 @@ export type Device = {
   pactType: number;
   pactCode: number;
   goodsType: number;
-  deviceEx: DeviceExtensionProperties;
+  deviceExt: DeviceExtensionProperties;
 };
 
 export type DeviceListResponse = {
-  devices: unknown[];
+  devices: Device[];
 } & GoveeAPIResponse;

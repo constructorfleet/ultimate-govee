@@ -1,8 +1,8 @@
-import { Url } from 'url';
-
 export type Product = {
   category: string;
+  categoryId: number;
   group: string;
+  groupId: number;
   modelName: string;
   skuUrl?: string;
   iconUrl?: string;
