@@ -1,8 +1,15 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src",
+  "projects": {
+    "govee": {
+      "type": "library",
+      "root": "src",
+      "entryFile": "index",
+      "sourceRoot": "src"
+    }
+  },
   "compilerOptions": {
-    "deleteOutDir": true
+    "tsConfigPath": "./tsconfig.json"
   }
 }
