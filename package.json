@@ -54,6 +54,7 @@
     "@nestjs/cqrs": "^10.2.6",
     "@nestjs/platform-express": "^10.0.0",
     "@types/axios": "^0.14.0",
+    "aws-iot-device-sdk-v2": "^1.18.0",
     "axios": "^1.6.2",
     "node-rsa": "^1.1.1",
     "pem": "^1.14.8",

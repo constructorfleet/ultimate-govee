@@ -2,20 +2,20 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import axios from 'axios';
 import { ConfigType } from '@nestjs/config';
 import { GoveeDeviceConfig } from './govee-device.config';
-import { OAuthData } from '../account/models/account-client';
+import { OAuthData } from '../../../domain/models/account-client';
 import {
   Device,
   DeviceData,
   DeviceListResponse,
   DeviceSettings,
 } from './models/device-list.response';
-import { goveeAuthenticatedHeaders } from '../utils';
+import { goveeAuthenticatedHeaders } from '../../../utils';
 import {
   BluetoothData,
   GoveeDevice,
   Measurement,
   WiFiData,
-} from './models/govee-device';
+} from '../../../domain/models/govee-device';
 
 @Injectable()
 export class GoveeDeviceService {

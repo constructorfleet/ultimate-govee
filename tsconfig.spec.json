@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "incremental": true,
+    "allowSyntheticDefaultImports": true,
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["es2015", "es2016", "es2017", "es2018"],
+    "declaration": false,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "noImplicitAny": false,
+    "baseUrl": "./src"
+  },
+  "include": ["src/**/*.spec.ts"],
+  "exclude": [".vscode/", ".idea/"]
+}

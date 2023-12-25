@@ -6,13 +6,11 @@ import { promisify } from 'util';
 export type CertificateBundle = {
   certificate: string;
   privateKey: string;
-  ca: string;
 };
 
 export const parseP12Certificate = async (
   certificate: string,
   p12Password: string,
-  ca: string,
 ): Promise<CertificateBundle> => {
   try {
     const cert = await promisify<Buffer, Pkcs12ReadOptions, Pkcs12ReadResult>(
@@ -22,7 +20,6 @@ export const parseP12Certificate = async (
     return {
       certificate: cert.cert,
       privateKey: key.exportKey('pkcs8'),
-      ca,
     };
   } catch (err) {
     throw new Error('Invalid P12 certificate');

@@ -1,4 +1,4 @@
-import { OAuthData } from '../account/models/account-client';
+import { OAuthData } from '../domain/models/account-client';
 
 const appVersion = '5.6.01';
 

@@ -8,8 +8,8 @@ export type OAuthData = {
 export type IoTData = {
   certificate: string;
   privateKey: string;
-  ca: string;
   endpoint: string;
+  accountId: string;
   clientId: string;
   topic: string;
 };

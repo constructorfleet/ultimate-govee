@@ -1,5 +1,5 @@
 import { registerAs } from '@nestjs/config';
-import { goveeAuthenticatedHeaders } from '../utils';
+import { goveeAuthenticatedHeaders } from '../../../utils';
 
 const deviceListUrl = 'https://app2.govee.com/device/rest/devices/v1/list';
 

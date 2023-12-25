@@ -9,7 +9,7 @@ import {
   SkuModel,
   Product as SkuProduct,
 } from './models/sku-list.response';
-import { ProductMap, Product } from './models/product-map';
+import { ProductMap, Product } from '../../../domain/models/product-map';
 
 @Injectable()
 export class GoveeProductService {

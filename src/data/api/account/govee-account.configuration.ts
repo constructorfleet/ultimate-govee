@@ -1,5 +1,5 @@
 import { registerAs } from '@nestjs/config';
-import { goveeAuthenticatedHeaders, goveeHeaders } from '../utils';
+import { goveeAuthenticatedHeaders, goveeHeaders } from '../../../utils';
 
 const authUrl = 'https://app2.govee.com/account/rest/account/login';
 const refreshTokenUrl =

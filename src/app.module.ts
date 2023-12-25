@@ -1,14 +1,11 @@
-import { GoveeProductModule } from './data/api/product/govee-product.module';
-import { GoveeprouctsserviceService } from './data/api/product/govee-product.service';
-import { GoveeAPIModule } from './data/api/govee-api.module';
-import { GoveeapiclientService } from './data/api/govee-api.service';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { GoveeAPIModule } from './data';
 
 @Module({
-  imports: [GoveeProductModule, GoveeAPIModule],
+  imports: [GoveeAPIModule],
   controllers: [AppController],
-  providers: [GoveeprouctsserviceService, GoveeapiclientService, AppService],
+  providers: [AppService],
 })
 export class AppModule {}

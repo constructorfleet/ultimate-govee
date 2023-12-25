@@ -6,9 +6,12 @@ import {
   GoveeCredentials,
 } from './govee-account.configuration';
 import { LoginResponse } from './models/login.response';
-import { AccountClient, OAuthData } from './models/account-client';
+import {
+  AccountClient,
+  OAuthData,
+} from '../../../domain/models/account-client';
 import { IoTCertificateData } from './models/iot-certificate.response';
-import { parseP12Certificate } from '../utils';
+import { parseP12Certificate } from '../../../utils';
 import { RefreshTokenResponse } from './models/refresh-token.response';
 
 @Injectable()
@@ -66,7 +69,6 @@ export class GoveeAuthService {
       const iotCertificate = await parseP12Certificate(
         iotCertResponse.p12,
         iotCertResponse.p12Pass,
-        '',
       );
       return {
         accountId: loginResponse.data.client.accountId,
@@ -74,6 +76,7 @@ export class GoveeAuthService {
         oauth,
         iot: {
           ...iotCertificate,
+          accountId: loginResponse.data.client.accountId,
           endpoint: iotCertResponse.endpoint,
           topic: loginResponse.data.client.topic,
           clientId: loginResponse.data.client.client,

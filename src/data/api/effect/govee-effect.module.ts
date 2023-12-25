@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { GoveeEffectService } from './govee-effect.service';
-import { GoveeEffectConfiguration } from './govee-effect.config';
-import { GoveeConfigModule } from 'src/config/govee-config..module';
+import { GoveeEffectConfig } from './govee-effect.config';
 
 @Module({
-  imports: [GoveeConfigModule],
-  providers: [GoveeEffectConfiguration, GoveeEffectService],
+  imports: [ConfigModule.forFeature(GoveeEffectConfig)],
+  providers: [GoveeEffectService],
   exports: [GoveeEffectService],
 })
 export class GoveeEffectModule {}
