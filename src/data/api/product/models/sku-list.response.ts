@@ -9,7 +9,7 @@ export class PairUrl {
   light?: string;
 }
 
-export class Product {
+export class SkuProduct {
   @Expose({ name: 'ic' })
   ic!: number;
 
@@ -52,8 +52,8 @@ export class SkuModel {
   showingSku!: string;
 
   @Expose({ name: 'products' })
-  @Type(() => Product)
-  products!: Product[];
+  @Type(() => SkuProduct)
+  products!: SkuProduct[];
 }
 
 export class SkuGroup {

@@ -7,9 +7,9 @@ import {
   Category,
   SkuGroup,
   SkuModel,
-  Product as SkuProduct,
+  SkuProduct,
 } from './models/sku-list.response';
-import { ProductMap, Product } from '../../../domain/models/product-map';
+import { Product } from './models/product';
 
 @Injectable()
 export class GoveeProductService {
@@ -20,7 +20,7 @@ export class GoveeProductService {
     private readonly config: ConfigType<typeof GoveeProductConfig>,
   ) {}
 
-  async getProductCategories(): Promise<ProductMap> {
+  async getProductCategories(): Promise<Record<string, Product>> {
     try {
       const response = await axios.get<SkuListResponse>(this.config.skuListUrl);
       const productMap = GoveeProductService.parseResponse(response.data);
@@ -31,9 +31,14 @@ export class GoveeProductService {
     }
   }
 
-  private static parseResponse(response: SkuListResponse): ProductMap {
+  private static parseResponse(
+    response: SkuListResponse,
+  ): Record<string, Product> {
     return response.categories.reduce(
-      (productMap: ProductMap, category: Category): ProductMap => {
+      (
+        productMap: Record<string, Product>,
+        category: Category,
+      ): Record<string, Product> => {
         category.groups.forEach((group: SkuGroup) => {
           group.models.forEach((model: SkuModel) => {
             model.products.forEach((product: SkuProduct) => {
@@ -53,7 +58,7 @@ export class GoveeProductService {
         });
         return productMap;
       },
-      {} as ProductMap,
+      {} as Record<string, Product>,
     );
   }
 }

@@ -24,19 +24,19 @@ export class GoveeDeviceService {
   ) {}
 
   async getDeviceList(oauthData: OAuthData): Promise<GoveeDevice[]> {
-    // try {
-    const response = await request(
-      this.config.deviceListUrl,
-      goveeAuthenticatedHeaders(oauthData),
-    ).get(DeviceListResponse);
-    return GoveeDeviceService.parseResponse(
-      response.data as DeviceListResponse,
-    );
-    // } catch (err) {
-    //   this.logger.error(err);
-    //   this.logger.error(`Unable to retrieve device list`, err);
-    //   throw new Error(`Unable to retrieve device list.`);
-    // }
+    try {
+      const response = await request(
+        this.config.deviceListUrl,
+        goveeAuthenticatedHeaders(oauthData),
+      ).get(DeviceListResponse);
+      return GoveeDeviceService.parseResponse(
+        response.data as DeviceListResponse,
+      );
+    } catch (err) {
+      this.logger.error(err);
+      this.logger.error(`Unable to retrieve device list`, err);
+      throw new Error(`Unable to retrieve device list.`);
+    }
   }
 
   private static parseResponse(response: DeviceListResponse): GoveeDevice[] {
