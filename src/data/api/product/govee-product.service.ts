@@ -34,14 +34,14 @@ export class GoveeProductService {
   private static parseResponse(response: SkuListResponse): ProductMap {
     return response.categories.reduce(
       (productMap: ProductMap, category: Category): ProductMap => {
-        category.supportGroups.forEach((group: SkuGroup) => {
-          group.supportSkuList.forEach((model: SkuModel) => {
+        category.groups.forEach((group: SkuGroup) => {
+          group.models.forEach((model: SkuModel) => {
             model.products.forEach((product: SkuProduct) => {
-              productMap[product.sku] = {
+              productMap[product.model] = {
                 category: category.name,
-                categoryId: category.rootId,
-                group: group.groupName,
-                groupId: group.groupId,
+                categoryId: category.id,
+                group: group.name,
+                groupId: group.id,
                 modelName: model.modelName,
                 skuUrl: product.skuUrl,
                 iconUrl: model.iconUrl,

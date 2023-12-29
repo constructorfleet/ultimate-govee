@@ -1,42 +1,86 @@
+import { Expose, Type } from 'class-transformer';
 import { GoveeAPIResponse } from '../../govee-api.models';
 
-export type PairUrl = {
-  dark: string;
-  light: string;
-};
+export class PairUrl {
+  @Expose({ name: 'dark' })
+  dark?: string;
 
-export type Product = {
-  ic: number;
-  pairUrl: PairUrl;
-  sku: string;
-  skuUrl: string;
-  spec: string;
-  extInfo: string;
-  goodsType: number;
-};
+  @Expose({ name: 'light' })
+  light?: string;
+}
 
-export type SkuModel = {
-  hintContent: string;
-  iconUrl: string;
-  modelName: string;
-  online: boolean;
-  productId: number;
-  showingSku: string;
-  products: Product[];
-};
+export class Product {
+  @Expose({ name: 'ic' })
+  ic!: number;
 
-export type SkuGroup = {
-  groupId: number;
-  groupName: string;
-  supportSkuList: SkuModel[];
-};
+  @Expose({ name: 'pairUrl' })
+  pairUrl?: PairUrl;
 
-export type Category = {
-  name: string;
-  rootId: number;
-  supportGroups: SkuGroup[];
-};
+  @Expose({ name: 'sku' })
+  model!: string;
 
-export type SkuListResponse = {
-  categories: Category[];
-} & GoveeAPIResponse;
+  @Expose({ name: 'skuUrl' })
+  skuUrl?: string;
+
+  @Expose({ name: 'spec' })
+  spec?: string;
+
+  @Expose({ name: 'extInfo' })
+  extInfo?: string;
+
+  @Expose({ name: 'goodsType' })
+  goodsType!: number;
+}
+
+export class SkuModel {
+  @Expose({ name: 'hintContent' })
+  hintContent?: string;
+
+  @Expose({ name: 'iconUrl' })
+  iconUrl?: string;
+
+  @Expose({ name: 'modelName' })
+  modelName!: string;
+
+  @Expose({ name: 'online' })
+  online!: boolean;
+
+  @Expose({ name: 'productId' })
+  productId!: number;
+
+  @Expose({ name: 'showingSKu' })
+  showingSku!: string;
+
+  @Expose({ name: 'products' })
+  @Type(() => Product)
+  products!: Product[];
+}
+
+export class SkuGroup {
+  @Expose({ name: 'groupId' })
+  id!: number;
+
+  @Expose({ name: 'groupName' })
+  name!: string;
+
+  @Expose({ name: 'supportSkuList' })
+  @Type(() => SkuModel)
+  models!: SkuModel[];
+}
+
+export class Category {
+  @Expose({ name: 'name' })
+  name!: string;
+
+  @Expose({ name: 'rootId' })
+  id!: number;
+
+  @Expose({ name: 'supportGroups' })
+  @Type(() => SkuGroup)
+  groups!: SkuGroup[];
+}
+
+export class SkuListResponse extends GoveeAPIResponse {
+  @Expose({ name: 'categories' })
+  categories!: Category[];
+}

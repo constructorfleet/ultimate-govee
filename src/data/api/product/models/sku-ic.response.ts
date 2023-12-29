@@ -1,14 +1,22 @@
+import { Expose, Type } from 'class-transformer';
 import { GoveeAPIResponse } from '../../govee-api.models';
 
-export type SkuIC = {
-  ic: number;
-  sku: string;
-};
+export class SkuIC {
+  @Expose({ name: 'ic' })
+  ic!: number;
 
-export type SkuICResponseData = {
-  skus: SkuIC[];
-};
+  @Expose({ name: 'sku' })
+  model!: string;
+}
 
-export type SkuICReponse = {
-  data: SkuICResponseData;
-} & GoveeAPIResponse;
+export class SkuICResponseData {
+  @Expose({ name: 'skus' })
+  @Type(() => SkuIC)
+  models!: SkuIC[];
+}
+
+export class SkuICReponse extends GoveeAPIResponse {
+  @Expose({ name: 'data' })
+  @Type(() => SkuICResponseData)
+  data!: SkuICResponseData;
+}

@@ -1,7 +1,7 @@
 import { registerAs } from '@nestjs/config';
-import { goveeAuthenticatedHeaders, goveeHeaders } from '../../../utils';
+import { goveeAuthenticatedHeaders, goveeHeaders } from '../../utils';
 
-const authUrl = 'https://app2.govee.com/account/rest/account/login';
+const authUrl = 'https://app2.govee.com/account/rest/account/v1/login';
 const refreshTokenUrl =
   'https://app2.govee.com/account/rest/v1/first/refresh-tokens';
 const iotCertUrl = 'https://app2.govee.com/app/v1/account/iot/key';

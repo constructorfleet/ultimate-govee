@@ -1,5 +1,5 @@
 import { registerAs } from '@nestjs/config';
-import { goveeHeaders } from '../../../utils';
+import { goveeHeaders } from '../../utils';
 
 const deviceEffectUrl = '/appsku/v2/devices/scenes/attributes';
 

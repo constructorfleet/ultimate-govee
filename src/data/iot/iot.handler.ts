@@ -1,4 +1,5 @@
 import { mqtt } from 'aws-iot-device-sdk-v2';
+import { IoTMessage } from './models/iot-message';
 
 export enum ConnectionState {
   Disconnected,
@@ -9,48 +10,37 @@ export enum ConnectionState {
   Closed,
 }
 
+export type MessageHandler = (
+  topic: string,
+  message: IoTMessage,
+  dup: boolean,
+  qos: mqtt.QoS,
+  retain: boolean,
+) => Promise<void>;
+
 export type Subscriber = (
-  onMessage: (
-    topic: string,
-    payload: ArrayBuffer,
-    dup: boolean,
-    qos: mqtt.QoS,
-    retain: boolean,
-  ) => Promise<void>,
+  onMessage: MessageHandler,
   subsciptionTopic: string,
   subscriptionQos?: mqtt.QoS,
 ) => Promise<void>;
 
 export type Publisher = (
   topic: string,
-  payload: mqtt.Payload,
+  message: IoTMessage,
   qos?: mqtt.QoS,
   retain?: boolean,
 ) => Promise<void>;
 
 export interface IoTHandler {
-  set state(state: ConnectionState);
-  get subscriber(): Subscriber;
-  set subscriber(subsciber: Subscriber);
-  get publisher(): Publisher;
-  set publisher(publisher: Publisher);
-
-  onConnected?: (resumed: boolean) => Promise<void>;
-  onDisconnected?: () => Promise<void>;
-  onClosed?: () => Promise<void>;
-  onError?: <TError = unknown>(reason: TError) => Promise<void>;
-  onConnectionFailure?: <TError = unknown>(reason: TError) => Promise<void>;
-  onConnectionSuccess?: (resumed: boolean) => Promise<void>;
-  onInterrupt?: <TError = unknown>(reason: TError) => Promise<void>;
-  onResume?: (code: number, resumed: boolean) => Promise<void>;
-  onMessage?: (
+  onConnected?: (resumed: boolean) => void;
+  onError?: <TError = unknown>(data: { error: TError }) => void;
+  onConnectionFailure?: <TError = unknown>(data: { error: TError }) => void;
+  onConnectionSuccess?: (data: { session_present: boolean }) => void;
+  onMessage: (
     topic: string,
     payload: ArrayBuffer,
     dup: boolean,
     qos: mqtt.QoS,
     retain: boolean,
-  ) => Promise<void>;
-  unsubscribe?: (topic: string) => Promise<void>;
-  disconnect?: () => Promise<void>;
-  connect?: () => Promise<void>;
+  ) => void;
 }

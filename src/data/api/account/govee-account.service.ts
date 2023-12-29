@@ -1,6 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import axios from 'axios';
 import {
   GoveeAccountConfig,
   GoveeCredentials,
@@ -10,13 +9,16 @@ import {
   AccountClient,
   OAuthData,
 } from '../../../domain/models/account-client';
-import { IoTCertificateData } from './models/iot-certificate.response';
-import { parseP12Certificate } from '../../../utils';
+import {
+  IoTCertificateData,
+  IoTCertificateResponse,
+} from './models/iot-certificate.response';
+import { parseP12Certificate, request } from '../../utils';
 import { RefreshTokenResponse } from './models/refresh-token.response';
 
 @Injectable()
-export class GoveeAuthService {
-  private logger: Logger = new Logger(GoveeAuthService.name);
+export class GoveeAccountService {
+  private logger: Logger = new Logger(GoveeAccountService.name);
 
   constructor(
     @Inject(GoveeAccountConfig.KEY)
@@ -25,17 +27,16 @@ export class GoveeAuthService {
 
   async refresh(oauth: OAuthData): Promise<OAuthData> {
     try {
-      const response = await axios.get<RefreshTokenResponse>(
+      const response = await request(
         this.config.refreshTokenUrl,
-        {
-          headers: this.config.authenticatedHeaders(oauth),
-        },
-      );
+        this.config.authenticatedHeaders(oauth),
+      ).get(RefreshTokenResponse);
       return {
-        accessToken: response.data.data.token,
-        refreshToken: response.data.data.refreshToken,
+        accessToken: (response.data as RefreshTokenResponse).data.token,
+        refreshToken: (response.data as RefreshTokenResponse).data.refreshToken,
         expiresAt:
-          new Date().getTime() + response.data.data.tokenExpireCycle * 1000,
+          new Date().getTime() +
+          (response.data as RefreshTokenResponse).data.tokenExpireCycle * 1000,
         clientId: oauth.clientId,
       };
     } catch (err) {
@@ -45,58 +46,76 @@ export class GoveeAuthService {
   }
 
   async authenticate(credentials: GoveeCredentials): Promise<AccountClient> {
+    const accountClient: AccountClient = {
+      clientId: '',
+      accountId: '',
+      oauth: {
+        accessToken: '',
+        refreshToken: '',
+        expiresAt: 0,
+        clientId: '',
+      },
+    };
+    let topic: string;
     try {
-      const loginResponse = await axios.post<LoginResponse>(
+      const loginResponse = await request(
         this.config.authUrl,
+        {},
         {
           email: credentials.username,
           password: credentials.password,
           client: credentials.clientId,
         },
-        {
-          headers: this.config.headers(credentials),
-        },
-      );
-      const oauth: OAuthData = {
-        accessToken: loginResponse.data.client.token,
+      ).post(LoginResponse);
+      accountClient.accountId = loginResponse.data.client.accountId;
+      accountClient.oauth = {
+        accessToken: loginResponse.data.client.accessToken,
         refreshToken: loginResponse.data.client.refreshToken,
         expiresAt:
           new Date().getTime() +
           loginResponse.data.client.tokenExpireCycle * 1000,
-        clientId: loginResponse.data.client.client,
+        clientId: loginResponse.data.client.clientId,
       };
-      const iotCertResponse = await this.getIoTCertificate(oauth);
-      const iotCertificate = await parseP12Certificate(
-        iotCertResponse.p12,
-        iotCertResponse.p12Pass,
+      topic = loginResponse.data.client.topic;
+    } catch (err) {
+      this.logger.error(
+        `Unable to authenticate with Govee. ${JSON.stringify(
+          credentials,
+        )} ${err}`,
+        err,
       );
-      return {
-        accountId: loginResponse.data.client.accountId,
-        clientId: loginResponse.data.client.client,
-        oauth,
-        iot: {
-          ...iotCertificate,
-          accountId: loginResponse.data.client.accountId,
-          endpoint: iotCertResponse.endpoint,
-          topic: loginResponse.data.client.topic,
-          clientId: loginResponse.data.client.client,
-        },
+      throw new Error(`Unable to authenticate with Govee.`);
+    }
+
+    try {
+      const iotCertResponse = await this.getIoTCertificate(accountClient.oauth);
+      const iotCertificate = await parseP12Certificate(
+        iotCertResponse.p12Certificate,
+        iotCertResponse.certificatePassword,
+      );
+      accountClient.iot = {
+        ...iotCertificate,
+        accountId: accountClient.accountId,
+        endpoint: iotCertResponse.brokerUrl,
+        topic,
+        clientId: accountClient.clientId,
       };
     } catch (err) {
+      this.logger.error(err);
       this.logger.error(`Unable to authenticate with Govee servers`, err);
-      throw new Error(`Unable to authenticate`);
+      return accountClient;
     }
+
+    return accountClient;
   }
 
   async getIoTCertificate(oauthData: OAuthData): Promise<IoTCertificateData> {
     try {
-      const response = await axios.get<IoTCertificateData>(
+      const response = await request(
         this.config.iotCertUrl,
-        {
-          headers: this.config.authenticatedHeaders(oauthData),
-        },
-      );
-      return response.data;
+        this.config.authenticatedHeaders(oauthData),
+      ).get(IoTCertificateResponse);
+      return (response.data as IoTCertificateResponse).data;
     } catch (err) {
       this.logger.error(`Unable to retrieve IoT certificate`, err);
       throw new Error(`Unable to retrieve IoT certificate`);

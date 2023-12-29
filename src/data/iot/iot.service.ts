@@ -1,99 +1,42 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { mqtt } from 'aws-iot-device-sdk-v2';
+import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
+import { TextDecoder } from 'web-encoding';
 import { IoTData } from '../../domain/models/account-client';
-import { IoTConnectionFactory } from './iot-connection.factory';
-import { ConnectionState, IoTHandler } from './iot.handler';
+import { IoTClient } from './iot.client';
+import { IoTMessage } from './models/iot-message';
+import { IoTHandler } from './iot.handler';
+
+const payloadDecoder = new TextDecoder();
+
+const parseMessage = (payload: ArrayBuffer): IoTMessage =>
+  JSON.parse(payloadDecoder.decode(payload)) as IoTMessage;
+
+export type OnMessageCallback = (message: IoTMessage) => void;
 
 @Injectable()
-export class IoTService {
+export class IoTService implements IoTHandler, OnModuleDestroy {
   private readonly logger: Logger = new Logger(IoTService.name);
+  private messageCallback: OnMessageCallback | undefined;
 
-  constructor(private readonly factory: IoTConnectionFactory) {}
+  constructor(private readonly client: IoTClient) {}
 
-  async connect(iotData: IoTData, handler: IoTHandler) {
-    const iotConnection: mqtt.MqttClientConnection =
-      this.factory.getConnection(iotData);
+  onMessage(topic: string, payload: ArrayBuffer, dup: boolean) {
+    const message = parseMessage(payload);
+    this.logger.debug(`Received message on topic ${topic}: ${message}`);
+    if (!dup && this.messageCallback) {
+      this.messageCallback(message);
+    }
+  }
 
-    iotConnection.on('connect', async () => {
-      handler.state = ConnectionState.Connected;
-      if (handler.connect) {
-        await handler.connect();
-      }
-    });
-    iotConnection.on(
-      'connection_failure',
-      async (data: mqtt.OnConnectionFailedResult) => {
-        handler.state = ConnectionState.Error;
-        if (handler.onConnectionFailure) {
-          await handler.onConnectionFailure(data);
-        }
-      },
-    );
-    iotConnection.on(
-      'connection_success',
-      async (data: mqtt.OnConnectionSuccessResult) => {
-        handler.state = ConnectionState.Connected;
-        if (handler.onConnectionSuccess) {
-          await handler.onConnectionSuccess(data.session_present);
-        }
-      },
-    );
-    iotConnection.on('resume', async (code: number, resumed: boolean) => {
-      handler.state = ConnectionState.Connected;
-      if (handler.onResume) {
-        await handler.onResume(code, resumed);
-      }
-    });
-    iotConnection.on('interrupt', async (reason: unknown) => {
-      handler.state = ConnectionState.Interrupted;
-      if (handler.onInterrupt) {
-        await handler.onInterrupt(reason);
-      }
-    });
-    iotConnection.on('error', async (reason: unknown) => {
-      handler.state = ConnectionState.Error;
-      if (handler.onError) {
-        await handler.onError(reason);
-      }
-    });
-    iotConnection.on('disconnect', async () => {
-      handler.state = ConnectionState.Disconnected;
-      if (handler.onDisconnected) {
-        await handler.onDisconnected();
-      }
-    });
-    iotConnection.on('closed', async () => {
-      handler.state = ConnectionState.Closed;
-      if (handler.onClosed) {
-        await handler.onClosed();
-      }
-    });
-    handler.publisher = async (
-      topic: string,
-      payload: mqtt.Payload,
-      qos: mqtt.QoS = mqtt.QoS.AtLeastOnce,
-      retain: boolean = false,
-    ) => {
-      await iotConnection.publish(topic, payload, qos, retain);
-    };
-    handler.subscriber = async (
-      onMessage: (
-        topic: string,
-        payload: ArrayBuffer,
-        dup: boolean,
-        qos: mqtt.QoS,
-        retain: boolean,
-      ) => Promise<void>,
-      subsciptionTopic: string,
-      subscriptionQos: mqtt.QoS = mqtt.QoS.AtLeastOnce,
-    ) => {
-      await iotConnection.subscribe(
-        subsciptionTopic,
-        subscriptionQos,
-        onMessage,
-      );
-    };
+  async connect(iotData: IoTData, callback: OnMessageCallback) {
+    this.messageCallback = callback;
+    this.client.create(iotData, this);
+  }
 
-    return iotConnection;
+  async send(topic: string, payload: string) {
+    this.client?.publish(topic, payload);
+  }
+
+  async onModuleDestroy() {
+    await this.client?.disconnect();
   }
 }
