@@ -9,7 +9,3 @@ export type Product = {
   goodsType: number;
   ic: number;
 };
-
-export type ProductMap = {
-  [sku: string]: unknown;
-};

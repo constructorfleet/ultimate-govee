@@ -17,6 +17,6 @@ export type IoTData = {
 export type AccountClient = {
   accountId: string;
   clientId: string;
-  iot: IoTData;
+  iot?: IoTData;
   oauth: OAuthData;
 };

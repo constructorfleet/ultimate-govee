@@ -3,16 +3,12 @@ import { ConfigType } from '@nestjs/config';
 import { GoveeDeviceConfig } from './govee-device.config';
 import { OAuthData } from '../../../domain/models/account-client';
 import {
-  Device,
+  GoveeAPIDevice,
   DeviceListResponse,
   DeviceSettings,
 } from './models/device-list.response';
 import { goveeAuthenticatedHeaders, request } from '../../utils';
-import {
-  BluetoothData,
-  GoveeDevice,
-  WiFiData,
-} from '../../../domain/models/govee-device';
+import { BluetoothData, GoveeDevice, WiFiData } from '../../govee-device';
 
 @Injectable()
 export class GoveeDeviceService {
@@ -40,7 +36,7 @@ export class GoveeDeviceService {
   }
 
   private static parseResponse(response: DeviceListResponse): GoveeDevice[] {
-    return response.devices.map((device: Device) => {
+    return response.devices.map((device: GoveeAPIDevice) => {
       try {
         const settings = device.deviceExt.deviceSettings;
         const data = device.deviceExt.deviceData;
@@ -57,36 +53,38 @@ export class GoveeDeviceService {
           ic: settings.ic,
           wifi: this.getWiFiData(settings),
           blueTooth: this.getBleData(settings),
-          online: data.isOnline,
-          isOn: data.isActive,
-          lastTime: data.lastReportTimestamp,
-          waterShortage: settings.waterShortage,
-          boilWaterCompleteNotification: settings.notifyWaterBoiling,
-          autoShudown: settings.automaticShutDown,
-          playState: settings.playState,
-          filterExpired: settings.filterExpired,
-          completeNotification: settings.notifyComplete,
-          battery: settings.batteryLevel,
-          temperature:
-            settings.minTemperature && settings.maxTemperature
-              ? {
-                  min: settings.minTemperature,
-                  max: settings.maxTemperature,
-                  calibration: settings.temperatureCalibration,
-                  warning: settings.temperatureWarning,
-                  current: data.currentTemperature,
-                }
-              : undefined,
-          humidity:
-            settings.minHumidity && settings.maxHumidity
-              ? {
-                  min: settings.minHumidity,
-                  max: settings.maxHumidity,
-                  calibration: settings.Calibration,
-                  warning: settings.humidityWarning,
-                  current: data.currentHumditity,
-                }
-              : undefined,
+          state: {
+            online: data.isOnline,
+            isOn: data.isOn,
+            lastTime: data.lastReportTimestamp,
+            waterShortage: settings.waterShortage,
+            boilWaterCompleteNotification: settings.notifyWaterBoiling,
+            autoShudown: settings.automaticShutDown,
+            playState: settings.playState,
+            filterExpired: settings.filterExpired,
+            completeNotification: settings.notifyComplete,
+            battery: settings.batteryLevel,
+            temperature:
+              settings.minTemperature && settings.maxTemperature
+                ? {
+                    min: settings.minTemperature,
+                    max: settings.maxTemperature,
+                    calibration: settings.temperatureCalibration,
+                    warning: settings.temperatureWarning,
+                    current: data.currentTemperature,
+                  }
+                : undefined,
+            humidity:
+              settings.minHumidity && settings.maxHumidity
+                ? {
+                    min: settings.minHumidity,
+                    max: settings.maxHumidity,
+                    calibration: settings.Calibration,
+                    warning: settings.humidityWarning,
+                    current: data.currentHumditity,
+                  }
+                : undefined,
+          },
         } as GoveeDevice;
       } catch (err) {
         console.dir(err);

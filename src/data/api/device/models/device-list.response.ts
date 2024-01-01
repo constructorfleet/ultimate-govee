@@ -177,7 +177,7 @@ export class DeviceData {
   isOnline!: boolean;
 
   @Expose({ name: 'isOnOff' })
-  isActive?: number;
+  isOn?: number;
 
   @Expose({ name: 'bind' })
   bind?: boolean;
@@ -243,7 +243,7 @@ export class DeviceExtensionProperties {
   subDevice?: string;
 }
 
-export class Device {
+export class GoveeAPIDevice {
   @Expose({ name: 'groupId' })
   groupId?: number;
 
@@ -281,6 +281,6 @@ export class Device {
 
 export class DeviceListResponse extends GoveeAPIResponse {
   @Expose({ name: 'devices' })
-  @Type(() => Device)
-  devices!: Device[];
+  @Type(() => GoveeAPIDevice)
+  devices!: GoveeAPIDevice[];
 }

@@ -1,4 +1,5 @@
-import { Expose, Type } from 'class-transformer';
+import { Expose, Transform, Type } from 'class-transformer';
+import { OpCode } from '../../../common';
 
 export type PowerState = {
   isOn: boolean;
@@ -124,13 +125,20 @@ export class MessageState {
   colorTemperature?: number | undefined;
 
   @Expose({ name: 'color' })
-  color?: { r: number; g: number; b: number } | undefined;
+  @Type(() => Color)
+  color?: Color | undefined;
 
   @Expose({ name: 'mode' })
   mode?: number | undefined;
 
   @Expose({ name: 'connected' })
-  connected?: boolean | 'true' | 'false' | undefined;
+  @Transform(({ value }) => {
+    if (value === undefined) {
+      return undefined;
+    }
+    return value === 'true' || value === true;
+  })
+  connected?: boolean | undefined;
 
   @Expose({ name: 'sta' })
   @Type(() => StateStatus)
@@ -147,7 +155,20 @@ export class MessageData {
 
 export class MessageOp {
   @Expose({ name: 'command' })
-  command?: string[];
+  @Transform(
+    ({ value }) =>
+      value
+        ?.map(OpCode.base64ToHexString)
+        ?.sort()
+        ?.map(OpCode.hexStringToArray),
+    {
+      toClassOnly: true,
+    },
+  )
+  @Transform(({ value }) => value?.map(OpCode.hexToBase64), {
+    toPlainOnly: true,
+  })
+  command?: number[][];
 
   @Expose({ name: 'mode' })
   mode?: string;

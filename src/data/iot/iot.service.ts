@@ -4,13 +4,14 @@ import { IoTData } from '../../domain/models/account-client';
 import { IoTClient } from './iot.client';
 import { IoTMessage } from './models/iot-message';
 import { IoTHandler } from './iot.handler';
+import { GoveeDeviceStatus } from '../govee-device';
 
 const payloadDecoder = new TextDecoder();
 
 const parseMessage = (payload: ArrayBuffer): IoTMessage =>
   JSON.parse(payloadDecoder.decode(payload)) as IoTMessage;
 
-export type OnMessageCallback = (message: IoTMessage) => void;
+export type OnMessageCallback = (message: GoveeDeviceStatus) => void;
 
 @Injectable()
 export class IoTService implements IoTHandler, OnModuleDestroy {
@@ -23,7 +24,7 @@ export class IoTService implements IoTHandler, OnModuleDestroy {
     const message = parseMessage(payload);
     this.logger.debug(`Received message on topic ${topic}: ${message}`);
     if (!dup && this.messageCallback) {
-      this.messageCallback(message);
+      this.messageCallback(IoTService.parseIoTMessage(message));
     }
   }
 
@@ -38,5 +39,29 @@ export class IoTService implements IoTHandler, OnModuleDestroy {
 
   async onModuleDestroy() {
     await this.client?.disconnect();
+  }
+
+  private static parseIoTMessage(message: IoTMessage): GoveeDeviceStatus {
+    return {
+      id: message.deviceId,
+      model: message.model,
+      pactCode: message.pactCode,
+      pactType: message.pactType,
+      state: {
+        online: message.state?.connected,
+        isOn: message.state?.isOn,
+        temperature: message.temperature
+          ? {
+              current: message.temperature,
+            }
+          : undefined,
+        humidity: message.humidity
+          ? {
+              current: message.humidity,
+            }
+          : undefined,
+      },
+      op: message.op,
+    };
   }
 }
