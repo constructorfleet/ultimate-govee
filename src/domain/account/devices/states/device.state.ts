@@ -25,6 +25,7 @@ export const filterCommands = (
 
 export abstract class DeviceState<StateName extends string, StateValue> {
   protected stateValue!: BehaviorSubject<StateValue>;
+  subscribe = this.stateValue.subscribe;
 
   public get value(): StateValue {
     return this.stateValue.value;
@@ -40,12 +41,6 @@ export abstract class DeviceState<StateName extends string, StateValue> {
   ) {
     this.stateValue = new BehaviorSubject(initialValue);
     this.device.status.subscribe((status) => this.parse(status));
-  }
-
-  subscribe(
-    ...params: Parameters<typeof this.stateValue.subscribe>
-  ): ReturnType<typeof this.stateValue.subscribe> {
-    return this.stateValue.subscribe(...params);
   }
 
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars
