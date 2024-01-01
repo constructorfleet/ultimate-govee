@@ -21,14 +21,9 @@ export type RGBLightType = typeof RGBLightType;
 
 export class RGBLight extends DeviceType {
   static readonly type: RGBLightType = RGBLightType;
-  static create(device: DeviceModel): RGBLight | undefined {
-    if (
-      device.categoryGroup.toLocaleLowerCase() ===
-      'RGB Strip Lights'.toLocaleLowerCase()
-    ) {
-      return new RGBLight(device, StateFactory);
-    }
-    return undefined;
+
+  constructor(device: DeviceModel) {
+    super(device, StateFactory);
   }
 }
 

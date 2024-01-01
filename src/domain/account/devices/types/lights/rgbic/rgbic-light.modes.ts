@@ -2,11 +2,11 @@ import { Logger } from '@nestjs/common';
 import { OpCode } from '../../../../../../common';
 import {
   DeviceOpState,
-  DeviceModel,
   SegmentCountState,
   DeviceState,
   ModeState,
-} from '../../..';
+} from '../../../states';
+import { DeviceModel } from '../../../devices.model';
 
 export enum RGBICModes {
   SCENE = 4,
@@ -171,7 +171,7 @@ export type ColorData = {
 
 export type WholeColor = {
   red?: number;
-  gree?: number;
+  green?: number;
   blue?: number;
 };
 
@@ -207,7 +207,33 @@ export class RGBICActiveState extends ModeState {
       >[],
     );
     this.activeIdentifier.subscribe((identifier) => {
-      this.logger.log(identifier);
+      if (identifier === undefined) {
+        return;
+      }
+      switch (identifier[0]) {
+        case RGBICModes.MIC:
+          this.stateValue.next(
+            this.modes.find((mode) => mode.name === MicModeStateName),
+          );
+          break;
+        case RGBICModes.SEGMENT_COLOR:
+          this.stateValue.next(
+            this.modes.find((mode) => mode.name === SegmentColorModeStateName),
+          );
+          break;
+        case RGBICModes.ADVANCED_COLOR:
+          this.stateValue.next(
+            this.modes.find((mode) => mode.name === AdvancedColorModeStateName),
+          );
+          break;
+        case RGBICModes.WHOLE_COLOR:
+          this.stateValue.next(
+            this.modes.find((mode) => mode.name === WholeColorModeStateName),
+          );
+          break;
+        default:
+          break;
+      }
     });
   }
 }

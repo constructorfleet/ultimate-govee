@@ -25,8 +25,10 @@ export class ManualModeState extends DeviceOpState<
 
   parseOpCommand(opCommand: number[]): void {
     if (opCommand[0] !== HumidifierModes.MANUAL) {
-      this.stateValue.next(opCommand[1]);
+      return;
     }
+    const command = opCommand.slice(1);
+    this.stateValue.next(command.slice(0, command.indexOf(0x00))[-1]);
   }
 }
 
@@ -124,7 +126,28 @@ export class HumidifierActiveState extends ModeState {
       >[],
     );
     this.activeIdentifier.subscribe((identifier) => {
-      this.logger.log(identifier);
+      if (identifier === undefined) {
+        return;
+      }
+      switch (identifier[0]) {
+        case HumidifierModes.MANUAL:
+          this.stateValue.next(
+            this.modes.find((mode) => mode.name === ManualModeStateName),
+          );
+          break;
+        case HumidifierModes.PROGRAM:
+          this.stateValue.next(
+            this.modes.find((mode) => mode.name === CustomModeStateName),
+          );
+          break;
+        case HumidifierModes.AUTO:
+          this.stateValue.next(
+            this.modes.find((mode) => mode.name === AutoModeStateName),
+          );
+          break;
+        default:
+          break;
+      }
     });
   }
 }

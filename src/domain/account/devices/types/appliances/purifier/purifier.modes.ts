@@ -1,6 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { ModeState, DeviceOpState, DeviceState } from '../../../states';
 import { DeviceModel } from '../../../devices.model';
+import { AutoModeStateName } from '../humidifier/humidifier.modes';
 
 enum PurifierModes {
   MANUAL = 1,
@@ -98,7 +99,28 @@ export class PurifierActiveMode extends ModeState {
       >[],
     );
     this.activeIdentifier.subscribe((identifier) => {
-      this.logger.log(identifier);
+      if (identifier === undefined) {
+        return;
+      }
+      switch (identifier[0]) {
+        case PurifierModes.MANUAL:
+          this.stateValue.next(
+            this.modes.find((mode) => mode.name === ManualModeStateName),
+          );
+          break;
+        case PurifierModes.PROGRAM:
+          this.stateValue.next(
+            this.modes.find((mode) => mode.name === CustomModeStateName),
+          );
+          break;
+        case PurifierModes.AUTO:
+          this.stateValue.next(
+            this.modes.find((mode) => mode.name === AutoModeStateName),
+          );
+          break;
+        default:
+          break;
+      }
     });
   }
 }

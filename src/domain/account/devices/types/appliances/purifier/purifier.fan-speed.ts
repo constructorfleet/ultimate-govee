@@ -1,3 +1,4 @@
+import { Subscription } from 'rxjs';
 import { DeviceOpState } from '../../../states';
 import { DeviceModel } from '../../../devices.model';
 import {
@@ -14,6 +15,7 @@ export class PurifierFanSpeedState extends DeviceOpState<
   FanSpeedStateName,
   number | undefined
 > {
+  private subscription: Subscription | undefined;
   constructor(
     device: DeviceModel,
     private readonly active: PurifierActiveMode | undefined = undefined,
@@ -23,14 +25,21 @@ export class PurifierFanSpeedState extends DeviceOpState<
     super({ opType, identifier }, device, FanSpeedStateName, undefined);
     if (active !== undefined) {
       active.subscribe((event) => {
+        if (this.subscription !== undefined) {
+          this.subscription.unsubscribe();
+        }
         switch (event?.name) {
           case CustomModeStateName:
-            this.stateValue.next(
-              (event.value as CustomMode)?.currentProgram?.fanSpeed,
+            this.subscription = event.subscribe((event) =>
+              this.stateValue.next(
+                (event as CustomMode)?.currentProgram?.fanSpeed,
+              ),
             );
             break;
           case ManualModeStateName:
-            this.stateValue.next(event.value as number | undefined);
+            this.subscription = event.subscribe((event) =>
+              this.stateValue.next(event as number | undefined),
+            );
             break;
           default:
             this.stateValue.next(undefined);
@@ -41,6 +50,9 @@ export class PurifierFanSpeedState extends DeviceOpState<
   }
 
   parseOpCommand(opCommand: number[]): void {
+    if (this.active !== undefined) {
+      return;
+    }
     const speed = opCommand[0] !== 16 ? opCommand[0] + 1 : 1;
     this.stateValue.next(speed * 25);
   }

@@ -1,6 +1,7 @@
+import { Subscription } from 'rxjs';
 import { DeviceState } from '../../../states';
 import { DeviceModel } from '../../../devices.model';
-import { AutoModeState } from './humidifier.modes';
+import { AutoModeState, HumidifierActiveState } from './humidifier.modes';
 
 export type HumiditierHumidity = {
   current?: number;
@@ -11,14 +12,20 @@ export class TargetHumidityState extends DeviceState<
   'targetHumidity',
   number | undefined
 > {
+  private subscription: Subscription | undefined;
   constructor(
     device: DeviceModel,
-    private activeState: DeviceState<string, any>,
+    private activeState: HumidifierActiveState,
   ) {
     super(device, 'targetHumidity', undefined);
     this.activeState.subscribe((event) => {
+      if (this.subscription !== undefined) {
+        this.subscription.unsubscribe();
+      }
       if (event?.name === 'modeAuto') {
-        this.stateValue.next((event as AutoModeState).value.targetHumidity);
+        this.subscription = event.subscribe((event) => {
+          this.stateValue.next((event as AutoModeState).value.targetHumidity);
+        });
       } else {
         this.stateValue.next(undefined);
       }

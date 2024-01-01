@@ -39,11 +39,6 @@ export type PurifierType = typeof PurifierType;
 
 export class PurifierDevice extends DeviceType {
   static readonly deviceType: PurifierType = PurifierType;
-  static create(device: DeviceModel): PurifierDevice | undefined {
-    return device.modelName.toLocaleLowerCase().includes(PurifierType)
-      ? new PurifierDevice(device)
-      : undefined;
-  }
 
   constructor(device: DeviceModel) {
     super(device, StateFactories);

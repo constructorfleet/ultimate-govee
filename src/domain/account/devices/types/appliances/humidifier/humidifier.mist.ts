@@ -1,3 +1,4 @@
+import { Subscription } from 'rxjs';
 import { DeviceState } from '../../../states';
 import { DeviceModel } from '../../../devices.model';
 import {
@@ -18,17 +19,25 @@ export class MistLevelState extends DeviceState<
   MistLevelStateName,
   number | undefined
 > {
+  private subscription: Subscription | undefined;
   constructor(device: DeviceModel, active: HumidifierActiveState) {
     super(device, mistLevel, undefined);
     active.subscribe((event) => {
+      if (this.subscription !== undefined) {
+        this.subscription.unsubscribe();
+      }
       switch (event?.name) {
         case CustomModeStateName:
-          this.stateValue.next(
-            (event.value as CustomMode)?.currentProgram?.mistLevel,
-          );
+          this.subscription = event.subscribe((event) => {
+            this.stateValue.next(
+              (event as CustomMode)?.currentProgram?.mistLevel,
+            );
+          });
           break;
         case ManualModeStateName:
-          this.stateValue.next(event.value as number | undefined);
+          this.subscription = event.subscribe((event) => {
+            this.stateValue.next(event as number | undefined);
+          });
           break;
         default:
           this.stateValue.next(undefined);
