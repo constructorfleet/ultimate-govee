@@ -1,4 +1,5 @@
-import { DeviceOpState, DeviceModel } from '../../..';
+import { DeviceOpState } from '../../../states';
+import { DeviceModel } from '../../../devices.model';
 import {
   CustomMode,
   CustomModeStateName,

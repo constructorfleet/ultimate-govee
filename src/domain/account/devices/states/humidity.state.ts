@@ -46,7 +46,8 @@ export class HumidityState extends DeviceState<HumidityStateName, Humidity> {
         },
       });
     } else if (data?.state?.sta?.stc) {
-      const [humdidity] = data.state.sta.stc.slice(2, 3);
+      const { stc } = data.state.sta;
+      const [humdidity] = stc.slice(2, 3);
       this.stateValue.next({
         ...this.stateValue.value,
         currentHumidity: humdidity,

@@ -1,12 +1,15 @@
+import { Injectable } from '@nestjs/common';
 import {
+  ConnectedState,
   ControlLockState,
-  DeviceModel,
   DisplayScheduleState,
   HumidityState,
   NightLightState,
+  PowerState,
   TimerState,
   WaterShortageState,
-} from '../../..';
+} from '../../../states';
+import { DeviceModel } from '../../../devices.model';
 import { DeviceType, StateFactories, StateFactory } from '../../device-type';
 import { TargetHumidityState } from './humidifier.target-humidity';
 import { MistLevelState } from './humidifier.mist';
@@ -19,9 +22,12 @@ import {
   ManualModeState,
   ManualModeStateName,
 } from './humidifier.modes';
-import { HumidiferUVCState } from './humidifer.uvc';
+import { DeviceTypeFactory } from '../../device-type.factory';
+import { HumidiferUVCState } from './humidifier.uvc';
 
 const StateFactory: StateFactories = [
+  (device: DeviceModel) => new PowerState(device),
+  (device: DeviceModel) => new ConnectedState(device),
   (device: DeviceModel) => new WaterShortageState(device),
   (device: DeviceModel) => new TimerState(device),
   (device: DeviceModel) => new ManualModeState(device),
@@ -62,5 +68,16 @@ export class HumidifierDevice extends DeviceType {
     this.addState(activeState);
     this.addState(new MistLevelState(device, activeState));
     this.addState(new TargetHumidityState(device, activeState));
+  }
+}
+
+@Injectable()
+export class HumidifierFactory extends DeviceTypeFactory<HumidifierDevice> {
+  constructor() {
+    super(HumidifierDevice, {
+      'Home Appliances': {
+        'Air Treatment': /Humidifier/,
+      },
+    });
   }
 }

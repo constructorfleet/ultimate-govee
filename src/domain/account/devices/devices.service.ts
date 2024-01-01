@@ -7,6 +7,7 @@ import {
 } from '../../../data';
 import { OAuthData } from '../../models/account-client';
 import { DeviceModel, createDevice } from './devices.model';
+import { DevicesFactory } from './devices.factory';
 
 @Injectable()
 export class DevicesService {
@@ -17,7 +18,12 @@ export class DevicesService {
   constructor(
     private readonly deviceApi: GoveeDeviceService,
     private readonly productApi: GoveeProductService,
-  ) {}
+    private readonly devicesFactory: DevicesFactory,
+  ) {
+    this.onDeviceAdded.subscribe((device: DeviceModel) =>
+      this.devicesFactory.create(device),
+    );
+  }
 
   async loadDevices(oauth: OAuthData) {
     const productCategories = await this.productApi.getProductCategories();
@@ -25,6 +31,7 @@ export class DevicesService {
     deviceList.forEach((apiDevice) => {
       if (this.devices[apiDevice.id] === undefined) {
         const newDevice = createDevice(apiDevice, productCategories);
+        this.onDeviceAdded.next(newDevice);
         this.devices[newDevice.id] = newDevice;
       }
     });

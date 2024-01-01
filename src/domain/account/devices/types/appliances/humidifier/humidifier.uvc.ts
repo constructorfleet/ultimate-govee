@@ -1,4 +1,5 @@
-import { DeviceModel, DeviceOpState } from '../../..';
+import { DeviceOpState } from '../../../states';
+import { DeviceModel } from '../../../devices.model';
 
 export const UVCStateName: 'isUVCActive' = 'isUVCActive' as const;
 export type UVCStateName = typeof UVCStateName;

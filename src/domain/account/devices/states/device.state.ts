@@ -1,6 +1,12 @@
 import { BehaviorSubject } from 'rxjs';
 import { DeviceModel } from '../devices.model';
 
+type MessageData = {
+  cmd?: string;
+};
+
+const StatusCommand = 'status';
+
 export const filterCommands = (
   commands: number[][],
   type: number,
@@ -46,7 +52,10 @@ export abstract class DeviceState<StateName extends string, StateValue> {
   parseState(data: unknown) {}
 
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars
-  parse(data: unknown) {
+  parse(data: MessageData) {
+    if (data.cmd !== StatusCommand) {
+      return;
+    }
     this.parseState(data);
   }
 }
@@ -55,7 +64,7 @@ export type OpCommandData = {
   op?: {
     command?: number[][];
   };
-};
+} & MessageData;
 
 export type OpCommandIdentifier = {
   opType: number;
@@ -83,6 +92,10 @@ export abstract class DeviceOpState<
   parseOpCommand(opCommand: number[]) {}
 
   parse(data: OpCommandData) {
+    if (data.cmd !== StatusCommand) {
+      return;
+    }
+
     const commands = data.op?.command ?? [];
     if (
       filterCommands(commands, this.opType, this.identifier).map((command) =>

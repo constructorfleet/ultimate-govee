@@ -11,24 +11,22 @@ export type SegmentCount = {
 
 export class SegmentCountState extends DeviceOpState<
   SegmentCountStateName,
-  SegmentCount
+  number | undefined
 > {
   constructor(
     device: DeviceModel,
     opType: number = 0xaa,
     identifier: number = 0x11,
   ) {
-    super({ opType, identifier }, device, SegmentCountStateName, {
-      segments: undefined,
-      groups: undefined,
-    });
+    super({ opType, identifier }, device, SegmentCountStateName, undefined);
   }
 
   parseOpCommand(opCommand: number[]) {
-    const [count, ...groups] = opCommand;
-    this.stateValue.next({
-      segments: count,
-      groups: groups.slice(0, groups.indexOf(0x00)),
-    });
+    this.stateValue.next(opCommand[1]);
+    // const [count, ...groups] = opCommand.slice(1);
+    // this.stateValue.next({
+    //   segments: count,
+    //   groups: groups.slice(0, groups.indexOf(0x00)),
+    // });
   }
 }

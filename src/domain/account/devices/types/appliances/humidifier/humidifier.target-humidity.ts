@@ -1,5 +1,6 @@
-import { DeviceModel, DeviceState } from '../../..';
-import { HumidifierActiveState, AutoModeState } from './humidifier.modes';
+import { DeviceState } from '../../../states';
+import { DeviceModel } from '../../../devices.model';
+import { AutoModeState } from './humidifier.modes';
 
 export type HumiditierHumidity = {
   current?: number;
@@ -12,7 +13,7 @@ export class TargetHumidityState extends DeviceState<
 > {
   constructor(
     device: DeviceModel,
-    private activeState: HumidifierActiveState,
+    private activeState: DeviceState<string, any>,
   ) {
     super(device, 'targetHumidity', undefined);
     this.activeState.subscribe((event) => {

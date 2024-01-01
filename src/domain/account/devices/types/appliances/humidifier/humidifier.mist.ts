@@ -1,8 +1,9 @@
-import { DeviceState, DeviceModel } from '../../..';
+import { DeviceState } from '../../../states';
+import { DeviceModel } from '../../../devices.model';
 import {
   CustomMode,
   CustomModeStateName,
-  HumidifierActiveState as HumiditierActiveState,
+  HumidifierActiveState,
   ManualModeStateName,
 } from './humidifier.modes';
 
@@ -17,7 +18,7 @@ export class MistLevelState extends DeviceState<
   MistLevelStateName,
   number | undefined
 > {
-  constructor(device: DeviceModel, active: HumiditierActiveState) {
+  constructor(device: DeviceModel, active: HumidifierActiveState) {
     super(device, mistLevel, undefined);
     active.subscribe((event) => {
       switch (event?.name) {

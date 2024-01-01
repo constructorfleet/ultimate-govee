@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import { DeviceModel } from '../../../devices.model';
 import {
   ControlLockState,
@@ -6,6 +7,7 @@ import {
   TimerState,
 } from '../../../states';
 import { DeviceType, StateFactories } from '../../device-type';
+import { DeviceTypeFactory } from '../../device-type.factory';
 import { FanSpeedStateName, PurifierFanSpeedState } from './purifier.fan-speed';
 import {
   CustomModeState,
@@ -54,5 +56,16 @@ export class PurifierDevice extends DeviceType {
       this.addState(active);
       this.addState(new PurifierFanSpeedState(device, active));
     }
+  }
+}
+
+@Injectable()
+export class PurifierFactory extends DeviceTypeFactory<PurifierDevice> {
+  constructor() {
+    super(PurifierDevice, {
+      'Home Appliances': {
+        'Air Treatment': /Purifier/,
+      },
+    });
   }
 }

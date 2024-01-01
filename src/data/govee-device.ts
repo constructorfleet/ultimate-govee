@@ -20,6 +20,7 @@ export type Measurement = {
 
 export type GoveeDeviceStatus = {
   id: string;
+  cmd?: string;
   model: string;
   pactType: number;
   pactCode: number;
@@ -36,6 +37,13 @@ export type GoveeDeviceStatus = {
     autoShudown?: boolean;
     filterExpired?: boolean;
     playState?: boolean;
+    mode?: number;
+    brightness?: number;
+    color?: {
+      red: number;
+      green: number;
+      blue: number;
+    };
   };
   op?: {
     command?: number[][];

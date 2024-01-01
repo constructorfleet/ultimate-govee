@@ -1,3 +1,4 @@
+import { OpCode } from '../../../../common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
 
@@ -24,7 +25,7 @@ export class TimerState extends DeviceOpState<TimerStateName, Timer> {
   parseOpCommand(opCommand: number[]) {
     let duration: number | undefined;
     if (opCommand.length <= 3) {
-      duration = opCommand[1] * 0xff + opCommand[2];
+      duration = OpCode.total(opCommand.slice(1, 3));
     }
     this.stateValue.next({
       enabled: opCommand[0] === 0x01,

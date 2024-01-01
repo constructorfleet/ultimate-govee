@@ -1,5 +1,6 @@
 import { Logger } from '@nestjs/common';
-import { ModeState, DeviceOpState, DeviceModel, DeviceState } from '../../..';
+import { ModeState, DeviceOpState, DeviceState } from '../../../states';
+import { DeviceModel } from '../../../devices.model';
 
 enum PurifierModes {
   MANUAL = 1,

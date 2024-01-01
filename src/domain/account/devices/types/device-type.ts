@@ -76,5 +76,3 @@ export abstract class DeviceType extends BehaviorSubject<DeviceStateValues> {
       .forEach((state) => this.addState(state));
   }
 }
-
-export type DeviceTypeFactory = (device: DeviceModel) => DeviceType | undefined;
