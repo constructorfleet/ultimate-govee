@@ -1,21 +1,25 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "declaration": true,
-    "removeComments": true,
-    "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "incremental": true,
     "allowSyntheticDefaultImports": true,
-    "target": "ES2021",
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["es2015", "es2016", "es2017", "es2018"],
+    "declaration": true,
+    "declarationMap": true,
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./",
-    "incremental": true,
-    "skipLibCheck": true,
-    "strictNullChecks": false,
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
     "noImplicitAny": false,
-    "strictBindCallApply": false,
-    "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
-  }
+    "resolveJsonModule": true,
+    "baseUrl": "./src"
+  },
+  "include": ["src/"],
+  "exclude": [".vscode/", ".idea/", "**/*.spec.ts"]
 }

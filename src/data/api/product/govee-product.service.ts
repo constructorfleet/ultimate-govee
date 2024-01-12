@@ -1,7 +1,8 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import axios from 'axios';
 import { ConfigType } from '@nestjs/config';
+import { plainToInstance } from 'class-transformer';
 import { GoveeProductConfig } from './govee-product.config';
+import { request } from '../../utils';
 import {
   SkuListResponse,
   Category,
@@ -9,32 +10,53 @@ import {
   SkuModel,
   SkuProduct,
 } from './models/sku-list.response';
+import previousCategories from './assets/categories.json';
 import { Product } from './models/product';
+import { InjectPersisted, PersistResult } from '../../../persist';
 
 @Injectable()
 export class GoveeProductService {
+  private static readonly logger: Logger = new Logger(GoveeProductService.name);
   private readonly logger: Logger = new Logger(GoveeProductService.name);
 
   constructor(
     @Inject(GoveeProductConfig.KEY)
     private readonly config: ConfigType<typeof GoveeProductConfig>,
+    @InjectPersisted({ filename: 'products.json' })
+    private readonly persistedProducts: Record<string, Product>,
   ) {}
 
+  @PersistResult({ filename: 'products.json' })
   async getProductCategories(): Promise<Record<string, Product>> {
     try {
-      const response = await axios.get<SkuListResponse>(this.config.skuListUrl);
-      const productMap = GoveeProductService.parseResponse(response.data);
+      const productMap = GoveeProductService.parseResponse(
+        await this.getApiReponse(),
+      );
+      const productMap2 = GoveeProductService.parseResponse(
+        plainToInstance(SkuListResponse, previousCategories),
+      );
+      Object.entries(productMap2).forEach(([key, value]) => {
+        productMap[key] = productMap[key] ?? value;
+      });
       return productMap;
     } catch (error) {
       this.logger.error(`Error retrieving product list`, error);
-      throw new Error(`Unable to retrieve product list`);
+      return this.persistedProducts;
     }
+  }
+
+  private async getApiReponse(): Promise<SkuListResponse> {
+    const response = await request(this.config.skuListUrl, {
+      accept: 'application/json',
+    }).get(SkuListResponse);
+    return response.data as SkuListResponse;
   }
 
   private static parseResponse(
     response: SkuListResponse,
   ): Record<string, Product> {
-    return response.categories.reduce(
+    const { categories } = response;
+    return categories.reduce(
       (
         productMap: Record<string, Product>,
         category: Category,

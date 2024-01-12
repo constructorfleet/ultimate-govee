@@ -17,6 +17,7 @@ export const GoveeAccountConfig = registerAs(GoveeAccountConfigKey, () => ({
   authUrl,
   iotCertUrl,
   refreshTokenUrl,
+  saveAuthTo: process.env.SAVE_AUTH_FILE,
   headers: goveeHeaders,
   authenticatedHeaders: goveeAuthenticatedHeaders,
 }));

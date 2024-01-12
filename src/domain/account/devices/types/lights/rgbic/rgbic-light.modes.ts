@@ -1,5 +1,5 @@
 import { Logger } from '@nestjs/common';
-import { OpCode } from '../../../../../../common';
+import { chunk, total } from '../../../../../../common';
 import {
   DeviceOpState,
   SegmentCountState,
@@ -42,8 +42,8 @@ export class SceneModeState extends DeviceOpState<
     }
 
     this.stateValue.next({
-      sceneId: OpCode.total(opCommand.slice(1, 3)),
-      sceneParamId: OpCode.total(opCommand.slice(3, 5)),
+      sceneId: total(opCommand.slice(1, 3)),
+      sceneParamId: total(opCommand.slice(3, 5)),
     });
   }
 }
@@ -134,7 +134,7 @@ export class SegmentColorModeState extends DeviceOpState<
 
   parseOpCommand(opCommand: number[]): void {
     const messageNumber = opCommand[0] - 1;
-    const segmentCodes = OpCode.chunk(opCommand.slice(1), 4).slice(0, 4);
+    const segmentCodes = chunk(opCommand.slice(1), 4).slice(0, 4);
     segmentCodes
       .map((segmentCode: number[]): Segment => {
         const [brightness, red, green, blue] = segmentCode;

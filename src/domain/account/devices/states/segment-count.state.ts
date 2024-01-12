@@ -22,11 +22,6 @@ export class SegmentCountState extends DeviceOpState<
   }
 
   parseOpCommand(opCommand: number[]) {
-    this.stateValue.next(opCommand[1]);
-    // const [count, ...groups] = opCommand.slice(1);
-    // this.stateValue.next({
-    //   segments: count,
-    //   groups: groups.slice(0, groups.indexOf(0x00)),
-    // });
+    this.stateValue.next(opCommand[2]);
   }
 }

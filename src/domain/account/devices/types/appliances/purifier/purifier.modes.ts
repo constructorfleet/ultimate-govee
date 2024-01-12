@@ -26,8 +26,10 @@ export class ManualModeState extends DeviceOpState<
 
   parseOpCommand(opCommand: number[]): void {
     if (opCommand[0] !== PurifierModes.MANUAL) {
-      this.stateValue.next(opCommand[1]);
+      return;
     }
+    const command = opCommand.slice(1);
+    this.stateValue.next(command[command.indexOf(0x00) - 1]);
   }
 }
 

@@ -32,7 +32,7 @@ export class DeviceSettings {
   @Expose({ name: 'boilWaterCompletedNotiOnOff' })
   @Transform(
     ({ value }) =>
-      [null, undefined].includes(value) ? undefined : value === 1,
+      [null, undefined].includes(value) ? undefined : value.toString() === '1',
     { toClassOnly: true },
   )
   @Transform(
@@ -46,7 +46,7 @@ export class DeviceSettings {
   @Expose({ name: 'completionNotiOnOff' })
   @Transform(
     ({ value }) =>
-      [null, undefined].includes(value) ? undefined : value === 1,
+      [null, undefined].includes(value) ? undefined : value.toString() === '1',
     { toClassOnly: true },
   )
   @Transform(
@@ -60,7 +60,7 @@ export class DeviceSettings {
   @Expose({ name: 'autoShutDownOnOff' })
   @Transform(
     ({ value }) =>
-      [null, undefined].includes(value) ? undefined : value === 1,
+      [null, undefined].includes(value) ? undefined : value.toString() === '1',
     { toClassOnly: true },
   )
   @Transform(
@@ -74,7 +74,7 @@ export class DeviceSettings {
   @Expose({ name: 'filterExpireOnOff' })
   @Transform(
     ({ value }) =>
-      [null, undefined].includes(value) ? undefined : value === 1,
+      [null, undefined].includes(value) ? undefined : value.toString() === '1',
     { toClassOnly: true },
   )
   @Transform(
@@ -115,10 +115,10 @@ export class DeviceSettings {
   @Expose({ name: 'sku' })
   model!: string;
 
-  @Expose({ name: 'waterShortage' })
+  @Expose({ name: 'waterShortageOnOff' })
   @Transform(
     ({ value }) =>
-      [null, undefined].includes(value) ? undefined : value === 1,
+      [null, undefined].includes(value) ? undefined : value.toString() === '1',
     { toClassOnly: true },
   )
   @Transform(

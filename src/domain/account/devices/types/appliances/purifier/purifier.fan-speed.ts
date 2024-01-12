@@ -2,8 +2,8 @@ import { Subscription } from 'rxjs';
 import { DeviceOpState } from '../../../states';
 import { DeviceModel } from '../../../devices.model';
 import {
-  CustomMode,
   CustomModeStateName,
+  CustomProgram,
   ManualModeStateName,
   PurifierActiveMode,
 } from './purifier.modes';
@@ -30,16 +30,16 @@ export class PurifierFanSpeedState extends DeviceOpState<
         }
         switch (event?.name) {
           case CustomModeStateName:
-            this.subscription = event.subscribe((event) =>
-              this.stateValue.next(
-                (event as CustomMode)?.currentProgram?.fanSpeed,
-              ),
-            );
+            this.subscription = event.subscribe((event) => {
+              const speed = (event as CustomProgram)?.fanSpeed;
+              this.stateValue.next(speed ? speed * 25 : speed);
+            });
             break;
           case ManualModeStateName:
-            this.subscription = event.subscribe((event) =>
-              this.stateValue.next(event as number | undefined),
-            );
+            this.subscription = event.subscribe((event) => {
+              const speed = event as number;
+              this.stateValue.next(speed ? speed * 25 : speed);
+            });
             break;
           default:
             this.stateValue.next(undefined);

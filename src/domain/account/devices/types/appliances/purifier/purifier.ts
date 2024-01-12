@@ -6,7 +6,7 @@ import {
   NightLightState,
   TimerState,
 } from '../../../states';
-import { DeviceType, StateFactories } from '../../device-type';
+import { DefaultFactory, DeviceType, StateFactories } from '../../device-type';
 import { DeviceTypeFactory } from '../../device-type.factory';
 import { FanSpeedStateName, PurifierFanSpeedState } from './purifier.fan-speed';
 import {
@@ -25,7 +25,7 @@ const StateFactories: StateFactories = [
       (device: DeviceModel) => new CustomModeState(device),
       (device: DeviceModel) => new TimerState(device, 0xaa, 0x26),
     ],
-    DefaultFactory: [
+    [DefaultFactory]: [
       (device: DeviceModel) => new PurifierFanSpeedState(device),
       (device: DeviceModel) => new NightLightState(device, 0xaa, 0x18),
       (device: DeviceModel) => new TimerState(device, 0xaa, 0x11),
@@ -42,7 +42,7 @@ export class PurifierDevice extends DeviceType {
 
   constructor(device: DeviceModel) {
     super(device, StateFactories);
-    const fanSpeedState = this.state(FanSpeedStateName);
+    const fanSpeedState = this.state<PurifierFanSpeedState>(FanSpeedStateName);
     if (!fanSpeedState) {
       const active = new PurifierActiveMode(device, [
         this.state(ManualModeStateName),

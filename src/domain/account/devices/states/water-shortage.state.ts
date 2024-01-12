@@ -1,5 +1,5 @@
 import { DeviceModel } from '../devices.model';
-import { DeviceOpState } from './device.state';
+import { DeviceState } from './device.state';
 
 export const WaterShortageStateName: 'waterShortage' = 'waterShortage' as const;
 export type WaterShortageStateName = typeof WaterShortageStateName;
@@ -13,16 +13,12 @@ export type WaterShortageType = {
   };
 };
 
-export class WaterShortageState extends DeviceOpState<
+export class WaterShortageState extends DeviceState<
   WaterShortageStateName,
   boolean | undefined
 > {
-  constructor(
-    device: DeviceModel,
-    opType: number = 0xaa,
-    identifier: number = 0x0a,
-  ) {
-    super({ opType, identifier }, device, WaterShortageStateName, undefined);
+  constructor(device: DeviceModel) {
+    super(device, WaterShortageStateName, undefined);
   }
 
   parseState(data: WaterShortageType) {
@@ -34,10 +30,5 @@ export class WaterShortageState extends DeviceOpState<
         this.stateValue.next(stc[1] !== 0);
       }
     }
-  }
-
-  parseOpCommand(opCommand: number[]) {
-    const waterShortage = opCommand[0] === 0x01;
-    this.stateValue.next(waterShortage);
   }
 }

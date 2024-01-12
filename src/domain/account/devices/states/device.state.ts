@@ -1,4 +1,4 @@
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observer, Subscription } from 'rxjs';
 import { DeviceModel } from '../devices.model';
 
 type MessageData = {
@@ -21,11 +21,17 @@ export const filterCommands = (
 
       return cmdType === type;
     })
-    .map((command) => command.slice(identifier === undefined ? 2 : 1));
+    .map((command) => command.slice(identifier !== undefined ? 2 : 1));
 
 export abstract class DeviceState<StateName extends string, StateValue> {
   protected stateValue!: BehaviorSubject<StateValue>;
-  subscribe = this.stateValue.subscribe;
+  subscribe(
+    observerOrNext?:
+      | Partial<Observer<StateValue>>
+      | ((value: StateValue) => void),
+  ): Subscription {
+    return this.stateValue.subscribe(observerOrNext);
+  }
 
   public get value(): StateValue {
     return this.stateValue.value;

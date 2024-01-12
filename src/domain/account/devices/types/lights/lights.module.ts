@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { RGBLightFactory } from './rgb/rgb-light';
+import { RGBLightModule } from './rgb/rgb-light.module';
+import { RGBICLightModule } from './rgbic/rgbic-light.module';
 import { LightsFactory } from './lights.factory';
-import { RGBICLightFactory } from './rgbic/rgbic-light';
 
 @Module({
-  imports: [RGBLightFactory, RGBICLightFactory],
+  imports: [RGBLightModule, RGBICLightModule],
+  providers: [LightsFactory],
   exports: [LightsFactory],
 })
 export class LightsModule {}

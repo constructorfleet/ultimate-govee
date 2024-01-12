@@ -28,11 +28,18 @@ module.exports = {
     'import/no-unresolved': 'off',
     'import/order': 'error',
     'import/prefer-default-export': 'off',
+    'mocha/no-mocha-arrows': 'off',
     'eslint/no-useless-constructor': 'off',
     'eslint/no-empty-function': 'off',
     'no-useless-constructor': 'off',
     'no-empty-function': 'off',
     'no-param-reassign': 'off',
+    'no-shadow': 'off',
+    'max-classes-per-file': 'off',
+    'lines-between-class-members': 'off',
+    'no-unsupported-features/node-builtins': 'off',
+    'node/no-unsupported-features/node-builtins': 'off',
+    'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
     'node/no-missing-import': [
       'error',
       {

@@ -7,6 +7,8 @@ export type ConnectedStateName = typeof ConnectedStateName;
 type IsConnectedType = {
   state?: {
     isConnected?: boolean;
+    connected?: boolean;
+    online?: boolean;
     isOnline?: boolean;
   };
 };
@@ -24,6 +26,10 @@ export class ConnectedState extends DeviceState<
       this.stateValue.next(data?.state?.isConnected);
     } else if (data?.state?.isOnline !== undefined) {
       this.stateValue.next(data?.state?.isOnline);
+    } else if (data?.state?.connected !== undefined) {
+      this.stateValue.next(data?.state?.connected);
+    } else if (data?.state?.online !== undefined) {
+      this.stateValue.next(data?.state?.online);
     }
   }
 }

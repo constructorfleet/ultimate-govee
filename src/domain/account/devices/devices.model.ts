@@ -1,13 +1,24 @@
 import { ClassConstructor } from 'class-transformer';
 import { BehaviorSubject } from 'rxjs';
-import { ProductModel } from '../../products';
+import { Logger } from '@nestjs/common';
 import { Version } from './version.info';
 import { GoveeDevice, GoveeDeviceStatus, Product } from '../../../data';
+
+export class ProductModel {
+  constructor(
+    public readonly category: string,
+    public readonly group: string,
+    public readonly modelName: string,
+    public readonly ic: number,
+    public readonly goodsType: number,
+  ) {}
+}
 
 export type DeviceConstructorArgs = {
   id: string;
   name: string;
   model: string;
+  iotTopic?: string | undefined;
   modelName: string;
   ic: number;
   goodsType: number;
@@ -16,6 +27,7 @@ export type DeviceConstructorArgs = {
   category: string;
   categoryGroup: string;
   version: Version;
+  deviceUpdate: <T>(device: T) => Promise<void>;
 } & GoveeDeviceStatus;
 
 export class DeviceModel {
@@ -23,6 +35,7 @@ export class DeviceModel {
   public readonly name: string;
   public readonly model: string;
   public readonly modelName: string;
+  public readonly iotTopic?: string | undefined;
   public readonly ic: number;
   public readonly goodsType: number;
   public readonly pactCode: number;
@@ -31,12 +44,14 @@ export class DeviceModel {
   public readonly category: string;
   public readonly categoryGroup: string;
   public readonly status: BehaviorSubject<GoveeDeviceStatus>;
+  public readonly refreshers: ((device: this) => void)[] = [];
 
   constructor(args: DeviceConstructorArgs) {
     this.id = args.id;
     this.name = args.name;
     this.model = args.model;
     this.modelName = args.modelName;
+    this.iotTopic = args.iotTopic;
     this.ic = args.ic;
     this.goodsType = args.goodsType;
     this.pactCode = args.pactCode;
@@ -53,6 +68,11 @@ export class DeviceModel {
   }
   set productData(product: ProductModel) {
     this.product = product;
+  }
+
+  refresh() {
+    new Logger(this.id).debug(`Refreshing ${this.refreshers.length}`);
+    this.refreshers.forEach((refresher) => refresher(this));
   }
 }
 
@@ -115,8 +135,8 @@ export type IoTDeviceConstructorArgs = {
 } & DeviceConstructorArgs;
 
 export type IoTDevice = {
-  get iotTopic(): string;
-};
+  get iotTopic(): string | undefined;
+} & DeviceModel;
 
 export const IoTDevice = <TDevice extends ClassConstructor<DeviceModel>>(
   device: TDevice,
@@ -136,8 +156,10 @@ export const IoTDevice = <TDevice extends ClassConstructor<DeviceModel>>(
 export const createDevice = (
   device: GoveeDevice,
   productCategories: Record<string, Product>,
+  iotUpdater: (device: DeviceModel) => void,
 ): DeviceModel => {
   let constructor: ClassConstructor<DeviceModel> = DeviceModel;
+  const refreshers: ((device: DeviceModel) => void)[] = [];
   if (device.blueTooth) {
     constructor = BLEDevice(constructor);
   }
@@ -145,14 +167,21 @@ export const createDevice = (
     constructor = WiFiDevice(constructor);
   }
   if (device.iotTopic) {
+    new Logger('createDevice').debug(device.iotTopic);
     constructor = IoTDevice(constructor);
+    refreshers.push(iotUpdater);
   }
   const product = productCategories[device.model];
-  return new constructor({
+  if (!product) {
+    new Logger('CreateDevice').log(`No product info for ${device.model}`);
+  }
+  const newDevice = new constructor({
     ...device,
     version: new Version(device.hardwareVersion, device.softwareVersion),
-    category: product.category || 'unknown',
-    categoryGroup: product.group || 'unknown',
-    modelName: product.modelName || 'unknown',
+    category: product?.category || 'unknown',
+    categoryGroup: product?.group || 'unknown',
+    modelName: product?.modelName || 'unknown',
   });
+  newDevice.refreshers.push(...refreshers);
+  return newDevice;
 };

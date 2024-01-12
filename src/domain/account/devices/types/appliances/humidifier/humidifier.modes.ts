@@ -28,7 +28,7 @@ export class ManualModeState extends DeviceOpState<
       return;
     }
     const command = opCommand.slice(1);
-    this.stateValue.next(command.slice(0, command.indexOf(0x00))[-1]);
+    this.stateValue.next(command[command.indexOf(0x00) - 1]);
   }
 }
 
@@ -129,7 +129,8 @@ export class HumidifierActiveState extends ModeState {
       if (identifier === undefined) {
         return;
       }
-      switch (identifier[0]) {
+      const modeIdentifier = identifier[identifier.indexOf(0x00) - 1];
+      switch (modeIdentifier) {
         case HumidifierModes.MANUAL:
           this.stateValue.next(
             this.modes.find((mode) => mode.name === ManualModeStateName),

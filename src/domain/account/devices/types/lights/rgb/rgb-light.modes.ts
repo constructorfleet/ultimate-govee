@@ -1,4 +1,4 @@
-import { OpCode } from '../../../../../../common';
+import { total } from '../../../../../../common';
 import { DeviceOpState, DeviceModel } from '../../..';
 
 export enum RGBModes {
@@ -32,8 +32,8 @@ export class SceneModeState extends DeviceOpState<
     }
 
     this.stateValue.next({
-      sceneId: OpCode.total(opCommand.slice(1, 3)),
-      sceneParamId: OpCode.total(opCommand.slice(3, 5)),
+      sceneId: total(opCommand.slice(1, 3)),
+      sceneParamId: total(opCommand.slice(3, 5)),
     });
   }
 }

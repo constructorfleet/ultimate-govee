@@ -14,6 +14,7 @@ export class SkuProduct {
   ic!: number;
 
   @Expose({ name: 'pairUrl' })
+  @Type(() => PairUrl)
   pairUrl?: PairUrl;
 
   @Expose({ name: 'sku' })
@@ -43,13 +44,13 @@ export class SkuModel {
   modelName!: string;
 
   @Expose({ name: 'online' })
-  online!: boolean;
+  online?: boolean;
 
   @Expose({ name: 'productId' })
   productId!: number;
 
   @Expose({ name: 'showingSKu' })
-  showingSku!: string;
+  showingSku?: string;
 
   @Expose({ name: 'products' })
   @Type(() => SkuProduct)
@@ -82,5 +83,6 @@ export class Category {
 
 export class SkuListResponse extends GoveeAPIResponse {
   @Expose({ name: 'categories' })
+  @Type(() => Category)
   categories!: Category[];
 }

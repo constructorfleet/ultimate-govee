@@ -1,7 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { GoveeDeviceConfig } from './govee-device.config';
-import { OAuthData } from '../../../domain/models/account-client';
 import {
   GoveeAPIDevice,
   DeviceListResponse,
@@ -9,6 +8,8 @@ import {
 } from './models/device-list.response';
 import { goveeAuthenticatedHeaders, request } from '../../utils';
 import { BluetoothData, GoveeDevice, WiFiData } from '../../govee-device';
+import { OAuthData } from '../account/models/account-client';
+import { InjectPersisted, PersistResult } from '../../../persist';
 
 @Injectable()
 export class GoveeDeviceService {
@@ -17,22 +18,37 @@ export class GoveeDeviceService {
   constructor(
     @Inject(GoveeDeviceConfig.KEY)
     private readonly config: ConfigType<typeof GoveeDeviceConfig>,
+    @InjectPersisted({
+      filename: 'devices.json',
+    })
+    private readonly deviceListResponse: DeviceListResponse | undefined,
   ) {}
 
   async getDeviceList(oauthData: OAuthData): Promise<GoveeDevice[]> {
     try {
-      const response = await request(
-        this.config.deviceListUrl,
-        goveeAuthenticatedHeaders(oauthData),
-      ).get(DeviceListResponse);
-      return GoveeDeviceService.parseResponse(
-        response.data as DeviceListResponse,
-      );
+      this.logger.log('Getting device list');
+      const response = await this.getApiResult(oauthData);
+      return GoveeDeviceService.parseResponse(response);
     } catch (err) {
       this.logger.error(err);
       this.logger.error(`Unable to retrieve device list`, err);
-      throw new Error(`Unable to retrieve device list.`);
+      return GoveeDeviceService.parseResponse(
+        this.deviceListResponse || { message: '', status: 0, devices: [] },
+      );
     }
+  }
+
+  @PersistResult({
+    filename: 'devices.json',
+  })
+  private async getApiResult(
+    oauthData: OAuthData,
+  ): Promise<DeviceListResponse> {
+    const response = await request(
+      this.config.deviceListUrl,
+      goveeAuthenticatedHeaders(oauthData),
+    ).post(DeviceListResponse);
+    return response.data as DeviceListResponse;
   }
 
   private static parseResponse(response: DeviceListResponse): GoveeDevice[] {
@@ -43,9 +59,11 @@ export class GoveeDeviceService {
         return {
           name: device.deviceName,
           model: device.sku,
+          cmd: 'status',
           softwareVersion: settings.softwareVersion,
           hardwareVersion: settings.hardwareVersion,
           id: device.device,
+          iotTopic: device.deviceExt.deviceSettings.topic,
           pactCode: device.pactCode,
           pactType: device.pactType,
           goodsType: device.goodsType,
