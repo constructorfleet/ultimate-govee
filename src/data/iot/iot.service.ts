@@ -1,15 +1,19 @@
 import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
-import { TextDecoder } from 'web-encoding';
-import { IoTData } from '../../domain/models/account-client';
+import { plainToInstance } from 'class-transformer';
+import { IoTData } from '../api';
 import { IoTClient } from './iot.client';
 import { IoTMessage } from './models/iot-message';
 import { IoTHandler } from './iot.handler';
 import { GoveeDeviceStatus } from '../govee-device';
+import { unpaddedHexToArray } from '../../common';
 
 const payloadDecoder = new TextDecoder();
 
-const parseMessage = (payload: ArrayBuffer): IoTMessage =>
-  JSON.parse(payloadDecoder.decode(payload)) as IoTMessage;
+const parseMessage = (payload: ArrayBuffer): IoTMessage => {
+  const decoded = payloadDecoder.decode(payload);
+  const plain = JSON.parse(decoded);
+  return plainToInstance(IoTMessage, plain);
+};
 
 export type OnMessageCallback = (message: GoveeDeviceStatus) => void;
 
@@ -22,7 +26,8 @@ export class IoTService implements IoTHandler, OnModuleDestroy {
 
   onMessage(topic: string, payload: ArrayBuffer, dup: boolean) {
     const message = parseMessage(payload);
-    this.logger.debug(`Received message on topic ${topic}: ${message}`);
+    this.logger.debug(`Received message on topic ${topic}`);
+    this.logger.debug(JSON.stringify(message));
     if (!dup && this.messageCallback) {
       this.messageCallback(IoTService.parseIoTMessage(message));
     }
@@ -30,10 +35,11 @@ export class IoTService implements IoTHandler, OnModuleDestroy {
 
   async connect(iotData: IoTData, callback: OnMessageCallback) {
     this.messageCallback = callback;
-    this.client.create(iotData, this);
+    await this.client.create(iotData, this);
   }
 
   async send(topic: string, payload: string) {
+    this.logger.debug(`Sending message to ${topic}, ${payload}`);
     this.client?.publish(topic, payload);
   }
 
@@ -42,11 +48,18 @@ export class IoTService implements IoTHandler, OnModuleDestroy {
   }
 
   private static parseIoTMessage(message: IoTMessage): GoveeDeviceStatus {
+    const code = message.state?.status?.code;
+    let humidityCode: number | undefined;
+    if (code !== undefined) {
+      humidityCode = unpaddedHexToArray(code)?.slice(-1)[0];
+    }
+    const currentHumditity = message.humidity ? message.humidity : humidityCode;
     return {
       id: message.deviceId,
       model: message.model,
       pactCode: message.pactCode,
       pactType: message.pactType,
+      cmd: message.command,
       state: {
         online: message.state?.connected,
         isOn: message.state?.isOn,
@@ -55,9 +68,9 @@ export class IoTService implements IoTHandler, OnModuleDestroy {
               current: message.temperature,
             }
           : undefined,
-        humidity: message.humidity
+        humidity: currentHumditity
           ? {
-              current: message.humidity,
+              current: currentHumditity,
             }
           : undefined,
       },

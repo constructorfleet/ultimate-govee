@@ -1,11 +1,18 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
+import { ConfigModule } from '@nestjs/config';
+import { PersistModule } from './persist';
 import { AppService } from './app.service';
-import { GoveeAPIModule } from './data';
+import { GoveeAPIModule, IoTModule } from './data';
+import { AccountModule } from './domain/account';
 
 @Module({
-  imports: [GoveeAPIModule],
-  controllers: [AppController],
+  imports: [
+    ConfigModule.forRoot(),
+    PersistModule.forRoot(),
+    GoveeAPIModule,
+    IoTModule,
+    AccountModule,
+  ],
   providers: [AppService],
 })
 export class AppModule {}

@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { ClassConstructor, plainToInstance } from 'class-transformer';
+import { writeFile } from 'fs/promises';
 
 export interface ApiResponseStatus {
   statusCode: number;
@@ -26,7 +27,7 @@ export class BaseResponse {
 
   public msg?: string;
 
-  public status?: number;
+  public status!: number;
 }
 
 export class Request<PayloadType extends BaseRequest> {
@@ -38,6 +39,7 @@ export class Request<PayloadType extends BaseRequest> {
 
   async get<ResponseType>(
     as: ClassConstructor<ResponseType>,
+    saveToFile: string | undefined = undefined,
   ): Promise<AxiosResponse<ResponseType | ResponseType[]>> {
     delete this.headers['Content-Type'];
     const res = await axios.get<ResponseType>(this.url, {
@@ -52,12 +54,18 @@ export class Request<PayloadType extends BaseRequest> {
         statusCode: res.status,
       });
     }
+    if (saveToFile) {
+      await writeFile(saveToFile, JSON.stringify(res.data, null, 2), {
+        encoding: 'utf-8',
+      });
+    }
     res.data = plainToInstance(as, res.data);
     return res;
   }
 
   async post<ResponseType extends BaseResponse>(
     as: ClassConstructor<ResponseType>,
+    saveToFile: string | undefined = undefined,
   ): Promise<AxiosResponse<ResponseType>> {
     const res = await axios.post<ResponseType>(this.url, this.payload, {
       timeout: 10000,
@@ -65,14 +73,17 @@ export class Request<PayloadType extends BaseRequest> {
     });
 
     if (res.status !== 200 || res.data.status !== 200) {
-      throw new ApiError(res.data.message, {
-        message: res.data.message,
+      throw new ApiError(res.data?.message ?? 'Unexpected Error', {
+        message: res.data.message ?? 'Unexpected Error',
         statusCode: res.data.status,
       });
     }
-
+    if (saveToFile) {
+      await writeFile(saveToFile, JSON.stringify(res.data, null, 2), {
+        encoding: 'utf-8',
+      });
+    }
     res.data = plainToInstance(as, res.data);
-
     return res;
   }
 }

@@ -3,22 +3,26 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { EOL } from 'os';
 import { ConfigType } from '@nestjs/config';
 import { IoTConfig } from './iot.config';
-import { IoTData } from '../../domain/models/account-client';
 import { IoTHandler } from './iot.handler';
+import { IoTData } from '../api';
 
 @Injectable()
 export class IoTClient {
   private readonly logger: Logger = new Logger();
   private connection: mqtt.MqttClientConnection | undefined;
-  private subscriptions: Set<string> = new Set<string>();
+  private connected = false;
+  private subscriptions: string[] = [];
 
   constructor(
     @Inject(IoTConfig.KEY)
     private readonly config: ConfigType<typeof IoTConfig>,
   ) {}
 
-  create(iotData: IoTData, handler: IoTHandler): this {
-    this.subscriptions.add(iotData.topic);
+  async create(iotData: IoTData, handler: IoTHandler): Promise<this> {
+    this.logger.debug(`Adding ${iotData.topic} to subscriptions`);
+    if (!this.subscriptions.includes(iotData.topic)) {
+      this.subscriptions.push(iotData.topic);
+    }
     const certificateWithCA = [
       iotData.certificate,
       this.config.certificateAuthority,
@@ -33,8 +37,10 @@ export class IoTClient {
         .with_endpoint(iotData.endpoint)
         .with_clean_session(false)
         .build();
-    const connection = client.new_connection(connectionConfig);
-    this.bindEvents(connection, handler);
+    this.connection = client.new_connection(connectionConfig);
+    this.bindEvents(this.connection, handler);
+    this.logger.log('Connecting to IoT');
+    await this.connection.connect();
     return this;
   }
 
@@ -44,11 +50,14 @@ export class IoTClient {
   ) {
     iotConnection.on('connect', async () => {
       this.logger.log('Connected to AWS IoT Core');
-      Array.from(this.subscriptions).forEach(
-        async (topic) =>
-          this.connection &&
-          this.connection.subscribe(topic, mqtt.QoS.AtLeastOnce),
-      );
+      this.subscriptions.forEach(async (topic) => {
+        if (topic === undefined) {
+          return;
+        }
+        this.logger.log(`Subscribing to ${topic}`);
+        iotConnection.subscribe(topic, mqtt.QoS.AtLeastOnce);
+      });
+      this.connected = true;
     });
     iotConnection.on(
       'connection_failure',
@@ -70,7 +79,16 @@ export class IoTClient {
             );
           },
     );
-    iotConnection.on('message', handler.onMessage.bind(handler));
+    iotConnection.on(
+      'message',
+      async (
+        topic: string,
+        payload: ArrayBuffer,
+        dup: boolean,
+        qos: mqtt.QoS,
+        retain: boolean,
+      ) => handler.onMessage(topic, payload, dup, qos, retain),
+    );
     iotConnection.on('resume', async (code: number, resumed: boolean) => {
       this.logger.debug(
         `Connection resumed with code ${code} with ${
@@ -103,14 +121,16 @@ export class IoTClient {
   }
 
   async subscribe(topic: string) {
-    this.subscriptions.add(topic);
+    if (!this.subscriptions.includes(topic)) {
+      this.subscriptions.push(topic);
+    }
     if (this.connection) {
       await this.connection.subscribe(topic, mqtt.QoS.AtLeastOnce);
     }
   }
 
   async publish(topic: string, payload: string) {
-    if (this.connection) {
+    if (this.connection && this.connected) {
       await this.connection.publish(
         topic,
         payload,

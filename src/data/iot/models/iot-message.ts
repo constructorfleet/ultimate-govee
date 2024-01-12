@@ -1,5 +1,5 @@
 import { Expose, Transform, Type } from 'class-transformer';
-import { OpCode } from '../../../common';
+import { base64ToHex, hexToBase64 } from '../../../common';
 
 export type PowerState = {
   isOn: boolean;
@@ -116,6 +116,15 @@ export class Color {
 
 export class MessageState {
   @Expose({ name: 'onOff' })
+  @Transform(
+    ({ value }) => {
+      if (value === undefined) {
+        return undefined;
+      }
+      return value === 'true' || value === true || value === 1;
+    },
+    { toClassOnly: true },
+  )
   isOn?: boolean | undefined;
 
   @Expose({ name: 'brightness' })
@@ -132,12 +141,15 @@ export class MessageState {
   mode?: number | undefined;
 
   @Expose({ name: 'connected' })
-  @Transform(({ value }) => {
-    if (value === undefined) {
-      return undefined;
-    }
-    return value === 'true' || value === true;
-  })
+  @Transform(
+    ({ value }) => {
+      if (value === undefined) {
+        return undefined;
+      }
+      return value === 'true' || value === true || value === 1;
+    },
+    { toClassOnly: true },
+  )
   connected?: boolean | undefined;
 
   @Expose({ name: 'sta' })
@@ -155,17 +167,10 @@ export class MessageData {
 
 export class MessageOp {
   @Expose({ name: 'command' })
-  @Transform(
-    ({ value }) =>
-      value
-        ?.map(OpCode.base64ToHexString)
-        ?.sort()
-        ?.map(OpCode.hexStringToArray),
-    {
-      toClassOnly: true,
-    },
-  )
-  @Transform(({ value }) => value?.map(OpCode.hexToBase64), {
+  @Transform(({ value }) => value?.map(base64ToHex), {
+    toClassOnly: true,
+  })
+  @Transform(({ value }) => value?.map(hexToBase64), {
     toPlainOnly: true,
   })
   command?: number[][];
