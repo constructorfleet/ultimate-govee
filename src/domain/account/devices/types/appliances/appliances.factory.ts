@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { FactoryType } from '../device-type.factory';
+import { FactoryType } from '../device.factory';
 import { HumidifierFactory } from './humidifier/humidifier';
 import { PurifierFactory } from './purifier/purifier';
 import { DeviceModel } from '../../devices.model';
-import { DeviceType } from '../device-type';
+import { Device } from '../device';
 
 @Injectable()
 export class AppliancesFactory implements FactoryType {
@@ -12,9 +12,9 @@ export class AppliancesFactory implements FactoryType {
     private readonly purifierFactory: PurifierFactory,
   ) {}
 
-  create(device: DeviceModel): DeviceType | undefined {
+  create(deviceModel: DeviceModel): Device | undefined {
     return [this.humidifierFactory, this.purifierFactory]
-      .map((factory) => factory.create(device))
+      .map((factory) => factory.create(deviceModel))
       .find((d) => d !== undefined);
   }
 }

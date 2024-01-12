@@ -6,8 +6,8 @@ import {
   NightLightState,
   TimerState,
 } from '../../../states';
-import { DefaultFactory, DeviceType, StateFactories } from '../../device-type';
-import { DeviceTypeFactory } from '../../device-type.factory';
+import { DefaultFactory, Device, StateFactories } from '../../device';
+import { DeviceFactory } from '../../device.factory';
 import { FanSpeedStateName, PurifierFanSpeedState } from './purifier.fan-speed';
 import {
   CustomModeState,
@@ -37,7 +37,7 @@ const StateFactories: StateFactories = [
 export const PurifierType: 'purifier' = 'purifier' as const;
 export type PurifierType = typeof PurifierType;
 
-export class PurifierDevice extends DeviceType {
+export class PurifierDevice extends Device {
   static readonly deviceType: PurifierType = PurifierType;
 
   constructor(device: DeviceModel) {
@@ -55,7 +55,7 @@ export class PurifierDevice extends DeviceType {
 }
 
 @Injectable()
-export class PurifierFactory extends DeviceTypeFactory<PurifierDevice> {
+export class PurifierFactory extends DeviceFactory<PurifierDevice> {
   constructor() {
     super(PurifierDevice, {
       'Home Appliances': {

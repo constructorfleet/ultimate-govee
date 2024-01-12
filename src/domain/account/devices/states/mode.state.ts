@@ -31,15 +31,18 @@ export abstract class ModeState extends DeviceOpState<
     undefined,
   );
   protected readonly modes: DeviceState<string, any>[];
+  protected readonly inline: boolean;
 
   constructor(
     device: DeviceModel,
     modes: (DeviceState<string, any> | undefined)[],
     opType: number = 0xaa,
     identifier: number = 0x05,
+    inline: boolean = false,
   ) {
     super({ opType, identifier }, device, ModeStateName, undefined);
     this.modes = definedStates(modes);
+    this.inline = inline;
   }
 
   parseState(data: ModeType) {
@@ -49,6 +52,10 @@ export abstract class ModeState extends DeviceOpState<
   }
 
   parseOpCommand(opCommand: number[]) {
+    if (this.inline) {
+      this.activeIdentifier.next(opCommand);
+      return;
+    }
     const [identifier, ...value] = opCommand;
     if (identifier !== 0x00) {
       return;

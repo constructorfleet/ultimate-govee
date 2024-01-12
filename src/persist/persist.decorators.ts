@@ -27,7 +27,11 @@ export function PersistResult(options: PersistOptions) {
       const writeData =
         options.transform === undefined ? result : options.transform(result);
       await writeFile(
-        filePath,
+        args.reduce(
+          (fp: string, arg: any, index: number) =>
+            fp.replace(`{${index}}`, arg),
+          filePath,
+        ),
         JSON.stringify(writeData, null, 2),
         options.writeOption,
       );

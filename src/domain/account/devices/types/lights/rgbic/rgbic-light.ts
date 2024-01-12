@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DeviceType, StateFactories } from '../../device-type';
+import { Device, StateFactories } from '../../device';
 import {
   BrightnessState,
   ConnectedState,
@@ -19,7 +19,8 @@ import {
   SceneModeStateName,
   AdvancedColorModeStateName,
 } from './rgbic-light.modes';
-import { DeviceTypeFactory } from '../../device-type.factory';
+import { DeviceFactory } from '../../device.factory';
+import { RGBICSegmentsState } from './rgbic-light.segments';
 
 const StateFactory: StateFactories = [
   (device: DeviceModel) => new PowerState(device),
@@ -33,7 +34,7 @@ const StateFactory: StateFactories = [
 export const RGBICLightType: 'rgbic' = 'rgbic' as const;
 export type RGBICLightType = typeof RGBICLightType;
 
-export class RGBICLight extends DeviceType {
+export class RGBICLightDevice extends Device {
   static readonly type = RGBICLightType;
 
   constructor(device: DeviceModel) {
@@ -53,13 +54,14 @@ export class RGBICLight extends DeviceType {
         this.state(AdvancedColorModeStateName),
       ]),
     );
+    this.addState(new RGBICSegmentsState(device, this));
   }
 }
 
 @Injectable()
-export class RGBICLightFactory extends DeviceTypeFactory<RGBICLight> {
+export class RGBICLightFactory extends DeviceFactory<RGBICLightDevice> {
   constructor() {
-    super(RGBICLight, {
+    super(RGBICLightDevice, {
       'LED Strip Light': {
         'RGBIC Strip Lights': true,
       },

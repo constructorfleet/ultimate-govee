@@ -1,7 +1,8 @@
 import { registerAs } from '@nestjs/config';
 import { goveeHeaders } from '../../utils';
 
-const deviceEffectUrl = '/appsku/v2/devices/scenes/attributes';
+const deviceEffectUrl =
+  'https://app2.govee.com/appsku/v2/devices/scenes/attributes';
 
 const GoveeEffectConfigKey = 'Configuration.Govee.Effect';
 

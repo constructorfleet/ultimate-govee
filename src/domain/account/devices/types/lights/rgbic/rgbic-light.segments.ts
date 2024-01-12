@@ -9,7 +9,7 @@ import {
   PowerState,
   PowerStateName,
 } from '../../../states';
-import { DeviceType } from '../../device-type';
+import { Device } from '../../device';
 import {
   WholeColorModeStateName,
   ColorModeState,
@@ -41,9 +41,9 @@ export class RGBICSegmentsState extends DeviceState<
   private on: boolean | undefined;
   private brightness: number | undefined;
   private segments: Segment[] = [];
-  constructor(device: DeviceModel, deviceType: DeviceType) {
-    super(device, SegmentsStateName, []);
-    deviceType.state<PowerState>(PowerStateName)?.subscribe((event) => {
+  constructor(deviceModel: DeviceModel, device: Device) {
+    super(deviceModel, SegmentsStateName, []);
+    device.state<PowerState>(PowerStateName)?.subscribe((event) => {
       if (event === undefined) {
         return;
       }
@@ -55,7 +55,7 @@ export class RGBICSegmentsState extends DeviceState<
         this.stateValue.next(this.segments);
       }
     });
-    deviceType.state(SegmentCountStateName)?.subscribe((event) => {
+    device.state(SegmentCountStateName)?.subscribe((event) => {
       if (
         event === undefined ||
         typeof event !== 'number' ||
@@ -72,21 +72,19 @@ export class RGBICSegmentsState extends DeviceState<
       );
       this.stateValue.next(this.segments);
     });
-    deviceType
-      .state<BrightnessState>(BrightnessStateName)
-      ?.subscribe((event) => {
-        if (event === undefined) {
-          return;
-        }
-        this.brightness = event;
-        if (this.applyToWhole) {
-          this.segments.forEach((segment) => {
-            segment.brightness = event;
-          });
-          this.stateValue.next(this.segments);
-        }
-      });
-    deviceType.state<RGBICActiveState>(ModeStateName)?.subscribe((event) => {
+    device.state<BrightnessState>(BrightnessStateName)?.subscribe((event) => {
+      if (event === undefined) {
+        return;
+      }
+      this.brightness = event;
+      if (this.applyToWhole) {
+        this.segments.forEach((segment) => {
+          segment.brightness = event;
+        });
+        this.stateValue.next(this.segments);
+      }
+    });
+    device.state<RGBICActiveState>(ModeStateName)?.subscribe((event) => {
       if (event === undefined) {
         return;
       }

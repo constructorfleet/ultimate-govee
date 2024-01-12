@@ -153,7 +153,7 @@ export const IoTDevice = <TDevice extends ClassConstructor<DeviceModel>>(
   return IoTDeviceMixin;
 };
 
-export const createDevice = (
+export const createDeviceModel = (
   device: GoveeDevice,
   productCategories: Record<string, Product>,
   iotUpdater: (device: DeviceModel) => void,

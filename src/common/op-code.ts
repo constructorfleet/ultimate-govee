@@ -1,7 +1,8 @@
 import { decode, encode } from 'base64-arraybuffer';
 
-const ArrayRange = (count: number, start: number = 0): number[] =>
-  Array(count).map((x, i) => i + start);
+const ArrayRange = (count: number): number[] =>
+  // eslint-disable-next-line prefer-spread
+  Array.apply(null, Array(count)).map((_, i) => i);
 
 export const hexStringToArray = (hexString: string): number[] =>
   hexString
@@ -49,6 +50,6 @@ export const total = (codes: number[], reverse: boolean = false) =>
   }, 0);
 
 export const chunk = (codes: number[], chunkSize: number) =>
-  ArrayRange(Math.ceil(codes.length / chunkSize)).map((i) =>
+  ArrayRange(Math.ceil(codes.length / chunkSize)).map((x, i) =>
     codes.slice(i * chunkSize, i * chunkSize + chunkSize),
   );

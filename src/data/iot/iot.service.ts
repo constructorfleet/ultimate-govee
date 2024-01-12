@@ -40,7 +40,11 @@ export class IoTService implements IoTHandler, OnModuleDestroy {
 
   async send(topic: string, payload: string) {
     this.logger.debug(`Sending message to ${topic}, ${payload}`);
-    this.client?.publish(topic, payload);
+    await this.client?.publish(topic, payload);
+  }
+
+  async subscribe(topic: string) {
+    await this.client?.subscribe(topic);
   }
 
   async onModuleDestroy() {

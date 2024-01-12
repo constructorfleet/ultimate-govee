@@ -134,7 +134,7 @@ export class SegmentColorModeState extends DeviceOpState<
 
   parseOpCommand(opCommand: number[]): void {
     const messageNumber = opCommand[0] - 1;
-    const segmentCodes = chunk(opCommand.slice(1), 4).slice(0, 4);
+    const segmentCodes = chunk(opCommand.slice(1), 4).slice(0, 3);
     segmentCodes
       .map((segmentCode: number[]): Segment => {
         const [brightness, red, green, blue] = segmentCode;
@@ -205,6 +205,9 @@ export class RGBICActiveState extends ModeState {
         string,
         any
       >[],
+      0xaa,
+      0x05,
+      true,
     );
     this.activeIdentifier.subscribe((identifier) => {
       if (identifier === undefined) {

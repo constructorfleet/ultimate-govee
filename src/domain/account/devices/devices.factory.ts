@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { AppliancesFactory } from './types/appliances';
 import { LightsFactory } from './types/lights/lights.factory';
 import { DeviceModel } from './devices.model';
-import { DeviceType } from './types/device-type';
+import { Device } from './types/device';
 
 @Injectable()
 export class DevicesFactory {
@@ -11,8 +11,8 @@ export class DevicesFactory {
     private readonly lightFactory: LightsFactory,
   ) {}
 
-  create(device: DeviceModel): DeviceType | undefined {
-    return [this.applianceFactory, this.lightFactory]
+  create(device: DeviceModel): Device | undefined {
+    return [this.lightFactory] // this.applianceFactory, this.lightFactory]
       .map((factory) => factory.create(device))
       .find((d) => d !== undefined);
   }

@@ -4,46 +4,62 @@ import {
   GoveeDevice,
   GoveeDeviceService,
   GoveeDeviceStatus,
+  GoveeDiyService,
+  GoveeEffectService,
   GoveeProductService,
   OAuthData,
 } from '../../../data';
-import { DeviceModel, createDevice } from './devices.model';
+import { DeviceModel, createDeviceModel } from './devices.model';
 import { DevicesFactory } from './devices.factory';
-import { DeviceType } from './types/device-type';
+import { Device } from './types/device';
+import { RGBICLightDevice } from './types/lights';
 
 @Injectable()
 export class DevicesService {
   private readonly logger: Logger = new Logger(DevicesService.name);
-  private devices: Record<string, DeviceType> = {};
-  public readonly onDeviceAdded: Subject<DeviceType> = new Subject();
+  private devices: Record<string, Device> = {};
+  public readonly onDeviceAdded: Subject<Device> = new Subject();
 
   constructor(
     private readonly deviceApi: GoveeDeviceService,
     private readonly productApi: GoveeProductService,
     private readonly devicesFactory: DevicesFactory,
+    private readonly effectsApi: GoveeEffectService,
+    private readonly diyApi: GoveeDiyService,
   ) {}
 
   async loadDevices(
     oauth: OAuthData,
-    iotUpdater: (device: DeviceModel) => unknown,
+    iotUpdater: (deviceModel: DeviceModel) => unknown,
   ) {
     this.logger.log('Loading product categories');
     const productCategories = await this.productApi.getProductCategories();
     this.logger.log('Loading devices');
     const deviceList = await this.deviceApi.getDeviceList(oauth);
-    deviceList.forEach((apiDevice: GoveeDevice) => {
+    deviceList.forEach(async (apiDevice: GoveeDevice) => {
       if (this.devices[apiDevice.id] === undefined) {
-        const newDevice = createDevice(
-          apiDevice,
-          productCategories,
-          iotUpdater,
+        const device = this.devicesFactory.create(
+          createDeviceModel(apiDevice, productCategories, iotUpdater),
         );
-        const newDeviceType = this.devicesFactory.create(newDevice);
-        if (newDeviceType === undefined) {
+        if (device === undefined) {
           return;
         }
-        this.devices[newDevice.id] = newDeviceType;
-        newDevice.refresh();
+        if (device instanceof RGBICLightDevice) {
+          await this.effectsApi.getDeviceEffects(
+            oauth,
+            device.model,
+            device.goodsType,
+            device.id,
+          );
+          await this.diyApi.getDeviceDiys(
+            oauth,
+            device.model,
+            device.goodsType,
+            device.id,
+          );
+        }
+        this.devices[device.id] = device;
+        device.refresh();
       }
       this.devices[apiDevice.id].deviceStatus(apiDevice);
     });

@@ -15,14 +15,6 @@ export class AccountService {
     private readonly iot: IoTService,
   ) {}
 
-  // eslint-disable-next-line class-methods-use-this
-  // async onDeviceAdded(device: DeviceModel) {
-  //   if (device.iotTopic === undefined) {
-  //     return;
-  //   }
-  //   device.refresh();
-  // }
-
   refreshIoT(device: IoTDevice) {
     this.logger.debug(`Refresh IoT ${device.iotTopic}`);
     if (
@@ -40,7 +32,7 @@ export class AccountService {
           cmd: 'status',
           cmdVersion: 0,
           type: 0,
-          transaction: `u_${Date.now()}`,
+          transaction: `z_${Date.now()}`,
         },
       }),
     );

@@ -6,8 +6,8 @@ import {
   PowerState,
 } from '../../../states';
 import { DeviceModel } from '../../../devices.model';
-import { DeviceType, StateFactories } from '../../device-type';
-import { DeviceTypeFactory } from '../../device-type.factory';
+import { Device, StateFactories } from '../../device';
+import { DeviceFactory } from '../../device.factory';
 
 const StateFactory: StateFactories = [
   (device: DeviceModel) => new PowerState(device),
@@ -19,7 +19,7 @@ const StateFactory: StateFactories = [
 export const RGBLightType: 'rgb' = 'rgb' as const;
 export type RGBLightType = typeof RGBLightType;
 
-export class RGBLight extends DeviceType {
+export class RGBLight extends Device {
   static readonly type: RGBLightType = RGBLightType;
 
   constructor(device: DeviceModel) {
@@ -28,7 +28,7 @@ export class RGBLight extends DeviceType {
 }
 
 @Injectable()
-export class RGBLightFactory extends DeviceTypeFactory<RGBLight> {
+export class RGBLightFactory extends DeviceFactory<RGBLight> {
   constructor() {
     super(RGBLight, {
       'LED Strip Light': {

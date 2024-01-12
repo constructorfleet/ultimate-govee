@@ -38,7 +38,7 @@ export class Request<PayloadType extends BaseRequest> {
   ) {}
 
   async get<ResponseType>(
-    as: ClassConstructor<ResponseType>,
+    as?: ClassConstructor<ResponseType>,
     saveToFile: string | undefined = undefined,
   ): Promise<AxiosResponse<ResponseType | ResponseType[]>> {
     delete this.headers['Content-Type'];
@@ -59,12 +59,14 @@ export class Request<PayloadType extends BaseRequest> {
         encoding: 'utf-8',
       });
     }
-    res.data = plainToInstance(as, res.data);
+    if (as !== undefined) {
+      res.data = plainToInstance(as, res.data);
+    }
     return res;
   }
 
   async post<ResponseType extends BaseResponse>(
-    as: ClassConstructor<ResponseType>,
+    as?: ClassConstructor<ResponseType>,
     saveToFile: string | undefined = undefined,
   ): Promise<AxiosResponse<ResponseType>> {
     const res = await axios.post<ResponseType>(this.url, this.payload, {
@@ -83,7 +85,9 @@ export class Request<PayloadType extends BaseRequest> {
         encoding: 'utf-8',
       });
     }
-    res.data = plainToInstance(as, res.data);
+    if (as !== undefined) {
+      res.data = plainToInstance(as, res.data);
+    }
     return res;
   }
 }

@@ -10,7 +10,7 @@ import {
   WaterShortageState,
 } from '../../../states';
 import { DeviceModel } from '../../../devices.model';
-import { DeviceType, StateFactories, StateFactory } from '../../device-type';
+import { Device, StateFactories, StateFactory } from '../../device';
 import { TargetHumidityState } from './humidifier.target-humidity';
 import { MistLevelState } from './humidifier.mist';
 import {
@@ -22,7 +22,7 @@ import {
   ManualModeState,
   ManualModeStateName,
 } from './humidifier.modes';
-import { DeviceTypeFactory } from '../../device-type.factory';
+import { DeviceFactory } from '../../device.factory';
 import { HumidiferUVCState } from './humidifier.uvc';
 
 const StateFactory: StateFactories = [
@@ -50,7 +50,7 @@ const StateFactory: StateFactories = [
 export const HumidifierType: 'humidifer' = 'humidifer' as const;
 export type HumidifierType = typeof HumidifierType;
 
-export class HumidifierDevice extends DeviceType {
+export class HumidifierDevice extends Device {
   static readonly deviceType: HumidifierType = HumidifierType;
 
   constructor(device: DeviceModel) {
@@ -67,7 +67,7 @@ export class HumidifierDevice extends DeviceType {
 }
 
 @Injectable()
-export class HumidifierFactory extends DeviceTypeFactory<HumidifierDevice> {
+export class HumidifierFactory extends DeviceFactory<HumidifierDevice> {
   constructor() {
     super(HumidifierDevice, {
       'Home Appliances': {

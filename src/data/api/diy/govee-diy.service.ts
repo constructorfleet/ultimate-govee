@@ -3,25 +3,25 @@ import { ConfigType } from '@nestjs/config';
 import { instanceToPlain } from 'class-transformer';
 import { PersistResult } from '../../../persist';
 import { request } from '../../utils';
-import { EffectListResponse } from './models/effect-list.response';
-import { GoveeEffectConfig } from './govee-effect.config';
+// import { EffectListResponse } from './models/effect-list.response';
+import { GoveeDiyConfig } from './govee-diy.config';
 import { OAuthData } from '../account/models/account-client';
 
 @Injectable()
-export class GoveeEffectService {
-  private readonly logger: Logger = new Logger(GoveeEffectService.name);
+export class GoveeDiyService {
+  private readonly logger: Logger = new Logger(GoveeDiyService.name);
 
   constructor(
-    @Inject(GoveeEffectConfig.KEY)
-    private readonly config: ConfigType<typeof GoveeEffectConfig>,
+    @Inject(GoveeDiyConfig.KEY)
+    private readonly config: ConfigType<typeof GoveeDiyConfig>,
   ) {}
 
   @PersistResult({
     path: 'persisted',
-    filename: '{3}.effects.json',
+    filename: '{3}.diys.json',
     transform: (data) => instanceToPlain(data),
   })
-  async getDeviceEffects(
+  async getDeviceDiys(
     oauth: OAuthData,
     model: string,
     goodsType: number,
@@ -29,17 +29,17 @@ export class GoveeEffectService {
   ): Promise<any> {
     try {
       const response = await request(
-        this.config.deviceEffectUrl,
+        this.config.deviceDiyUrl,
         this.config.headers(oauth),
         {
           sku: model,
           goodsType,
           device: deviceId,
         },
-      ).get(EffectListResponse, `persisted/${deviceId}.raw.json`);
-      return response.data as EffectListResponse;
+      ).get();
+      return response.data;
     } catch (error) {
-      this.logger.error(`Unable to retrieve device effects`, error);
+      this.logger.error(`Unable to retrieve device diys`, error);
       return undefined;
     }
   }

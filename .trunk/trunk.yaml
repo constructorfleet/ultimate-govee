@@ -2,12 +2,12 @@
 # To learn more about the format of this file, see https://docs.trunk.io/reference/trunk-yaml
 version: 0.1
 cli:
-  version: 1.18.1
+  version: 1.19.0
 # Trunk provides extensibility via plugins. (https://docs.trunk.io/plugins)
 plugins:
   sources:
     - id: trunk
-      ref: v1.4.1
+      ref: v1.4.2
       uri: https://github.com/trunk-io/plugins
 # Many linters and tools depend on runtimes - configure them here. (https://docs.trunk.io/runtimes)
 runtimes:
@@ -20,7 +20,7 @@ lint:
     - deno
   enabled:
     - actionlint@1.6.26
-    - checkov@3.1.42
+    - checkov@3.1.57
     - eslint@8.56.0
     - git-diff-check
     - hadolint@2.12.0
@@ -28,8 +28,8 @@ lint:
     - osv-scanner@1.5.0
     - prettier@3.1.1
     - terrascan@1.18.11
-    - trivy@0.48.1
-    - trufflehog@3.63.5
+    - trivy@0.48.3
+    - trufflehog@3.63.8
     - yamllint@1.33.0
     - prettier@3.1.1
 actions:

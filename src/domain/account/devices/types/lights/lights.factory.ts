@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { RGBLightFactory } from './rgb/rgb-light';
-import { FactoryType } from '../device-type.factory';
+import { FactoryType } from '../device.factory';
 import { DeviceModel } from '../../devices.model';
-import { DeviceType } from '../device-type';
+import { Device } from '../device';
 import { RGBICLightFactory } from './rgbic/rgbic-light';
 
 @Injectable()
@@ -13,8 +13,8 @@ export class LightsFactory implements FactoryType {
     private readonly rgbicFactory: RGBICLightFactory,
   ) {}
 
-  create(device: DeviceModel): DeviceType | undefined {
-    return [this.rgbFactory, this.rgbicFactory]
+  create(device: DeviceModel): Device | undefined {
+    return [this.rgbicFactory] // this.rgbFactory, this.rgbicFactory]
       .map((factory) => factory.create(device))
       .find((d) => d !== undefined);
   }

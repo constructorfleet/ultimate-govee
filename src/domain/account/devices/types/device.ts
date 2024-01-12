@@ -32,13 +32,13 @@ export type ModelStateFactory =
 
 export type StateFactories = ModelStateFactory[];
 
-export abstract class DeviceType extends BehaviorSubject<DeviceStateValues> {
+export abstract class Device extends BehaviorSubject<DeviceStateValues> {
   private readonly logger: Logger = new Logger(this.constructor.name);
   private readonly refreshSubject: Subject<Date> = new Subject();
 
   static readonly deviceType: string;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  static create(device: DeviceModel): DeviceType | undefined {
+  static create(deviceMode: DeviceModel): Device | undefined {
     return undefined;
   }
 
@@ -69,6 +69,14 @@ export abstract class DeviceType extends BehaviorSubject<DeviceStateValues> {
 
   get name(): string {
     return this.device.name;
+  }
+
+  get goodsType(): number {
+    return this.device.goodsType;
+  }
+
+  get iotTopic(): string | undefined {
+    return this.device.iotTopic;
   }
 
   get currentState() {
@@ -121,13 +129,16 @@ export abstract class DeviceType extends BehaviorSubject<DeviceStateValues> {
       }
     });
     this.pipe(auditTime(5000)).subscribe((states) =>
-      console.dir({
-        deviceId: this.id,
-        name: this.name,
-        model: this.model,
-        type: this.constructor.name,
-        ...states,
-      }),
+      console.dir(
+        {
+          deviceId: this.id,
+          name: this.name,
+          model: this.model,
+          type: this.constructor.name,
+          ...states,
+        },
+        { depth: 4 },
+      ),
     );
   }
 }

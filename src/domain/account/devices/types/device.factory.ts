@@ -1,7 +1,7 @@
 import { ClassConstructor } from 'class-transformer';
 import { Subject } from 'rxjs';
 import { DeviceModel } from '../devices.model';
-import { DeviceType } from './device-type';
+import { Device } from './device';
 
 export type GroupMatcher = RegExp | RegExp[] | true;
 
@@ -9,23 +9,23 @@ export type GroupMatchers = Record<string, GroupMatcher>;
 export type CategoryMatchers = Record<string, GroupMatchers>;
 
 export type FactoryType = {
-  create: (device: DeviceModel) => DeviceType | undefined;
+  create: (device: DeviceModel) => Device | undefined;
 };
 
-export class DeviceTypeFactory<TDevice extends DeviceType> {
+export class DeviceFactory<TDevice extends Device> {
   private static factories: FactoryType[] = [];
-  private static onNewDevice: Subject<DeviceType> = new Subject();
+  private static onNewDevice: Subject<Device> = new Subject();
   static subscribe(
-    ...args: Parameters<Subject<DeviceType>['subscribe']>
-  ): ReturnType<Subject<DeviceType>['subscribe']> {
-    return DeviceTypeFactory.onNewDevice.subscribe(...args);
+    ...args: Parameters<Subject<Device>['subscribe']>
+  ): ReturnType<Subject<Device>['subscribe']> {
+    return DeviceFactory.onNewDevice.subscribe(...args);
   }
 
   constructor(
-    private readonly typeConstructor: ClassConstructor<DeviceType>,
+    private readonly typeConstructor: ClassConstructor<Device>,
     private readonly matchers: CategoryMatchers,
   ) {
-    DeviceTypeFactory.factories.push(this);
+    DeviceFactory.factories.push(this);
   }
 
   create(device: DeviceModel): TDevice | undefined {
@@ -47,7 +47,7 @@ export class DeviceTypeFactory<TDevice extends DeviceType> {
     }
     const constructor = this.typeConstructor;
     const newDevice = new constructor(device) as TDevice;
-    DeviceTypeFactory.onNewDevice.next(newDevice);
+    DeviceFactory.onNewDevice.next(newDevice);
     return newDevice;
   }
 }
