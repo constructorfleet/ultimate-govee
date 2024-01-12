@@ -1,5 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
+import { join } from 'path';
 import {
   GoveeAccountConfig,
   GoveeCredentials,
@@ -23,7 +24,7 @@ export class GoveeAccountService {
     @Inject(GoveeAccountConfig.KEY)
     private readonly config: ConfigType<typeof GoveeAccountConfig>,
     @InjectPersisted({
-      filename: 'accountClient.json',
+      filename: join('persisted', 'accountClient.json'),
     })
     private accountClient: AccountClient | undefined,
   ) {}
@@ -72,6 +73,7 @@ export class GoveeAccountService {
   }
 
   @PersistResult({
+    path: 'persisted',
     filename: 'accountClient.json',
   })
   async authenticate(credentials: GoveeCredentials): Promise<AccountClient> {
