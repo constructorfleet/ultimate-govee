@@ -14,7 +14,7 @@ export type IoTData = {
   topic: string;
 };
 
-export type AccountClient = {
+export type AccountState = {
   accountId: string;
   clientId: string;
   iot?: IoTData;

@@ -36,6 +36,7 @@ export * from './segment-count.state';
 export * from './temperature.state';
 export * from './timer.state';
 export * from './water-shortage.state';
+export * from './numeric.state';
 
 export const DeviceStates = [
   ActiveState,

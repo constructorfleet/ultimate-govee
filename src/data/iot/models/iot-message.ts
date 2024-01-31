@@ -1,5 +1,5 @@
 import { Expose, Transform, Type } from 'class-transformer';
-import { base64ToHex, hexToBase64 } from '../../../common';
+import { base64ToHex, hexToBase64 } from '@govee/common';
 
 export type PowerState = {
   isOn: boolean;

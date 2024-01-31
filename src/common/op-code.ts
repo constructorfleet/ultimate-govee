@@ -4,6 +4,11 @@ const ArrayRange = (count: number): number[] =>
   // eslint-disable-next-line prefer-spread
   Array.apply(null, Array(count)).map((_, i) => i);
 
+export enum OpType {
+  COMMAND = 0x33,
+  REPORT = 0xaa,
+}
+
 export const hexStringToArray = (hexString: string): number[] =>
   hexString
     .trim()
@@ -44,12 +49,28 @@ export const hexToBase64 = (codes: number[]): string =>
 export const total = (codes: number[], reverse: boolean = false) =>
   codes.reduce((res: number, code: number, index: number) => {
     if (reverse) {
-      return 255 ** index * code + res;
+      return 256 ** index * code + res;
     }
-    return 255 ** (codes.length - index - 1) * code + res;
+    return 256 ** (codes.length - index - 1) * code + res;
   }, 0);
 
 export const chunk = (codes: number[], chunkSize: number) =>
   ArrayRange(Math.ceil(codes.length / chunkSize)).map((x, i) =>
     codes.slice(i * chunkSize, i * chunkSize + chunkSize),
   );
+
+export function asOpCode(opType: number, ...values: number[]): number[] {
+  const cmdFrame = Buffer.from([opType, ...values]);
+  const cmdPaddedFrame = Buffer.concat([
+    cmdFrame,
+    Buffer.from(new Array(19 - cmdFrame.length).fill(0)),
+  ]);
+  return Array.from(
+    Buffer.concat([
+      cmdPaddedFrame,
+      Buffer.from([
+        cmdPaddedFrame.reduce((checksum, val) => checksum ** val, 0),
+      ]),
+    ]),
+  );
+}

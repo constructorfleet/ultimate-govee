@@ -1,4 +1,4 @@
-import { total } from '../../../../common';
+import { total } from '@govee/common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
 

@@ -1,6 +1,6 @@
 import { Expose, Transform, Type } from 'class-transformer';
+import { base64ToHex, chunk } from '@govee/common';
 import { GoveeAPIResponse } from '../../govee-api.models';
-import { base64ToHex, chunk } from '../../../../common';
 
 export class EffectSceneRule {
   @Expose({ name: 'maxSoftVersion' })

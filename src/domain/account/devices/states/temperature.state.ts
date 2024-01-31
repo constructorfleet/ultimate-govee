@@ -1,49 +1,73 @@
-import { Measurement } from '../../../../data';
+import { Measurement } from '@govee/data';
 import { DeviceModel } from '../devices.model';
-import { DeviceState } from './device.state';
+import { DeviceOpState, ParseOption } from './device.state';
 
-export const TemperatureStateName: 'temperature' = 'temperature' as const;
+export const TemperatureStateName: 'temperatureData' =
+  'temperatureData' as const;
 export type TemperatureStateName = typeof TemperatureStateName;
 
-export type TemperatureType = {
+export type TemperatureDataType = {
   state?: {
     temperature?: Measurement;
   };
 };
 
-export type Temperature = {
-  currentTemperature?: number;
+export type TemperatureData = {
   range: {
     min?: number;
     max?: number;
   };
   calibration?: number;
+  raw?: number;
+  current?: number;
 };
 
-export class TemperatureState extends DeviceState<
+export class TemperatureState extends DeviceOpState<
   TemperatureStateName,
-  Temperature
+  TemperatureData
 > {
-  constructor(device: DeviceModel) {
-    super(device, TemperatureStateName, {
-      currentTemperature: undefined,
-      range: {
-        min: undefined,
-        max: undefined,
+  constructor(
+    device: DeviceModel,
+    opType: number | undefined = undefined,
+    identifier: number | undefined = undefined,
+    parseOption: ParseOption = 'state',
+  ) {
+    super(
+      { opType, identifier },
+      device,
+      TemperatureStateName,
+      {
+        range: {
+          min: undefined,
+          max: undefined,
+        },
+        calibration: undefined,
       },
-      calibration: undefined,
-    });
+      parseOption,
+    );
   }
 
-  parseState(data: TemperatureType) {
+  parseState(data: TemperatureDataType) {
     if (data?.state?.temperature !== undefined) {
+      const calibration =
+        data?.state?.temperature?.calibration ??
+        this.stateValue.value.calibration;
+      const current =
+        data?.state?.temperature?.current ?? this.stateValue.value.current;
+      let raw: number | undefined;
+      if (current !== undefined && calibration !== undefined) {
+        raw = current - calibration;
+      } else {
+        raw = current;
+      }
       this.stateValue.next({
-        currentTemperature: data?.state?.temperature?.current,
-        calibration: data?.state?.temperature?.calibration,
+        calibration,
         range: {
-          min: data?.state?.temperature?.min,
-          max: data?.state?.temperature?.max,
+          min: data?.state?.temperature?.min ?? this.stateValue.value.range.min,
+          max: data?.state?.temperature?.max ?? this.stateValue.value.range.max,
         },
+        current,
+        raw,
       });
     }
   }

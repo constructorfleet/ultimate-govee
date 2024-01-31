@@ -41,6 +41,7 @@ export class RGBICSegmentsState extends DeviceState<
   private on: boolean | undefined;
   private brightness: number | undefined;
   private segments: Segment[] = [];
+
   constructor(deviceModel: DeviceModel, device: Device) {
     super(deviceModel, SegmentsStateName, []);
     device.state<PowerState>(PowerStateName)?.subscribe((event) => {
@@ -141,5 +142,10 @@ export class RGBICSegmentsState extends DeviceState<
           this.stateValue.next(this.segments);
       }
     });
+  }
+
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars
+  parseState(data: unknown) {
+    // no-op
   }
 }

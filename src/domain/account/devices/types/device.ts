@@ -1,8 +1,8 @@
-import { BehaviorSubject, Subject, auditTime, sampleTime } from 'rxjs';
+import { BehaviorSubject, interval } from 'rxjs';
 import { Logger } from '@nestjs/common';
+import { GoveeDeviceStatus } from '@govee/data';
 import { DeviceModel } from '../devices.model';
 import { DeviceState } from '../states/device.state';
-import { GoveeDeviceStatus } from '../../../../data';
 
 export type DeviceStates = Record<string, DeviceState<string, any>>;
 export type DeviceStateValues = Record<string, unknown>;
@@ -32,9 +32,25 @@ export type ModelStateFactory =
 
 export type StateFactories = ModelStateFactory[];
 
+const buildStates = (
+  stateFactories: StateFactories,
+  device: DeviceModel,
+): DeviceState<string, any>[] =>
+  stateFactories
+    .map((factory) =>
+      typeof factory === 'object'
+        ? factory[device.model] ?? factory[DefaultFactory]
+        : factory,
+    )
+    .filter((factory) => factory !== undefined)
+    .map((factory) =>
+      Array.isArray(factory) ? factory.map((f) => f(device)) : factory(device),
+    )
+    .flat();
+
 export abstract class Device extends BehaviorSubject<DeviceStateValues> {
   private readonly logger: Logger = new Logger(this.constructor.name);
-  private readonly refreshSubject: Subject<Date> = new Subject();
+  // private readonly refreshSubject: Subject<Date> = new Subject();
 
   static readonly deviceType: string;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -42,18 +58,12 @@ export abstract class Device extends BehaviorSubject<DeviceStateValues> {
     return undefined;
   }
 
-  private readonly deviceStates: BehaviorSubject<DeviceStates> =
-    new BehaviorSubject({});
   private readonly states: DeviceStates = {};
 
   protected addState<TDevice extends DeviceState<string, any>>(
     state: TDevice,
   ): void {
     this.states[state.name] = state;
-    this.deviceStates.next(this.states);
-    this.refreshSubject
-      .pipe(sampleTime(5000))
-      .subscribe(() => this.device.refresh());
     state.subscribe(() => {
       this.next(deviceStateValues(this.states));
     });
@@ -97,7 +107,7 @@ export abstract class Device extends BehaviorSubject<DeviceStateValues> {
   }
 
   refresh() {
-    this.refreshSubject.next(new Date());
+    this.device.refresh();
   }
 
   constructor(
@@ -105,30 +115,20 @@ export abstract class Device extends BehaviorSubject<DeviceStateValues> {
     stateFactories: StateFactories,
   ) {
     super({});
-    stateFactories
-      .map((factory) =>
-        typeof factory === 'object'
-          ? factory[device.model] ?? factory[DefaultFactory]
-          : factory,
-      )
-      .filter((factory) => factory !== undefined)
-      .map((factory) =>
-        Array.isArray(factory)
-          ? factory.map((f) => f(device))
-          : factory(device),
-      )
-      .flat()
-      .forEach((state) => this.addState(state));
+    buildStates(stateFactories, device).forEach((state) => {
+      this.addState(state);
+      state.parse({
+        cmd: 'status',
+        ...device.status.value,
+      });
+    });
     device.status.subscribe((status) => {
-      // this.logger.debug('Received status', status);
       Object.values(this.states).forEach((element) => {
         element.parse(status);
       });
-      if ((status.cmd ?? 'status') !== 'status') {
-        this.refresh();
-      }
     });
-    this.pipe(auditTime(5000)).subscribe((states) =>
+    interval(5000).subscribe(() => this.refresh());
+    this.subscribe((states) =>
       console.dir(
         {
           deviceId: this.id,

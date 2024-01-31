@@ -1,4 +1,5 @@
 import { BehaviorSubject, Observer, Subscription } from 'rxjs';
+import { Logger } from '@nestjs/common';
 import { DeviceModel } from '../devices.model';
 
 type MessageData = {
@@ -9,11 +10,14 @@ const StatusCommand = 'status';
 
 export const filterCommands = (
   commands: number[][],
-  type: number,
+  type?: number,
   identifier?: number,
 ) =>
   commands
     .filter((command) => {
+      if (type === undefined) {
+        return true;
+      }
       const [cmdType, cmdIdentifier] = command.slice(0, 2);
       if (identifier !== undefined) {
         return cmdIdentifier === identifier;
@@ -21,9 +25,19 @@ export const filterCommands = (
 
       return cmdType === type;
     })
-    .map((command) => command.slice(identifier !== undefined ? 2 : 1));
+    .map((command) => {
+      if (type === undefined && identifier === undefined) {
+        return command;
+      }
+      if (identifier === undefined) {
+        return command.slice(1);
+      }
+      return command.slice(2);
+    });
 
 export abstract class DeviceState<StateName extends string, StateValue> {
+  protected readonly logger: Logger = new Logger(this.constructor.name);
+
   protected stateValue!: BehaviorSubject<StateValue>;
   subscribe(
     observerOrNext?:
@@ -49,10 +63,11 @@ export abstract class DeviceState<StateName extends string, StateValue> {
     this.device.status.subscribe((status) => this.parse(status));
   }
 
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars
-  parseState(data: unknown) {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, class-methods-use-this
+  parseState(data: unknown) {
+    // no-op
+  }
 
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars
   parse(data: MessageData) {
     if (data.cmd !== StatusCommand) {
       return;
@@ -68,21 +83,24 @@ export type OpCommandData = {
 } & MessageData;
 
 export type OpCommandIdentifier = {
-  opType: number;
-  identifier?: number;
+  opType?: number | undefined;
+  identifier?: number | undefined;
 };
+
+export type ParseOption = 'opCode' | 'state' | 'both';
 
 export abstract class DeviceOpState<
   StateName extends string,
   StateValue,
 > extends DeviceState<StateName, StateValue> {
-  protected readonly opType: number;
+  protected readonly opType: number | undefined;
   protected readonly identifier: number | undefined;
   constructor(
-    { opType = 0xaa, identifier }: OpCommandIdentifier,
+    { opType, identifier }: OpCommandIdentifier,
     device: DeviceModel,
     name: StateName,
     initialValue: StateValue,
+    private readonly parseOption: ParseOption = 'opCode',
   ) {
     super(device, name, initialValue);
     this.opType = opType;
@@ -98,12 +116,37 @@ export abstract class DeviceOpState<
     }
 
     const commands = data.op?.command ?? [];
-    if (
-      filterCommands(commands, this.opType, this.identifier).map((command) =>
+    if (['both', 'opCode'].includes(this.parseOption)) {
+      this.filterOpCommands(commands).forEach((command) =>
         this.parseOpCommand(command),
-      ).length === 0
-    ) {
+      );
+    }
+    if (['both', 'state'].includes(this.parseOption)) {
       this.parseState(data);
     }
   }
+
+  protected filterOpCommands(opCommands: number[][]): number[][] {
+    return filterCommands(opCommands, this.opType, this.identifier);
+  }
 }
+
+// export type CommandableState<StateName extends string, StateValue, StateType extends DeviceState<StateName, StateValue>> = {
+//   set: StateType extends DeviceOpState<string, infer StateValue>
+//   ? (nextState: StateValue) => number[][] | undefined
+//   : StateType extends DeviceState<string, infer StateValue> ?
+//   (nextState: StateValue) => Record<string, unknown> | undefined
+//   : never;
+// } & StateType;
+
+// export const CommandableState = <StateName extends string, StateValue, StateType extends DeviceState<StateName, StateValue>>(base: Type<StateType>): Type<CommandableState<ModeStateName, StateValue, StateType>> => {
+//   class StateMixin extends base {
+//     constructor(args: ConstructorParameters<typeof base>) {
+//       super(...args);
+//     }
+
+//     set
+//   }
+
+//   return StateMixin as Type<;
+// }

@@ -1,12 +1,12 @@
-import { unpaddedHexToArray } from '../../../../common';
-import { Measurement } from '../../../../data';
+import { Measurement } from '@govee/data';
+import { unpaddedHexToArray } from '@govee/common';
 import { DeviceModel } from '../devices.model';
-import { DeviceState } from './device.state';
+import { DeviceOpState, ParseOption } from './device.state';
 
 export const HumidityStateName: 'humidity' = 'humidity' as const;
 export type HumidityStateName = typeof HumidityStateName;
 
-export type HumidityType = {
+export type HumidityDataType = {
   state?: {
     humidity?: Measurement;
     status?: {
@@ -15,45 +15,75 @@ export type HumidityType = {
   };
 };
 
-export type Humidity = {
-  currentHumidity?: number;
+export type HumidityData = {
   range: {
     min?: number;
     max?: number;
   };
   calibration?: number;
+  raw?: number;
+  current?: number;
 };
 
-export class HumidityState extends DeviceState<HumidityStateName, Humidity> {
-  constructor(device: DeviceModel) {
-    super(device, HumidityStateName, {
-      currentHumidity: undefined,
-      range: {
-        min: undefined,
-        max: undefined,
+export class HumidityState extends DeviceOpState<
+  HumidityStateName,
+  HumidityData
+> {
+  constructor(
+    device: DeviceModel,
+    opType: number | undefined = undefined,
+    identifier: number | undefined = undefined,
+    parseOption: ParseOption = 'state',
+  ) {
+    super(
+      { opType, identifier },
+      device,
+      HumidityStateName,
+      {
+        range: {
+          min: undefined,
+          max: undefined,
+        },
+        calibration: undefined,
+        current: undefined,
       },
-      calibration: undefined,
-    });
+      parseOption,
+    );
   }
 
-  parseState(data: HumidityType) {
+  parseState(data: HumidityDataType) {
     if (data?.state?.humidity !== undefined) {
+      const calibration =
+        data?.state?.humidity?.calibration ?? this.stateValue.value.calibration;
+      const current =
+        data?.state?.humidity?.current ?? this.stateValue.value.current;
+      let raw: number | undefined;
+      if (current !== undefined && calibration !== undefined) {
+        raw = current - calibration;
+      } else {
+        raw = current;
+      }
       this.stateValue.next({
-        currentHumidity: data.state?.humidity?.current,
-        calibration: data.state?.humidity?.calibration,
+        calibration,
         range: {
-          min: data.state?.humidity?.min,
-          max: data.state?.humidity?.max,
+          min: data?.state?.humidity?.min ?? this.stateValue.value.range.min,
+          max: data?.state?.humidity?.max ?? this.stateValue.value.range.max,
         },
+        current,
+        raw,
       });
-    } else if (data?.state?.status?.code) {
+    }
+    if (data?.state?.status?.code) {
       const { code } = data.state.status;
       const codes = unpaddedHexToArray(code);
       if (codes !== undefined) {
+        const calibration = this.stateValue.value.calibration ?? 0;
         const [humdidity] = codes.slice(2, 3);
         this.stateValue.next({
           ...this.stateValue.value,
-          currentHumidity: humdidity,
+          current: humdidity + calibration,
+          raw: humdidity,
+          calibration,
         });
       }
     }

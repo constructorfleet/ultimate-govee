@@ -1,12 +1,12 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { GoveeAccountService, IoTService, AccountState } from '@govee/data';
 import { AccountConfig } from './account.config';
-import { GoveeAccountService, IoTService, AccountClient } from '../../data';
 import { DeviceModel, DevicesService, IoTDevice } from './devices';
 
 @Injectable()
 export class AccountService {
   private readonly logger: Logger = new Logger(AccountService.name);
-  private apiClient: AccountClient | undefined;
+  private apiState: AccountState | undefined;
 
   constructor(
     @Inject(AccountConfig.provide) private readonly config: AccountConfig,
@@ -15,10 +15,14 @@ export class AccountService {
     private readonly iot: IoTService,
   ) {}
 
+  accountState(): AccountState | undefined {
+    return this.apiState;
+  }
+
   refreshIoT(device: IoTDevice) {
     this.logger.debug(`Refresh IoT ${device.iotTopic}`);
     if (
-      this.apiClient?.iot?.topic === undefined ||
+      this.apiState?.iot?.topic === undefined ||
       device.iotTopic === undefined
     ) {
       return;
@@ -28,7 +32,7 @@ export class AccountService {
       JSON.stringify({
         topic: device.iotTopic,
         msg: {
-          accountTopic: this.apiClient.iot.topic,
+          accountTopic: this.apiState.iot.topic,
           cmd: 'status',
           cmdVersion: 0,
           type: 0,
@@ -39,16 +43,16 @@ export class AccountService {
   }
 
   async connect() {
-    this.apiClient = await this.api.authenticate(this.config);
+    this.apiState = await this.api.authenticate(this.config);
 
-    if (this.apiClient.iot !== undefined) {
-      await this.iot.connect(this.apiClient.iot, (message) =>
+    if (this.apiState.iot !== undefined) {
+      await this.iot.connect(this.apiState.iot, (message) =>
         this.devices.onMessage(message),
       );
     }
 
     await this.devices.loadDevices(
-      this.apiClient.oauth,
+      this.apiState.oauth,
       (device: DeviceModel) => {
         this.refreshIoT(device as unknown as IoTDevice);
       },

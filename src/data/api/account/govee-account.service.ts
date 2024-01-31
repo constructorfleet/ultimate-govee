@@ -1,12 +1,13 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { join } from 'path';
+import { InjectPersisted, PersistResult } from '@govee/persist';
 import {
   GoveeAccountConfig,
   GoveeCredentials,
 } from './govee-account.configuration';
 import { LoginResponse } from './models/login.response';
-import { AccountClient, OAuthData } from './models/account-client';
+import { AccountState, OAuthData } from './models/account-client';
 import {
   IoTCertificateData,
   IoTCertificateResponse,
@@ -14,7 +15,6 @@ import {
 import { parseP12Certificate, request } from '../../utils';
 import { RefreshTokenResponse } from './models/refresh-token.response';
 import { decodeJWT } from './models/jwt';
-import { InjectPersisted, PersistResult } from '../../../persist';
 
 @Injectable()
 export class GoveeAccountService {
@@ -26,7 +26,7 @@ export class GoveeAccountService {
     @InjectPersisted({
       filename: join('persisted', 'accountClient.json'),
     })
-    private accountClient: AccountClient | undefined,
+    private accountClient: AccountState | undefined,
   ) {}
 
   private isTokenValid(token?: string): boolean {
@@ -76,7 +76,7 @@ export class GoveeAccountService {
     path: 'persisted',
     filename: 'accountClient.json',
   })
-  async authenticate(credentials: GoveeCredentials): Promise<AccountClient> {
+  async authenticate(credentials: GoveeCredentials): Promise<AccountState> {
     let { clientId } = credentials;
     let topic: string;
     if (this.accountClient !== undefined) {

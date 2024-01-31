@@ -19,7 +19,7 @@ const StateFactory: StateFactories = [
 export const RGBLightType: 'rgb' = 'rgb' as const;
 export type RGBLightType = typeof RGBLightType;
 
-export class RGBLight extends Device {
+export class RGBLightDevice extends Device {
   static readonly type: RGBLightType = RGBLightType;
 
   constructor(device: DeviceModel) {
@@ -28,9 +28,9 @@ export class RGBLight extends Device {
 }
 
 @Injectable()
-export class RGBLightFactory extends DeviceFactory<RGBLight> {
+export class RGBLightFactory extends DeviceFactory<RGBLightDevice> {
   constructor() {
-    super(RGBLight, {
+    super(RGBLightDevice, {
       'LED Strip Light': {
         'RGB Strip Lights': true,
       },

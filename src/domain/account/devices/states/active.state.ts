@@ -1,3 +1,4 @@
+import { OpType } from '@govee/common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
 
@@ -10,7 +11,7 @@ export class ActiveState extends DeviceOpState<
 > {
   constructor(
     device: DeviceModel,
-    opType: number = 0xaa,
+    opType: number = OpType.REPORT,
     identifier: number = 0x01,
   ) {
     super({ opType, identifier }, device, ActiveStateName, undefined);

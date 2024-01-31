@@ -1,5 +1,4 @@
-import { Logger } from '@nestjs/common';
-import { chunk, total } from '../../../../../../common';
+import { chunk, total } from '@govee/common';
 import {
   DeviceOpState,
   SegmentCountState,
@@ -194,7 +193,6 @@ export class ColorModeState extends DeviceState<
 }
 
 export class RGBICActiveState extends ModeState {
-  private readonly logger: Logger = new Logger(RGBICActiveState.name);
   constructor(
     device: DeviceModel,
     states: (DeviceState<string, any> | undefined)[],

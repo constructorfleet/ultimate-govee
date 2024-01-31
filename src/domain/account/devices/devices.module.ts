@@ -1,13 +1,14 @@
 import { Module } from '@nestjs/common';
-import { DevicesService } from './devices.service';
 import {
   GoveeDeviceModule,
   GoveeDiyModule,
   GoveeEffectModule,
   GoveeProductModule,
-} from '../../../data';
+} from '@govee/data';
+import { DevicesService } from './devices.service';
 import { AppliancesModule } from './types/appliances';
 import { LightsModule } from './types/lights/lights.module';
+import { HomeImprovementModule } from './types/home-improvement/home-improvement.module';
 import { DevicesFactory } from './devices.factory';
 
 @Module({
@@ -17,6 +18,7 @@ import { DevicesFactory } from './devices.factory';
     GoveeEffectModule,
     GoveeDiyModule,
     AppliancesModule,
+    HomeImprovementModule,
     LightsModule,
   ],
   providers: [DevicesService, DevicesFactory],

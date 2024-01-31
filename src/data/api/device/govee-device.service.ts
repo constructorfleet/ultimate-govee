@@ -1,6 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { join } from 'path';
+import { InjectPersisted, PersistResult } from '@govee/persist';
 import { GoveeDeviceConfig } from './govee-device.config';
 import {
   GoveeAPIDevice,
@@ -10,7 +11,6 @@ import {
 import { goveeAuthenticatedHeaders, request } from '../../utils';
 import { BluetoothData, GoveeDevice, WiFiData } from '../../govee-device';
 import { OAuthData } from '../account/models/account-client';
-import { InjectPersisted, PersistResult } from '../../../persist';
 
 @Injectable()
 export class GoveeDeviceService {
@@ -85,20 +85,22 @@ export class GoveeDeviceService {
             completeNotification: settings.notifyComplete,
             battery: settings.batteryLevel,
             temperature:
-              settings.minTemperature && settings.maxTemperature
+              settings.minTemperature !== undefined &&
+              settings.maxTemperature !== undefined
                 ? {
-                    min: settings.minTemperature,
-                    max: settings.maxTemperature,
+                    min: settings.minTemperature / 100,
+                    max: settings.maxTemperature / 100,
                     calibration: settings.temperatureCalibration,
                     warning: settings.temperatureWarning,
                     current: data.currentTemperature,
                   }
                 : undefined,
             humidity:
-              settings.minHumidity && settings.maxHumidity
+              settings.minHumidity !== undefined &&
+              settings.maxHumidity !== undefined
                 ? {
-                    min: settings.minHumidity,
-                    max: settings.maxHumidity,
+                    min: settings.minHumidity / 100,
+                    max: settings.maxHumidity / 100,
                     calibration: settings.Calibration,
                     warning: settings.humidityWarning,
                     current: data.currentHumditity,

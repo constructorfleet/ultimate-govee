@@ -1,11 +1,12 @@
 import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
+import { unpaddedHexToArray } from '@govee/common';
+import { PersistResult } from 'persist';
 import { IoTData } from '../api';
 import { IoTClient } from './iot.client';
 import { IoTMessage } from './models/iot-message';
 import { IoTHandler } from './iot.handler';
 import { GoveeDeviceStatus } from '../govee-device';
-import { unpaddedHexToArray } from '../../common';
 
 const payloadDecoder = new TextDecoder();
 
@@ -58,7 +59,7 @@ export class IoTService implements IoTHandler, OnModuleDestroy {
       humidityCode = unpaddedHexToArray(code)?.slice(-1)[0];
     }
     const currentHumditity = message.humidity ? message.humidity : humidityCode;
-    return {
+    const result = {
       id: message.deviceId,
       model: message.model,
       pactCode: message.pactCode,
@@ -67,18 +68,27 @@ export class IoTService implements IoTHandler, OnModuleDestroy {
       state: {
         online: message.state?.connected,
         isOn: message.state?.isOn,
-        temperature: message.temperature
-          ? {
-              current: message.temperature,
-            }
-          : undefined,
-        humidity: currentHumditity
-          ? {
-              current: currentHumditity,
-            }
-          : undefined,
+        temperature: {
+          current: message.temperature,
+        },
+        humidity: {
+          current: currentHumditity,
+        },
       },
       op: message.op,
     };
+    this.recordMessage(result.id, result);
+    return result;
+  }
+
+  @PersistResult({
+    path: 'persisted',
+    filename: '{0}.status.json',
+  })
+  static recordMessage(
+    deviceId: string,
+    message: GoveeDeviceStatus,
+  ): GoveeDeviceStatus {
+    return message;
   }
 }

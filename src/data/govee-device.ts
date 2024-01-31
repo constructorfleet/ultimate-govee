@@ -15,7 +15,7 @@ export type Measurement = {
   max?: number;
   calibration?: number;
   warning?: boolean;
-  current: number;
+  current?: number;
 };
 
 export type GoveeDeviceStatus = {

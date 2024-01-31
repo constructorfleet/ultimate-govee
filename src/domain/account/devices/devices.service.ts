@@ -8,7 +8,7 @@ import {
   GoveeEffectService,
   GoveeProductService,
   OAuthData,
-} from '../../../data';
+} from '@govee/data';
 import { DeviceModel, createDeviceModel } from './devices.model';
 import { DevicesFactory } from './devices.factory';
 import { Device } from './types/device';
@@ -44,6 +44,10 @@ export class DevicesService {
         if (device === undefined) {
           return;
         }
+        device.deviceStatus({
+          cmd: 'status',
+          ...apiDevice,
+        });
         if (device instanceof RGBICLightDevice) {
           await this.effectsApi.getDeviceEffects(
             oauth,
@@ -59,7 +63,6 @@ export class DevicesService {
           );
         }
         this.devices[device.id] = device;
-        device.refresh();
       }
       this.devices[apiDevice.id].deviceStatus(apiDevice);
     });
@@ -76,8 +79,5 @@ export class DevicesService {
       return;
     }
     device.deviceStatus(message);
-    if (message.cmd !== 'status') {
-      device.refresh();
-    }
   }
 }

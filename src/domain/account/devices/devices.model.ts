@@ -1,8 +1,8 @@
 import { ClassConstructor } from 'class-transformer';
 import { BehaviorSubject } from 'rxjs';
 import { Logger } from '@nestjs/common';
+import { GoveeDevice, GoveeDeviceStatus, Product } from '@govee/data';
 import { Version } from './version.info';
-import { GoveeDevice, GoveeDeviceStatus, Product } from '../../../data';
 
 export class ProductModel {
   constructor(

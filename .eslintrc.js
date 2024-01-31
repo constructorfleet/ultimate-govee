@@ -1,15 +1,28 @@
 module.exports = {
-  plugins: ['@typescript-eslint/eslint-plugin'],
+  settings: {
+    'import/parsers': {
+      '@typescript-eslint/parser': ['.ts'],
+    },
+    'import/resolver': {
+      typescript: true,
+      node: true,
+    },
+  },
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    project: './tsconfig.json',
+    tsconfigRootDir: './',
+  },
+  plugins: ['@typescript-eslint/eslint-plugin', '@typescript-eslint', 'import'],
   extends: [
     'eslint:recommended',
     'airbnb',
     'plugin:@typescript-eslint/recommended',
-    'plugin:import/recommended',
-    'plugin:import/typescript',
     'plugin:node/recommended',
     'plugin:mocha/recommended',
-    'plugin:react/recommended',
     'prettier',
+    'plugin:import/recommended',
+    'plugin:import/typescript',
   ],
   root: true,
   env: {
@@ -37,13 +50,23 @@ module.exports = {
     'no-shadow': 'off',
     'max-classes-per-file': 'off',
     'lines-between-class-members': 'off',
+    'class-methods-use-this': 'off',
     'no-unsupported-features/node-builtins': 'off',
     'node/no-unsupported-features/node-builtins': 'off',
-    'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+    'eslint/no-bitwise': 'off',
+    'no-bitwise': 'off',
+    'import/no-extraneous-dependencies': ['off', { devDependencies: true }],
     'node/no-missing-import': [
-      'error',
+      'off',
       {
-        allowModules: [],
+        allowModules: ['@govee/data', '@govee/domain'],
+        resolvePaths: [
+          __dirname,
+          './src/*',
+          './src/common/*',
+          './src/data/*',
+          './src/domain/*',
+        ],
         tryExtensions: ['.js', '.json', '.node', '.ts'],
       },
     ],

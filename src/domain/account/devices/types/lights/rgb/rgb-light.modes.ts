@@ -1,5 +1,5 @@
-import { total } from '../../../../../../common';
-import { DeviceOpState, DeviceModel } from '../../..';
+import { total } from '@govee/common';
+import { DeviceOpState, DeviceModel } from '@govee/domain';
 
 export enum RGBModes {
   SCENE = 4,

@@ -1,3 +1,4 @@
+import { OpType, asOpCode } from '@govee/common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
 
@@ -14,6 +15,7 @@ export class BrightnessState extends DeviceOpState<
   BrightnessStateName,
   number | undefined
 > {
+  // implements CommandableState<DeviceOpState<BrightnessStateName, number | undefined>> {
   constructor(
     device: DeviceModel,
     opType: number = 0xaa,
@@ -31,5 +33,13 @@ export class BrightnessState extends DeviceOpState<
   parseOpCommand(opCommand: number[]) {
     const [brightness] = opCommand.slice(0, 1);
     this.stateValue.next(brightness);
+  }
+
+  set(nextState: number | undefined): number[][] | undefined {
+    if (nextState === undefined) {
+      return undefined;
+    }
+
+    return [asOpCode(OpType.COMMAND, this.identifier!, nextState)];
   }
 }

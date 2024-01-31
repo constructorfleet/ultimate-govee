@@ -1,6 +1,5 @@
-import { Logger } from '@nestjs/common';
-import { ModeState, DeviceOpState, DeviceState } from '../../../states';
 import { DeviceModel } from '../../../devices.model';
+import { ModeState, DeviceOpState, DeviceState } from '../../../states';
 import { AutoModeStateName } from '../humidifier/humidifier.modes';
 
 enum PurifierModes {
@@ -88,7 +87,6 @@ export class CustomModeState extends DeviceOpState<
 }
 
 export class PurifierActiveMode extends ModeState {
-  private readonly logger: Logger = new Logger(PurifierActiveMode.name);
   constructor(
     device: DeviceModel,
     states: (DeviceState<string, any> | undefined)[],
