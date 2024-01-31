@@ -1,9 +1,10 @@
 import { Subject } from 'rxjs';
+import { Optional } from '@govee/common';
 import { Type } from '@nestjs/common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
 
-type StateValue = number | undefined;
+type StateValue = Optional<number>;
 type OpCodeParserFn = (
   opCommand: number[],
   stateValue: Subject<StateValue>,
@@ -15,17 +16,17 @@ type StateParserFn = <StateData>(
 
 export const NumericState = <StateName extends string>(
   stateName: StateName,
-  opCodeParser: OpCodeParserFn | undefined = undefined,
-  stateParser: StateParserFn | undefined = undefined,
+  opCodeParser: Optional<OpCodeParserFn> = undefined,
+  stateParser: Optional<StateParserFn> = undefined,
 ): Type<DeviceOpState<StateName, StateValue>> => {
   class NumberState extends DeviceOpState<StateName, StateValue> {
-    opCodeParser: OpCodeParserFn | undefined = opCodeParser;
-    stateParser: StateParserFn | undefined = stateParser;
+    opCodeParser: Optional<OpCodeParserFn> = opCodeParser;
+    stateParser: Optional<StateParserFn> = stateParser;
 
     constructor(
       device: DeviceModel,
-      opType: number | undefined = undefined,
-      identifier: number | undefined = undefined,
+      opType: Optional<number> = undefined,
+      identifier: Optional<number> = undefined,
     ) {
       super({ opType, identifier }, device, stateName, undefined);
     }

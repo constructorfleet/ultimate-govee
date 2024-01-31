@@ -10,7 +10,7 @@ export type AccountConfig = {
   password: string;
   clientId: string;
   apiKey: string;
-  saveAuthInfo?: string | undefined;
+  saveAuthInfo?: Optional<string>;
 };
 
 export const CredentialsConfig = registerAs('GoveeCredentials', () => ({

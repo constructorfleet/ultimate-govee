@@ -1,4 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Optional } from '@govee/common';
 import { ClassConstructor, plainToInstance } from 'class-transformer';
 import { FileReader, FileWriter } from './persist.providers';
 
@@ -10,7 +11,7 @@ export class PersistService {
     @Inject(FileWriter.provide) private readonly writer: FileWriter,
   ) {}
 
-  async persist<T>(data: T, where: string | undefined = undefined) {
+  async persist<T>(data: T, where: Optional<string> = undefined) {
     if (where === undefined) {
       return;
     }
@@ -20,8 +21,8 @@ export class PersistService {
 
   async retreive<T>(
     as: ClassConstructor<T>,
-    where: string | undefined,
-  ): Promise<T | undefined> {
+    where: Optional<string>,
+  ): Promise<Optional<T>> {
     if (where === undefined) {
       return undefined;
     }

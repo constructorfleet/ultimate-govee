@@ -2,6 +2,7 @@ import { CrtError, iot, mqtt } from 'aws-iot-device-sdk-v2';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { EOL } from 'os';
 import { ConfigType } from '@nestjs/config';
+import { Optional } from '@govee/common';
 import { IoTConfig } from './iot.config';
 import { IoTHandler } from './iot.handler';
 import { IoTData } from '../api';
@@ -9,7 +10,7 @@ import { IoTData } from '../api';
 @Injectable()
 export class IoTClient {
   private readonly logger: Logger = new Logger();
-  private connection: mqtt.MqttClientConnection | undefined;
+  private connection: Optional<mqtt.MqttClientConnection>;
   private connected = false;
   private subscriptions: string[] = [];
 

@@ -1,6 +1,6 @@
 import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
-import { unpaddedHexToArray } from '@govee/common';
+import { Optional, unpaddedHexToArray } from '@govee/common';
 import { PersistResult } from 'persist';
 import { IoTData } from '../api';
 import { IoTClient } from './iot.client';
@@ -21,7 +21,7 @@ export type OnMessageCallback = (message: GoveeDeviceStatus) => void;
 @Injectable()
 export class IoTService implements IoTHandler, OnModuleDestroy {
   private readonly logger: Logger = new Logger(IoTService.name);
-  private messageCallback: OnMessageCallback | undefined;
+  private messageCallback: Optional<OnMessageCallback>;
 
   constructor(private readonly client: IoTClient) {}
 
@@ -54,7 +54,7 @@ export class IoTService implements IoTHandler, OnModuleDestroy {
 
   private static parseIoTMessage(message: IoTMessage): GoveeDeviceStatus {
     const code = message.state?.status?.code;
-    let humidityCode: number | undefined;
+    let humidityCode: Optional<number>;
     if (code !== undefined) {
       humidityCode = unpaddedHexToArray(code)?.slice(-1)[0];
     }

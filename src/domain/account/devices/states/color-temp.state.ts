@@ -1,3 +1,4 @@
+import { Optional } from '@govee/common';
 import { DeviceModel } from '../devices.model';
 import { DeviceState } from './device.state';
 
@@ -13,7 +14,7 @@ export type ColorTempData = {
 
 export class ColorTempState extends DeviceState<
   ColorTempStateName,
-  number | undefined
+  Optional<number>
 > {
   constructor(device: DeviceModel) {
     super(device, ColorTempStateName, undefined);

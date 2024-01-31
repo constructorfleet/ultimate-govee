@@ -1,4 +1,4 @@
-import { OpType, asOpCode } from '@govee/common';
+import { OpType, asOpCode, Optional } from '@govee/common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
 
@@ -7,7 +7,7 @@ export type ControlLockStateName = typeof ControlLockStateName;
 
 export class ControlLockState extends DeviceOpState<
   ControlLockStateName,
-  boolean | undefined
+  Optional<boolean>
 > {
   constructor(
     device: DeviceModel,
@@ -21,7 +21,7 @@ export class ControlLockState extends DeviceOpState<
     this.stateValue.next(opCommand[0] === 0x01);
   }
 
-  protected opCommand(nextState: boolean | undefined): number[] | undefined {
+  protected opCommand(nextState: Optional<boolean>): Optional<number[]> {
     if (nextState === undefined) {
       return undefined;
     }

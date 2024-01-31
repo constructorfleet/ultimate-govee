@@ -1,4 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Optional } from '@govee/common';
 import { GoveeAccountService, IoTService, AccountState } from '@govee/data';
 import { AccountConfig } from './account.config';
 import { DeviceModel, DevicesService, IoTDevice } from './devices';
@@ -6,7 +7,7 @@ import { DeviceModel, DevicesService, IoTDevice } from './devices';
 @Injectable()
 export class AccountService {
   private readonly logger: Logger = new Logger(AccountService.name);
-  private apiState: AccountState | undefined;
+  private apiState: Optional<AccountState>;
 
   constructor(
     @Inject(AccountConfig.provide) private readonly config: AccountConfig,
@@ -15,7 +16,7 @@ export class AccountService {
     private readonly iot: IoTService,
   ) {}
 
-  accountState(): AccountState | undefined {
+  accountState(): Optional<AccountState> {
     return this.apiState;
   }
 

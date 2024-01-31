@@ -1,3 +1,4 @@
+import { Optional } from '@govee/common';
 import { BehaviorSubject } from 'rxjs';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState, DeviceState } from './device.state';
@@ -19,15 +20,15 @@ export type ModeType = {
 };
 
 const definedStates = (
-  states: (DeviceState<string, any> | undefined)[],
+  states: Optional<DeviceState<string, any>>[],
 ): DeviceState<string, any>[] =>
   states.filter((state) => state !== undefined) as DeviceState<string, any>[];
 
 export abstract class ModeState extends DeviceOpState<
   ModeStateName,
-  DeviceState<string, unknown> | undefined
+  Optional<DeviceState<string, unknown>>
 > {
-  protected activeIdentifier = new BehaviorSubject<number[] | undefined>(
+  protected activeIdentifier = new BehaviorSubject<Optional<number[]>>(
     undefined,
   );
   protected readonly modes: DeviceState<string, any>[];
@@ -35,7 +36,7 @@ export abstract class ModeState extends DeviceOpState<
 
   constructor(
     device: DeviceModel,
-    modes: (DeviceState<string, any> | undefined)[],
+    modes: Optional<DeviceState<string, any>>[],
     opType: number = 0xaa,
     identifier: number = 0x05,
     inline: boolean = false,

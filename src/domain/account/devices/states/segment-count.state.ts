@@ -1,3 +1,4 @@
+import { Optional } from '@govee/common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
 
@@ -11,7 +12,7 @@ export type SegmentCount = {
 
 export class SegmentCountState extends DeviceOpState<
   SegmentCountStateName,
-  number | undefined
+  Optional<number>
 > {
   constructor(
     device: DeviceModel,

@@ -1,3 +1,4 @@
+import { Optional } from '@govee/common';
 import { Subscription } from 'rxjs';
 import { DeviceState } from '../../../states';
 import { DeviceModel } from '../../../devices.model';
@@ -17,9 +18,9 @@ export type MistLevel = {
 
 export class MistLevelState extends DeviceState<
   MistLevelStateName,
-  number | undefined
+  Optional<number>
 > {
-  private subscription: Subscription | undefined;
+  private subscription: Optional<Subscription>;
   constructor(device: DeviceModel, active: HumidifierActiveState) {
     super(device, mistLevel, undefined);
     active.subscribe((event) => {
@@ -36,7 +37,7 @@ export class MistLevelState extends DeviceState<
           break;
         case ManualModeStateName:
           this.subscription = event.subscribe((event) => {
-            this.stateValue.next(event as number | undefined);
+            this.stateValue.next(event as Optional<number>);
           });
           break;
         default:

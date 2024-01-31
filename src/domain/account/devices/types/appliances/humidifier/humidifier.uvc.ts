@@ -1,3 +1,4 @@
+import { Optional } from '@govee/common';
 import { DeviceOpState } from '../../../states';
 import { DeviceModel } from '../../../devices.model';
 
@@ -6,7 +7,7 @@ export type UVCStateName = typeof UVCStateName;
 
 export class HumidiferUVCState extends DeviceOpState<
   UVCStateName,
-  boolean | undefined
+  Optional<boolean>
 > {
   constructor(
     device: DeviceModel,

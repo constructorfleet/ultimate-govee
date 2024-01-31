@@ -1,5 +1,5 @@
 import { Measurement } from '@govee/data';
-import { unpaddedHexToArray } from '@govee/common';
+import { unpaddedHexToArray, Optional } from '@govee/common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState, ParseOption } from './device.state';
 
@@ -31,8 +31,8 @@ export class HumidityState extends DeviceOpState<
 > {
   constructor(
     device: DeviceModel,
-    opType: number | undefined = undefined,
-    identifier: number | undefined = undefined,
+    opType: Optional<number> = undefined,
+    identifier: Optional<number> = undefined,
     parseOption: ParseOption = 'state',
   ) {
     super(
@@ -57,7 +57,7 @@ export class HumidityState extends DeviceOpState<
         data?.state?.humidity?.calibration ?? this.stateValue.value.calibration;
       const current =
         data?.state?.humidity?.current ?? this.stateValue.value.current;
-      let raw: number | undefined;
+      let raw: Optional<number>;
       if (current !== undefined && calibration !== undefined) {
         raw = current - calibration;
       } else {

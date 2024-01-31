@@ -1,3 +1,4 @@
+import { Optional } from '@govee/common';
 import { DeviceModel } from '../devices.model';
 import { DeviceState } from './device.state';
 
@@ -12,10 +13,7 @@ export type PowerType = {
   };
 };
 
-export class PowerState extends DeviceState<
-  PowerStateName,
-  boolean | undefined
-> {
+export class PowerState extends DeviceState<PowerStateName, Optional<boolean>> {
   constructor(device: DeviceModel) {
     super(device, PowerStateName, undefined);
   }

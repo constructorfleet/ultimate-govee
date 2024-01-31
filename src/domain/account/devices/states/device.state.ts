@@ -1,4 +1,5 @@
 import { BehaviorSubject, Observer, Subscription } from 'rxjs';
+import { Optional, Ignorable } from '@govee/common';
 import { Logger } from '@nestjs/common';
 import { DeviceModel } from '../devices.model';
 
@@ -10,8 +11,8 @@ const StatusCommand = 'status';
 
 export const filterCommands = (
   commands: number[][],
-  type?: number,
-  identifier?: number,
+  type?: Optional<number>,
+  identifier?: Optional<number>,
 ) =>
   commands
     .filter((command) => {
@@ -83,8 +84,8 @@ export type OpCommandData = {
 } & MessageData;
 
 export type OpCommandIdentifier = {
-  opType?: number | undefined;
-  identifier?: number | undefined;
+  opType?: Ignorable<Optional<number>>;
+  identifier?: Ignorable<Optional<number>>;
 };
 
 export type ParseOption = 'opCode' | 'state' | 'both';
@@ -93,8 +94,8 @@ export abstract class DeviceOpState<
   StateName extends string,
   StateValue,
 > extends DeviceState<StateName, StateValue> {
-  protected readonly opType: number | undefined;
-  protected readonly identifier: number | undefined;
+  protected readonly opType: Ignorable<Optional<number>>;
+  protected readonly identifier: Ignorable<Optional<number>>;
   constructor(
     { opType, identifier }: OpCommandIdentifier,
     device: DeviceModel,
@@ -127,13 +128,20 @@ export abstract class DeviceOpState<
   }
 
   protected filterOpCommands(opCommands: number[][]): number[][] {
-    return filterCommands(opCommands, this.opType, this.identifier);
+    if (this.opType === null) {
+      return opCommands;
+    }
+    return filterCommands(
+      opCommands,
+      this.opType,
+      this.identifier || undefined,
+    );
   }
 }
 
 // export type CommandableState<StateName extends string, StateValue, StateType extends DeviceState<StateName, StateValue>> = {
 //   set: StateType extends DeviceOpState<string, infer StateValue>
-//   ? (nextState: StateValue) => number[][] | undefined
+//   ? (nextState: StateValue) => Optional<number[][]>
 //   : StateType extends DeviceState<string, infer StateValue> ?
 //   (nextState: StateValue) => Record<string, unknown> | undefined
 //   : never;

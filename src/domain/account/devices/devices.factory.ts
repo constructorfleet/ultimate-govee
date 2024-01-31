@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Optional } from '@govee/common';
 import { AppliancesFactory } from './types/appliances';
 import { LightsFactory } from './types/lights/lights.factory';
 import { DeviceModel } from './devices.model';
@@ -13,7 +14,7 @@ export class DevicesFactory {
     private readonly homeImprovementFactory: HomeImprovementFactory,
   ) {}
 
-  create(device: DeviceModel): Device | undefined {
+  create(device: DeviceModel): Optional<Device> {
     return [
       this.applianceFactory,
       this.lightFactory,

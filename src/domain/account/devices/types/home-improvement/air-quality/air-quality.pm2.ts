@@ -1,4 +1,5 @@
 import { Subject } from 'rxjs';
+import { Optional } from '@govee/common';
 import { NumericState } from '../../../states/numeric.state';
 
 export const PM2StateName: 'pm2' = 'pm2' as const;
@@ -6,7 +7,7 @@ export type PM2StateName = typeof PM2StateName;
 
 export const PM2State = NumericState(
   PM2StateName,
-  (opCommand: number[], stateValue: Subject<number | undefined>) => {
+  (opCommand: number[], stateValue: Subject<Optional<number>>) => {
     if (opCommand.every((code) => code === 0x00)) {
       return;
     }

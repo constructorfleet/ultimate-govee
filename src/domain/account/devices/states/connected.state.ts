@@ -1,3 +1,4 @@
+import { Optional } from '@govee/common';
 import { DeviceModel } from '../devices.model';
 import { DeviceState } from './device.state';
 
@@ -15,7 +16,7 @@ type IsConnectedType = {
 
 export class ConnectedState extends DeviceState<
   ConnectedStateName,
-  boolean | undefined
+  Optional<boolean>
 > {
   constructor(device: DeviceModel) {
     super(device, ConnectedStateName, undefined);

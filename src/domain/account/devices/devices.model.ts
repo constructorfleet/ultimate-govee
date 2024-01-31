@@ -1,6 +1,7 @@
 import { ClassConstructor } from 'class-transformer';
 import { BehaviorSubject } from 'rxjs';
 import { Logger } from '@nestjs/common';
+import { Optional } from '@govee/common';
 import { GoveeDevice, GoveeDeviceStatus, Product } from '@govee/data';
 import { Version } from './version.info';
 
@@ -18,7 +19,7 @@ export type DeviceConstructorArgs = {
   id: string;
   name: string;
   model: string;
-  iotTopic?: string | undefined;
+  iotTopic?: Optional<string>;
   modelName: string;
   ic: number;
   goodsType: number;
@@ -35,7 +36,7 @@ export class DeviceModel {
   public readonly name: string;
   public readonly model: string;
   public readonly modelName: string;
-  public readonly iotTopic?: string | undefined;
+  public readonly iotTopic?: Optional<string>;
   public readonly ic: number;
   public readonly goodsType: number;
   public readonly pactCode: number;
@@ -62,8 +63,8 @@ export class DeviceModel {
     this.status = new BehaviorSubject(args as GoveeDeviceStatus);
   }
 
-  private product: ProductModel | undefined;
-  get productData(): ProductModel | undefined {
+  private product: Optional<ProductModel>;
+  get productData(): Optional<ProductModel> {
     return this.product;
   }
   set productData(product: ProductModel) {
@@ -135,7 +136,7 @@ export type IoTDeviceConstructorArgs = {
 } & DeviceConstructorArgs;
 
 export type IoTDevice = {
-  get iotTopic(): string | undefined;
+  get iotTopic(): Optional<string>;
 } & DeviceModel;
 
 export const IoTDevice = <TDevice extends ClassConstructor<DeviceModel>>(

@@ -1,3 +1,4 @@
+import { Optional } from '@govee/common';
 import { DeviceModel } from '../../../devices.model';
 import { ModeState, DeviceOpState, DeviceState } from '../../../states';
 
@@ -12,7 +13,7 @@ export type ManualModeStateName = typeof ManualModeStateName;
 
 export class ManualModeState extends DeviceOpState<
   ManualModeStateName,
-  number | undefined
+  Optional<number>
 > {
   constructor(
     device: DeviceModel,
@@ -48,7 +49,7 @@ export type CustomMode = {
 
 export class CustomModeState extends DeviceOpState<
   CustomModeStateName,
-  CustomProgram | undefined
+  Optional<CustomProgram>
 > {
   private customModes: CustomMode = {};
   constructor(
@@ -114,7 +115,7 @@ export class AutoModeState extends DeviceOpState<AutoModeStateName, AutoMode> {
 export class HumidifierActiveState extends ModeState {
   constructor(
     device: DeviceModel,
-    states: (DeviceState<string, any> | undefined)[],
+    states: Optional<DeviceState<string, any>>[],
   ) {
     super(
       device,

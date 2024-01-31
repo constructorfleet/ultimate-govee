@@ -1,3 +1,4 @@
+import { Optional } from '@govee/common';
 import { DeviceModel } from '../../../devices.model';
 import { ModeState, DeviceOpState, DeviceState } from '../../../states';
 import { AutoModeStateName } from '../humidifier/humidifier.modes';
@@ -13,7 +14,7 @@ export type ManualModeStateName = typeof ManualModeStateName;
 
 export class ManualModeState extends DeviceOpState<
   ManualModeStateName,
-  number | undefined
+  Optional<number>
 > {
   constructor(
     device: DeviceModel,

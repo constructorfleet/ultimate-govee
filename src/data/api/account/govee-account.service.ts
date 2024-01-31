@@ -1,6 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { join } from 'path';
+import { Optional } from '@govee/common';
 import { InjectPersisted, PersistResult } from '@govee/persist';
 import {
   GoveeAccountConfig,
@@ -26,7 +27,7 @@ export class GoveeAccountService {
     @InjectPersisted({
       filename: join('persisted', 'accountClient.json'),
     })
-    private accountClient: AccountState | undefined,
+    private accountClient: Optional<AccountState>,
   ) {}
 
   private isTokenValid(token?: string): boolean {

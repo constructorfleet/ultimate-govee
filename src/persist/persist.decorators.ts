@@ -1,10 +1,11 @@
 import { Logger } from '@nestjs/common';
+import { Optional } from '@govee/common';
 import { existsSync } from 'fs';
 import { mkdir, writeFile } from 'fs/promises';
 import { join } from 'path';
 
 export type PersistOptions = {
-  path?: string | undefined;
+  path?: Optional<string>;
   filename: string;
   writeOption?: {
     encoding?: null | undefined;

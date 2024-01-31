@@ -2,6 +2,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { join } from 'path';
 import { InjectPersisted, PersistResult } from '@govee/persist';
+import { Optional } from '@govee/common';
 import { GoveeDeviceConfig } from './govee-device.config';
 import {
   GoveeAPIDevice,
@@ -22,7 +23,7 @@ export class GoveeDeviceService {
     @InjectPersisted({
       filename: join('persisted', 'devices.json'),
     })
-    private readonly deviceListResponse: DeviceListResponse | undefined,
+    private readonly deviceListResponse: Optional<DeviceListResponse>,
   ) {}
 
   async getDeviceList(oauthData: OAuthData): Promise<GoveeDevice[]> {
@@ -115,7 +116,7 @@ export class GoveeDeviceService {
     });
   }
 
-  private static getWiFiData(settings: DeviceSettings): WiFiData | undefined {
+  private static getWiFiData(settings: DeviceSettings): Optional<WiFiData> {
     if (
       !settings.wifiHardwareVersion ||
       !settings.wifiSoftVersion ||
@@ -132,9 +133,7 @@ export class GoveeDeviceService {
     };
   }
 
-  private static getBleData(
-    settings: DeviceSettings,
-  ): BluetoothData | undefined {
+  private static getBleData(settings: DeviceSettings): Optional<BluetoothData> {
     if (!settings.bleAddress || !settings.bleName) {
       return undefined;
     }

@@ -1,5 +1,6 @@
 import { BehaviorSubject, interval } from 'rxjs';
 import { Logger } from '@nestjs/common';
+import { Optional } from '@govee/common';
 import { GoveeDeviceStatus } from '@govee/data';
 import { DeviceModel } from '../devices.model';
 import { DeviceState } from '../states/device.state';
@@ -54,7 +55,7 @@ export abstract class Device extends BehaviorSubject<DeviceStateValues> {
 
   static readonly deviceType: string;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  static create(deviceMode: DeviceModel): Device | undefined {
+  static create(deviceMode: DeviceModel): Optional<Device> {
     return undefined;
   }
 
@@ -85,7 +86,7 @@ export abstract class Device extends BehaviorSubject<DeviceStateValues> {
     return this.device.goodsType;
   }
 
-  get iotTopic(): string | undefined {
+  get iotTopic(): Optional<string> {
     return this.device.iotTopic;
   }
 
@@ -98,7 +99,7 @@ export abstract class Device extends BehaviorSubject<DeviceStateValues> {
 
   state<TDevice extends DeviceState<string, any> = DeviceState<string, any>>(
     stateName: string,
-  ): TDevice | undefined {
+  ): Optional<TDevice> {
     return this.states[stateName] as TDevice;
   }
 

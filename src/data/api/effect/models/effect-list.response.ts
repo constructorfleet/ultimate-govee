@@ -57,7 +57,7 @@ export class LightEffect {
   diyEffectStr?: string;
 
   @Expose({ name: 'diyEffect', toPlainOnly: true })
-  get diyEffect(): number[][] | undefined {
+  get diyEffect(): Optional<number[][]> {
     if (this.diyEffectStr === undefined) {
       return undefined;
     }
@@ -71,7 +71,7 @@ export class LightEffect {
   sceneEffectStr?: string;
 
   @Expose()
-  get chunk10(): number[][] | undefined {
+  get chunk10(): Optional<number[][]> {
     if (this.sceneEffectStr === undefined) {
       return undefined;
     }
@@ -79,7 +79,7 @@ export class LightEffect {
   }
 
   @Expose()
-  get chunk20(): number[][] | undefined {
+  get chunk20(): Optional<number[][]> {
     if (this.sceneEffectStr === undefined) {
       return undefined;
     }
@@ -138,7 +138,7 @@ export class EffectScene {
   diyEffectStr?: string;
 
   @Expose()
-  get diyEffect(): number[][] | undefined {
+  get diyEffect(): Optional<number[][]> {
     if (this.diyEffectStr === undefined) {
       return undefined;
     }
@@ -152,7 +152,7 @@ export class EffectScene {
   sceneEffectStr?: string;
 
   @Expose()
-  get sceneEffect(): number[][] | undefined {
+  get sceneEffect(): Optional<number[][]> {
     if (this.sceneEffectStr === undefined) {
       return undefined;
     }
@@ -160,7 +160,7 @@ export class EffectScene {
   }
 
   @Expose()
-  get sceneEffect20(): number[][] | undefined {
+  get sceneEffect20(): Optional<number[][]> {
     if (this.sceneEffectStr === undefined) {
       return undefined;
     }
@@ -168,7 +168,7 @@ export class EffectScene {
   }
 
   @Expose()
-  get sceneEffect8(): number[][] | undefined {
+  get sceneEffect8(): Optional<number[][]> {
     if (this.sceneEffectStr === undefined) {
       return undefined;
     }

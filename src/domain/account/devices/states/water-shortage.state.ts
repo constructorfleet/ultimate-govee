@@ -1,3 +1,4 @@
+import { Optional } from '@govee/common';
 import { DeviceModel } from '../devices.model';
 import { DeviceState } from './device.state';
 
@@ -15,7 +16,7 @@ export type WaterShortageType = {
 
 export class WaterShortageState extends DeviceState<
   WaterShortageStateName,
-  boolean | undefined
+  Optional<boolean>
 > {
   constructor(device: DeviceModel) {
     super(device, WaterShortageStateName, undefined);

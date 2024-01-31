@@ -39,7 +39,7 @@ export class Request<PayloadType extends BaseRequest> {
 
   async get<ResponseType>(
     as?: ClassConstructor<ResponseType>,
-    saveToFile: string | undefined = undefined,
+    saveToFile: Optional<string> = undefined,
   ): Promise<AxiosResponse<ResponseType | ResponseType[]>> {
     delete this.headers['Content-Type'];
     const res = await axios.get<ResponseType>(this.url, {
@@ -67,7 +67,7 @@ export class Request<PayloadType extends BaseRequest> {
 
   async post<ResponseType extends BaseResponse>(
     as?: ClassConstructor<ResponseType>,
-    saveToFile: string | undefined = undefined,
+    saveToFile: Optional<string> = undefined,
   ): Promise<AxiosResponse<ResponseType>> {
     const res = await axios.post<ResponseType>(this.url, this.payload, {
       timeout: 10000,

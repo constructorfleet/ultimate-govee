@@ -1,5 +1,6 @@
+/* trunk-ignore-all(prettier) */
 import { Expose, Transform, Type } from 'class-transformer';
-import { base64ToHex, hexToBase64 } from '@govee/common';
+import { Optional, base64ToHex, hexToBase64 } from '@govee/common';
 
 export type PowerState = {
   isOn: boolean;
@@ -43,8 +44,8 @@ export type StatusCode = {
 
 export type StatusState = {
   status: Partial<StatusCurrentTemperature> &
-    Partial<StatusSetTemperature> &
-    Partial<StatusCode>;
+  Partial<StatusSetTemperature> &
+  Partial<StatusCode>;
 };
 
 export type OpCommand = {
@@ -94,24 +95,24 @@ export type MessageStateType = Partial<PowerState> &
 
 export class StateStatus {
   @Expose({ name: 'curTem' })
-  currentTemperature?: number | undefined;
+  currentTemperature?: Optional<number>;
 
   @Expose({ name: 'setTem' })
-  setTemperature?: number | undefined;
+  setTemperature?: Optional<number>;
 
   @Expose({ name: 'stc' })
-  code?: string | undefined;
+  code?: Optional<string>;
 }
 
 export class Color {
   @Expose({ name: 'r' })
-  red: number | undefined;
+  red: Optional<number>;
 
   @Expose({ name: 'g' })
-  green: number | undefined;
+  green: Optional<number>;
 
   @Expose({ name: 'b' })
-  blue: number | undefined;
+  blue: Optional<number>;
 }
 
 export class MessageState {
@@ -125,20 +126,20 @@ export class MessageState {
     },
     { toClassOnly: true },
   )
-  isOn?: boolean | undefined;
+  isOn?: Optional<boolean>;
 
   @Expose({ name: 'brightness' })
-  brightness?: number | undefined;
+  brightness?: Optional<number>;
 
   @Expose({ name: 'colorTemInKelvin' })
-  colorTemperature?: number | undefined;
+  colorTemperature?: Optional<number>;
 
   @Expose({ name: 'color' })
   @Type(() => Color)
   color?: Color | undefined;
 
   @Expose({ name: 'mode' })
-  mode?: number | undefined;
+  mode?: Optional<number>;
 
   @Expose({ name: 'connected' })
   @Transform(
@@ -150,7 +151,7 @@ export class MessageState {
     },
     { toClassOnly: true },
   )
-  connected?: boolean | undefined;
+  connected?: Optional<boolean>;
 
   @Expose({ name: 'sta' })
   @Type(() => StateStatus)

@@ -1,3 +1,4 @@
+import { Optional } from '@govee/common';
 import { Measurement } from '@govee/data';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState, ParseOption } from './device.state';
@@ -28,8 +29,8 @@ export class TemperatureState extends DeviceOpState<
 > {
   constructor(
     device: DeviceModel,
-    opType: number | undefined = undefined,
-    identifier: number | undefined = undefined,
+    opType: Optional<number> = undefined,
+    identifier: Optional<number> = undefined,
     parseOption: ParseOption = 'state',
   ) {
     super(
@@ -54,7 +55,7 @@ export class TemperatureState extends DeviceOpState<
         this.stateValue.value.calibration;
       const current =
         data?.state?.temperature?.current ?? this.stateValue.value.current;
-      let raw: number | undefined;
+      let raw: Optional<number>;
       if (current !== undefined && calibration !== undefined) {
         raw = current - calibration;
       } else {

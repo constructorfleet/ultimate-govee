@@ -1,4 +1,5 @@
 import { Subscription } from 'rxjs';
+import { Optional } from '@govee/common';
 import { DeviceState } from '../../../states';
 import { DeviceModel } from '../../../devices.model';
 import { AutoModeState, HumidifierActiveState } from './humidifier.modes';
@@ -10,7 +11,7 @@ export type HumiditierHumidity = {
 
 export class TargetHumidityState extends DeviceState<
   'targetHumidity',
-  number | undefined
+  Optional<number>
 > {
   private subscription: Subscription | undefined;
   constructor(

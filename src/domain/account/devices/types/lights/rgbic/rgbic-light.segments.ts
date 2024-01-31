@@ -1,4 +1,5 @@
 import { Subscription } from 'rxjs';
+import { Optional } from '@govee/common';
 import { DeviceModel } from '../../../devices.model';
 import {
   DeviceState,
@@ -36,10 +37,10 @@ export class RGBICSegmentsState extends DeviceState<
   SegmentsStateName,
   Segment[]
 > {
-  private subscription: Subscription | undefined;
+  private subscription: Optional<Subscription>;
   private applyToWhole: boolean = false;
-  private on: boolean | undefined;
-  private brightness: number | undefined;
+  private on: Optional<boolean>;
+  private brightness: Optional<number>;
   private segments: Segment[] = [];
 
   constructor(deviceModel: DeviceModel, device: Device) {

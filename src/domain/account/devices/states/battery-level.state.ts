@@ -1,3 +1,4 @@
+import { Optional } from '@govee/common';
 import { DeviceModel } from '../devices.model';
 import { DeviceState } from './device.state';
 
@@ -13,7 +14,7 @@ export type BatteryType = {
 
 export class BatteryLevelState extends DeviceState<
   BatteryLevelStateName,
-  number | undefined
+  Optional<number>
 > {
   constructor(device: DeviceModel) {
     super(device, BatteryLevelStateName, undefined);

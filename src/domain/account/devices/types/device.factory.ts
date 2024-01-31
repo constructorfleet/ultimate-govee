@@ -1,5 +1,6 @@
 import { ClassConstructor } from 'class-transformer';
 import { Subject } from 'rxjs';
+import { Optional } from '@govee/common';
 import { DeviceModel } from '../devices.model';
 import { Device } from './device';
 
@@ -9,7 +10,7 @@ export type GroupMatchers = Record<string, GroupMatcher>;
 export type CategoryMatchers = Record<string, GroupMatchers>;
 
 export type FactoryType = {
-  create: (device: DeviceModel) => Device | undefined;
+  create: (device: DeviceModel) => Optional<Device>;
 };
 
 export class DeviceFactory<TDevice extends Device> {
@@ -28,7 +29,7 @@ export class DeviceFactory<TDevice extends Device> {
     DeviceFactory.factories.push(this);
   }
 
-  create(device: DeviceModel): TDevice | undefined {
+  create(device: DeviceModel): Optional<TDevice> {
     const categoryMatches = this.matchers[device.category];
     if (categoryMatches === undefined) {
       return undefined;

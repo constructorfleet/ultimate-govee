@@ -1,4 +1,5 @@
 import { Subscription } from 'rxjs';
+import { Optional } from '@govee/common';
 import { DeviceOpState } from '../../../states';
 import { DeviceModel } from '../../../devices.model';
 import {
@@ -13,7 +14,7 @@ export type FanSpeedStateName = typeof FanSpeedStateName;
 
 export class PurifierFanSpeedState extends DeviceOpState<
   FanSpeedStateName,
-  number | undefined
+  Optional<number>
 > {
   private subscription: Subscription | undefined;
   constructor(

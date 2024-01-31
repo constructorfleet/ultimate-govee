@@ -1,4 +1,4 @@
-import { total } from '@govee/common';
+import { total, Optional } from '@govee/common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
 
@@ -23,7 +23,7 @@ export class TimerState extends DeviceOpState<TimerStateName, Timer> {
   }
 
   parseOpCommand(opCommand: number[]) {
-    let duration: number | undefined;
+    let duration: Optional<number>;
     if (opCommand.length <= 3) {
       duration = total(opCommand.slice(1, 3));
     }

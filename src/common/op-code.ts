@@ -20,9 +20,7 @@ export const uint8ToHex = (uint8Array: Uint8Array): string =>
     .toString('hex')
     .replace(/(.{2})/g, '$1 ');
 
-export const unpaddedHexToArray = (
-  hexString?: string,
-): number[] | undefined => {
+export const unpaddedHexToArray = (hexString?: string): Optional<number[]> => {
   if (!hexString) {
     return undefined;
   }

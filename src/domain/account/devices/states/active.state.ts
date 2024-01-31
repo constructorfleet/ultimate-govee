@@ -1,4 +1,4 @@
-import { OpType } from '@govee/common';
+import { OpType, Optional } from '@govee/common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
 
@@ -7,7 +7,7 @@ export type ActiveStateName = typeof ActiveStateName;
 
 export class ActiveState extends DeviceOpState<
   ActiveStateName,
-  boolean | undefined
+  Optional<boolean>
 > {
   constructor(
     device: DeviceModel,

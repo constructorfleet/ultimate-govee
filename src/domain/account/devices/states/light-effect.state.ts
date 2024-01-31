@@ -1,3 +1,4 @@
+import { Optional } from '@govee/common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
 
@@ -14,8 +15,8 @@ export class LightEffectState extends DeviceOpState<
 > {
   constructor(
     device: DeviceModel,
-    opType: number | undefined = 0xa3,
-    identifier: number | undefined = undefined,
+    opType: Optional<number> = 0xa3,
+    identifier: Optional<number> = undefined,
   ) {
     super({ opType, identifier }, device, LightEffectStateName, {
       commands: [],

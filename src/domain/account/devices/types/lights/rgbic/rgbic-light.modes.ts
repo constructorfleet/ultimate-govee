@@ -1,4 +1,4 @@
-import { chunk, total } from '@govee/common';
+import { chunk, total, Optional } from '@govee/common';
 import {
   DeviceOpState,
   SegmentCountState,
@@ -195,7 +195,7 @@ export class ColorModeState extends DeviceState<
 export class RGBICActiveState extends ModeState {
   constructor(
     device: DeviceModel,
-    states: (DeviceState<string, any> | undefined)[],
+    states: Optional<DeviceState<string, any>>[],
   ) {
     super(
       device,
