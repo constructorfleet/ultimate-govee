@@ -20,18 +20,18 @@ lint:
     - deno
   enabled:
     - actionlint@1.6.26
-    - checkov@3.1.57
+    - checkov@3.1.67
     - eslint@8.56.0
     - git-diff-check
     - hadolint@2.12.0
     - markdownlint@0.38.0
-    - osv-scanner@1.5.0
-    - prettier@3.1.1
+    - osv-scanner@1.6.1
+    - prettier@3.2.4
     - terrascan@1.18.11
     - trivy@0.48.3
-    - trufflehog@3.63.8
+    - trufflehog@3.63.10
     - yamllint@1.33.0
-    - prettier@3.1.1
+    - prettier@3.2.4
 actions:
   disabled:
     - trunk-check-pre-push

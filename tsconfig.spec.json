@@ -3,6 +3,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "incremental": true,
+    "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "tsBuildInfoFile": "./dist/.tsbuildinfo",
     "target": "ES2022",
