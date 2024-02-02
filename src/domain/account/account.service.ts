@@ -2,7 +2,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Optional } from '@govee/common';
 import { GoveeAccountService, IoTService, AccountState } from '@govee/data';
 import { AccountConfig } from './account.config';
-import { DeviceModel, DevicesService, IoTDevice } from './devices';
+import { DeviceModel, DevicesService, IoTDevice } from '../devices';
 
 @Injectable()
 export class AccountService {
@@ -21,7 +21,7 @@ export class AccountService {
   }
 
   refreshIoT(device: IoTDevice) {
-    this.logger.debug(`Refresh IoT ${device.iotTopic}`);
+    // this.logger.debug(`Refresh IoT ${device.iotTopic}`);
     if (
       this.apiState?.iot?.topic === undefined ||
       device.iotTopic === undefined
@@ -48,11 +48,11 @@ export class AccountService {
 
     if (this.apiState.iot !== undefined) {
       await this.iot.connect(this.apiState.iot, (message) =>
-        this.devices.onMessage(message),
+        this.devices.onDeviceStatus(message),
       );
     }
 
-    await this.devices.loadDevices(
+    await this.devices.refreshDeviceList(
       this.apiState.oauth,
       (device: DeviceModel) => {
         this.refreshIoT(device as unknown as IoTDevice);

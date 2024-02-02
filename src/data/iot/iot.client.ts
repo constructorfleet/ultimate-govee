@@ -40,7 +40,7 @@ export class IoTClient {
         .build();
     this.connection = client.new_connection(connectionConfig);
     this.bindEvents(this.connection, handler);
-    this.logger.log('Connecting to IoT');
+    this.logger.log('Connecting to IoT Core');
     await this.connection.connect();
     return this;
   }

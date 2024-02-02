@@ -40,6 +40,7 @@ export abstract class DeviceState<StateName extends string, StateValue> {
   protected readonly logger: Logger = new Logger(this.constructor.name);
 
   protected stateValue!: BehaviorSubject<StateValue>;
+
   subscribe(
     observerOrNext?:
       | Partial<Observer<StateValue>>
@@ -74,6 +75,14 @@ export abstract class DeviceState<StateName extends string, StateValue> {
       return;
     }
     this.parseState(data);
+  }
+
+  setState(nextState: StateValue): any {
+    return this.stateToCommand(nextState);
+  }
+
+  protected stateToCommand(state: StateValue): any {
+    return state;
   }
 }
 

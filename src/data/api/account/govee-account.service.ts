@@ -38,12 +38,6 @@ export class GoveeAccountService {
       }
       const expirationDateUTC = new Date(1970, 1, 1).setSeconds(jwt.exp);
       const nowUTC = new Date().getTime();
-      this.logger.debug(
-        'RestClient',
-        'isTokenValid',
-        expirationDateUTC,
-        nowUTC,
-      );
       return nowUTC < expirationDateUTC;
     } catch (error) {
       this.logger.error('RestClient', 'isTokenValid', error);
@@ -80,6 +74,8 @@ export class GoveeAccountService {
   async authenticate(credentials: GoveeCredentials): Promise<AccountState> {
     let { clientId } = credentials;
     let topic: string;
+    // const ttr = await request("https://community-api.govee.com/os/v1/login", {}, { email: credentials.username, password: credentials.password }).post();
+    // console.dir(ttr.data, {depth: 5});
     if (this.accountClient !== undefined) {
       if (this.isTokenValid(this.accountClient?.oauth?.accessToken)) {
         return this.accountClient;
@@ -98,7 +94,7 @@ export class GoveeAccountService {
       clientId: credentials.clientId,
     };
     try {
-      this.logger.log('Authenticating with Govee');
+      this.logger.log('Authenticating with Govee REST API');
       const loginResponse = await request(
         this.config.authUrl,
         {},
@@ -145,7 +141,6 @@ export class GoveeAccountService {
         clientId,
       };
     } catch (err) {
-      this.logger.error(err);
       this.logger.error(`Unable to authenticate with Govee servers`, err);
       return this.accountClient;
     }
@@ -154,7 +149,7 @@ export class GoveeAccountService {
 
   async getIoTCertificate(oauthData: OAuthData): Promise<IoTCertificateData> {
     try {
-      this.logger.log('Getting IoT auth information');
+      this.logger.log('Getting IoT authentication information');
       const response = await request(
         this.config.iotCertUrl,
         this.config.authenticatedHeaders(oauthData),

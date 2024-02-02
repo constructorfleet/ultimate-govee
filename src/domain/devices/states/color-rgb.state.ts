@@ -7,9 +7,9 @@ export type ColorRGBStateName = typeof ColorRGBStateName;
 export type ColorRGBData = {
   state?: {
     color?: {
-      r?: number;
-      g?: number;
-      b?: number;
+      red?: number;
+      green?: number;
+      blue?: number;
     };
   };
 };
@@ -32,9 +32,9 @@ export class ColorRGBState extends DeviceState<ColorRGBStateName, ColorRGB> {
   parseState(data: ColorRGBData) {
     if (data?.state?.color) {
       this.stateValue.next({
-        red: data.state.color.r,
-        green: data.state.color.g,
-        blue: data.state.color.b,
+        red: data.state.color.red,
+        green: data.state.color.green,
+        blue: data.state.color.blue,
       });
     }
   }

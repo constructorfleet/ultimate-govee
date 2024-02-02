@@ -17,8 +17,11 @@ import { Product } from './models/product';
 
 @Injectable()
 export class GoveeProductService {
-  private static readonly logger: Logger = new Logger(GoveeProductService.name);
   private readonly logger: Logger = new Logger(GoveeProductService.name);
+  private static readonly previousProductMap =
+    GoveeProductService.parseResponse(
+      plainToInstance(SkuListResponse, previousCategories),
+    );
 
   constructor(
     @Inject(GoveeProductConfig.KEY)
@@ -30,15 +33,16 @@ export class GoveeProductService {
   @PersistResult({ path: 'persisted', filename: 'products.json' })
   async getProductCategories(): Promise<Record<string, Product>> {
     try {
+      this.logger.log(`Retrieving product list from Govee REST API`);
       const productMap = GoveeProductService.parseResponse(
         await this.getApiReponse(),
       );
-      const productMap2 = GoveeProductService.parseResponse(
-        plainToInstance(SkuListResponse, previousCategories),
+
+      Object.entries(GoveeProductService.previousProductMap).forEach(
+        ([key, value]) => {
+          productMap[key] = productMap[key] ?? value;
+        },
       );
-      Object.entries(productMap2).forEach(([key, value]) => {
-        productMap[key] = productMap[key] ?? value;
-      });
       return productMap;
     } catch (error) {
       this.logger.error(`Error retrieving product list`, error);

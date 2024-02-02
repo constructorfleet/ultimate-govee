@@ -1,5 +1,5 @@
 import { Expose, Transform, Type } from 'class-transformer';
-import { base64ToHex, chunk } from '@govee/common';
+import { asOpCode, base64ToHex, chunk, Optional } from '@govee/common';
 import { GoveeAPIResponse } from '../../govee-api.models';
 
 export class EffectSceneRule {
@@ -65,25 +65,34 @@ export class LightEffect {
   }
 
   @Expose({ name: 'sceneEffectCode' })
-  sceneEffectCode?: unknown[];
+  sceneEffectCode?: number;
 
   @Expose({ name: 'sceneEffectStr' })
   sceneEffectStr?: string;
 
-  @Expose()
-  get chunk10(): Optional<number[][]> {
-    if (this.sceneEffectStr === undefined) {
+  @Expose({ name: 'sceneEffect' })
+  get sceneEffect(): number[][] | undefined {
+    if (
+      this.sceneEffectStr === undefined ||
+      this.sceneEffectCode === undefined
+    ) {
       return undefined;
     }
-    return chunk(base64ToHex(this.sceneEffectStr), 10);
-  }
-
-  @Expose()
-  get chunk20(): Optional<number[][]> {
-    if (this.sceneEffectStr === undefined) {
-      return undefined;
-    }
-    return chunk(base64ToHex(this.sceneEffectStr), 20);
+    const codes = base64ToHex(this.sceneEffectStr);
+    const lines = chunk([1, -1, 2, ...codes], 17);
+    lines[0][1] = lines.length;
+    return [
+      ...lines.map((line: number[], index: number) =>
+        asOpCode(0xa3, index === lines.length - 1 ? 0xff : index, ...line),
+      ),
+      asOpCode(
+        0x33,
+        0x05,
+        0x04,
+        this.sceneEffectCode % 256,
+        this.sceneEffectCode >> 8,
+      ),
+    ];
   }
 
   @Expose({ name: 'rules' })

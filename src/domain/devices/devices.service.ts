@@ -9,10 +9,12 @@ import {
   GoveeProductService,
   OAuthData,
 } from '@govee/data';
+import { CommandBus, EventBus } from '@nestjs/cqrs';
 import { DeviceModel, createDeviceModel } from './devices.model';
 import { DevicesFactory } from './devices.factory';
 import { Device } from './types/device';
-import { RGBICLightDevice } from './types/lights';
+import { NewDeviceEvent } from './cqrs/events/new-device.event';
+import { UpdateDeviceStatusCommand } from '../../../cqrs/commands/update-device-status.command';
 
 @Injectable()
 export class DevicesService {
@@ -26,15 +28,17 @@ export class DevicesService {
     private readonly devicesFactory: DevicesFactory,
     private readonly effectsApi: GoveeEffectService,
     private readonly diyApi: GoveeDiyService,
+    private readonly commandBus: CommandBus,
+    private readonly eventBus: EventBus,
   ) {}
 
-  async loadDevices(
+  async refreshDeviceList(
     oauth: OAuthData,
     iotUpdater: (deviceModel: DeviceModel) => unknown,
   ) {
-    this.logger.log('Loading product categories');
+    this.logger.debug('Loading product categories');
     const productCategories = await this.productApi.getProductCategories();
-    this.logger.log('Loading devices');
+    this.logger.debug('Loading devices');
     const deviceList = await this.deviceApi.getDeviceList(oauth);
     deviceList.forEach(async (apiDevice: GoveeDevice) => {
       if (this.devices[apiDevice.id] === undefined) {
@@ -44,40 +48,20 @@ export class DevicesService {
         if (device === undefined) {
           return;
         }
-        device.deviceStatus({
+        this.eventBus.publish(new NewDeviceEvent(device));
+      }
+      await this.commandBus.execute(
+        new UpdateDeviceStatusCommand(apiDevice.id, {
           cmd: 'status',
           ...apiDevice,
-        });
-        if (device instanceof RGBICLightDevice) {
-          await this.effectsApi.getDeviceEffects(
-            oauth,
-            device.model,
-            device.goodsType,
-            device.id,
-          );
-          await this.diyApi.getDeviceDiys(
-            oauth,
-            device.model,
-            device.goodsType,
-            device.id,
-          );
-        }
-        this.devices[device.id] = device;
-      }
+        }),
+      );
+
       this.devices[apiDevice.id].deviceStatus(apiDevice);
     });
   }
 
-  onMessage(message: GoveeDeviceStatus) {
-    if (this.devices === undefined) {
-      this.logger.warn('No devices loaded', this.devices);
-      return;
-    }
-    const device = this.devices[message.id];
-    if (!device) {
-      this.logger.warn(`Unknown device ${message.id}`);
-      return;
-    }
-    device.deviceStatus(message);
+  async onDeviceStatus(message: GoveeDeviceStatus) {
+    await this.commandBus.execute(message);
   }
 }

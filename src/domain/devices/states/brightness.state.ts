@@ -15,13 +15,18 @@ export class BrightnessState extends DeviceOpState<
   BrightnessStateName,
   Optional<number>
 > {
-  // implements CommandableState<DeviceOpState<BrightnessStateName, Optional<number>>> {
   constructor(
     device: DeviceModel,
     opType: number = 0xaa,
     identifier: number = 0x04,
   ) {
-    super({ opType, identifier }, device, BrightnessStateName, undefined);
+    super(
+      { opType, identifier },
+      device,
+      BrightnessStateName,
+      undefined,
+      'both',
+    );
   }
 
   parseState(data: BrightnessData) {

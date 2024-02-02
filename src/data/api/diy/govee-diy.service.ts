@@ -18,7 +18,7 @@ export class GoveeDiyService {
 
   @PersistResult({
     path: 'persisted',
-    filename: '{3}.diys.json',
+    filename: 'diys.json',
     transform: (data) => instanceToPlain(data),
   })
   async getDeviceDiys(
@@ -28,9 +28,20 @@ export class GoveeDiyService {
     deviceId: string,
   ): Promise<any> {
     try {
+      this.logger.log(
+        `Retrieving DIY effects for device ${deviceId} from Govee REST API`,
+      );
       const response = await request(
         this.config.deviceDiyUrl,
-        this.config.headers(oauth),
+        {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          clientType: '0',
+          clientId: oauth.clientId,
+          appVersion: '',
+          authorization: `Bearer ${oauth.accessToken}`,
+          appversion: '3.7.0',
+        },
         {
           sku: model,
           goodsType,

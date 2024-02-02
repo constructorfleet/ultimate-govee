@@ -2,14 +2,18 @@ import { OAuthData } from '../api/account/models/account-client';
 
 const appVersion = '5.6.01';
 
-export const goveeHeaders = (data: {
+export const goveeHeaders = ({
+  clientId,
+  clientType = '1',
+}: {
   clientId: string;
+  clientType?: '1' | '0';
 }): Record<string, string> => ({
-  clientType: `1`,
+  clientType,
   'Content-Type': 'application/json',
   Accept: 'application/json',
   iotVersion: '0',
-  clientId: data.clientId,
+  clientId,
   'User-Agent': `GoveeHome/${appVersion} (com.ihoment.GoVeeSensor; build:2; iOS 16.5.0) Alamofire/5.6.4`,
   appVersion,
   AppVersion: appVersion,
@@ -17,8 +21,12 @@ export const goveeHeaders = (data: {
 
 export const goveeAuthenticatedHeaders = (
   data: OAuthData,
+  clientType: '0' | '1' = '1',
 ): Record<string, string> => ({
-  ...goveeHeaders(data),
+  ...goveeHeaders({
+    ...data,
+    clientType,
+  }),
   Authorization: `Bearer ${data.accessToken}`,
 });
 

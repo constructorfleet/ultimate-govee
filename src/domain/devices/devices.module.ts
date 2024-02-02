@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import {
+  DataModule,
   GoveeDeviceModule,
   GoveeDiyModule,
   GoveeEffectModule,
@@ -13,6 +14,7 @@ import { DevicesFactory } from './devices.factory';
 
 @Module({
   imports: [
+    DataModule,
     GoveeDeviceModule,
     GoveeProductModule,
     GoveeEffectModule,

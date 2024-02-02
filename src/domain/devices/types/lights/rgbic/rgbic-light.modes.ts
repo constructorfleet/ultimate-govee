@@ -19,6 +19,7 @@ export const SceneModeStateName: 'sceneMode' = 'sceneMode' as const;
 export type SceneModeStateName = typeof SceneModeStateName;
 
 export type SceneMode = {
+  sceneCode?: number;
   sceneId?: number;
   sceneParamId?: number;
 };
@@ -41,8 +42,9 @@ export class SceneModeState extends DeviceOpState<
     }
 
     this.stateValue.next({
-      sceneId: total(opCommand.slice(1, 3)),
-      sceneParamId: total(opCommand.slice(3, 5)),
+      sceneCode: total(opCommand.slice(1, 3), true),
+      sceneId: total(opCommand.slice(3, 5), true),
+      sceneParamId: total(opCommand.slice(5, 7), true),
     });
   }
 }
@@ -94,6 +96,39 @@ export class MicModeState extends DeviceOpState<MicModeStateName, MicMode> {
 export const AdvancedColorModeStateName: 'advancedColorMode' =
   'advancedColorMode' as const;
 export type AdvancedColorModeStateName = typeof AdvancedColorModeStateName;
+
+export type AdvancedColorData = {
+  diyEffectCode?: number;
+};
+
+export class AdvancedColorModeState extends DeviceOpState<
+  AdvancedColorModeStateName,
+  AdvancedColorData
+> {
+  constructor(
+    deviceModel: DeviceModel,
+    opType: number = 0xaa,
+    identifier: number = 0x05,
+  ) {
+    super(
+      { opType, identifier },
+      deviceModel,
+      AdvancedColorModeStateName,
+      {},
+      'opCode',
+    );
+  }
+
+  parseOpCommand(opCommand: number[]): void {
+    if (opCommand[0] !== RGBICModes.ADVANCED_COLOR) {
+      return;
+    }
+
+    this.stateValue.next({
+      diyEffectCode: total(opCommand.slice(1, opCommand.indexOf(0x00)), true),
+    });
+  }
+}
 
 export const SegmentColorModeStateName: 'segmentColorMode' =
   'segmentColorMode' as const;
@@ -183,12 +218,23 @@ export class ColorModeState extends DeviceState<
   }
 
   parseState(data: ColorData): void {
-    if (data?.state?.mode !== RGBICModes.WHOLE_COLOR) {
-      return;
-    }
     if (data?.state?.color !== undefined) {
       this.stateValue.next(data.state.color);
     }
+  }
+
+  protected stateToCommand(state: WholeColor): any {
+    return {
+      cmd: 'colorwc',
+      data: {
+        color: {
+          r: state.red,
+          g: state.green,
+          b: state.blue,
+        },
+        colorTemInKelvin: 0,
+      },
+    };
   }
 }
 

@@ -18,6 +18,8 @@ import {
   SegmentColorModeStateName,
   SceneModeStateName,
   AdvancedColorModeStateName,
+  SceneModeState,
+  AdvancedColorModeState,
 } from './rgbic-light.modes';
 import { DeviceFactory } from '../../device.factory';
 import { RGBICSegmentsState } from './rgbic-light.segments';
@@ -29,6 +31,8 @@ const StateFactory: StateFactories = [
   (device: DeviceModel) => new SegmentCountState(device),
   (device: DeviceModel) => new ColorModeState(device),
   (device: DeviceModel) => new MicModeState(device),
+  (device: DeviceModel) => new SceneModeState(device),
+  (device: DeviceModel) => new AdvancedColorModeState(device),
 ];
 
 export const RGBICLightType: 'rgbic' = 'rgbic' as const;
@@ -52,6 +56,7 @@ export class RGBICLightDevice extends Device {
         this.state(SegmentColorModeStateName),
         this.state(SceneModeStateName),
         this.state(AdvancedColorModeStateName),
+        this.state(SceneModeStateName),
       ]),
     );
     this.addState(new RGBICSegmentsState(device, this));
@@ -63,7 +68,7 @@ export class RGBICLightFactory extends DeviceFactory<RGBICLightDevice> {
   constructor() {
     super(RGBICLightDevice, {
       'LED Strip Light': {
-        'RGBIC Strip Lights': true,
+        'RGBIC Strip Lights': /2\*10m RGBIC Strip Light.*/,
       },
     });
   }

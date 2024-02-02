@@ -106,13 +106,13 @@ export class StateStatus {
 
 export class Color {
   @Expose({ name: 'r' })
-  red: Optional<number>;
+  red!: number;
 
   @Expose({ name: 'g' })
-  green: Optional<number>;
+  green!: number;
 
   @Expose({ name: 'b' })
-  blue: Optional<number>;
+  blue!: number;
 }
 
 export class MessageState {
@@ -136,7 +136,7 @@ export class MessageState {
 
   @Expose({ name: 'color' })
   @Type(() => Color)
-  color?: Color | undefined;
+  color?: Optional<Color>;
 
   @Expose({ name: 'mode' })
   mode?: Optional<number>;

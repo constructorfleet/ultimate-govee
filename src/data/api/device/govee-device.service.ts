@@ -12,6 +12,7 @@ import {
 import { goveeAuthenticatedHeaders, request } from '../../utils';
 import { BluetoothData, GoveeDevice, WiFiData } from '../../govee-device';
 import { OAuthData } from '../account/models/account-client';
+import { GoveeDiyService } from '../diy/govee-diy.service';
 
 @Injectable()
 export class GoveeDeviceService {
@@ -24,15 +25,15 @@ export class GoveeDeviceService {
       filename: join('persisted', 'devices.json'),
     })
     private readonly deviceListResponse: Optional<DeviceListResponse>,
+    private readonly diyService: GoveeDiyService,
   ) {}
 
   async getDeviceList(oauthData: OAuthData): Promise<GoveeDevice[]> {
     try {
-      this.logger.log('Getting device list');
+      this.logger.log('Retrieving list of devices from Govee REST API');
       const response = await this.getApiResult(oauthData);
       return GoveeDeviceService.parseResponse(response);
     } catch (err) {
-      this.logger.error(err);
       this.logger.error(`Unable to retrieve device list`, err);
       return GoveeDeviceService.parseResponse(
         this.deviceListResponse || { message: '', status: 0, devices: [] },

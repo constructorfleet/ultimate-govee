@@ -28,7 +28,7 @@ export class IoTService implements IoTHandler, OnModuleDestroy {
   onMessage(topic: string, payload: ArrayBuffer, dup: boolean) {
     const message = parseMessage(payload);
     this.logger.debug(`Received message on topic ${topic}`);
-    this.logger.debug(JSON.stringify(message));
+    // this.logger.debug(JSON.stringify(message));
     if (!dup && this.messageCallback) {
       this.messageCallback(IoTService.parseIoTMessage(message));
     }
@@ -40,7 +40,7 @@ export class IoTService implements IoTHandler, OnModuleDestroy {
   }
 
   async send(topic: string, payload: string) {
-    this.logger.debug(`Sending message to ${topic}, ${payload}`);
+    this.logger.debug(`Sending message to topic ${topic}`);
     await this.client?.publish(topic, payload);
   }
 
@@ -74,6 +74,16 @@ export class IoTService implements IoTHandler, OnModuleDestroy {
         humidity: {
           current: currentHumditity,
         },
+        brightness: message.state?.brightness,
+        color:
+          message.state?.color !== undefined
+            ? {
+                red: message.state.color.red,
+                green: message.state.color.green,
+                blue: message.state.color.blue,
+              }
+            : undefined,
+        mode: message.state?.mode,
       },
       op: message.op,
     };

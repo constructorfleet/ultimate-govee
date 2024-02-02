@@ -4,6 +4,29 @@ import { Optional } from '@govee/common';
 import { GoveeDeviceStatus } from '@govee/data';
 import { DeviceModel } from '../devices.model';
 import { DeviceState } from '../states/device.state';
+import Winston from 'winston';
+import DailyRotateFile from 'winston-daily-rotate-file';
+
+const getLogger = (device: Device): Winston.Logger =>
+  Winston.createLogger({
+    level: 'info',
+    format: Winston.format.combine(
+      Winston.format.timestamp(),
+      Winston.format.json({
+        space: 2,
+      }),
+    ),
+    transports: [
+      new DailyRotateFile({
+        dirname: `persisted/devices/${device.model}`,
+        filename: `${device.id.replace(/:/g, '')}-%DATE%.log`,
+        datePattern: 'YYYY-MM-DD',
+        zippedArchive: true,
+        maxSize: '20m',
+        maxFiles: '7d',
+      }),
+    ],
+  });
 
 export type DeviceStates = Record<string, DeviceState<string, any>>;
 export type DeviceStateValues = Record<string, unknown>;
@@ -111,6 +134,12 @@ export abstract class Device extends BehaviorSubject<DeviceStateValues> {
     this.device.refresh();
   }
 
+  setState(stateName: string, nextState: any): any {
+    return this.state(stateName)?.setState(nextState);
+  }
+
+  protected stateLogger: Winston.Logger | undefined;
+
   constructor(
     protected readonly device: DeviceModel,
     stateFactories: StateFactories,
@@ -129,17 +158,17 @@ export abstract class Device extends BehaviorSubject<DeviceStateValues> {
       });
     });
     interval(5000).subscribe(() => this.refresh());
-    this.subscribe((states) =>
-      console.dir(
-        {
-          deviceId: this.id,
-          name: this.name,
-          model: this.model,
-          type: this.constructor.name,
-          ...states,
-        },
-        { depth: 4 },
-      ),
-    );
+    this.subscribe((states) => {
+      if (this.stateLogger === undefined) {
+        this.stateLogger = getLogger(this);
+      }
+      this.stateLogger.info({
+        deviceId: this.id,
+        name: this.name,
+        model: this.model,
+        type: this.constructor.name,
+        ...states,
+      });
+    });
   }
 }

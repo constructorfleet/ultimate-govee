@@ -41,7 +41,7 @@ export abstract class ModeState extends DeviceOpState<
     identifier: number = 0x05,
     inline: boolean = false,
   ) {
-    super({ opType, identifier }, device, ModeStateName, undefined);
+    super({ opType, identifier }, device, ModeStateName, undefined, 'both');
     this.modes = definedStates(modes);
     this.inline = inline;
   }

@@ -1,4 +1,5 @@
 import { decode, encode } from 'base64-arraybuffer';
+import { Optional } from './types';
 
 const ArrayRange = (count: number): number[] =>
   // eslint-disable-next-line prefer-spread
@@ -45,20 +46,19 @@ export const hexToBase64 = (codes: number[]): string =>
   encode(Uint8Array.of(...codes));
 
 export const total = (codes: number[], reverse: boolean = false) =>
-  codes.reduce((res: number, code: number, index: number) => {
-    if (reverse) {
-      return 256 ** index * code + res;
-    }
-    return 256 ** (codes.length - index - 1) * code + res;
-  }, 0);
+  (reverse ? codes.reverse() : codes).reduce(
+    (res: number, code: number, index: number) =>
+      res | (code << (8 * (codes.length - index - 1))),
+    0,
+  );
 
 export const chunk = (codes: number[], chunkSize: number) =>
   ArrayRange(Math.ceil(codes.length / chunkSize)).map((x, i) =>
     codes.slice(i * chunkSize, i * chunkSize + chunkSize),
   );
 
-export function asOpCode(opType: number, ...values: number[]): number[] {
-  const cmdFrame = Buffer.from([opType, ...values]);
+export const asOpCode = (opCode: number, ...values: number[]): number[] => {
+  const cmdFrame = Buffer.from([opCode, ...values]);
   const cmdPaddedFrame = Buffer.concat([
     cmdFrame,
     Buffer.from(new Array(19 - cmdFrame.length).fill(0)),
@@ -67,8 +67,8 @@ export function asOpCode(opType: number, ...values: number[]): number[] {
     Buffer.concat([
       cmdPaddedFrame,
       Buffer.from([
-        cmdPaddedFrame.reduce((checksum, val) => checksum ** val, 0),
+        cmdPaddedFrame.reduce((checksum, val) => checksum ^ val, 0),
       ]),
     ]),
   );
-}
+};

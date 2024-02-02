@@ -1,5 +1,6 @@
 import { FactoryProvider } from '@nestjs/common';
 import { ConfigType, registerAs } from '@nestjs/config';
+import { Optional } from '@govee/common';
 import { Md5 } from 'ts-md5';
 import { v4 as uuidv4 } from 'uuid';
 

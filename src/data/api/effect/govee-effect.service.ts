@@ -28,6 +28,9 @@ export class GoveeEffectService {
     deviceId: string,
   ): Promise<any> {
     try {
+      this.logger.log(
+        `Retrieving light effects for device ${deviceId} from Govee REST API`,
+      );
       const response = await request(
         this.config.deviceEffectUrl,
         this.config.headers(oauth),
@@ -39,7 +42,7 @@ export class GoveeEffectService {
       ).get(EffectListResponse, `persisted/${deviceId}.raw.json`);
       return response.data as EffectListResponse;
     } catch (error) {
-      this.logger.error(`Unable to retrieve device effects`, error);
+      this.logger.error(`Unable to retrieve device light effects`, error);
       return undefined;
     }
   }

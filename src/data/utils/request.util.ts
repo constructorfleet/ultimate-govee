@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+import { Optional } from '@govee/common';
 import { ClassConstructor, plainToInstance } from 'class-transformer';
 import { writeFile } from 'fs/promises';
 

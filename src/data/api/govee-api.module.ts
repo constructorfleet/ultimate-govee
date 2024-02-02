@@ -17,5 +17,11 @@ import { GoveeProductModule } from './product';
     GoveeEffectModule,
     GoveeProductModule,
   ],
+  exports: [
+    GoveeAccountModule,
+    GoveeDeviceModule,
+    GoveeEffectModule,
+    GoveeProductModule,
+  ],
 })
 export class GoveeAPIModule {}

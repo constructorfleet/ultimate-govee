@@ -24,11 +24,11 @@ export class EffectsService {
       device.goodsType,
       device.id,
     );
-    await this.diyService.getDeviceDiys(
-      oauth,
-      device.model,
-      device.goodsType,
-      device.id,
-    );
+    // await this.diyService.getDeviceDiys(
+    //   oauth,
+    //   device.model,
+    //   device.goodsType,
+    //   device.id,
+    // );
   }
 }
