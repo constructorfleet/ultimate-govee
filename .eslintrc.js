@@ -55,6 +55,8 @@ module.exports = {
     'node/no-unsupported-features/node-builtins': 'off',
     'eslint/no-bitwise': 'off',
     'no-bitwise': 'off',
+    'eslint/no-plusplus': 'off',
+    'no-plusplus': 'off',
     'import/no-extraneous-dependencies': ['off', { devDependencies: true }],
     'node/no-missing-import': [
       'off',
