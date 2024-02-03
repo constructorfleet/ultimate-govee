@@ -57,6 +57,7 @@ module.exports = {
     'no-bitwise': 'off',
     'eslint/no-plusplus': 'off',
     'no-plusplus': 'off',
+    'function-call-argument-newline': 'always',
     'import/no-extraneous-dependencies': ['off', { devDependencies: true }],
     'node/no-missing-import': [
       'off',

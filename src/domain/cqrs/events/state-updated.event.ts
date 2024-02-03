@@ -1,4 +1,4 @@
-export class StateChangedEvent<StateName extends string, StateValue> {
+export class StateUpdatedEvent<StateName extends string, StateValue> {
   constructor(
     readonly deviceId: string,
     readonly stateName: StateName,

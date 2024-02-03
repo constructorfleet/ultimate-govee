@@ -13,8 +13,7 @@ import { CommandBus, EventBus } from '@nestjs/cqrs';
 import { DeviceModel, createDeviceModel } from './devices.model';
 import { DevicesFactory } from './devices.factory';
 import { Device } from './types/device';
-import { NewDeviceEvent } from './cqrs/events/new-device.event';
-import { UpdateDeviceStatusCommand } from '../../../cqrs/commands/update-device-status.command';
+import { NewDeviceEvent, UpdateDeviceStatusCommand } from '../cqrs';
 
 @Injectable()
 export class DevicesService {
@@ -30,7 +29,7 @@ export class DevicesService {
     private readonly diyApi: GoveeDiyService,
     private readonly commandBus: CommandBus,
     private readonly eventBus: EventBus,
-  ) {}
+  ) { }
 
   async refreshDeviceList(
     oauth: OAuthData,

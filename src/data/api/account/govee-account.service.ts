@@ -8,7 +8,7 @@ import {
   GoveeCredentials,
 } from './govee-account.configuration';
 import { LoginResponse } from './models/login.response';
-import { AccountState, OAuthData } from './models/account-client';
+import { GoveeAccount, OAuthData } from './models/account-client';
 import {
   IoTCertificateData,
   IoTCertificateResponse,
@@ -24,13 +24,9 @@ export class GoveeAccountService {
   constructor(
     @Inject(GoveeAccountConfig.KEY)
     private readonly config: ConfigType<typeof GoveeAccountConfig>,
-    @InjectPersisted({
-      filename: join('persisted', 'accountClient.json'),
-    })
-    private accountClient: Optional<AccountState>,
-  ) {}
+  ) { }
 
-  private isTokenValid(token?: string): boolean {
+  public isTokenValid(token?: string): boolean {
     const jwt = decodeJWT(token);
     try {
       if (!jwt?.exp || !jwt?.iat) {
@@ -67,23 +63,12 @@ export class GoveeAccountService {
     }
   }
 
-  @PersistResult({
-    path: 'persisted',
-    filename: 'accountClient.json',
-  })
-  async authenticate(credentials: GoveeCredentials): Promise<AccountState> {
+  async authenticate(credentials: GoveeCredentials): Promise<GoveeAccount> {
     let { clientId } = credentials;
     let topic: string;
     // const ttr = await request("https://community-api.govee.com/os/v1/login", {}, { email: credentials.username, password: credentials.password }).post();
     // console.dir(ttr.data, {depth: 5});
-    if (this.accountClient !== undefined) {
-      if (this.isTokenValid(this.accountClient?.oauth?.accessToken)) {
-        return this.accountClient;
-      }
-      this.accountClient.oauth = await this.refresh(this.accountClient.oauth);
-      return this.accountClient;
-    }
-    this.accountClient = {
+    const account: GoveeAccount = {
       accountId: '',
       oauth: {
         accessToken: '',
@@ -105,8 +90,8 @@ export class GoveeAccountService {
         },
       ).post(LoginResponse);
       clientId = loginResponse.data.client.clientId;
-      this.accountClient.accountId = loginResponse.data.client.accountId;
-      this.accountClient.oauth = {
+      account.accountId = loginResponse.data.client.accountId;
+      account.oauth = {
         accessToken: loginResponse.data.client.accessToken,
         refreshToken: loginResponse.data.client.refreshToken,
         expiresAt:
@@ -117,9 +102,9 @@ export class GoveeAccountService {
       topic = loginResponse.data.client.topic;
     } catch (err) {
       this.logger.error(
-        `Unable to authenticate with Govee. ${JSON.stringify(
+        `Unable to authenticate with Govee. ${ JSON.stringify(
           credentials,
-        )} ${err}`,
+        ) } ${ err }`,
         err,
       );
       throw new Error(`Unable to authenticate with Govee.`);
@@ -127,24 +112,23 @@ export class GoveeAccountService {
 
     try {
       const iotCertResponse = await this.getIoTCertificate(
-        this.accountClient.oauth,
+        account.oauth,
       );
       const iotCertificate = await parseP12Certificate(
         iotCertResponse.p12Certificate,
         iotCertResponse.certificatePassword,
       );
-      this.accountClient.iot = {
+      account.iot = {
         ...iotCertificate,
-        accountId: this.accountClient.accountId,
+        accountId: account.accountId,
         endpoint: iotCertResponse.brokerUrl,
         topic,
         clientId,
       };
     } catch (err) {
       this.logger.error(`Unable to authenticate with Govee servers`, err);
-      return this.accountClient;
     }
-    return this.accountClient;
+    return account;
   }
 
   async getIoTCertificate(oauthData: OAuthData): Promise<IoTCertificateData> {

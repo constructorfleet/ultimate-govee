@@ -1,9 +1,10 @@
 import { OAuthData } from '@govee/data';
+import { AccountId, ClientId } from '../../accounts/accounts.state';
 
 export class AuthenticatedEvent {
   constructor(
-    readonly accountId: string,
-    readonly clientId: string,
+    readonly accountId: AccountId,
+    readonly clientId: ClientId,
     readonly oauthData: OAuthData,
-  ) {}
+  ) { }
 }

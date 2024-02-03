@@ -25,7 +25,7 @@ const persistedFiles: Record<string, PersistedFile> = {};
 
 export const createPersistedFileProviders = () =>
   Object.entries(persistedFiles).map(([filePath, options]) => ({
-    provide: `Persisted.${filePath}`,
+    provide: `Persisted.${ filePath }`,
     useFactory: async () => {
       if (!existsSync(filePath)) {
         return undefined;
@@ -42,5 +42,5 @@ export const InjectPersisted = (persistedFile: PersistedFile) => {
   if (persistedFiles[persistedFile.filename] === undefined) {
     persistedFiles[persistedFile.filename] = persistedFile;
   }
-  return Inject(`Persisted.${persistedFile.filename}`);
+  return Inject(`Persisted.${ persistedFile.filename }`);
 };

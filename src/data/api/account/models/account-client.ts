@@ -14,7 +14,7 @@ export type IoTData = {
   topic: string;
 };
 
-export type AccountState = {
+export type GoveeAccount = {
   accountId: string;
   clientId: string;
   iot?: IoTData;

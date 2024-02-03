@@ -18,6 +18,9 @@
     "ghcr.io/jungaretti/features/vim:1": {},
     "ghcr.io/trunk-io/devcontainer-feature/trunk:1": {}
   },
+  "appPort": [
+    "0.0.0.0:5112:5112" // CodeGPT
+  ],
   "customizations": {
     "vscode": {
       "extensions": [
