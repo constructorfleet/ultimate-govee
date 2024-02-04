@@ -7,7 +7,7 @@
   "license": "MIT",
   "author": "@Teagan423",
   "engines": {
-    "node": ">18.10.0,>=20.10.0"
+    "node": ">=20.10.0"
   },
   "keywords": [
     "govee",
@@ -37,6 +37,7 @@
     "@nestjs/cqrs": "^10.2.6",
     "@nestjs/microservices": "^10.3.0",
     "@nestjs/platform-express": "^10.0.0",
+    "@santi100/equal-lib": "^1.0.9",
     "@types/axios": "^0.14.0",
     "aws-iot-device-sdk-v2": "^1.18.0",
     "axios": "^1.6.2",
