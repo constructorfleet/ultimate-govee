@@ -19,6 +19,7 @@ export const filterCommands = (
       if (type === undefined) {
         return true;
       }
+
       const [cmdType, cmdIdentifier] = command.slice(0, 2);
       if (identifier !== undefined) {
         return cmdIdentifier === identifier;
@@ -39,14 +40,14 @@ export const filterCommands = (
 export abstract class DeviceState<StateName extends string, StateValue> {
   protected readonly logger: Logger = new Logger(this.constructor.name);
 
-  protected stateValue!: BehaviorSubject<StateValue>;
+  protected readonly stateValue: BehaviorSubject<StateValue>;
 
   subscribe(
     observerOrNext?:
       | Partial<Observer<StateValue>>
       | ((value: StateValue) => void),
   ): Subscription {
-    return this.stateValue.subscribe(observerOrNext);
+    return this.stateValue?.subscribe(observerOrNext);
   }
 
   public get value(): StateValue {
@@ -62,7 +63,7 @@ export abstract class DeviceState<StateName extends string, StateValue> {
     initialValue: StateValue,
   ) {
     this.stateValue = new BehaviorSubject(initialValue);
-    this.device.status.subscribe((status) => this.parse(status));
+    this.device.status?.subscribe((status) => this.parse(status));
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, class-methods-use-this
@@ -71,7 +72,7 @@ export abstract class DeviceState<StateName extends string, StateValue> {
   }
 
   parse(data: MessageData) {
-    if (data.cmd !== StatusCommand) {
+    if (data.cmd && data.cmd !== StatusCommand) {
       return;
     }
     this.parseState(data);
@@ -121,9 +122,9 @@ export abstract class DeviceOpState<
   parseOpCommand(opCommand: number[]) {}
 
   parse(data: OpCommandData) {
-    if (data.cmd !== StatusCommand) {
-      return;
-    }
+    // if (data.cmd !== StatusCommand) {
+    //   return;
+    // }
 
     const commands = data.op?.command ?? [];
     if (['both', 'opCode'].includes(this.parseOption)) {

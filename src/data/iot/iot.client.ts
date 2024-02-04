@@ -1,5 +1,5 @@
 import { CrtError, iot, mqtt } from 'aws-iot-device-sdk-v2';
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
 import { EOL } from 'os';
 import { ConfigType } from '@nestjs/config';
 import { Optional } from '@govee/common';
@@ -8,8 +8,8 @@ import { IoTHandler } from './iot.handler';
 import { IoTData } from '../api';
 
 @Injectable()
-export class IoTClient {
-  private readonly logger: Logger = new Logger();
+export class IoTClient implements OnModuleDestroy {
+  private readonly logger: Logger = new Logger(IoTClient.name);
   private connection: Optional<mqtt.MqttClientConnection>;
   private connected = false;
   private subscriptions: string[] = [];
@@ -38,8 +38,10 @@ export class IoTClient {
         .with_endpoint(iotData.endpoint)
         .with_clean_session(false)
         .build();
+
     this.connection = client.new_connection(connectionConfig);
     this.bindEvents(this.connection, handler);
+
     this.logger.log('Connecting to IoT Core');
     await this.connection.connect();
     return this;
@@ -114,10 +116,10 @@ export class IoTClient {
           },
     );
     iotConnection.on('disconnect', async () => {
-      this.logger.debug(`Disconnected from MQTT broker.`);
+      this.logger.log(`Disconnected from MQTT broker.`);
     });
     iotConnection.on('closed', async () => {
-      this.logger.debug(`Connection to MQTT broker closed.`);
+      this.logger.log(`Connection to MQTT broker closed.`);
     });
   }
 
@@ -144,6 +146,11 @@ export class IoTClient {
   async disconnect() {
     if (this.connection) {
       await this.connection.disconnect();
+      this.subscriptions = [];
     }
+  }
+
+  async onModuleDestroy() {
+    await this.disconnect();
   }
 }

@@ -14,8 +14,8 @@ export type PersistOptions = {
 };
 
 export function PersistResult(options: PersistOptions) {
-  const logger: Logger = new Logger('PersistResult');
-  return (target: any, nameMethod: string, descriptor: PropertyDescriptor) => {
+  const logger: Logger = new Logger('Persist');
+  return (_: any, __: string, descriptor: PropertyDescriptor) => {
     const original = descriptor.value;
     // eslint-disable-next-line func-names
     descriptor.value = async function (...args: any[]) {
@@ -23,16 +23,16 @@ export function PersistResult(options: PersistOptions) {
       if (options.path !== undefined && !existsSync(options.path)) {
         await mkdir(options.path, { recursive: true });
       }
-      logger.log('Writing Data');
       const filePath = join(options.path ?? '.', options.filename);
+      const resolvedPath = args.reduce(
+        (fp: string, arg: any, index: number) => fp.replace(`{${index}}`, arg),
+        filePath,
+      );
+      logger.debug(`Persisting result to ${resolvedPath}`);
       const writeData =
         options.transform === undefined ? result : options.transform(result);
       await writeFile(
-        args.reduce(
-          (fp: string, arg: any, index: number) =>
-            fp.replace(`{${index}}`, arg),
-          filePath,
-        ),
+        resolvedPath,
         JSON.stringify(writeData, null, 2),
         options.writeOption,
       );

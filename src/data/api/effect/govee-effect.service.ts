@@ -26,7 +26,7 @@ export class GoveeEffectService {
     model: string,
     goodsType: number,
     deviceId: string,
-  ): Promise<any> {
+  ): Promise<EffectListResponse | undefined> {
     try {
       this.logger.log(
         `Retrieving light effects for device ${deviceId} from Govee REST API`,
@@ -39,7 +39,38 @@ export class GoveeEffectService {
           goodsType,
           device: deviceId,
         },
-      ).get(EffectListResponse, `persisted/${deviceId}.raw.json`);
+      ).get(EffectListResponse, `persisted/${deviceId}.effects.raw.json`);
+      return response.data as EffectListResponse;
+    } catch (error) {
+      this.logger.error(`Unable to retrieve device light effects`, error);
+      return undefined;
+    }
+  }
+
+  @PersistResult({
+    path: 'persisted',
+    filename: '{3}.scenes.json',
+    transform: (data) => instanceToPlain(data),
+  })
+  async getDeviceScenes(
+    oauth: OAuthData,
+    model: string,
+    goodsType: number,
+    deviceId: string,
+  ): Promise<EffectListResponse | undefined> {
+    try {
+      this.logger.log(
+        `Retrieving light scenes for device ${deviceId} from Govee REST API`,
+      );
+      const response = await request(
+        this.config.sceneUrl,
+        this.config.headers(oauth),
+        {
+          sku: model,
+          goodsType,
+          device: deviceId,
+        },
+      ).get(EffectListResponse, `persisted/${deviceId}.scenes.raw.json`);
       return response.data as EffectListResponse;
     } catch (error) {
       this.logger.error(`Unable to retrieve device light effects`, error);

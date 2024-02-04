@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Optional } from '@govee/common';
-import { AppliancesFactory } from './types/appliances';
-import { LightsFactory } from './types/lights/lights.factory';
+import { AppliancesFactory } from './appliances/appliances.factory';
+import { LightsFactory } from './lights/lights.factory';
 import { DeviceModel } from './devices.model';
-import { Device } from './types/device';
-import { HomeImprovementFactory } from './types/home-improvement';
+import { Device } from './device';
+import { HomeImprovementFactory } from './home-improvement';
 
 @Injectable()
 export class DevicesFactory {

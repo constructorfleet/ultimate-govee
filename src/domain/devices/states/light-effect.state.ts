@@ -1,4 +1,5 @@
-import { Optional } from '@govee/common';
+import { DeltaMap, Optional, total } from '@govee/common';
+import { BehaviorSubject } from 'rxjs';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
 
@@ -9,28 +10,35 @@ export type LightEffects = {
   commands: number[][];
 };
 
+export type LightEffect = {
+  name?: string;
+  code?: number;
+  commands?: Optional<number[][]>;
+};
+
 export class LightEffectState extends DeviceOpState<
   LightEffectStateName,
-  LightEffects
+  LightEffect
 > {
+  readonly effects: DeltaMap<number, LightEffect> = new DeltaMap();
+  readonly activeEffectCode: BehaviorSubject<number | undefined> =
+    new BehaviorSubject<number | undefined>(undefined);
   constructor(
     device: DeviceModel,
-    opType: Optional<number> = 0xa3,
-    identifier: Optional<number> = undefined,
+    opType: Optional<number> = 0xaa,
+    identifier: Optional<number> = 0x05,
   ) {
-    super({ opType, identifier }, device, LightEffectStateName, {
-      commands: [],
+    super({ opType, identifier }, device, LightEffectStateName, {});
+    this.activeEffectCode.subscribe((effectCode) =>
+      this.stateValue.next(this.effects.get(effectCode ?? -1) ?? {}),
+    );
+    this.effects.delta$.subscribe(() => {
+      this.stateValue.next(this.stateValue.getValue());
     });
   }
 
-  parseOpCommandmandmandmand(opCommand: number[]) {
-    if (opCommand[0] === 0x00) {
-      this.stateValue.next({
-        commands: [],
-      });
-    }
-    this.stateValue.next({
-      commands: [...this.value.commands, opCommand],
-    });
+  parseOpCommand(opCommand: number[]) {
+    const effectCode: number = total(opCommand.slice(0, 2));
+    this.activeEffectCode.next(effectCode);
   }
 }

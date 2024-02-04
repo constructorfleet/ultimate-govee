@@ -208,6 +208,10 @@ export class EffectDisplay {
 
   @Expose({ name: 'sceneCategories' })
   @Type(() => EffectCategory)
+  sceneCategories!: EffectCategory[];
+
+  @Expose({ name: 'categories' })
+  @Type(() => EffectCategory)
   categories!: EffectCategory[];
 }
 

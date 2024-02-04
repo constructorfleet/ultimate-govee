@@ -1,4 +1,4 @@
-import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { Optional, unpaddedHexToArray } from '@govee/common';
 import { PersistResult } from 'persist';
@@ -16,12 +16,12 @@ const parseMessage = (payload: ArrayBuffer): IoTMessage => {
   return plainToInstance(IoTMessage, plain);
 };
 
-export type OnMessageCallback = (message: GoveeDeviceStatus) => void;
+export type OnIoTMessageCallback = (message: GoveeDeviceStatus) => void;
 
 @Injectable()
-export class IoTService implements IoTHandler, OnModuleDestroy {
+export class IoTService implements IoTHandler {
   private readonly logger: Logger = new Logger(IoTService.name);
-  private messageCallback: Optional<OnMessageCallback>;
+  private messageCallback: Optional<OnIoTMessageCallback>;
 
   constructor(private readonly client: IoTClient) {}
 
@@ -34,7 +34,10 @@ export class IoTService implements IoTHandler, OnModuleDestroy {
     }
   }
 
-  async connect(iotData: IoTData, callback: OnMessageCallback) {
+  async connect(iotData: IoTData, callback: OnIoTMessageCallback) {
+    if (this.client !== undefined) {
+      await this.client.disconnect();
+    }
     this.messageCallback = callback;
     await this.client.create(iotData, this);
   }
@@ -46,10 +49,6 @@ export class IoTService implements IoTHandler, OnModuleDestroy {
 
   async subscribe(topic: string) {
     await this.client?.subscribe(topic);
-  }
-
-  async onModuleDestroy() {
-    await this.client?.disconnect();
   }
 
   private static parseIoTMessage(message: IoTMessage): GoveeDeviceStatus {

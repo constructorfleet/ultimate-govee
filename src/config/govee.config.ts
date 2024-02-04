@@ -1,4 +1,5 @@
 import { FactoryProvider, NotImplementedException } from '@nestjs/common';
+import { registerAs } from '@nestjs/config';
 
 export const GoveeConfig = 'Configuration.Govee';
 
@@ -19,3 +20,12 @@ export const GoveeConfiguration: FactoryProvider = {
     throw new NotImplementedException();
   },
 };
+
+export const CredentialsConfig = registerAs(
+  'Configuration.Credentials',
+  () => ({
+    username: process.env.USERNAME || '',
+    password: process.env.PASSWORD || '',
+    apikey: process.env.API_KEY || '',
+  }),
+);

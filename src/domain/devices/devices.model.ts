@@ -149,6 +149,10 @@ export const IoTDevice = <TDevice extends ClassConstructor<DeviceModel>>(
       super(args[0]);
       this.iotTopic = args[0].iotTopic;
     }
+
+    refresh() {
+      super.refresh();
+    }
   }
 
   return IoTDeviceMixin;

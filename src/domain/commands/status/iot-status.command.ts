@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { IoTService } from '@govee/data';
 import { DeviceCommand } from '../command';
-import { Device } from '../..';
+import { Device } from '../../devices/device';
 
 @Injectable()
 export class IoTStatusCommand extends DeviceCommand {

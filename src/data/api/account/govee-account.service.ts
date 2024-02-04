@@ -1,7 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { join } from 'path';
-import { Optional } from '@govee/common';
 import { InjectPersisted, PersistResult } from '@govee/persist';
 import {
   GoveeAccountConfig,
@@ -24,7 +22,11 @@ export class GoveeAccountService {
   constructor(
     @Inject(GoveeAccountConfig.KEY)
     private readonly config: ConfigType<typeof GoveeAccountConfig>,
-  ) { }
+    @InjectPersisted({
+      filename: 'persisted/accountClient.json',
+    })
+    private readonly persisted: GoveeAccount | undefined,
+  ) {}
 
   public isTokenValid(token?: string): boolean {
     const jwt = decodeJWT(token);
@@ -63,7 +65,18 @@ export class GoveeAccountService {
     }
   }
 
+  @PersistResult({
+    path: 'persisted',
+    filename: 'accountClient.json',
+  })
   async authenticate(credentials: GoveeCredentials): Promise<GoveeAccount> {
+    if (
+      this.persisted?.oauth &&
+      this.isTokenValid(this.persisted.oauth.accessToken)
+    ) {
+      this.logger.log('Using persisted credentials');
+      return this.persisted;
+    }
     let { clientId } = credentials;
     let topic: string;
     // const ttr = await request("https://community-api.govee.com/os/v1/login", {}, { email: credentials.username, password: credentials.password }).post();
@@ -102,18 +115,16 @@ export class GoveeAccountService {
       topic = loginResponse.data.client.topic;
     } catch (err) {
       this.logger.error(
-        `Unable to authenticate with Govee. ${ JSON.stringify(
+        `Unable to authenticate with Govee. ${JSON.stringify(
           credentials,
-        ) } ${ err }`,
+        )} ${err}`,
         err,
       );
       throw new Error(`Unable to authenticate with Govee.`);
     }
 
     try {
-      const iotCertResponse = await this.getIoTCertificate(
-        account.oauth,
-      );
+      const iotCertResponse = await this.getIoTCertificate(account.oauth);
       const iotCertificate = await parseP12Certificate(
         iotCertResponse.p12Certificate,
         iotCertResponse.certificatePassword,
