@@ -6,7 +6,7 @@ import {
   DeviceDiscoveredEvent,
   LightEffectsReceivedEvent,
   SetLightEffectsCommand,
-} from '../cqrs';
+} from '../../cqrs';
 import { LightDevice } from './light.device';
 
 @Injectable()

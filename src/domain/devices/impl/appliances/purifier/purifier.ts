@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { CommandBus, EventBus } from '@nestjs/cqrs';
-import { DeviceModel } from '../../devices.model';
+import { DeviceModel } from '../../../devices.model';
 import {
   ControlLockState,
   DisplayScheduleState,
   NightLightState,
   TimerState,
-} from '../../states';
-import { DefaultFactory, Device, StateFactories } from '../../device';
-import { DeviceFactory } from '../../device.factory';
+} from '../../../states';
+import { DefaultFactory, Device, StateFactories } from '../../../device';
+import { DeviceFactory } from '../../../device.factory';
 import { FanSpeedStateName, PurifierFanSpeedState } from './purifier.fan-speed';
 import {
   CustomModeState,

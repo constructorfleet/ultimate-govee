@@ -1,7 +1,7 @@
 import { Subscription } from 'rxjs';
 import { Optional } from '@govee/common';
-import { DeviceState } from '../../states';
-import { DeviceModel } from '../../devices.model';
+import { DeviceState } from '../../../states';
+import { DeviceModel } from '../../../devices.model';
 import {
   AutoModeState,
   AutoModeStateName,

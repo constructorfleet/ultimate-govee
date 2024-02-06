@@ -1,6 +1,6 @@
 import { Optional } from '@govee/common';
-import { DeviceOpState } from '../../states';
-import { DeviceModel } from '../../devices.model';
+import { DeviceOpState } from '../../../states';
+import { DeviceModel } from '../../../devices.model';
 
 export const UVCStateName: 'isUVCActive' = 'isUVCActive' as const;
 export type UVCStateName = typeof UVCStateName;

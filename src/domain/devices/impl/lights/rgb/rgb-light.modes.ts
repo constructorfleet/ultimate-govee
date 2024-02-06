@@ -1,6 +1,6 @@
 import { total } from '@govee/common';
-import { DeviceOpState } from '../../states';
-import { DeviceModel } from '../../devices.model';
+import { DeviceOpState } from '../../../states';
+import { DeviceModel } from '../../../devices.model';
 
 export enum RGBModes {
   SCENE = 4,

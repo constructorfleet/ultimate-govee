@@ -7,8 +7,8 @@ import {
   ModeState,
   LightEffectState,
   LightEffect,
-} from '../../states';
-import { DeviceModel } from '../../devices.model';
+} from '../../../states';
+import { DeviceModel } from '../../../devices.model';
 
 export enum RGBICModes {
   SCENE = 4,

@@ -5,10 +5,10 @@ import {
   ColorRGBState,
   ConnectedState,
   PowerState,
-} from '../../states';
-import { DeviceModel } from '../../devices.model';
-import { StateFactories } from '../../device';
-import { DeviceFactory } from '../../device.factory';
+} from '../../../states';
+import { DeviceModel } from '../../../devices.model';
+import { StateFactories } from '../../../device';
+import { DeviceFactory } from '../../../device.factory';
 import { LightDevice } from '../light.device';
 
 const StateFactory: StateFactories = [

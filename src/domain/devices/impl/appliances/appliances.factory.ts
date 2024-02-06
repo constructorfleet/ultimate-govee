@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Optional } from '@govee/common';
 import { CommandBus, EventBus } from '@nestjs/cqrs';
-import { FactoryType } from '../device.factory';
+import { FactoryType } from '../../device.factory';
 import { HumidifierFactory } from './humidifier/humidifier';
 import { PurifierFactory } from './purifier/purifier';
-import { DeviceModel } from '../devices.model';
-import { Device } from '../device';
+import { DeviceModel } from '../../devices.model';
+import { Device } from '../../device';
 
 @Injectable()
 export class AppliancesFactory implements FactoryType {

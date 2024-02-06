@@ -2,9 +2,9 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Optional } from '@govee/common';
 import { CommandBus, EventBus } from '@nestjs/cqrs';
 import { RGBLightFactory } from './rgb/rgb-light';
-import { FactoryType } from '../device.factory';
-import { DeviceModel } from '../devices.model';
-import { Device } from '../device';
+import { FactoryType } from '../../device.factory';
+import { DeviceModel } from '../../devices.model';
+import { Device } from '../../device';
 import { RGBICLightFactory } from './rgbic/rgbic-light';
 
 @Injectable()

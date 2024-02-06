@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CommandBus, EventBus } from '@nestjs/cqrs';
-import { StateFactories } from '../../device';
+import { StateFactories } from '../../../device';
 import {
   BrightnessState,
   ConnectedState,
@@ -8,8 +8,8 @@ import {
   PowerState,
   SegmentCountState,
   SegmentCountStateName,
-} from '../../states';
-import { DeviceModel } from '../../devices.model';
+} from '../../../states';
+import { DeviceModel } from '../../../devices.model';
 import {
   SegmentColorModeState,
   ColorModeState,
@@ -22,7 +22,7 @@ import {
   SceneModeState,
   AdvancedColorModeState,
 } from './rgbic-light.modes';
-import { DeviceFactory } from '../../device.factory';
+import { DeviceFactory } from '../../../device.factory';
 import { LightDevice } from '../light.device';
 
 const StateFactory: StateFactories = [

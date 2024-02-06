@@ -1,13 +1,9 @@
-import { Optional, asOpCode } from '@govee/common';
-import { DeviceModel } from '../../devices.model';
-import {
-  ModeState,
-  DeviceOpState,
-  DeviceState,
-  HumidityState,
-} from '../../states';
+import { Optional, asOpCode, total } from '@govee/common';
+import { DeviceModel } from '../../../devices.model';
+import { ModeState, DeviceOpState, DeviceState } from '../../../states';
+import { AutoModeStateName } from '../humidifier/humidifier.modes';
 
-enum HumidifierModes {
+enum PurifierModes {
   MANUAL = 1,
   PROGRAM = 2,
   AUTO = 3,
@@ -29,25 +25,23 @@ export class ManualModeState extends DeviceOpState<
   }
 
   parseOpCommand(opCommand: number[]): void {
-    if (opCommand[0] !== HumidifierModes.MANUAL) {
+    if (opCommand[0] !== PurifierModes.MANUAL) {
       return;
     }
     const command = opCommand.slice(1);
     this.stateValue.next(command[command.indexOf(0x00) - 1]);
   }
 
-  setState(nextState: number) {
-    if (nextState < 0) {
-      this.logger.warn('Next state is less than 0, adjusting to 0');
-      nextState = 0;
-    } else if (nextState > 9) {
-      this.logger.warn('Next state is greater than 9, adjusting to 9');
-      nextState = 9;
+  setState(nextState: Optional<number>) {
+    if (nextState === undefined) {
+      this.logger.warn('Fan speed not specified, ignoring command');
+      return;
     }
+
     this.commandBus.next({
       data: {
         command: [
-          asOpCode(0x33, this.identifier!, HumidifierModes.MANUAL, nextState),
+          asOpCode(0x33, this.identifier!, PurifierModes.MANUAL, 0, nextState),
         ],
       },
     });
@@ -59,7 +53,7 @@ export type CustomModeStateName = typeof CustomModeStateName;
 
 export type CustomProgram = {
   id: number;
-  mistLevel: number;
+  fanSpeed: number;
   duration: number;
   remaining: number;
 };
@@ -72,7 +66,7 @@ export type CustomMode = {
 
 export class CustomModeState extends DeviceOpState<
   CustomModeStateName,
-  Optional<CustomProgram>
+  CustomProgram | undefined
 > {
   private customModes: CustomMode = {};
   constructor(
@@ -84,7 +78,7 @@ export class CustomModeState extends DeviceOpState<
   }
 
   parseOpCommand(opCommand: number[]): void {
-    if (opCommand[0] !== HumidifierModes.PROGRAM) {
+    if (opCommand[0] !== PurifierModes.PROGRAM) {
       return;
     }
     const command = opCommand.slice(1);
@@ -93,9 +87,9 @@ export class CustomModeState extends DeviceOpState<
       programs: [0, 1, 2].map(
         (i): CustomProgram => ({
           id: i,
-          mistLevel: command[1 + 5 * i],
-          duration: command[2 + 5 * i] * 255 + command[3 + 5 * i],
-          remaining: command[4 + 5 * i] * 255 + command[5 + 5 * i],
+          fanSpeed: command[1 + 5 * i],
+          duration: total([command[2 + 5 * i], command[3 + 5 * i]]),
+          remaining: total([command[4 + 5 * i], command[5 + 5 * i]]),
         }),
       ),
     };
@@ -109,24 +103,21 @@ export class CustomModeState extends DeviceOpState<
     this.stateValue.next(this.customModes.currentProgram);
   }
 
-  setState(nextState: Optional<CustomProgram>) {
-    if (nextState === undefined) {
-      this.logger.warn('Program not specified, ignoring command');
+  setState(nextState: CustomProgram | undefined) {
+    if (nextState === undefined || nextState?.fanSpeed === undefined) {
+      this.logger.warn('Fan speed not specified, ignoring command');
       return;
     }
-
     const newProgram: CustomProgram = {
-      id: nextState?.id ?? this.customModes?.currentProgram?.id ?? 0,
+      id: nextState.id ?? this.customModes.currentProgram?.id ?? 0,
       duration:
-        nextState?.duration ?? this.customModes?.currentProgram?.duration ?? 0,
+        nextState?.duration ?? this.customModes.currentProgram?.duration ?? 100,
       remaining:
         nextState?.remaining ??
-        this.customModes?.currentProgram?.remaining ??
+        this.customModes.currentProgram?.duration ??
         100,
-      mistLevel:
-        nextState?.mistLevel ??
-        this.customModes?.currentProgram?.mistLevel ??
-        0,
+      fanSpeed:
+        nextState?.fanSpeed ?? this.customModes?.currentProgram?.fanSpeed ?? 1,
     };
 
     const newPrograms: Record<number, CustomProgram> = {
@@ -135,19 +126,19 @@ export class CustomModeState extends DeviceOpState<
           id: 0,
           duration: 100,
           remaining: newProgram.id > 0 ? 0 : 100,
-          mistLevel: 0,
+          fanSpeed: 0,
         },
         1: {
           id: 1,
           duration: 100,
           remaining: newProgram.id > 1 ? 0 : 100,
-          mistLevel: 0,
+          fanSpeed: 0,
         },
         2: {
           id: 2,
           duration: 32640,
           remaining: 32640,
-          mistLevel: 0,
+          fanSpeed: 0,
         },
       }),
       [newProgram.id]: newProgram,
@@ -159,13 +150,13 @@ export class CustomModeState extends DeviceOpState<
           asOpCode(
             0x33,
             this.identifier!,
-            HumidifierModes.PROGRAM,
+            PurifierModes.PROGRAM,
             newProgram.id,
             ...[0, 1, 2].reduce((commands, program) => {
               commands.push(
                 ...[
                   newPrograms[program].id,
-                  newPrograms[program].mistLevel,
+                  newPrograms[program].fanSpeed,
                   Math.floor(newPrograms[program].duration / 255),
                   newPrograms[program].duration % 255,
                   Math.floor(newPrograms[program].remaining / 255),
@@ -181,70 +172,10 @@ export class CustomModeState extends DeviceOpState<
   }
 }
 
-export const AutoModeStateName: 'autoMode' = 'autoMode' as const;
-export type AutoModeStateName = typeof AutoModeStateName;
-
-export type AutoMode = {
-  targetHumidity?: number;
-};
-
-export class AutoModeState extends DeviceOpState<AutoModeStateName, AutoMode> {
+export class PurifierActiveMode extends ModeState {
   constructor(
     device: DeviceModel,
-    readonly humidityState?: HumidityState,
-    opType: number = 0xaa,
-    identifier: number = 0x05,
-  ) {
-    super({ opType, identifier }, device, AutoModeStateName, {});
-  }
-
-  parseOpCommand(opCommand: number[]) {
-    if (opCommand[0] !== HumidifierModes.AUTO) {
-      return;
-    }
-    this.stateValue.next({
-      targetHumidity: opCommand[1],
-    });
-  }
-
-  setState(nextState: AutoMode) {
-    if (nextState.targetHumidity === undefined) {
-      this.logger.warn('Target humidity not specified, ignoring state command');
-      return;
-    }
-    if (this.humidityState?.value?.range) {
-      const { range } = this.humidityState.value;
-      if (nextState.targetHumidity < (range.min ?? 0)) {
-        this.logger.warn(
-          `Target humidity ${nextState.targetHumidity} is less than minimum ${range.min ?? 0}, adjusting to minimum`,
-        );
-        nextState.targetHumidity = range.min ?? 0;
-      } else if (nextState.targetHumidity > (range.max ?? 0)) {
-        this.logger.warn(
-          `Target humidity ${nextState.targetHumidity} is greater than maximum ${range.max ?? 100}, adjusting to maximum`,
-        );
-        nextState.targetHumidity = range.max ?? 100;
-      }
-    }
-    this.commandBus.next({
-      data: {
-        command: [
-          asOpCode(
-            0x33,
-            this.identifier!,
-            HumidifierModes.AUTO,
-            nextState.targetHumidity,
-          ),
-        ],
-      },
-    });
-  }
-}
-
-export class HumidifierActiveState extends ModeState {
-  constructor(
-    device: DeviceModel,
-    states: Optional<DeviceState<string, any>>[],
+    states: (DeviceState<string, any> | undefined)[],
   ) {
     super(
       device,
@@ -253,23 +184,22 @@ export class HumidifierActiveState extends ModeState {
         any
       >[],
     );
-    this.activeIdentifier?.subscribe((identifier) => {
+    this.activeIdentifier.subscribe((identifier) => {
       if (identifier === undefined) {
         return;
       }
-      const modeIdentifier = identifier[identifier.indexOf(0x00) - 1];
-      switch (modeIdentifier) {
-        case HumidifierModes.MANUAL:
+      switch (identifier[0]) {
+        case PurifierModes.MANUAL:
           this.stateValue.next(
             this.modes.find((mode) => mode.name === ManualModeStateName),
           );
           break;
-        case HumidifierModes.PROGRAM:
+        case PurifierModes.PROGRAM:
           this.stateValue.next(
             this.modes.find((mode) => mode.name === CustomModeStateName),
           );
           break;
-        case HumidifierModes.AUTO:
+        case PurifierModes.AUTO:
           this.stateValue.next(
             this.modes.find((mode) => mode.name === AutoModeStateName),
           );
@@ -282,9 +212,10 @@ export class HumidifierActiveState extends ModeState {
 
   setState(nextState: Optional<DeviceState<string, unknown>>) {
     if (nextState === undefined) {
-      this.logger.warn('Next state is undefined, ignoring command');
+      this.logger.warn('Next state is not specified, ignoring command');
       return;
     }
+
     nextState.setState(nextState.value);
   }
 }

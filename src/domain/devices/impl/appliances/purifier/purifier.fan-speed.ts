@@ -1,7 +1,7 @@
 import { Subscription } from 'rxjs';
 import { Optional, asOpCode } from '@govee/common';
-import { DeviceOpState } from '../../states';
-import { DeviceModel } from '../../devices.model';
+import { DeviceOpState } from '../../../states';
+import { DeviceModel } from '../../../devices.model';
 import {
   CustomModeStateName,
   CustomProgram,
@@ -60,14 +60,14 @@ export class PurifierFanSpeedState extends DeviceOpState<
 
   setState(nextState: Optional<number>) {
     if (this.active === undefined) {
-      const quartile = Math.floor((nextState ?? 0) / 4);
+      // const quartile = Math.floor((nextState ?? 0) / 4);
       this.commandBus.next({
         data: {
           command: [
             asOpCode(
               0x33,
               this.identifier!,
-              quartile === 0 ? 16 : quartile - 1,
+              nextState === 0 ? 16 : quartile - 1,
             ),
           ],
         },

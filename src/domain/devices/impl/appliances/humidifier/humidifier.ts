@@ -10,9 +10,9 @@ import {
   PowerState,
   TimerState,
   WaterShortageState,
-} from '../../states';
-import { DeviceModel } from '../../devices.model';
-import { Device, StateFactories } from '../../device';
+} from '../../../states';
+import { DeviceModel } from '../../../devices.model';
+import { Device, StateFactories } from '../../../device';
 import { TargetHumidityState } from './humidifier.target-humidity';
 import { MistLevelState } from './humidifier.mist';
 import {
@@ -23,7 +23,7 @@ import {
   ManualModeState,
   ManualModeStateName,
 } from './humidifier.modes';
-import { DeviceFactory } from '../../device.factory';
+import { DeviceFactory } from '../../../device.factory';
 import { HumidiferUVCState } from './humidifier.uvc';
 
 const StateFactories: StateFactories = [
