@@ -2,7 +2,6 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Logger } from '@nestjs/common';
 import { SetLightEffectsCommand } from '../commands/set-light-effects.command';
 import {
-  LightEffect,
   LightEffectState,
   LightEffectStateName,
 } from '../../states/light-effect.state';
@@ -32,13 +31,6 @@ export class SetLightEffctsCommandHandler
     }
     command.effects
       .filter((effect) => !!effect.code)
-      .map(
-        (effect): LightEffect => ({
-          name: effect.name,
-          code: effect.code,
-          commands: effect.sceneEffect,
-        }),
-      )
       .forEach((effect) => {
         state.effects.set(effect.code!, effect);
       });
