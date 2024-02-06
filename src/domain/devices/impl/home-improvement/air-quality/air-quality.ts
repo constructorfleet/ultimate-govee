@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { CommandBus, EventBus } from '@nestjs/cqrs';
-import { DeviceModel } from '../../devices.model';
-import { DefaultFactory, Device, StateFactories } from '../../device';
-import { DeviceFactory } from '../../device.factory';
+import { DeviceModel } from '../../../devices.model';
+import { DefaultFactory, Device, StateFactories } from '../../../device';
+import { DeviceFactory } from '../../../device.factory';
 import { PM2State } from './air-quality.pm2';
 import { TemperatureState } from './air-quality.temperature';
 import { HumidityState } from './air-quality.humidity';

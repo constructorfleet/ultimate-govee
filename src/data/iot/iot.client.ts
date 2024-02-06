@@ -91,7 +91,6 @@ export class IoTClient implements OnModuleDestroy {
         qos: mqtt.QoS,
         retain: boolean,
       ) => {
-        this.logger.log('RECEIVED', topic);
         handler.onMessage(topic, payload, dup, qos, retain);
       },
     );

@@ -1,5 +1,5 @@
-import { HumidityState as BaseState } from '../../states/humidity.state';
-import { DeviceModel } from '../../devices.model';
+import { HumidityState as BaseState } from '../../../states/humidity.state';
+import { DeviceModel } from '../../../devices.model';
 
 export class HumidityState extends BaseState {
   constructor(device: DeviceModel) {

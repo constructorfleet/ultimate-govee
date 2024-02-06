@@ -36,14 +36,14 @@ export class PowerState extends DeviceState<PowerStateName, Optional<boolean>> {
     this.commandBus.next({
       command: 'turn',
       data: {
-        value: nextState ? 1 : 0,
+        value: nextState ? '1' : '0',
       },
     });
 
     this.commandBus.next({
       command: 'turn',
       data: {
-        val: nextState ? '1' : '0',
+        val: nextState === true ? '1' : '0',
       },
     });
   }

@@ -67,7 +67,7 @@ export class PurifierFanSpeedState extends DeviceOpState<
             asOpCode(
               0x33,
               this.identifier!,
-              nextState === 0 ? 16 : quartile - 1,
+              nextState === 0 || nextState === undefined ? 16 : nextState - 1,
             ),
           ],
         },

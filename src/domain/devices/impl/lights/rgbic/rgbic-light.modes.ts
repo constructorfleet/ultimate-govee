@@ -47,7 +47,11 @@ export class SceneModeState extends LightEffectState {
     }
     if (effect === undefined && nextState.name !== undefined) {
       effect = Array.from(this.effects.keys())
-        .map((k) => this.effects.get(k))
+        .map((k) => {
+          const r = this.effects.get(k);
+          console.dir({ k, r });
+          return r;
+        })
         .find((e) => e?.name === nextState.name);
     }
     if (effect === undefined) {
@@ -255,6 +259,36 @@ export class SegmentColorModeState extends DeviceOpState<
     this.stateValue.next(this.segments);
   }
 
+  // setState(nextState: Segment[]) {
+  //   const segmentCunks = chunk(
+  //     this.segments.map((s) => nextState.find((s1) => s1.id === s.id) ?? s),
+  //     3,
+  //   );
+  //   this.commandBus.next({
+  //     data: {
+  //       command: [
+  //         ...segmentCunks.map((segments, index) =>
+  //           asOpCode(
+  //             0x33,
+  //             0xa5,
+  //             index + 1,
+  //             ...segments.reduce((codes, segment) => {
+  //               codes.push(
+  //                 segment.brightness ?? 100,
+  //                 segment.color?.red ?? 0,
+  //                 segment.color?.green ?? 0,
+  //                 segment.color?.blue ?? 0,
+  //               );
+  //               return codes;
+  //             }, [] as number[]),
+  //           ),
+  //         ),
+  //         asOpCode(0x33, 0x05, RGBICModes.SEGMENT_COLOR, 1),
+  //       ],
+  //     },
+  //   });
+  // }
+
   setState(nextState: Segment[]) {
     const pad = (val: number): string => `000${val}`.slice(-3);
     const groups: SegmentUpdate = nextState.reduce(
@@ -295,7 +329,6 @@ export class SegmentColorModeState extends DeviceOpState<
         return asOpCode(
           0x33,
           0x05,
-          this.identifier!,
           RGBICModes.SEGMENT_COLOR,
           1,
           color.red,
@@ -311,13 +344,20 @@ export class SegmentColorModeState extends DeviceOpState<
       },
     );
 
+    // colorCommands.forEach((command) =>
+    //   this.commandBus.next({
+    //     data: {
+    //       command: [command],
+    //     },
+    //   }),
+    // );
+
     const brightnessCommands = Object.entries(groups.brightnessGroups).map(
       ([key, indicies]) => {
         const indexBytes = indexToSegmentBits(indicies);
         return asOpCode(
           0x33,
           0x05,
-          this.identifier!,
           RGBICModes.SEGMENT_COLOR,
           2,
           parseInt(key, 10),
@@ -326,6 +366,13 @@ export class SegmentColorModeState extends DeviceOpState<
       },
     );
 
+    // brightnessCommands.forEach((command) =>
+    //   this.commandBus.next({
+    //     data: {
+    //       command: [command],
+    //     },
+    //   }),
+    // );
     this.commandBus.next({
       data: {
         command: [...colorCommands, ...brightnessCommands],

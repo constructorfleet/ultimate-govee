@@ -89,7 +89,7 @@ export abstract class Device extends BehaviorSubject<DeviceStateValues> {
     this.device.status.subscribe((status) => state.parse(status));
     this.states.set(state.name, state);
     state.subscribe((value) => {
-      this.loggableState(this.id);
+      // this.loggableState(this.id);
       this.stateValues.set(state.name, value);
     });
     state.commandBus.subscribe((cmd) =>

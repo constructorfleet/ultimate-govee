@@ -73,7 +73,9 @@ export class GoveeEffectService {
               ...scene.lightEffects.map(
                 (lightEffect): Effect => ({
                   name: `${scene.name} ${lightEffect.name}`.trim(),
-                  code: scene.code,
+                  code: [0, undefined, null].includes(lightEffect.code)
+                    ? scene.code
+                    : lightEffect.code,
                   opCode: lightEffect.opCode,
                   type: lightEffect.sceneType,
                   cmdVersion: lightEffect.cmdVersion,

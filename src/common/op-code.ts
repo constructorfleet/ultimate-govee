@@ -52,7 +52,7 @@ export const total = (codes: number[], reverse: boolean = false) =>
     0,
   );
 
-export const chunk = (codes: number[], chunkSize: number) =>
+export const chunk = <T>(codes: T[], chunkSize: number) =>
   ArrayRange(Math.ceil(codes.length / chunkSize)).map((x, i) =>
     codes.slice(i * chunkSize, i * chunkSize + chunkSize),
   );

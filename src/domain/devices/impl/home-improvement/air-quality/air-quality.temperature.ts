@@ -1,5 +1,5 @@
-import { TemperatureState as BaseState } from '../../states/temperature.state';
-import { DeviceModel } from '../../devices.model';
+import { TemperatureState as BaseState } from '../../../states/temperature.state';
+import { DeviceModel } from '../../../devices.model';
 
 export class TemperatureState extends BaseState {
   constructor(device: DeviceModel) {

@@ -12,13 +12,8 @@ const payloadDecoder = new TextDecoder();
 
 const parseMessage = (payload: ArrayBuffer): IoTMessage => {
   const decoded = payloadDecoder.decode(payload);
-  try {
-    const plain = JSON.parse(decoded);
-    return plainToInstance(IoTMessage, plain);
-  } catch (e) {
-    console.error(e);
-    throw e;
-  }
+  const plain = JSON.parse(decoded);
+  return plainToInstance(IoTMessage, plain);
 };
 
 export type OnIoTMessageCallback = (message: GoveeDeviceStatus) => void;
