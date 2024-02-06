@@ -22,9 +22,9 @@ export class IoTChannelService extends ChannelService<
 
   onConfigChange(config: IoTData) {
     this.eventBus.publish(
-      new IoTChannelChangedEvent(config, (status) =>
-        this.eventBus.publish(new CQRS.DeviceStatusReceivedEvent(status)),
-      ),
+      new IoTChannelChangedEvent(config, (status) => {
+        this.eventBus.publish(new CQRS.DeviceStatusReceivedEvent(status));
+      }),
     );
   }
 }

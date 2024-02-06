@@ -40,8 +40,8 @@ export class ManualModeState extends DeviceOpState<
 
     this.commandBus.next({
       data: {
-        commandOp: [
-          asOpCode(0x33, this.identifier!, PurifierModes.MANUAL, nextState),
+        command: [
+          asOpCode(0x33, this.identifier!, PurifierModes.MANUAL, 0, nextState),
         ],
       },
     });
@@ -146,7 +146,7 @@ export class CustomModeState extends DeviceOpState<
 
     this.commandBus.next({
       data: {
-        commandOp: [
+        command: [
           asOpCode(
             0x33,
             this.identifier!,

@@ -46,7 +46,7 @@ export class ManualModeState extends DeviceOpState<
     }
     this.commandBus.next({
       data: {
-        commandOp: [
+        command: [
           asOpCode(0x33, this.identifier!, HumidifierModes.MANUAL, nextState),
         ],
       },
@@ -155,7 +155,7 @@ export class CustomModeState extends DeviceOpState<
 
     this.commandBus.next({
       data: {
-        commandOp: [
+        command: [
           asOpCode(
             0x33,
             this.identifier!,
@@ -228,7 +228,7 @@ export class AutoModeState extends DeviceOpState<AutoModeStateName, AutoMode> {
     }
     this.commandBus.next({
       data: {
-        commandOp: [
+        command: [
           asOpCode(
             0x33,
             this.identifier!,

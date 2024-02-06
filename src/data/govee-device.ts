@@ -65,16 +65,19 @@ export type GoveeCommandDataColorRGB = {
 };
 
 export type GoveeCommandData = {
-  commandOp?: number[][];
+  command?: number[][] | string[];
   color?: GoveeCommandDataColor | GoveeCommandDataColorRGB;
   value?: number | string | string[];
+  val?: number | string | string[];
   colorTemperature?: number;
   opcode?: string;
+  modeValue?: string;
 };
 
 export type GoveeCommand =
   | 'pt'
   | 'ptReal'
+  | 'mode'
   | 'turn'
   | 'brightness'
   | 'color'

@@ -60,13 +60,14 @@ export class PurifierFanSpeedState extends DeviceOpState<
 
   setState(nextState: Optional<number>) {
     if (this.active === undefined) {
+      const quartile = Math.floor((nextState ?? 0) / 4);
       this.commandBus.next({
         data: {
-          commandOp: [
+          command: [
             asOpCode(
               0x33,
               this.identifier!,
-              nextState === 1 ? 16 : (nextState ?? 1) - 1,
+              quartile === 0 ? 16 : quartile - 1,
             ),
           ],
         },

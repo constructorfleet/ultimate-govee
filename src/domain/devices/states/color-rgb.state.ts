@@ -72,7 +72,7 @@ export class ColorRGBState extends DeviceOpState<ColorRGBStateName, ColorRGB> {
 
     this.commandBus.next({
       data: {
-        commandOp: [
+        command: [
           asOpCode(
             0x33,
             this.identifier!,

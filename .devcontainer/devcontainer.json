@@ -13,13 +13,13 @@
       "upgradePackages": true,
       "username": "automatic",
       "userUid": "automatic",
-      "userGid": "automatic"
+      "userGid": "automatic",
     },
     "ghcr.io/jungaretti/features/vim:1": {},
-    "ghcr.io/trunk-io/devcontainer-feature/trunk:1": {}
+    "ghcr.io/trunk-io/devcontainer-feature/trunk:1": {},
   },
   "appPort": [
-    "0.0.0.0:5112:5112" // CodeGPT
+    "0.0.0.0:5112:5112", // CodeGPT
   ],
   "customizations": {
     "vscode": {
@@ -31,17 +31,17 @@
         "YaleHuang.chatgpt-ai",
         "huizhou.githd",
         "awhitenose.explorerGitTools",
-        "DanielSanMedium.dscodegpt"
+        "DanielSanMedium.dscodegpt",
       ],
       "settings": {
         "[typescript]": {
           "editor.tabSize": 2,
           "editor.formatOnSave": true,
-          "editor.defaultFormatter": "trunk.io"
-        }
-      }
-    }
-  }
+          "editor.defaultFormatter": "trunk.io",
+        },
+      },
+    },
+  },
   // Features to add to the dev container. More info: https://containers.dev/features.
   // "features": {},
   // Use 'forwardPorts' to make a list of ports inside the container available locally.

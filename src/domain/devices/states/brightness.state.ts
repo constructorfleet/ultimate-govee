@@ -48,12 +48,12 @@ export class BrightnessState extends DeviceOpState<
     this.commandBus.next({
       command: 'brightness',
       data: {
-        value: nextState,
+        val: nextState,
       },
     });
     this.commandBus.next({
       data: {
-        commandOp: [asOpCode(0x33, this.identifier!, nextState)],
+        command: [asOpCode(0x33, this.identifier!, nextState)],
       },
     });
   }

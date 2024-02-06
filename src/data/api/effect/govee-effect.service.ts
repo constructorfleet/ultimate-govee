@@ -1,6 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { instanceToPlain } from 'class-transformer';
 import { PersistResult } from '@govee/persist';
 import { Optional } from '@govee/common';
 import { request } from '../../utils';
@@ -46,7 +45,7 @@ export class GoveeEffectService {
   @PersistResult({
     path: 'persisted',
     filename: '{3}.effects.json',
-    transform: (data) => instanceToPlain(data),
+    // transform: (data) => instanceToPlain(data),
   })
   async getDeviceEffects(
     oauth: OAuthData,
@@ -95,7 +94,7 @@ export class GoveeEffectService {
   @PersistResult({
     path: 'persisted',
     filename: '{3}.scenes.json',
-    transform: (data) => instanceToPlain(data),
+    // transform: (data) => instanceToPlain(data),
   })
   async getDeviceScenes(
     oauth: OAuthData,

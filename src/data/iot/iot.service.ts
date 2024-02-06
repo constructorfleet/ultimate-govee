@@ -12,8 +12,13 @@ const payloadDecoder = new TextDecoder();
 
 const parseMessage = (payload: ArrayBuffer): IoTMessage => {
   const decoded = payloadDecoder.decode(payload);
-  const plain = JSON.parse(decoded);
-  return plainToInstance(IoTMessage, plain);
+  try {
+    const plain = JSON.parse(decoded);
+    return plainToInstance(IoTMessage, plain);
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
 };
 
 export type OnIoTMessageCallback = (message: GoveeDeviceStatus) => void;
@@ -27,8 +32,6 @@ export class IoTService implements IoTHandler {
 
   onMessage(topic: string, payload: ArrayBuffer, dup: boolean) {
     const message = parseMessage(payload);
-    this.logger.debug(`Received message on topic ${topic}`);
-    // this.logger.debug(JSON.stringify(message));
     if (!dup && this.messageCallback) {
       this.messageCallback(IoTService.parseIoTMessage(message));
     }

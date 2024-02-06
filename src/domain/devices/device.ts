@@ -1,6 +1,6 @@
 import { BehaviorSubject, Subject, interval, sampleTime } from 'rxjs';
 import { ConsoleLogger, Logger } from '@nestjs/common';
-import { DeltaMap, Optional } from '@govee/common';
+import { DeltaMap, Optional, hexToBase64 } from '@govee/common';
 import { GoveeDeviceStatus } from '@govee/data';
 import DailyRotateFile from 'winston-daily-rotate-file';
 import Winston from 'winston';
@@ -11,6 +11,7 @@ import { DeviceModel } from './devices.model';
 import { DeviceState } from './states/device.state';
 import { ModeState, ModeStateName } from './states/mode.state';
 import { DeviceRefeshEvent } from './cqrs/events/device-refresh.event';
+import { DeviceStateCommandEvent } from './cqrs/events/device-state-command.event';
 
 class JsonLogger extends ConsoleLogger {}
 
@@ -91,6 +92,28 @@ export abstract class Device extends BehaviorSubject<DeviceStateValues> {
       this.loggableState(this.id);
       this.stateValues.set(state.name, value);
     });
+    state.commandBus.subscribe((cmd) =>
+      this.eventBus.publish(
+        new DeviceStateCommandEvent(
+          state.name,
+          {
+            deviceId: this.id,
+            command: cmd.command,
+            cmdVersion: cmd.cmdVersion ?? 0,
+            type: cmd.type ?? 1,
+            data: {
+              ...cmd.data,
+              ...(cmd.data.command !== undefined
+                ? { command: cmd.data.command.map((x) => hexToBase64(x)) }
+                : {}),
+            },
+          },
+          {
+            iotTopic: this.iotTopic,
+          },
+        ),
+      ),
+    );
     return state;
   }
 
@@ -115,8 +138,12 @@ export abstract class Device extends BehaviorSubject<DeviceStateValues> {
   }
 
   get currentState() {
-    return Object.entries(this.states).reduce((s, [k, v]) => {
-      s[k] = v.value;
+    return Array.from(this.states.entries()).reduce((s, [k, v]) => {
+      if (k === ModeStateName) {
+        s[k] = (v as ModeState).activeIdentifier;
+      } else {
+        s[k] = v.value;
+      }
       return s;
     }, {});
   }
@@ -203,7 +230,7 @@ export abstract class Device extends BehaviorSubject<DeviceStateValues> {
     filename: '{0}.state.json',
   })
   loggableState(deviceId: string) {
-    return {
+    const state = {
       deviceId,
       name: this.name,
       model: this.model,
@@ -221,5 +248,6 @@ export abstract class Device extends BehaviorSubject<DeviceStateValues> {
         ),
       ),
     };
+    return state;
   }
 }

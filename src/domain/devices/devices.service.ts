@@ -35,6 +35,10 @@ export class DevicesService {
     return this.deviceMap.get(deviceId);
   }
 
+  getDeviceIds(): string[] {
+    return Array.from(this.deviceMap.keys());
+  }
+
   setDevice(device: Optional<Device>) {
     if (!device) {
       return;

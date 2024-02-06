@@ -67,7 +67,7 @@ export class RGBICLightFactory extends DeviceFactory<RGBICLightDevice> {
   constructor() {
     super(RGBICLightDevice, {
       'LED Strip Light': {
-        'RGBIC Strip Lights': /2\*10m RGBIC Strip Light.*/,
+        'RGBIC Strip Lights': [/2\*10m RGBIC Strip Light.*/, /.*RGBIC.*/],
       },
     });
   }

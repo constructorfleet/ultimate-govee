@@ -58,16 +58,16 @@ export class EffectSceneRule {
 }
 
 export class LightEffect {
-  @Expose({ name: 'sceneParamId' })
+  @Expose({ name: 'scenceParamId' })
   parameterId!: number;
 
-  @Expose({ name: 'sceneName' })
+  @Expose({ name: 'scenceName' })
   name!: string;
 
-  @Expose({ name: 'sceneParam' })
-  opCodeBase64?: string;
+  @Expose({ name: 'scenceParam' })
+  opCodeBase64!: string;
 
-  @Expose({ name: 'sceneOpCode' })
+  @Expose({ name: 'scenceOpCode' })
   get opCode(): Optional<number[][] | undefined> {
     return rebuildOpCode(this.code, this.opCodeBase64);
   }

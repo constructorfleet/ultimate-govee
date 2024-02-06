@@ -90,7 +90,10 @@ export class IoTClient implements OnModuleDestroy {
         dup: boolean,
         qos: mqtt.QoS,
         retain: boolean,
-      ) => handler.onMessage(topic, payload, dup, qos, retain),
+      ) => {
+        this.logger.log('RECEIVED', topic);
+        handler.onMessage(topic, payload, dup, qos, retain);
+      },
     );
     iotConnection.on('resume', async (code: number, resumed: boolean) => {
       this.logger.debug(

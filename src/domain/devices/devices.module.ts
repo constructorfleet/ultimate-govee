@@ -13,9 +13,11 @@ import {
   UpdateDeviceStatusCommandHandler,
   SetLightEffctsCommandHandler,
 } from './cqrs/handlers';
+import { DeviceController } from './device.controller';
 
 @Module({
   imports: [DataModule, AppliancesModule, HomeImprovementModule, LightsModule],
+  controllers: [DeviceController],
   providers: [
     DevicesService,
     DevicesFactory,
