@@ -1,6 +1,7 @@
-import { BehaviorSubject, Observer, Subscription } from 'rxjs';
+import { BehaviorSubject, Observer, Subject, Subscription } from 'rxjs';
 import { Optional, Ignorable } from '@govee/common';
 import { Logger } from '@nestjs/common';
+import { GoveeDeviceCommand } from '@govee/data';
 import { DeviceModel } from '../devices.model';
 
 type MessageData = {
@@ -41,20 +42,19 @@ export abstract class DeviceState<StateName extends string, StateValue> {
   protected readonly logger: Logger = new Logger(this.constructor.name);
 
   protected readonly stateValue: BehaviorSubject<StateValue>;
+  readonly commandBus: Subject<Omit<GoveeDeviceCommand, 'deviceId'>> =
+    new Subject();
 
   subscribe(
     observerOrNext?:
       | Partial<Observer<StateValue>>
       | ((value: StateValue) => void),
   ): Subscription {
-    return this.stateValue?.subscribe(observerOrNext);
+    return this.stateValue.subscribe(observerOrNext);
   }
 
   public get value(): StateValue {
     return this.stateValue.value;
-  }
-  public set value(value: StateValue) {
-    this.stateValue.next(value);
   }
 
   constructor(
@@ -122,10 +122,6 @@ export abstract class DeviceOpState<
   parseOpCommand(opCommand: number[]) {}
 
   parse(data: OpCommandData) {
-    // if (data.cmd !== StatusCommand) {
-    //   return;
-    // }
-
     const commands = data.op?.command ?? [];
     if (['both', 'opCode'].includes(this.parseOption)) {
       this.filterOpCommands(commands).forEach((command) =>
@@ -148,23 +144,3 @@ export abstract class DeviceOpState<
     );
   }
 }
-
-// export type CommandableState<StateName extends string, StateValue, StateType extends DeviceState<StateName, StateValue>> = {
-//   set: StateType extends DeviceOpState<string, infer StateValue>
-//   ? (nextState: StateValue) => Optional<number[][]>
-//   : StateType extends DeviceState<string, infer StateValue> ?
-//   (nextState: StateValue) => Record<string, unknown> | undefined
-//   : never;
-// } & StateType;
-
-// export const CommandableState = <StateName extends string, StateValue, StateType extends DeviceState<StateName, StateValue>>(base: Type<StateType>): Type<CommandableState<ModeStateName, StateValue, StateType>> => {
-//   class StateMixin extends base {
-//     constructor(args: ConstructorParameters<typeof base>) {
-//       super(...args);
-//     }
-
-//     set
-//   }
-
-//   return StateMixin as Type<;
-// }

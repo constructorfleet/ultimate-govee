@@ -28,10 +28,10 @@ export abstract class ModeState extends DeviceOpState<
   ModeStateName,
   Optional<DeviceState<string, unknown>>
 > {
-  protected activeIdentifier = new BehaviorSubject<Optional<number[]>>(
+  readonly activeIdentifier = new BehaviorSubject<Optional<number[]>>(
     undefined,
   );
-  protected readonly modes: DeviceState<string, any>[];
+  readonly modes: DeviceState<string, any>[];
   protected readonly inline: boolean;
 
   constructor(

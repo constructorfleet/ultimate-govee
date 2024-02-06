@@ -1,4 +1,4 @@
-import { Optional } from '@govee/common';
+import { Ignorable, Optional } from '@govee/common';
 import { Measurement } from '@govee/data';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState, ParseOption } from './device.state';
@@ -29,8 +29,8 @@ export class TemperatureState extends DeviceOpState<
 > {
   constructor(
     device: DeviceModel,
-    opType: Optional<number> = undefined,
-    identifier: Optional<number> = undefined,
+    opType: Ignorable<Optional<number>> = undefined,
+    identifier: Ignorable<Optional<number>> = undefined,
     parseOption: ParseOption = 'state',
   ) {
     super(

@@ -1,4 +1,4 @@
-import { OpType, asOpCode, Optional } from '@govee/common';
+import { asOpCode, Optional } from '@govee/common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
 
@@ -40,11 +40,21 @@ export class BrightnessState extends DeviceOpState<
     this.stateValue.next(brightness);
   }
 
-  set(nextState: Optional<number>): Optional<number[][]> {
+  setState(nextState: Optional<number>) {
     if (nextState === undefined) {
-      return undefined;
+      return;
     }
 
-    return [asOpCode(OpType.COMMAND, this.identifier!, nextState)];
+    this.commandBus.next({
+      command: 'brightness',
+      data: {
+        value: nextState,
+      },
+    });
+    this.commandBus.next({
+      data: {
+        commandOp: [asOpCode(0x33, this.identifier!, nextState)],
+      },
+    });
   }
 }

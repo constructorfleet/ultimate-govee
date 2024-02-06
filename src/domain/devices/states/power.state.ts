@@ -27,4 +27,17 @@ export class PowerState extends DeviceState<PowerStateName, Optional<boolean>> {
       this.stateValue.next(data.state.isOn);
     }
   }
+
+  setState(nextState: Optional<boolean>) {
+    if (nextState === undefined) {
+      this.logger.warn('Power was not specified, ignoring command');
+      return;
+    }
+    this.commandBus.next({
+      command: 'turn',
+      data: {
+        value: nextState ? '1' : '0',
+      },
+    });
+  }
 }

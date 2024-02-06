@@ -1,5 +1,5 @@
 import { Subscription } from 'rxjs';
-import { Optional } from '@govee/common';
+import { Optional, asOpCode } from '@govee/common';
 import { DeviceOpState } from '../../states';
 import { DeviceModel } from '../../devices.model';
 import {
@@ -56,5 +56,38 @@ export class PurifierFanSpeedState extends DeviceOpState<
     }
     const speed = opCommand[0] !== 16 ? opCommand[0] + 1 : 1;
     this.stateValue.next(speed * 25);
+  }
+
+  setState(nextState: Optional<number>) {
+    if (this.active === undefined) {
+      this.commandBus.next({
+        data: {
+          commandOp: [
+            asOpCode(
+              0x33,
+              this.identifier!,
+              nextState === 1 ? 16 : (nextState ?? 1) - 1,
+            ),
+          ],
+        },
+      });
+      return;
+    }
+    if (this.active.value === undefined) {
+      this.logger.log('Unable to determine current mode, ignoring command');
+      return;
+    }
+    switch (this.active.value.name) {
+      case ManualModeStateName:
+        this.active.value.setState(nextState);
+        break;
+      case CustomModeStateName:
+        this.active.value.setState({
+          fanSpeed: nextState,
+        });
+        break;
+      default:
+        break;
+    }
   }
 }

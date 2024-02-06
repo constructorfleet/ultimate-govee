@@ -1,10 +1,11 @@
-import { chunk, total, Optional } from '@govee/common';
+import { chunk, total, Optional, asOpCode } from '@govee/common';
 import {
   DeviceOpState,
   SegmentCountState,
   DeviceState,
   ModeState,
   LightEffectState,
+  LightEffect,
 } from '../../states';
 import { DeviceModel } from '../../devices.model';
 
@@ -26,10 +27,26 @@ export class SceneModeState extends LightEffectState {
 
   parseOpCommand(opCommand: number[]): void {
     if (opCommand[0] !== RGBICModes.SCENE) {
-      return;
+      this.activeEffectCode.next(undefined);
     }
 
     this.activeEffectCode.next(total(opCommand.slice(1, 3), true));
+  }
+
+  setState(nextState: LightEffect) {
+    if (nextState.code === undefined) {
+      this.logger.warn(
+        `Scene code is required to issue commands to ${this.constructor.name}`,
+      );
+      return;
+    }
+
+    this.commandBus.next({
+      data: {
+        commandOp: nextState.opCode,
+      },
+      cmdVersion: nextState.cmdVersion,
+    });
   }
 }
 
@@ -59,6 +76,7 @@ export class MicModeState extends DeviceOpState<MicModeStateName, MicMode> {
 
   parseOpCommand(opCommand: number[]): void {
     if (opCommand[0] !== RGBICModes.MIC) {
+      this.stateValue.next({});
       return;
     }
     const [micScene, sensitivity, calm, autoColor, red, green, blue] =
@@ -72,6 +90,39 @@ export class MicModeState extends DeviceOpState<MicModeStateName, MicMode> {
         red,
         green,
         blue,
+      },
+    });
+  }
+
+  setState(nextState: MicMode) {
+    const next = {
+      micScene: nextState.micScene ?? this.value.micScene ?? 0,
+      sensitivity: nextState.sensitivity ?? this.value.sensitivity ?? 50,
+      calm: (nextState.calm ?? this.value.calm) === true ? 0x01 : 0x00,
+      autoColor:
+        (nextState.autoColor ?? this.value?.autoColor) === true ? 0x01 : 0x00,
+      color: {
+        red: nextState.color?.red ?? this.value?.color?.red ?? 0,
+        green: nextState.color?.green ?? this.value?.color?.green ?? 0,
+        blue: nextState.color?.blue ?? this.value?.color?.blue ?? 0,
+      },
+    };
+    this.commandBus.next({
+      data: {
+        commandOp: [
+          asOpCode(
+            0x33,
+            this.identifier!,
+            RGBICModes.MIC,
+            next.micScene,
+            next.sensitivity,
+            next.calm,
+            next.autoColor,
+            next.color.red,
+            next.color.green,
+            next.color.blue,
+          ),
+        ],
       },
     });
   }
@@ -105,6 +156,7 @@ export class AdvancedColorModeState extends DeviceOpState<
 
   parseOpCommand(opCommand: number[]): void {
     if (opCommand[0] !== RGBICModes.ADVANCED_COLOR) {
+      this.stateValue.next({});
       return;
     }
 
@@ -118,13 +170,28 @@ export const SegmentColorModeStateName: 'segmentColorMode' =
   'segmentColorMode' as const;
 export type SegmentColorModeStateName = typeof SegmentColorModeStateName;
 
+type Color = {
+  red: number;
+  green: number;
+  blue: number;
+};
+
 export type Segment = {
+  id?: number;
   brightness?: number;
-  color?: {
-    red: number;
-    green: number;
-    blue: number;
-  };
+  color?: Color;
+};
+
+const indexToSegmentBits = (indices: number): number[] =>
+  Number(indices)
+    .toString(16)
+    .split(/(.{2})/g)
+    ?.filter((i) => i.length > 0)
+    .map((i) => parseInt(`0x${i}`, 16));
+
+type SegmentUpdate = {
+  colorGroups: Record<string, number>;
+  brightnessGroups: Record<string, number>;
 };
 
 export class SegmentColorModeState extends DeviceOpState<
@@ -154,9 +221,10 @@ export class SegmentColorModeState extends DeviceOpState<
     const messageNumber = opCommand[0] - 1;
     const segmentCodes = chunk(opCommand.slice(1), 4).slice(0, 3);
     segmentCodes
-      .map((segmentCode: number[]): Segment => {
+      .map((segmentCode: number[], index): Segment => {
         const [brightness, red, green, blue] = segmentCode;
         return {
+          id: index,
           brightness,
           color: {
             red,
@@ -169,6 +237,82 @@ export class SegmentColorModeState extends DeviceOpState<
         this.segments[messageNumber * 3 + index] = segment;
       });
     this.stateValue.next(this.segments);
+  }
+
+  setState(nextState: Segment[]) {
+    const pad = (val: number): string => `000${val}`.slice(-3);
+    const groups: SegmentUpdate = nextState.reduce(
+      (group, segment) => {
+        if (segment.id === undefined) {
+          return group;
+        }
+        if (segment.color !== undefined) {
+          const key = `${pad(segment.color.red)}${pad(segment.color.green)}${pad(segment.color.blue)}`;
+          group.colorGroups[key] =
+            (group.colorGroups[key] || 0) + (1 << segment.id);
+        }
+        if (segment.brightness !== undefined) {
+          group.brightnessGroups[`${segment.brightness}`] =
+            (group.brightnessGroups[`${segment.brightness}`] || 0) +
+            (1 << segment.id);
+        }
+        return group;
+      },
+      {
+        colorGroups: {},
+        brightnessGroups: {},
+      } as SegmentUpdate,
+    );
+
+    const colorCommands = Object.entries(groups.colorGroups).map(
+      ([key, indicies]) => {
+        const colorKeys = key
+          .split(/(.{3})/g)
+          .filter((i) => i.length > 0)
+          .map((i) => Number.parseInt(i, 10));
+        const color: Color = {
+          red: colorKeys[0],
+          green: colorKeys[1],
+          blue: colorKeys[2],
+        };
+        const indexBytes = indexToSegmentBits(indicies);
+        return asOpCode(
+          0x33,
+          this.identifier!,
+          RGBICModes.SEGMENT_COLOR,
+          1,
+          color.red,
+          color.green,
+          color.blue,
+          0,
+          0,
+          0,
+          0,
+          0,
+          ...indexBytes,
+        );
+      },
+    );
+
+    const brightnessCommands = Object.entries(groups.brightnessGroups).map(
+      ([key, indicies]) => {
+        const indexBytes = indexToSegmentBits(indicies);
+        return asOpCode(
+          0x33,
+          this.identifier!,
+          RGBICModes.SEGMENT_COLOR,
+          2,
+          parseInt(key, 10),
+          ...indexBytes,
+        );
+      },
+    );
+
+    this.commandBus.next({
+      data: {
+        commandOp: [...colorCommands, ...brightnessCommands],
+      },
+    });
   }
 }
 
@@ -204,6 +348,8 @@ export class ColorModeState extends DeviceState<
   parseState(data: ColorData): void {
     if (data?.state?.color !== undefined) {
       this.stateValue.next(data.state.color);
+    } else {
+      this.stateValue.next({});
     }
   }
 
@@ -219,6 +365,19 @@ export class ColorModeState extends DeviceState<
         colorTemInKelvin: 0,
       },
     };
+  }
+
+  setState(nextState: WholeColor) {
+    this.commandBus.next({
+      command: 'colorwc',
+      data: {
+        color: {
+          r: nextState.red ?? 0,
+          g: nextState.green ?? 0,
+          b: nextState.blue ?? 0,
+        },
+      },
+    });
   }
 }
 
@@ -266,5 +425,14 @@ export class RGBICActiveState extends ModeState {
           break;
       }
     });
+  }
+
+  setState(nextState: Optional<DeviceState<string, unknown>>) {
+    if (nextState === undefined) {
+      this.logger.warn('Next state not specified, ignoring command');
+      return;
+    }
+
+    nextState.setState(nextState.value);
   }
 }

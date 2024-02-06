@@ -2,7 +2,11 @@ import { Subscription } from 'rxjs';
 import { Optional } from '@govee/common';
 import { DeviceState } from '../../states';
 import { DeviceModel } from '../../devices.model';
-import { AutoModeState, HumidifierActiveState } from './humidifier.modes';
+import {
+  AutoModeState,
+  AutoModeStateName,
+  HumidifierActiveState,
+} from './humidifier.modes';
 
 export type HumiditierHumidity = {
   current?: number;
@@ -31,5 +35,22 @@ export class TargetHumidityState extends DeviceState<
         this.stateValue.next(undefined);
       }
     });
+  }
+
+  setState(nextState: Optional<number>) {
+    if (nextState === undefined) {
+      this.logger.warn('Target humidity not specified, ignoring command');
+      return;
+    }
+    if (this.activeState.value?.name !== AutoModeStateName) {
+      this.logger.log(
+        'Target humidtiy can only be set in Auto, changing to to Auto',
+      );
+      this.activeState.modes
+        .find((m) => m.name === AutoModeStateName)
+        ?.setState(nextState);
+    } else {
+      this.activeState.value.setState(nextState);
+    }
   }
 }

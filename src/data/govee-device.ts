@@ -1,3 +1,5 @@
+import { DeviceId } from '@govee/common';
+
 export type WiFiData = {
   name?: string;
   mac: string;
@@ -48,6 +50,43 @@ export type GoveeDeviceStatus = {
   op?: {
     command?: number[][];
   };
+};
+
+export type GoveeCommandDataColor = {
+  red: number;
+  green: number;
+  blue: number;
+};
+
+export type GoveeCommandDataColorRGB = {
+  r: number;
+  g: number;
+  b: number;
+};
+
+export type GoveeCommandData = {
+  commandOp?: number[][];
+  color?: GoveeCommandDataColor | GoveeCommandDataColorRGB;
+  value?: number | string | string[];
+  colorTemperature?: number;
+  opcode?: string;
+};
+
+export type GoveeCommand =
+  | 'pt'
+  | 'ptReal'
+  | 'turn'
+  | 'brightness'
+  | 'color'
+  | 'colorTem'
+  | 'colorwc';
+
+export type GoveeDeviceCommand = {
+  deviceId: DeviceId;
+  command?: GoveeCommand;
+  type?: number;
+  cmdVersion?: number;
+  data: GoveeCommandData;
 };
 
 export type GoveeDevice = {

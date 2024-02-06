@@ -23,7 +23,6 @@ import {
   AdvancedColorModeState,
 } from './rgbic-light.modes';
 import { DeviceFactory } from '../../device.factory';
-import { RGBICSegmentsState } from './rgbic-light.segments';
 import { LightDevice } from '../light.device';
 
 const StateFactory: StateFactories = [
@@ -60,7 +59,6 @@ export class RGBICLightDevice extends LightDevice {
         this.state(LightEffectStateName),
       ]),
     );
-    this.addState(new RGBICSegmentsState(device, this));
   }
 }
 

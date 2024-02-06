@@ -1,20 +1,12 @@
 import { DeltaMap, Optional, total } from '@govee/common';
 import { BehaviorSubject } from 'rxjs';
+import { Effect } from '@govee/data';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
 
 export const LightEffectStateName: 'lightEffect' = 'lightEffect' as const;
 export type LightEffectStateName = typeof LightEffectStateName;
-
-export type LightEffects = {
-  commands: number[][];
-};
-
-export type LightEffect = {
-  name?: string;
-  code?: number;
-  commands?: Optional<number[][]>;
-};
+export type LightEffect = Partial<Effect>;
 
 export class LightEffectState extends DeviceOpState<
   LightEffectStateName,

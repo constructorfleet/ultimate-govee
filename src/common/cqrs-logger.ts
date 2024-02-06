@@ -34,15 +34,7 @@ const processTokens = (tokens: string[]): Token[] => {
   const tokenMetas = tempTokens.reduce(
     (acc: Token[], token: string, index: number) => {
       let tokenType: TokenType = TokenType.PLAIN;
-      // console.dir({
-      //   token,
-      //   type: tokenTypes[token],
-      //   nextTokenType:
-      //     index < tempTokens.length - 1
-      //       ? tokenTypes[tempTokens[index + 1]]
-      //       : undefined,
-      //   prevTokenTYpe: index === 0 ? undefined : acc[index - 1].type,
-      // });
+
       if (tokenTypes[token] !== undefined) {
         tokenType = tokenTypes[token];
       } else if (

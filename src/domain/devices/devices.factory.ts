@@ -16,9 +16,9 @@ export class DevicesFactory {
 
   create(device: DeviceModel): Optional<Device> {
     return [
-      // this.applianceFactory,
+      this.applianceFactory,
       this.lightFactory,
-      // this.homeImprovementFactory,
+      this.homeImprovementFactory,
     ]
       .map((factory) => factory.create(device))
       .find((d) => d !== undefined);

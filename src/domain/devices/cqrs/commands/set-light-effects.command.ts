@@ -1,10 +1,10 @@
 import { DeviceId, Labelled } from '@govee/common';
-import { EffectScene } from '@govee/data';
+import { Effect } from '@govee/data';
 
 export class SetLightEffectsCommand implements Labelled {
-  label = () => `Set Effects foR ${this.deviceId}`;
+  label = () => `Set Effects for ${this.deviceId}`;
   constructor(
     readonly deviceId: DeviceId,
-    readonly effects: EffectScene[],
+    readonly effects: Effect[],
   ) {}
 }

@@ -59,11 +59,11 @@ export class IoTChannelSagas {
   refreshDeviceFlow = (events$: Observable<any>): Observable<ICommand> =>
     events$.pipe(
       ofType(CQRS.DeviceRefeshEvent),
-      filter((event) => event.device.iotTopic !== undefined),
+      filter((event) => event.iotTopic !== undefined),
       map(
         (event) =>
-          new IoTPublishCommand(event.device.iotTopic!, {
-            topic: event.device.iotTopic,
+          new IoTPublishCommand(event.iotTopic!, {
+            topic: event.iotTopic,
             msg: {
               accountTopic: this.service.getConfig()?.topic,
               cmd: 'status',

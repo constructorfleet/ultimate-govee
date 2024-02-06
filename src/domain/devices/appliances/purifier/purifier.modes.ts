@@ -1,4 +1,4 @@
-import { Optional } from '@govee/common';
+import { Optional, asOpCode, total } from '@govee/common';
 import { DeviceModel } from '../../devices.model';
 import { ModeState, DeviceOpState, DeviceState } from '../../states';
 import { AutoModeStateName } from '../humidifier/humidifier.modes';
@@ -31,6 +31,21 @@ export class ManualModeState extends DeviceOpState<
     const command = opCommand.slice(1);
     this.stateValue.next(command[command.indexOf(0x00) - 1]);
   }
+
+  setState(nextState: Optional<number>) {
+    if (nextState === undefined) {
+      this.logger.warn('Fan speed not specified, ignoring command');
+      return;
+    }
+
+    this.commandBus.next({
+      data: {
+        commandOp: [
+          asOpCode(0x33, this.identifier!, PurifierModes.MANUAL, nextState),
+        ],
+      },
+    });
+  }
 }
 
 export const CustomModeStateName: 'customMode' = 'customMode' as const;
@@ -40,6 +55,7 @@ export type CustomProgram = {
   id: number;
   fanSpeed: number;
   duration: number;
+  remaining: number;
 };
 
 export type CustomMode = {
@@ -71,8 +87,9 @@ export class CustomModeState extends DeviceOpState<
       programs: [0, 1, 2].map(
         (i): CustomProgram => ({
           id: i,
-          fanSpeed: command[1 + 3 * i],
-          duration: command[2 + 3 * i] * 255 + command[3 + 3 * i],
+          fanSpeed: command[1 + 5 * i],
+          duration: total([command[2 + 5 * i], command[3 + 5 * i]]),
+          remaining: total([command[4 + 5 * i], command[5 + 5 * i]]),
         }),
       ),
     };
@@ -84,6 +101,74 @@ export class CustomModeState extends DeviceOpState<
           : undefined,
     };
     this.stateValue.next(this.customModes.currentProgram);
+  }
+
+  setState(nextState: CustomProgram | undefined) {
+    if (nextState === undefined || nextState?.fanSpeed === undefined) {
+      this.logger.warn('Fan speed not specified, ignoring command');
+      return;
+    }
+    const newProgram: CustomProgram = {
+      id: nextState.id ?? this.customModes.currentProgram?.id ?? 0,
+      duration:
+        nextState?.duration ?? this.customModes.currentProgram?.duration ?? 100,
+      remaining:
+        nextState?.remaining ??
+        this.customModes.currentProgram?.duration ??
+        100,
+      fanSpeed:
+        nextState?.fanSpeed ?? this.customModes?.currentProgram?.fanSpeed ?? 1,
+    };
+
+    const newPrograms: Record<number, CustomProgram> = {
+      ...(this.customModes.programs ?? {
+        0: {
+          id: 0,
+          duration: 100,
+          remaining: newProgram.id > 0 ? 0 : 100,
+          fanSpeed: 0,
+        },
+        1: {
+          id: 1,
+          duration: 100,
+          remaining: newProgram.id > 1 ? 0 : 100,
+          fanSpeed: 0,
+        },
+        2: {
+          id: 2,
+          duration: 32640,
+          remaining: 32640,
+          fanSpeed: 0,
+        },
+      }),
+      [newProgram.id]: newProgram,
+    };
+
+    this.commandBus.next({
+      data: {
+        commandOp: [
+          asOpCode(
+            0x33,
+            this.identifier!,
+            PurifierModes.PROGRAM,
+            newProgram.id,
+            ...[0, 1, 2].reduce((commands, program) => {
+              commands.push(
+                ...[
+                  newPrograms[program].id,
+                  newPrograms[program].fanSpeed,
+                  Math.floor(newPrograms[program].duration / 255),
+                  newPrograms[program].duration % 255,
+                  Math.floor(newPrograms[program].remaining / 255),
+                  newPrograms[program].remaining % 255,
+                ],
+              );
+              return commands;
+            }, [] as number[]),
+          ),
+        ],
+      },
+    });
   }
 }
 
@@ -123,5 +208,14 @@ export class PurifierActiveMode extends ModeState {
           break;
       }
     });
+  }
+
+  setState(nextState: Optional<DeviceState<string, unknown>>) {
+    if (nextState === undefined) {
+      this.logger.warn('Next state is not specified, ignoring command');
+      return;
+    }
+
+    nextState.setState(nextState.value);
   }
 }

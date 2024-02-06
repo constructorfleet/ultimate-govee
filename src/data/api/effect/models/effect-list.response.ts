@@ -1,6 +1,35 @@
 import { Expose, Transform, Type } from 'class-transformer';
-import { asOpCode, base64ToHex, chunk, Optional } from '@govee/common';
+import { base64ToHex, Optional } from '@govee/common';
 import { GoveeAPIResponse } from '../../govee-api.models';
+import { rebuildOpCode } from './op-code';
+
+export class SpeedInfo {
+  @Expose({ name: 'speedIndex' })
+  index!: number;
+
+  @Expose({ name: 'supSpeed' })
+  supportsSpeed!: boolean;
+
+  @Expose({ name: 'config' })
+  config!: unknown;
+}
+
+export class LightEffectSpecialEffect {
+  @Expose({ name: 'scenceParamId' })
+  parameterId!: number;
+
+  @Expose({ name: 'sceneParam' })
+  opCodeBase64?: string;
+
+  @Expose({ name: 'cmdVersion' })
+  cmdVersion!: number;
+
+  @Expose({ name: 'supportSku' })
+  supportedModels?: string[];
+
+  @Expose({ name: 'speedInfo' })
+  speedInfo?: SpeedInfo;
+}
 
 export class EffectSceneRule {
   @Expose({ name: 'maxSoftVersion' })
@@ -36,84 +65,56 @@ export class LightEffect {
   name!: string;
 
   @Expose({ name: 'sceneParam' })
-  parameter!: string;
+  opCodeBase64?: string;
+
+  @Expose({ name: 'sceneOpCode' })
+  get opCode(): Optional<number[][] | undefined> {
+    return rebuildOpCode(this.code, this.opCodeBase64);
+  }
 
   @Expose({ name: 'sceneCode' })
   code!: number;
 
   @Expose({ name: 'specialEffect' })
-  specialEffect?: unknown[];
+  specialEffect?: LightEffectSpecialEffect[];
 
   @Expose({ name: 'cmdVersion' })
-  commandVersion!: number;
+  cmdVersion!: number;
 
   @Expose({ name: 'sceneType' })
   sceneType!: number;
 
   @Expose({ name: 'diyEffectCode' })
-  diyEffectCode?: unknown[];
+  diyOpCode?: unknown[];
 
   @Expose({ name: 'diyEffectStr' })
-  diyEffectStr?: string;
+  diyOpCodeBase64?: string;
 
   @Expose({ name: 'diyEffect', toPlainOnly: true })
   get diyEffect(): Optional<number[][]> {
-    if (this.diyEffectStr === undefined) {
+    if (this.diyOpCodeBase64 === undefined) {
       return undefined;
     }
-    return this.diyEffectStr.split('/').map(base64ToHex);
-  }
-
-  @Expose({ name: 'sceneEffectCode' })
-  sceneEffectCode?: number;
-
-  @Expose({ name: 'sceneEffectStr' })
-  sceneEffectStr?: string;
-
-  @Expose({ name: 'sceneEffect' })
-  get sceneEffect(): number[][] | undefined {
-    if (
-      this.sceneEffectStr === undefined ||
-      this.sceneEffectCode === undefined
-    ) {
-      return undefined;
-    }
-    const codes = base64ToHex(this.sceneEffectStr);
-    const lines = chunk([1, -1, 2, ...codes], 17);
-    lines[0][1] = lines.length;
-    return [
-      ...lines.map((line: number[], index: number) =>
-        asOpCode(0xa3, index === lines.length - 1 ? 0xff : index, ...line),
-      ),
-      asOpCode(
-        0x33,
-        0x05,
-        0x04,
-        this.sceneEffectCode % 256,
-        this.sceneEffectCode >> 8,
-      ),
-    ];
+    // Probably wrong
+    return this.diyOpCodeBase64.split('/').map(base64ToHex);
   }
 
   @Expose({ name: 'rules' })
   rules?: unknown[];
+
+  @Expose({ name: 'speedInfo' })
+  speedInfo?: SpeedInfo;
 }
 
 export class EffectScene {
   @Expose({ name: 'sceneId' })
   id!: number;
 
-  @Expose({ name: 'sceneParamId' })
-  paramId!: number;
-
   @Expose({ name: 'iconUrls' })
   urls?: string[];
 
   @Expose({ name: 'sceneName' })
   name!: string;
-
-  @Expose({ name: 'sceneNameNew' })
-  nameTranslations!: Record<string, string>;
 
   @Expose({ name: 'sceneType' })
   type!: number;
@@ -124,68 +125,24 @@ export class EffectScene {
   @Expose({ name: 'sceneCategoryId' })
   categoryId!: number;
 
-  @Expose({ name: 'scenesHing' })
-  hint!: string;
-
-  @Expose({ name: 'scenesHintNew' })
-  hintTranslations!: Record<string, string>;
-
   @Expose({ name: 'rule' })
   rule?: EffectSceneRule;
-
-  @Expose({ name: 'voiceUrl' })
-  voiceUrl?: string;
 
   @Expose({ name: 'lightEffects' })
   @Type(() => LightEffect)
   lightEffects!: LightEffect[];
 
-  @Expose({ name: 'diyEffectCode' })
-  diyEffectCode?: unknown[];
+  @Expose({ name: 'voiceUrl' })
+  voiceUrl?: string;
 
-  @Expose({ name: 'diyEffectStr' })
-  diyEffectStr?: string;
-
-  @Expose()
-  get diyEffect(): Optional<number[][]> {
-    if (this.diyEffectStr === undefined) {
-      return undefined;
-    }
-    return this.diyEffectStr.split(/.{10}/g).map(base64ToHex);
-  }
-
-  @Expose({ name: 'sceneEffectCode' })
-  sceneEffectCode?: unknown[];
-
-  @Expose({ name: 'sceneEffectStr' })
-  sceneEffectStr?: string;
-
-  @Expose()
-  get sceneEffect(): Optional<number[][]> {
-    if (this.sceneEffectStr === undefined) {
-      return undefined;
-    }
-    return chunk(base64ToHex(this.sceneEffectStr), 10);
-  }
-
-  @Expose()
-  get sceneEffect20(): Optional<number[][]> {
-    if (this.sceneEffectStr === undefined) {
-      return undefined;
-    }
-    return chunk(base64ToHex(this.sceneEffectStr), 20);
-  }
-
-  @Expose()
-  get sceneEffect8(): Optional<number[][]> {
-    if (this.sceneEffectStr === undefined) {
-      return undefined;
-    }
-    return chunk(base64ToHex(this.sceneEffectStr), 8);
-  }
+  @Expose({ name: 'createTime' })
+  createTimestamp!: number;
 }
 
 export class EffectCategory {
+  @Expose({ name: 'categoryId' })
+  id!: number;
+
   @Expose({ name: 'name' })
   name!: string;
 
@@ -194,21 +151,10 @@ export class EffectCategory {
   scenes!: EffectScene[];
 }
 
-export class EffectDisplay {
-  @Expose({ name: 'displayCategory' })
-  displayCategory?: number;
-
-  @Expose({ name: 'isSupport' })
-  @Transform(({ value }) => value === 1, { toClassOnly: true })
-  isSupport?: boolean;
-
+export class EffectData {
   @Expose({ name: 'supportSpeed' })
   @Transform(({ value }) => value === 1, { toClassOnly: true })
   supportSpeed?: boolean;
-
-  @Expose({ name: 'sceneCategories' })
-  @Type(() => EffectCategory)
-  sceneCategories!: EffectCategory[];
 
   @Expose({ name: 'categories' })
   @Type(() => EffectCategory)
@@ -217,6 +163,6 @@ export class EffectDisplay {
 
 export class EffectListResponse extends GoveeAPIResponse {
   @Expose({ name: 'data' })
-  @Type(() => EffectDisplay)
-  effectData!: EffectDisplay;
+  @Type(() => EffectData)
+  effectData!: EffectData;
 }

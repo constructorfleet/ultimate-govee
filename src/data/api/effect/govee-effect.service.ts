@@ -2,10 +2,17 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { instanceToPlain } from 'class-transformer';
 import { PersistResult } from '@govee/persist';
+import { Optional } from '@govee/common';
 import { request } from '../../utils';
-import { EffectListResponse } from './models/effect-list.response';
+import {
+  EffectCategory,
+  EffectListResponse,
+  EffectScene,
+} from './models/effect-list.response';
 import { GoveeEffectConfig } from './govee-effect.config';
 import { OAuthData } from '../account/models/account-client';
+import { Effect } from './models/effect.model';
+import { SceneListResponse } from './models/scene-list.response';
 
 @Injectable()
 export class GoveeEffectService {
@@ -15,6 +22,26 @@ export class GoveeEffectService {
     @Inject(GoveeEffectConfig.KEY)
     private readonly config: ConfigType<typeof GoveeEffectConfig>,
   ) {}
+
+  async getEffects(
+    oauth: OAuthData,
+    model: string,
+    goodsType: number,
+    deviceId: string,
+  ): Promise<Optional<Effect[]>> {
+    const [deviceScenes, deviceEffects] = await Promise.all([
+      this.getDeviceScenes(oauth, model, goodsType, deviceId),
+      this.getDeviceEffects(oauth, model, goodsType, deviceId),
+    ]);
+    const effects = deviceEffects ?? [];
+    // Add any scene not already defined
+    effects.push(
+      ...(deviceScenes ?? []).filter(
+        (effect) => effects.find((e) => e.name === effect.name) === undefined,
+      ),
+    );
+    return effects;
+  }
 
   @PersistResult({
     path: 'persisted',
@@ -26,7 +53,7 @@ export class GoveeEffectService {
     model: string,
     goodsType: number,
     deviceId: string,
-  ): Promise<EffectListResponse | undefined> {
+  ): Promise<Optional<Effect[]>> {
     try {
       this.logger.log(
         `Retrieving light effects for device ${deviceId} from Govee REST API`,
@@ -40,7 +67,25 @@ export class GoveeEffectService {
           device: deviceId,
         },
       ).get(EffectListResponse, `persisted/${deviceId}.effects.raw.json`);
-      return response.data as EffectListResponse;
+      return (response.data as EffectListResponse).effectData.categories.reduce(
+        (effects: Effect[], category: EffectCategory) => {
+          category.scenes.forEach((scene: EffectScene) => {
+            effects.push(
+              ...scene.lightEffects.map(
+                (lightEffect): Effect => ({
+                  name: `${scene.name} ${lightEffect.name}`.trim(),
+                  code: scene.code,
+                  opCode: lightEffect.opCode,
+                  type: lightEffect.sceneType,
+                  cmdVersion: lightEffect.cmdVersion,
+                }),
+              ),
+            );
+          });
+          return effects;
+        },
+        [] as Effect[],
+      );
     } catch (error) {
       this.logger.error(`Unable to retrieve device light effects`, error);
       return undefined;
@@ -57,7 +102,7 @@ export class GoveeEffectService {
     model: string,
     goodsType: number,
     deviceId: string,
-  ): Promise<EffectListResponse | undefined> {
+  ): Promise<Optional<Effect[]>> {
     try {
       this.logger.log(
         `Retrieving light scenes for device ${deviceId} from Govee REST API`,
@@ -70,8 +115,24 @@ export class GoveeEffectService {
           goodsType,
           device: deviceId,
         },
-      ).get(EffectListResponse, `persisted/${deviceId}.scenes.raw.json`);
-      return response.data as EffectListResponse;
+      ).get(SceneListResponse, `persisted/${deviceId}.scenes.raw.json`);
+      return (response.data as SceneListResponse).sceneData.categories.reduce(
+        (effects: Effect[], category) => {
+          effects.push(
+            ...category.scenes.map(
+              (scene): Effect => ({
+                name: scene.name,
+                code: scene.code,
+                opCode: scene.opCode,
+                type: scene.type,
+                cmdVersion: 0,
+              }),
+            ),
+          );
+          return effects;
+        },
+        [] as Effect[],
+      );
     } catch (error) {
       this.logger.error(`Unable to retrieve device light effects`, error);
       return undefined;

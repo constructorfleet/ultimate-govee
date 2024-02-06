@@ -5,6 +5,7 @@ import {
   ControlLockState,
   DisplayScheduleState,
   HumidityState,
+  HumidityStateName,
   NightLightState,
   PowerState,
   TimerState,
@@ -16,7 +17,6 @@ import { TargetHumidityState } from './humidifier.target-humidity';
 import { MistLevelState } from './humidifier.mist';
 import {
   AutoModeState,
-  AutoModeStateName,
   CustomModeState,
   CustomModeStateName,
   HumidifierActiveState,
@@ -42,7 +42,6 @@ const StateFactories: StateFactories = [
       (device: DeviceModel) => new NightLightState(device, 0xaa, 0x1b),
       (device: DeviceModel) => new DisplayScheduleState(device, 0xaa, 0x18),
       (device: DeviceModel) => new HumidiferUVCState(device),
-      (device: DeviceModel) => new AutoModeState(device),
       (device: DeviceModel) => new HumidityState(device),
     ],
   },
@@ -56,10 +55,13 @@ export class HumidifierDevice extends Device {
 
   constructor(device: DeviceModel, eventBus: EventBus, commandBus: CommandBus) {
     super(device, eventBus, commandBus, StateFactories);
+    const autoModeState = this.addState(
+      new AutoModeState(device, this.state<HumidityState>(HumidityStateName)),
+    );
     const activeState = new HumidifierActiveState(device, [
       this.state(ManualModeStateName),
       this.state(CustomModeStateName),
-      this.state(AutoModeStateName),
+      autoModeState,
     ]);
     this.addState(activeState);
     this.addState(new MistLevelState(device, activeState));

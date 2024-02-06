@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs';
 import { DeviceState } from '../../states';
 import { DeviceModel } from '../../devices.model';
 import {
+  AutoModeStateName,
   CustomMode,
   CustomModeStateName,
   HumidifierActiveState,
@@ -21,12 +22,16 @@ export class MistLevelState extends DeviceState<
   Optional<number>
 > {
   private subscription: Optional<Subscription>;
-  constructor(device: DeviceModel, active: HumidifierActiveState) {
+  constructor(
+    device: DeviceModel,
+    readonly active: HumidifierActiveState,
+  ) {
     super(device, mistLevel, undefined);
     active?.subscribe((event) => {
       if (this.subscription !== undefined) {
         this.subscription.unsubscribe();
       }
+
       switch (event?.name) {
         case CustomModeStateName:
           this.subscription = event?.subscribe((event) => {
@@ -45,5 +50,36 @@ export class MistLevelState extends DeviceState<
           break;
       }
     });
+  }
+
+  setState(nextState: Optional<number>) {
+    if (this.active.value === undefined) {
+      this.logger.warn('Active state is unknown, ignoring command');
+      return;
+    }
+    if (nextState === undefined) {
+      this.logger.warn('Mist level is not specified, igoring command');
+      return;
+    }
+    switch (this.active.value.name) {
+      case AutoModeStateName:
+        this.logger.warn(
+          'Mist level cannot be set when in Auto, changing mode to Manual',
+        );
+        this.active.modes
+          .find((mode) => mode.name === ManualModeStateName)
+          ?.setState(nextState);
+        break;
+      case CustomModeStateName:
+        this.active.value.setState({
+          mistLevel: nextState,
+        });
+        break;
+      case ManualModeStateName:
+        this.active.value.setState(nextState);
+        break;
+      default:
+        break;
+    }
   }
 }

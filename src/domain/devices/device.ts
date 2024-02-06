@@ -1,15 +1,18 @@
-import { BehaviorSubject, interval } from 'rxjs';
-import { Logger } from '@nestjs/common';
-import { DeltaMap, Optional, startDelta } from '@govee/common';
+import { BehaviorSubject, Subject, interval, sampleTime } from 'rxjs';
+import { ConsoleLogger, Logger } from '@nestjs/common';
+import { DeltaMap, Optional } from '@govee/common';
 import { GoveeDeviceStatus } from '@govee/data';
 import DailyRotateFile from 'winston-daily-rotate-file';
 import Winston from 'winston';
 import { deepEquality } from '@santi100/equal-lib';
 import { CommandBus, EventBus } from '@nestjs/cqrs';
+import { PersistResult } from '@govee/persist';
 import { DeviceModel } from './devices.model';
 import { DeviceState } from './states/device.state';
-import { ModeStateName } from './states/mode.state';
+import { ModeState, ModeStateName } from './states/mode.state';
 import { DeviceRefeshEvent } from './cqrs/events/device-refresh.event';
+
+class JsonLogger extends ConsoleLogger {}
 
 const getLogger = (deviceId: string, deviceModel: string): Winston.Logger =>
   Winston.createLogger({
@@ -77,15 +80,18 @@ export abstract class Device extends BehaviorSubject<DeviceStateValues> {
   private readonly stateValues: DeltaMap<string, any> = new DeltaMap({
     isModified: (current, previous) => !deepEquality(current, previous),
   });
+  private readonly refreshSubject: Subject<undefined> = new Subject();
 
   protected addState<TDevice extends DeviceState<string, any>>(
     state: TDevice,
-  ): void {
+  ): TDevice {
     this.device.status.subscribe((status) => state.parse(status));
     this.states.set(state.name, state);
     state.subscribe((value) => {
+      this.loggableState(this.id);
       this.stateValues.set(state.name, value);
     });
+    return state;
   }
 
   get id(): string {
@@ -130,8 +136,9 @@ export abstract class Device extends BehaviorSubject<DeviceStateValues> {
   }
 
   refresh() {
-    this.eventBus.publish(new DeviceRefeshEvent(this.id));
-    this.device.refresh();
+    this.refreshSubject.next(undefined);
+
+    // this.device.refresh();
   }
 
   setState(stateName: string, nextState: any): any {
@@ -155,12 +162,29 @@ export abstract class Device extends BehaviorSubject<DeviceStateValues> {
         ...device.status.value,
       });
     });
+    this.refreshSubject
+      .pipe(sampleTime(1000))
+      .subscribe(() =>
+        this.eventBus.publish(
+          new DeviceRefeshEvent(
+            this.id,
+            this.model,
+            this.goodsType,
+            this.iotTopic,
+          ),
+        ),
+      );
     interval(5000).subscribe(() => this.refresh());
-    this.stateValues.delta$.pipe(startDelta()).subscribe((stateValues) => {
-      const values = Object.fromEntries(stateValues.all.entries());
+    this.stateValues.delta$.subscribe(() => {
+      const values = Object.fromEntries(
+        Array.from(this.stateValues.keys()).map((k) => [
+          k,
+          this.stateValues[k],
+        ]),
+      );
       this.next(values);
     });
-    this.subscribe((states) => {
+    this.subscribe(async (states) => {
       if (this.stateLogger === undefined) {
         this.stateLogger = getLogger(this.id, this.model);
       }
@@ -171,15 +195,31 @@ export abstract class Device extends BehaviorSubject<DeviceStateValues> {
         type: this.constructor.name,
         ...states,
       });
-      this.logger.log({
-        deviceId: this.id,
-        name: this.name,
-        model: this.model,
-        type: this.constructor.name,
-        ...Object.fromEntries(
-          Object.entries(states).filter((s) => s[0] !== ModeStateName),
-        ),
-      });
     });
+  }
+
+  @PersistResult({
+    path: 'persisted',
+    filename: '{0}.state.json',
+  })
+  loggableState(deviceId: string) {
+    return {
+      deviceId,
+      name: this.name,
+      model: this.model,
+      type: this.constructor.name,
+      ...Object.fromEntries(
+        Array.from(this.stateValues.keys()).map((s) =>
+          s !== ModeStateName
+            ? [s, this.stateValues.get(s)]
+            : [
+                s,
+                (
+                  this.stateValues.get(s) as ModeState
+                )?.activeIdentifier?.getValue(),
+              ],
+        ),
+      ),
+    };
   }
 }

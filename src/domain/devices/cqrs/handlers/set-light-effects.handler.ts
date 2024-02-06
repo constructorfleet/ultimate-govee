@@ -31,6 +31,7 @@ export class SetLightEffctsCommandHandler
       return;
     }
     command.effects
+      .filter((effect) => !!effect.code)
       .map(
         (effect): LightEffect => ({
           name: effect.name,
@@ -39,12 +40,7 @@ export class SetLightEffctsCommandHandler
         }),
       )
       .forEach((effect) => {
-        if (effect.code === 22) {
-          console.dir(effect);
-        }
-        if (effect.code) {
-          state.effects.set(effect.code, effect);
-        }
+        state.effects.set(effect.code!, effect);
       });
   }
 }

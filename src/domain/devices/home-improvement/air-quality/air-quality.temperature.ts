@@ -3,7 +3,7 @@ import { DeviceModel } from '../../devices.model';
 
 export class TemperatureState extends BaseState {
   constructor(device: DeviceModel) {
-    super(device, undefined, undefined, 'both');
+    super(device, null, null, 'both');
   }
 
   parseOpCommand(opCommand: number[]): void {
