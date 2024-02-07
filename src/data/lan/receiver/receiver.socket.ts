@@ -1,31 +1,45 @@
-import { Inject, OnModuleInit } from '@nestjs/common';
+import { Inject, OnModuleDestroy } from '@nestjs/common';
 import { Socket } from 'dgram';
 import { ConfigType } from '@nestjs/config';
 import { AddressInfo } from 'net';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { ReceiverConfig } from './receiver.config';
-import { SocketEventHandler } from '../lan.types';
+import { MessageEvent, ReceiverState } from './receiver.types';
 
-export class ReceiverSocket implements OnModuleInit {
+export class ReceiverSocket implements OnModuleDestroy {
+  readonly socketState = new BehaviorSubject<ReceiverState>(
+    ReceiverState.UNBOUND,
+  );
+  readonly messageBus: Subject<MessageEvent> = new Subject();
+
   constructor(
     @Inject(ReceiverConfig.KEY)
     private readonly config: ConfigType<typeof ReceiverConfig>,
     private readonly socket: Socket,
-  ) {}
+  ) {
+    this.socket
+      .addListener('close', () => this.socketState.next(ReceiverState.CLOSED))
+      .addListener('connect', () =>
+        this.socketState.next(ReceiverState.CONNECTED),
+      )
+      .addListener('error', (err) => this.socketState.next(ReceiverState.ERROR))
+      .addListener('listening', () =>
+        this.socketState.next(ReceiverState.LISTENING),
+      )
+      .addListener('message', (msg, rinfo) =>
+        this.messageBus.next({
+          message: msg,
+          remoteInfo: rinfo,
+        }),
+      );
+  }
 
   get address(): AddressInfo {
     return this.socket.address();
   }
 
-  bindHandler(eventHandler: SocketEventHandler) {
-    this.socket
-      .addListener('close', eventHandler.onClose)
-      .addListener('connect', eventHandler.onConnect)
-      .addListener('error', eventHandler.onError)
-      .addListener('listening', eventHandler.onListening)
-      .addListener('message', eventHandler.onMessage);
-  }
-
   bind() {
+    this.socketState.next(ReceiverState.BINDING);
     this.socket.bind(this.config.receiverPort, () => {
       this.socket.addMembership(
         this.config.broadcastAddress,
@@ -38,7 +52,7 @@ export class ReceiverSocket implements OnModuleInit {
     this.socket.close();
   }
 
-  onModuleInit() {
-    this.bind();
+  onModuleDestroy() {
+    this.close();
   }
 }

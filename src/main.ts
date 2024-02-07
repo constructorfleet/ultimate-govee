@@ -6,6 +6,8 @@ import { AppModule } from './app.module';
 import { AppService } from './app.service';
 import { CredentialsConfig } from './config/govee.config';
 import { CQRSLogger } from './common/cqrs-logger';
+import { MicroserviceOptions } from '@nestjs/microservices';
+import { IpcServer } from './ipc';
 // import { Labelled } from './common';
 
 // const getMesage = (event: Labelled, action: string): string => {
@@ -52,6 +54,9 @@ import { CQRSLogger } from './common/cqrs-logger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.connectMicroservice<MicroserviceOptions>({
+    strategy: app.get(IpcServer),
+  });
   const config = app.get<ConfigType<typeof CredentialsConfig>>(
     CredentialsConfig.KEY,
   );
@@ -62,6 +67,7 @@ async function bootstrap() {
   );
   const appService = app.get(AppService);
   app.enableShutdownHooks();
+  await app.startAllMicroservices();
   await app.listen(3000);
   appService.connect(config.username, config.password);
 }

@@ -1,8 +1,8 @@
-import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Socket } from 'dgram';
 
 @Injectable()
-export class SenderSocket implements OnApplicationBootstrap {
+export class SenderSocket {
   constructor(private readonly socket: Socket) {}
 
   async send(
@@ -10,9 +10,11 @@ export class SenderSocket implements OnApplicationBootstrap {
     port: number,
     address?: string,
   ) {
+    console.dir({ msg, port, address });
     return new Promise<void>((resolve, reject) => {
       this.socket.send(msg, port, address, (error) => {
         if (error !== undefined) {
+          console.log(`send`, error);
           reject(error);
         } else {
           resolve();
@@ -27,9 +29,5 @@ export class SenderSocket implements OnApplicationBootstrap {
 
   close() {
     this.socket.close();
-  }
-
-  onApplicationBootstrap() {
-    this.bind();
   }
 }
