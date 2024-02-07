@@ -1,13 +1,13 @@
 import { RemoteInfo } from 'dgram';
 
 export enum ReceiverState {
-  UNBOUND,
-  BINDING,
-  BOUND,
-  LISTENING,
-  CONNECTED,
-  ERROR,
-  CLOSED,
+  UNBOUND = 'UNBOUND',
+  BINDING = 'BINDING',
+  BOUND = 'BOUND',
+  LISTENING = 'LISTENING',
+  CONNECTED = 'CONNECTED',
+  ERROR = 'ERROR',
+  CLOSED = 'CLOSED',
 }
 
 export type MessageEvent = {

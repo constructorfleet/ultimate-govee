@@ -1,9 +1,4 @@
-import {
-  Inject,
-  Injectable,
-  OnApplicationBootstrap,
-  OnModuleInit,
-} from '@nestjs/common';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { SenderService } from './sender/sender.service';
 import { ReceiverService } from './receiver/receiver.service';
@@ -20,7 +15,7 @@ export class LANDiscovery implements OnModuleInit {
 
   async discoverDevices() {
     await this.receiver.bind();
-    this.sender.bind();
+    // this.sender.bind();
     await this.sender.scan();
   }
 

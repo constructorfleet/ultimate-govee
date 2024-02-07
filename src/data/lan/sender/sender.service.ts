@@ -11,18 +11,21 @@ export class SenderService {
     private readonly socket: SenderSocket,
   ) {}
 
-  bind() {
+  async bind() {
     this.socket.bind();
   }
 
   sendDeviceCommand() {}
 
   async scan() {
+    // await this.socket.send(JSON.stringify({ msg: { cmd: "devStatus", data: {} } }), 4003, '10.0.13.148');
     await this.socket.send(
       JSON.stringify(this.config.scanCommand),
       this.config.scanPort,
       this.config.broadcastAddress,
     );
+
+    console.dir('Sent');
   }
 
   async deviceCommand(deviceAddress: string, command) {

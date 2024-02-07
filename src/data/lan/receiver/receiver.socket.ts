@@ -1,4 +1,4 @@
-import { Inject, OnModuleDestroy } from '@nestjs/common';
+import { Inject, OnModuleDestroy, Logger } from '@nestjs/common';
 import { Socket } from 'dgram';
 import { ConfigType } from '@nestjs/config';
 import { AddressInfo } from 'net';
@@ -7,6 +7,7 @@ import { ReceiverConfig } from './receiver.config';
 import { MessageEvent, ReceiverState } from './receiver.types';
 
 export class ReceiverSocket implements OnModuleDestroy {
+  private readonly logger: Logger = new Logger(ReceiverSocket.name);
   readonly socketState = new BehaviorSubject<ReceiverState>(
     ReceiverState.UNBOUND,
   );
@@ -41,6 +42,10 @@ export class ReceiverSocket implements OnModuleDestroy {
   bind() {
     this.socketState.next(ReceiverState.BINDING);
     this.socket.bind(this.config.receiverPort, () => {
+      this.logger.log(
+        `Adding membershipt ${this.config.broadcastAddress} ${this.config.bindAddress}`,
+      );
+
       this.socket.addMembership(
         this.config.broadcastAddress,
         this.config.bindAddress,
