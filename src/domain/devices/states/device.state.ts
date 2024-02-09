@@ -38,7 +38,7 @@ export const filterCommands = (
       return command.slice(2);
     });
 
-export abstract class DeviceState<StateName extends string, StateValue> {
+export class DeviceState<StateName extends string, StateValue> {
   protected readonly logger: Logger = new Logger(this.constructor.name);
 
   protected readonly stateValue: BehaviorSubject<StateValue>;
@@ -100,7 +100,7 @@ export type OpCommandIdentifier = {
 
 export type ParseOption = 'opCode' | 'state' | 'both';
 
-export abstract class DeviceOpState<
+export class DeviceOpState<
   StateName extends string,
   StateValue,
 > extends DeviceState<StateName, StateValue> {

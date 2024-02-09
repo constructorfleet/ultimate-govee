@@ -24,7 +24,7 @@ const definedStates = (
 ): DeviceState<string, any>[] =>
   states.filter((state) => state !== undefined) as DeviceState<string, any>[];
 
-export abstract class ModeState extends DeviceOpState<
+export class ModeState extends DeviceOpState<
   ModeStateName,
   Optional<DeviceState<string, unknown>>
 > {

@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { CqrsModule } from '@nestjs/cqrs';
-import { IpcModule } from '@govee/ipc';
 import { PersistModule } from './persist';
 import { AppService } from './app.service';
 import { DataModule } from './data';
@@ -16,13 +15,6 @@ import { DevicesModule } from './domain/devices';
     PersistModule.forRoot(),
     CqrsModule.forRoot(),
     ConfigModule.forFeature(CredentialsConfig),
-    IpcModule.register({
-      id: 'govee',
-      appspace: 'data',
-      socketRoot: '/workspaces/govee/sockets',
-      networkHost: 'localhost',
-      networkPort: 3333,
-    }),
     DataModule,
     AuthModule,
     ChannelsModule,
