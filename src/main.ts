@@ -54,9 +54,9 @@ import { IpcServer } from './ipc';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.connectMicroservice<MicroserviceOptions>({
-    strategy: app.get(IpcServer),
-  });
+  // app.connectMicroservice<MicroserviceOptions>({
+  //   strategy: app.get(IpcServer),
+  // });
   const config = app.get<ConfigType<typeof CredentialsConfig>>(
     CredentialsConfig.KEY,
   );
@@ -67,7 +67,7 @@ async function bootstrap() {
   );
   const appService = app.get(AppService);
   app.enableShutdownHooks();
-  await app.startAllMicroservices();
+  // await app.startAllMicroservices();
   await app.listen(3000);
   appService.connect(config.username, config.password);
 }

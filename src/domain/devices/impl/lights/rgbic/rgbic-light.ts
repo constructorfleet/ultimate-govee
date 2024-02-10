@@ -8,6 +8,7 @@ import {
   PowerState,
   SegmentCountState,
   SegmentCountStateName,
+  ColorTempState,
 } from '../../../states';
 import { DeviceModel } from '../../../devices.model';
 import {
@@ -29,6 +30,7 @@ const StateFactory: StateFactories = [
   (device: DeviceModel) => new PowerState(device),
   (device: DeviceModel) => new ConnectedState(device),
   (device: DeviceModel) => new BrightnessState(device),
+  (device: DeviceModel) => new ColorTempState(device),
   (device: DeviceModel) => new SegmentCountState(device),
   (device: DeviceModel) => new ColorModeState(device),
   (device: DeviceModel) => new SceneModeState(device),
@@ -68,6 +70,14 @@ export class RGBICLightFactory extends DeviceFactory<RGBICLightDevice> {
     super(RGBICLightDevice, {
       'LED Strip Light': {
         'RGBIC Strip Lights': [/2\*10m RGBIC Strip Light.*/, /.*RGBIC.*/],
+      },
+      'Indoor Lighting': {
+        'Floor Lamps': [/2\*10m RGBIC Strip Light.*/, /.*RGBIC.*/],
+        'Wall Lamps': [/Glide/],
+      },
+      'Outdoor Lighting': {
+        'Strip Lights': [/Phantasy/, /RGBIC/],
+        'String Lights': [/RGBIC/],
       },
     });
   }

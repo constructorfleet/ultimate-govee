@@ -8,7 +8,7 @@ export type ColorTempStateName = typeof ColorTempStateName;
 
 export type ColorTempData = {
   state?: {
-    colorTemInKelvin?: number;
+    colorTemperature?: number;
   };
 };
 
@@ -21,8 +21,21 @@ export class ColorTempState extends DeviceState<
   }
 
   parseState(data: ColorTempData) {
-    if (data?.state?.colorTemInKelvin !== undefined) {
-      this.stateValue.next(data.state.colorTemInKelvin);
+    if (data?.state?.colorTemperature !== undefined) {
+      this.stateValue.next(data.state.colorTemperature);
     }
+  }
+
+  setState(nextState: Optional<number>) {
+    if (nextState === undefined) {
+      this.logger.warn('Color temperature not provided, ignoring command.');
+      return;
+    }
+    this.commandBus.next({
+      command: 'colorTem',
+      data: {
+        colorTemInKelvin: nextState,
+      },
+    });
   }
 }

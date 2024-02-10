@@ -6,6 +6,7 @@ import {
   DecoderFn,
   DecoderArgs,
   Operations,
+  Conditions,
 } from './types';
 import {
   Add,
@@ -24,6 +25,8 @@ import {
   Substract,
   ValueFromHex,
 } from './decoder.constants';
+import { deviceMatches } from './device.condition';
+import { propertyMatches } from './property.condition';
 
 const reverseHexData = (hexData: string, length: number): string =>
   chunk(hexData.slice(0, length).split(''), 2)
@@ -174,6 +177,35 @@ export const postProcessing = (
 export const Decoder = {
   value_from_hex_string: valueFromHexString,
   bf_value_from_hex_string: bcfValueFromHexString,
+  matches(device: DecodeDevice, conditions: Conditions): boolean {
+    return deviceMatches(device, conditions);
+  },
+  decodeProperties(
+    device: DecodeDevice,
+    properties: Record<
+      string,
+      {
+        condition?: Conditions;
+        decoder: DecoderArgs;
+        postProcessing?: Operations;
+      }
+    >,
+  ): Record<string, number | undefined> {
+    const decoded: Record<string, number | undefined> = {};
+    Object.entries(properties)
+      .filter(([name, value]) =>
+        value.condition ? propertyMatches(device, value.condition) : true,
+      )
+      .forEach(([name, value]) => {
+        decoded[name] = Decoder.decode(
+          device,
+          value.decoder,
+          value.postProcessing,
+          decoded[Calibration],
+        );
+      });
+    return decoded;
+  },
   decode(
     device: DecodeDevice,
     decoderArgs: DecoderArgs,

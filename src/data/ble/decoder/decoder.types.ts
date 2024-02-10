@@ -1,5 +1,6 @@
 import { Expose, Transform, Type } from 'class-transformer';
 import { Conditions, DecoderArgs, Operations } from './lib/types';
+import { Optional } from '@govee/common';
 
 export const typeMappings = {
   1: ['Temperature, Humidity, Battery'],
@@ -41,7 +42,7 @@ export class DeviceProperty {
   condition?: Conditions;
 
   @Expose({ name: 'decoder' })
-  decoder?: DecoderArgs;
+  decoder!: DecoderArgs;
 
   @Expose({ name: 'post_proc' })
   postProcessing?: Operations;
@@ -95,9 +96,24 @@ export class DecoderDeviceSpecification {
   conditions?: Conditions;
 
   @Expose({ name: 'properties' })
-  @Type(() => DeviceProperties)
-  properties?: DeviceProperties;
+  properties?: Record<string, DeviceProperty>;
 
   @Expose({ name: 'propertyMetadata' })
   propertyMetadata?: Record<string, DecoderPropertyMetadata>;
 }
+
+export type DecodedProperty =
+  | {
+      name: string;
+      unit: string;
+    }
+  | number;
+
+export type DecodedDevice = {
+  id: string;
+  brand: string;
+  model: string;
+  modelName: string;
+  type: string;
+  properties: Record<string, Optional<DecodedProperty>>;
+};

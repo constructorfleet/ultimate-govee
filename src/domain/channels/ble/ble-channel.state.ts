@@ -1,5 +1,5 @@
 import { DeviceId } from '@govee/common';
-import { BlePeripheral } from '@govee/data';
+import { BlePeripheral, DecodedDevice } from '@govee/data';
 import { ChannelState } from '../channel.state';
 
 export type BleChannelConfig = {
@@ -10,7 +10,7 @@ export type BleChannelConfig = {
 };
 
 type NewType = {
-  devices: Record<DeviceId, BlePeripheral>;
+  devices: Record<DeviceId, DecodedDevice>;
 };
 
 export type BleChannelState = ChannelState<BleChannelConfig> & NewType;

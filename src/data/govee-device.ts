@@ -41,6 +41,7 @@ export type GoveeDeviceStatus = {
     playState?: boolean;
     mode?: number;
     brightness?: number;
+    colorTemperature?: number;
     color?: {
       red: number;
       green: number;
@@ -69,7 +70,7 @@ export type GoveeCommandData = {
   color?: GoveeCommandDataColor | GoveeCommandDataColorRGB;
   value?: number | string | string[];
   val?: number | string | string[];
-  colorTemperature?: number;
+  colorTemInKelvin?: number;
   opcode?: string;
   modeValue?: string;
 };

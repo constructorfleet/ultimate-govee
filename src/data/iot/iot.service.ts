@@ -13,6 +13,7 @@ const payloadDecoder = new TextDecoder();
 const parseMessage = (payload: ArrayBuffer): IoTMessage => {
   const decoded = payloadDecoder.decode(payload);
   const plain = JSON.parse(decoded);
+  IoTService.recordRawMessage(plain.device, plain);
   return plainToInstance(IoTMessage, plain);
 };
 
@@ -55,6 +56,7 @@ export class IoTService implements IoTHandler {
     if (code !== undefined) {
       humidityCode = unpaddedHexToArray(code)?.slice(-1)[0];
     }
+
     const currentHumditity = message.humidity ? message.humidity : humidityCode;
     const result = {
       id: message.deviceId,
@@ -72,6 +74,7 @@ export class IoTService implements IoTHandler {
           current: currentHumditity,
         },
         brightness: message.state?.brightness,
+        colorTemperature: message.state?.colorTemperature,
         color:
           message.state?.color !== undefined
             ? {
@@ -96,6 +99,14 @@ export class IoTService implements IoTHandler {
     deviceId: string,
     message: GoveeDeviceStatus,
   ): GoveeDeviceStatus {
+    return message;
+  }
+
+  @PersistResult({
+    path: 'persisted',
+    filename: '{0}.raw.json',
+  })
+  static recordRawMessage(deviceId: string, message): any {
     return message;
   }
 }

@@ -14,8 +14,8 @@ export class BleChannelService extends ChannelService<
     eventBus: EventBus,
   ) {
     super(eventBus);
-    bleClient.peripheralDiscovered.subscribe((peripheral) => {
-      this.state.devices[peripheral.address] = peripheral;
+    bleClient.peripheralDecoded.subscribe((peripheral) => {
+      this.state.devices[peripheral.id] = peripheral;
     });
   }
 

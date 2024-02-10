@@ -213,6 +213,7 @@ export class Device extends BehaviorSubject<DeviceStateValues> {
       if (this.stateLogger === undefined) {
         this.stateLogger = getLogger(this.id, this.model);
       }
+      this.loggableState(this.id);
       this.stateLogger.info({
         deviceId: this.id,
         name: this.name,
