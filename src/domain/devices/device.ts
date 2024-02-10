@@ -71,7 +71,7 @@ const buildStates = (
     )
     .flat();
 
-export abstract class Device extends BehaviorSubject<DeviceStateValues> {
+export class Device extends BehaviorSubject<DeviceStateValues> {
   private readonly logger: Logger;
 
   static readonly deviceType: string = 'unknown';
@@ -164,8 +164,6 @@ export abstract class Device extends BehaviorSubject<DeviceStateValues> {
 
   refresh() {
     this.refreshSubject.next(undefined);
-
-    // this.device.refresh();
   }
 
   setState(stateName: string, nextState: any): any {

@@ -43,6 +43,9 @@ export class DevicesService {
     if (!device) {
       return;
     }
+    if (this.getDevice(device.id)) {
+      return;
+    }
     this.deviceMap.set(device.id, device);
   }
 

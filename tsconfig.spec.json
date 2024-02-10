@@ -17,7 +17,10 @@
     "strict": true,
     "esModuleInterop": true,
     "noImplicitAny": false,
-    "baseUrl": "./src"
+    "baseUrl": "./src",
+    "paths": {
+      "@govee/*": ["./*"]
+    }
   },
   "include": ["src/**/*.spec.ts"],
   "exclude": [".vscode/", ".idea/"]

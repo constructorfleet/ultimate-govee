@@ -5,5 +5,9 @@
   "testRegex": ".e2e-spec.ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "moduleNameMapper": {
+    "@govee/ipc/(.*)": "<rootDir>/../libs/ipc/src/$1",
+    "@govee/ipc": "<rootDir>/../libs/ipc/src"
   }
 }
