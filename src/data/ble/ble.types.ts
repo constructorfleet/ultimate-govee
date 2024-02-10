@@ -6,7 +6,7 @@ import {
 import { type EventEmitter } from 'events';
 import { BleModuleOptions } from './ble.options';
 
-const BleModuleOptionsKey: InjectionToken = 'Ble.Module.Options';
+export const BleModuleOptionsKey: string = 'Ble.Module.Options';
 
 export const { ConfigurableModuleClass, MODULE_OPTIONS_TOKEN } =
   new ConfigurableModuleBuilder<BleModuleOptions>({

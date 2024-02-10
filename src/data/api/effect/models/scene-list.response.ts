@@ -48,10 +48,10 @@ export class Scene {
   }
 
   @Expose({ name: 'sceneDif4Device' })
-  dif4Device!: number;
+  dif4Device?: number;
 
   @Expose({ name: 'diyEffectCode' })
-  diyOpCode!: number;
+  diyOpCode?: number;
 
   @Expose({ name: 'diyEffectStr' })
   diyOpCodeBase64?: string;
@@ -60,6 +60,7 @@ export class Scene {
   rules?: unknown[];
 
   @Expose({ name: 'speedInfo' })
+  @Type(() => SceneSpeedInfo)
   speedInfo?: SceneSpeedInfo;
 }
 
@@ -68,6 +69,7 @@ export class SceneCategory {
   name!: string;
 
   @Expose({ name: 'scenes' })
+  @Type(() => Scene)
   scenes!: Scene[];
 }
 
@@ -76,15 +78,16 @@ export class SceneData {
   displayCategory!: number;
 
   @Expose({ name: 'sceneCategories' })
+  @Type(() => SceneCategory)
   categories!: SceneCategory[];
 
   @Expose({ name: 'isSupport' })
   @TransformBoolean
-  isSUpported!: boolean;
+  isSUpported?: boolean;
 
   @Expose({ name: 'supportSpeed' })
   @TransformBoolean
-  supportsSpeed!: boolean;
+  supportsSpeed?: boolean;
 }
 
 export class SceneListResponse extends GoveeAPIResponse {

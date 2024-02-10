@@ -3,6 +3,9 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { Optional } from '@govee/common';
 import { BleModuleOptions } from './ble.options';
 import { BlePeripheral, InjectBleOptions, NobleBle } from './ble.types';
+import { DecoderService } from './decoder/decoder.service';
+import { DecodeDevice } from './decoder/lib/types';
+import { DecodedDevice } from './decoder';
 
 const STATE_DISABLED = 'disabled';
 const STATE_ENABLED = 'enabled';
@@ -16,9 +19,13 @@ export class BleClient implements OnApplicationBootstrap {
     STATE_DISABLED,
   );
 
-  readonly peripheralDiscovered: Subject<BlePeripheral> = new Subject();
+  private readonly peripheralDiscovered: Subject<BlePeripheral> = new Subject();
+  readonly peripheralDecoded: Subject<DecodedDevice> = new Subject();
 
-  constructor(@InjectBleOptions private readonly options: BleModuleOptions) {
+  constructor(
+    @InjectBleOptions private readonly options: BleModuleOptions,
+    private readonly decoder: DecoderService,
+  ) {
     this.state.subscribe(async (state) => {
       switch (state) {
         case STATE_ENABLED:
@@ -29,11 +36,20 @@ export class BleClient implements OnApplicationBootstrap {
           return undefined;
       }
     });
+    this.peripheralDiscovered.subscribe(async (peripheral) => {
+      const device = await this.decoder.decodeDevice(peripheral);
+      if (!device) {
+        return;
+      }
+      this.peripheralDecoded.next(device);
+    });
   }
 
   async onDisabled() {
+    await this.noble?.stopScanning();
     await this.connectedPeripheral?.disconnectAsync();
     this.noble?.removeAllListeners();
+    this.noble = undefined;
   }
 
   async onEnabled() {
@@ -56,6 +72,7 @@ export class BleClient implements OnApplicationBootstrap {
       );
       this.peripheralDiscovered.next(peripheral);
     });
+    await this.noble.startScanningAsync();
   }
 
   async onApplicationBootstrap() {

@@ -5,6 +5,7 @@ import {
   ColorRGBState,
   ConnectedState,
   PowerState,
+  ColorTempState,
 } from '../../../states';
 import { DeviceModel } from '../../../devices.model';
 import { StateFactories } from '../../../device';
@@ -16,6 +17,7 @@ const StateFactory: StateFactories = [
   (device: DeviceModel) => new ConnectedState(device),
   (device: DeviceModel) => new BrightnessState(device),
   (device: DeviceModel) => new ColorRGBState(device),
+  (device: DeviceModel) => new ColorTempState(device),
 ];
 
 export const RGBLightType: 'rgb' = 'rgb' as const;

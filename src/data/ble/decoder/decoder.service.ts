@@ -3,22 +3,67 @@ import { DecoderConfig } from './decoder.config';
 import { ConfigType } from '@nestjs/config';
 import { request } from '../../utils';
 import {
+  DecodedDevice,
   DecoderDeviceSpecification,
   DecoderPropertiesMetadata,
 } from './decoder.types';
 import { plainToInstance } from 'class-transformer';
+import { BlePeripheral } from '..';
+import { InjectDecoder } from './decoder.providers';
+import { Decoder } from './lib/decoder';
+import { DecodeDevice } from './lib/types';
+import { Optional } from '@govee/common';
 
 @Injectable()
 export class DecoderService {
   private readonly logger: Logger = new Logger(DecoderService.name);
   private readonly properties: Record<string, DecoderPropertiesMetadata> = {};
-  private readonly devices: Record<string, DecoderDeviceSpecification> = {};
+  private readonly deviceSpecifications: Record<
+    string,
+    DecoderDeviceSpecification
+  > = {};
   private readonly deviceProperties: Record<string, string> = {};
 
   constructor(
     @Inject(DecoderConfig.KEY)
     private readonly config: ConfigType<typeof DecoderConfig>,
+    @InjectDecoder private readonly decoder: typeof Decoder,
   ) {}
+
+  async decodeDevice(
+    peripheral: BlePeripheral,
+  ): Promise<Optional<DecodedDevice>> {
+    const modelMatch = /(H\d{4})/.exec(peripheral.advertisement.localName);
+    if (modelMatch?.groups === undefined) {
+      this.logger.warn(
+        `Could not match model number for ${peripheral.address}`,
+      );
+      return undefined;
+    }
+    const spec = await this.getDeviceSpec(modelMatch?.groups[1] || '');
+    if (spec === undefined) {
+      return undefined;
+    }
+    const device: DecodeDevice = {
+      name: peripheral.advertisement.localName,
+      macAddress: peripheral.id,
+      uuid: peripheral.uuid,
+      manufacturerData:
+        peripheral.advertisement.manufacturerData.toString('hex'),
+      serviceData: [],
+    };
+    if (spec.conditions && !this.decoder.matches(device, spec.conditions)) {
+      return undefined;
+    }
+    return {
+      id: device.macAddress,
+      brand: spec.brand,
+      model: spec.model,
+      modelName: spec.modelName,
+      type: spec.type,
+      properties: this.decoder.decodeProperties(device, spec.properties ?? {}),
+    };
+  }
 
   async getCommonProperties() {
     try {
@@ -37,7 +82,7 @@ export class DecoderService {
   async getDeviceSpec(
     model: string,
   ): Promise<DecoderDeviceSpecification | undefined> {
-    let deviceSpec = this.devices[`_${model}_json`];
+    let deviceSpec = this.deviceSpecifications[`_${model}_json`];
     if (deviceSpec === undefined) {
       const url = this.config.deviceJsonUrl(model);
       try {
@@ -46,7 +91,7 @@ export class DecoderService {
           return undefined;
         }
         this.processHeaderFile(file);
-        deviceSpec = this.devices[`_${model}_json`];
+        deviceSpec = this.deviceSpecifications[`_${model}_json`];
         if (deviceSpec === undefined) {
           return undefined;
         }
@@ -69,7 +114,7 @@ export class DecoderService {
           item['value'],
         );
       } else if (item.name.endsWith('_json')) {
-        this.devices[item.name] = plainToInstance(
+        this.deviceSpecifications[item.name] = plainToInstance(
           DecoderDeviceSpecification,
           item['value'],
         );
