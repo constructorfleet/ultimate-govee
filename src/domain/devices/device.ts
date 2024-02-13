@@ -8,7 +8,7 @@ import { deepEquality } from '@santi100/equal-lib';
 import { CommandBus, EventBus } from '@nestjs/cqrs';
 import { PersistResult } from '@govee/persist';
 import { DeviceModel } from './devices.model';
-import { DeviceState } from './states/device.state';
+import { DeviceOpState, DeviceState } from './states/device.state';
 import { ModeState, ModeStateName } from './states/mode.state';
 import { DeviceRefeshEvent } from './cqrs/events/device-refresh.event';
 import { DeviceStateCommandEvent } from './cqrs/events/device-state-command.event';
@@ -82,22 +82,38 @@ export class Device extends BehaviorSubject<DeviceStateValues> {
     isModified: (current, previous) => !deepEquality(current, previous),
   });
   private readonly refreshSubject: Subject<undefined> = new Subject();
+  private readonly opIdentifiers: Set<number[]> = new Set();
 
   protected addState<TDevice extends DeviceState<string, any>>(
     state: TDevice,
   ): TDevice {
+    if (
+      state instanceof DeviceOpState &&
+      state.identifier !== undefined &&
+      state.identifier !== null
+    ) {
+      this.opIdentifiers.add(
+        typeof state.identifier === 'number'
+          ? [state.identifier]
+          : state.identifier,
+      );
+    }
     this.device.status.subscribe((status) => state.parse(status));
     this.states.set(state.name, state);
     state.subscribe((value) => {
-      // this.loggableState(this.id);
       this.stateValues.set(state.name, value);
+    });
+    state.clearCommand.subscribe((commandId) => {
+      // TODO
     });
     state.commandBus.subscribe((cmd) =>
       this.eventBus.publish(
         new DeviceStateCommandEvent(
+          this.id,
           state.name,
           {
             deviceId: this.id,
+            commandId: cmd.commandId,
             command: cmd.command,
             cmdVersion: cmd.cmdVersion ?? 0,
             type: cmd.type ?? 1,
@@ -110,6 +126,7 @@ export class Device extends BehaviorSubject<DeviceStateValues> {
           },
           {
             iotTopic: this.iotTopic,
+            bleAddress: this.bleAddress,
           },
         ),
       ),
@@ -133,8 +150,20 @@ export class Device extends BehaviorSubject<DeviceStateValues> {
     return this.device.goodsType;
   }
 
+  get pactCode(): number {
+    return this.device.pactCode;
+  }
+
+  get pactType(): number {
+    return this.device.pactType;
+  }
+
   get iotTopic(): Optional<string> {
     return this.device.iotTopic;
+  }
+
+  get bleAddress(): Optional<string> {
+    return this.device.bleAddress;
   }
 
   get currentState() {
@@ -187,18 +216,20 @@ export class Device extends BehaviorSubject<DeviceStateValues> {
         ...device.status.value,
       });
     });
-    this.refreshSubject
-      .pipe(sampleTime(1000))
-      .subscribe(() =>
-        this.eventBus.publish(
-          new DeviceRefeshEvent(
-            this.id,
-            this.model,
-            this.goodsType,
-            this.iotTopic,
-          ),
+    this.refreshSubject.pipe(sampleTime(1000)).subscribe(() =>
+      this.eventBus.publish(
+        new DeviceRefeshEvent(
+          this.id,
+          this.model,
+          this.goodsType,
+          {
+            iotTopic: this.iotTopic,
+            bleAddress: this.bleAddress,
+          },
+          Array.from(this.opIdentifiers),
         ),
-      );
+      ),
+    );
     interval(5000).subscribe(() => this.refresh());
     this.stateValues.delta$.subscribe(() => {
       const values = Object.fromEntries(
@@ -213,13 +244,12 @@ export class Device extends BehaviorSubject<DeviceStateValues> {
       if (this.stateLogger === undefined) {
         this.stateLogger = getLogger(this.id, this.model);
       }
-      this.loggableState(this.id);
       this.stateLogger.info({
         deviceId: this.id,
         name: this.name,
         model: this.model,
         type: this.constructor.name,
-        ...states,
+        states: this.loggableState(this.id),
       });
     });
   }
@@ -234,6 +264,8 @@ export class Device extends BehaviorSubject<DeviceStateValues> {
       name: this.name,
       model: this.model,
       type: this.constructor.name,
+      iotTopic: this.iotTopic,
+      bleAddress: this.bleAddress,
       ...Object.fromEntries(
         Array.from(this.stateValues.keys()).map((s) =>
           s !== ModeStateName

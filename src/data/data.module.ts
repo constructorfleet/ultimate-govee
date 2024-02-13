@@ -5,7 +5,7 @@ import { CommandRouter } from './command-router';
 import { BleModule } from '.';
 
 @Module({
-  imports: [GoveeAPIModule, IoTModule, BleModule.forRoot({ enabled: false })],
+  imports: [GoveeAPIModule, IoTModule, BleModule.forRoot({ enabled: true })],
   providers: [CommandRouter],
   exports: [GoveeAPIModule, IoTModule, BleModule, CommandRouter],
 })

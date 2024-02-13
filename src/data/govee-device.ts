@@ -39,8 +39,10 @@ export type GoveeDeviceStatus = {
     autoShudown?: boolean;
     filterExpired?: boolean;
     playState?: boolean;
+    pm25?: Measurement;
     mode?: number;
     brightness?: number;
+    tempProbes?: Record<number, number>;
     colorTemperature?: number;
     color?: {
       red: number;
@@ -86,12 +88,28 @@ export type GoveeCommand =
   | 'colorwc';
 
 export type GoveeDeviceCommand = {
+  commandId: string;
   deviceId: DeviceId;
   command?: GoveeCommand;
   type?: number;
   cmdVersion?: number;
   data: GoveeCommandData;
 };
+
+export type GoveeDeviceStateCommand =
+  | Omit<GoveeDeviceCommand, 'deviceId' | 'commandId'>
+  | Omit<GoveeDeviceCommand, 'deviceId' | 'commandId'>[];
+export type GoveeStatusForStateCommand =
+  | Partial<
+      Pick<GoveeDeviceStatus, 'state'> & {
+        op?: { command: (number | undefined)[][] };
+      }
+    >
+  | Partial<
+      Pick<GoveeDeviceStatus, 'state'> & {
+        op?: { command: (number | undefined)[][] };
+      }
+    >[];
 
 export type GoveeDevice = {
   id: string;

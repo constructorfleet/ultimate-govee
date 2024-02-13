@@ -1,4 +1,9 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  Logger,
+  OnApplicationBootstrap,
+} from '@nestjs/common';
 import { DecoderConfig } from './decoder.config';
 import { ConfigType } from '@nestjs/config';
 import { request } from '../../utils';
@@ -13,9 +18,10 @@ import { InjectDecoder } from './decoder.providers';
 import { Decoder } from './lib/decoder';
 import { DecodeDevice } from './lib/types';
 import { Optional } from '@govee/common';
+import axios, { AxiosError } from 'axios';
 
 @Injectable()
-export class DecoderService {
+export class DecoderService implements OnApplicationBootstrap {
   private readonly logger: Logger = new Logger(DecoderService.name);
   private readonly properties: Record<string, DecoderPropertiesMetadata> = {};
   private readonly deviceSpecifications: Record<
@@ -34,13 +40,17 @@ export class DecoderService {
     peripheral: BlePeripheral,
   ): Promise<Optional<DecodedDevice>> {
     const modelMatch = /(H\d{4})/.exec(peripheral.advertisement.localName);
-    if (modelMatch?.groups === undefined) {
+    if (!modelMatch) {
+      return undefined;
+    }
+    if (!modelMatch[1]) {
       this.logger.warn(
-        `Could not match model number for ${peripheral.address}`,
+        `Could not match model number for ${peripheral.id} ${peripheral.advertisement.localName}`,
       );
       return undefined;
     }
-    const spec = await this.getDeviceSpec(modelMatch?.groups[1] || '');
+    this.logger.log(`Matched model ${modelMatch[1]}`);
+    const spec = await this.getDeviceSpec(modelMatch[1] || '');
     if (spec === undefined) {
       return undefined;
     }
@@ -49,7 +59,7 @@ export class DecoderService {
       macAddress: peripheral.id,
       uuid: peripheral.uuid,
       manufacturerData:
-        peripheral.advertisement.manufacturerData.toString('hex'),
+        peripheral.advertisement.manufacturerData?.toString('hex'),
       serviceData: [],
     };
     if (spec.conditions && !this.decoder.matches(device, spec.conditions)) {
@@ -61,12 +71,13 @@ export class DecoderService {
       model: spec.model,
       modelName: spec.modelName,
       type: spec.type,
-      properties: this.decoder.decodeProperties(device, spec.properties ?? {}),
+      state: this.decoder.decodeProperties(device, spec.properties ?? {}),
     };
   }
 
   async getCommonProperties() {
     try {
+      this.logger.log('Retrieving common propertiest header');
       const file = await this.getHeaderFile(this.config.commonPropertiesUrl);
       if (!file) {
         return;
@@ -96,7 +107,10 @@ export class DecoderService {
           return undefined;
         }
       } catch (err) {
-        this.logger.error(`Error retrieving header from ${url} for ${model}`);
+        this.logger.debug(
+          `Error retrieving header from ${url} for ${model}`,
+          err,
+        );
         return undefined;
       }
     }
@@ -106,6 +120,7 @@ export class DecoderService {
   }
 
   private processHeaderFile(file: string) {
+    this.logger.debug('Processing header file');
     const itemsInFile = this.findJsonInResponse(file);
     itemsInFile.forEach((item) => {
       if (item.name.endsWith('_props')) {
@@ -163,5 +178,10 @@ export class DecoderService {
       return undefined;
     }
     return JSON.parse(valueMatch[1].replace(/\\/g, ''));
+  }
+
+  async onApplicationBootstrap() {
+    this.logger.log('Loading decoder metadata...');
+    await this.getCommonProperties();
   }
 }

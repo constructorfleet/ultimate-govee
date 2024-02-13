@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { SensorFactory } from './air-quality';
+import { AirQualityFactory } from './air-quality';
 
 @Module({
-  providers: [SensorFactory],
-  exports: [SensorFactory],
+  providers: [AirQualityFactory],
+  exports: [AirQualityFactory],
 })
 export class AirQualityModule {}

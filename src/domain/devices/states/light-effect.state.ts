@@ -18,7 +18,7 @@ export class LightEffectState extends DeviceOpState<
   constructor(
     device: DeviceModel,
     opType: Optional<number> = 0xaa,
-    identifier: Optional<number> = 0x05,
+    identifier: Optional<number[]> = [0x05],
   ) {
     super({ opType, identifier }, device, LightEffectStateName, {});
     this.activeEffectCode.subscribe((effectCode) =>

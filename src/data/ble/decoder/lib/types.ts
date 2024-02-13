@@ -54,7 +54,7 @@ export const Operator = [
 export type Operator = (typeof Operator)[number];
 
 export type Operation = Operator | number;
-export type Operations = Operation[];
+export type Operations = (string | number)[];
 
 export type Condition = string | number;
 export type Conditions = Condition[];

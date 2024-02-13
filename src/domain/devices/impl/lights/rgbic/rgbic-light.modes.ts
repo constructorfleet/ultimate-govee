@@ -1,5 +1,5 @@
 import { chunk, total, Optional, asOpCode } from '@govee/common';
-import { Effect } from '@govee/data';
+import { Effect, GoveeDeviceStateCommand } from '@govee/data';
 import {
   DeviceOpState,
   SegmentCountState,
@@ -7,8 +7,10 @@ import {
   ModeState,
   LightEffectState,
   LightEffect,
+  StateCommandAndStatus,
 } from '../../../states';
 import { DeviceModel } from '../../../devices.model';
+import { v4 as uuidv4 } from 'uuid';
 
 export enum RGBICModes {
   SCENE = 4,
@@ -21,25 +23,23 @@ export class SceneModeState extends LightEffectState {
   constructor(
     device: DeviceModel,
     opType: number = 0xaa,
-    identifier: number = 0x05,
+    identifier: number[] = [0x05, RGBICModes.SCENE],
   ) {
     super(device, opType, identifier);
   }
 
   parseOpCommand(opCommand: number[]): void {
-    if (opCommand[0] !== RGBICModes.SCENE) {
-      this.activeEffectCode.next(undefined);
-    }
-
-    this.activeEffectCode.next(total(opCommand.slice(1, 3), true));
+    this.activeEffectCode.next(total(opCommand.slice(0, 2), true));
   }
 
-  setState(nextState: LightEffect) {
+  protected stateToCommand(
+    nextState: LightEffect,
+  ): Optional<StateCommandAndStatus> {
     if (nextState.code === undefined && nextState.name === undefined) {
       this.logger.warn(
         `Scene code or name is required to issue commands to ${this.constructor.name}`,
       );
-      return;
+      return undefined;
     }
     let effect: Partial<Effect> | undefined;
     if (nextState.code !== undefined) {
@@ -49,7 +49,6 @@ export class SceneModeState extends LightEffectState {
       effect = Array.from(this.effects.keys())
         .map((k) => {
           const r = this.effects.get(k);
-          console.dir({ k, r });
           return r;
         })
         .find((e) => e?.name === nextState.name);
@@ -58,15 +57,22 @@ export class SceneModeState extends LightEffectState {
       this.logger.warn(
         `Unable to locate effect with code ${nextState.code} or ${nextState.name}`,
       );
-      return;
+      return undefined;
     }
 
-    this.commandBus.next({
-      data: {
-        command: effect?.opCode,
+    return {
+      command: {
+        data: {
+          command: effect.opCode,
+        },
+        cmdVersion: effect.cmdVersion,
       },
-      cmdVersion: effect?.cmdVersion,
-    });
+      status: {
+        op: {
+          command: [[(effect.code ?? 0) >> 8, (effect.code ?? 0) % 256]],
+        },
+      },
+    };
   }
 }
 
@@ -89,16 +95,12 @@ export class MicModeState extends DeviceOpState<MicModeStateName, MicMode> {
   constructor(
     device: DeviceModel,
     opType: number = 0xaa,
-    identifier: number = 0x05,
+    identifier: number[] = [0x05, RGBICModes.MIC],
   ) {
     super({ opType, identifier }, device, MicModeStateName, {});
   }
 
   parseOpCommand(opCommand: number[]): void {
-    if (opCommand[0] !== RGBICModes.MIC) {
-      this.stateValue.next({});
-      return;
-    }
     const [micScene, sensitivity, calm, autoColor, red, green, blue] =
       opCommand.slice(1);
     this.stateValue.next({
@@ -114,7 +116,9 @@ export class MicModeState extends DeviceOpState<MicModeStateName, MicMode> {
     });
   }
 
-  setState(nextState: MicMode) {
+  protected stateToCommand(
+    nextState: MicMode,
+  ): Optional<StateCommandAndStatus> {
     const next = {
       micScene: nextState.micScene ?? this.value.micScene ?? 0,
       sensitivity: nextState.sensitivity ?? this.value.sensitivity ?? 50,
@@ -127,24 +131,40 @@ export class MicModeState extends DeviceOpState<MicModeStateName, MicMode> {
         blue: nextState.color?.blue ?? this.value?.color?.blue ?? 0,
       },
     };
-    this.commandBus.next({
-      data: {
-        command: [
-          asOpCode(
-            0x33,
-            this.identifier!,
-            RGBICModes.MIC,
-            next.micScene,
-            next.sensitivity,
-            next.calm,
-            next.autoColor,
-            next.color.red,
-            next.color.green,
-            next.color.blue,
-          ),
-        ],
+    return {
+      command: {
+        data: {
+          command: [
+            asOpCode(
+              0x33,
+              this.identifier!,
+              next.micScene,
+              next.sensitivity,
+              next.calm,
+              next.autoColor,
+              next.color.red,
+              next.color.green,
+              next.color.blue,
+            ),
+          ],
+        },
       },
-    });
+      status: {
+        op: {
+          command: [
+            [
+              next.micScene,
+              next.sensitivity,
+              next.calm,
+              next.autoColor,
+              next.color.red,
+              next.color.green,
+              next.color.blue,
+            ],
+          ],
+        },
+      },
+    };
   }
 }
 
@@ -163,7 +183,7 @@ export class AdvancedColorModeState extends DeviceOpState<
   constructor(
     deviceModel: DeviceModel,
     opType: number = 0xaa,
-    identifier: number = 0x05,
+    identifier: number[] = [0x05, RGBICModes.ADVANCED_COLOR],
   ) {
     super(
       { opType, identifier },
@@ -175,11 +195,6 @@ export class AdvancedColorModeState extends DeviceOpState<
   }
 
   parseOpCommand(opCommand: number[]): void {
-    if (opCommand[0] !== RGBICModes.ADVANCED_COLOR) {
-      this.stateValue.next({});
-      return;
-    }
-
     this.stateValue.next({
       diyEffectCode: total(opCommand.slice(1, opCommand.indexOf(0x00)), true),
     });
@@ -223,7 +238,7 @@ export class SegmentColorModeState extends DeviceOpState<
     device: DeviceModel,
     segmentCount: SegmentCountState,
     opType: number = 0xaa,
-    identifier: number = 0xa5,
+    identifier: number[] = [0xa5],
   ) {
     super({ opType, identifier }, device, SegmentColorModeStateName, []);
     segmentCount?.subscribe((event) => {
@@ -259,37 +274,9 @@ export class SegmentColorModeState extends DeviceOpState<
     this.stateValue.next(this.segments);
   }
 
-  // setState(nextState: Segment[]) {
-  //   const segmentCunks = chunk(
-  //     this.segments.map((s) => nextState.find((s1) => s1.id === s.id) ?? s),
-  //     3,
-  //   );
-  //   this.commandBus.next({
-  //     data: {
-  //       command: [
-  //         ...segmentCunks.map((segments, index) =>
-  //           asOpCode(
-  //             0x33,
-  //             0xa5,
-  //             index + 1,
-  //             ...segments.reduce((codes, segment) => {
-  //               codes.push(
-  //                 segment.brightness ?? 100,
-  //                 segment.color?.red ?? 0,
-  //                 segment.color?.green ?? 0,
-  //                 segment.color?.blue ?? 0,
-  //               );
-  //               return codes;
-  //             }, [] as number[]),
-  //           ),
-  //         ),
-  //         asOpCode(0x33, 0x05, RGBICModes.SEGMENT_COLOR, 1),
-  //       ],
-  //     },
-  //   });
-  // }
-
-  setState(nextState: Segment[]) {
+  protected stateToCommand(
+    nextState: Segment[],
+  ): Optional<StateCommandAndStatus> {
     const pad = (val: number): string => `000${val}`.slice(-3);
     const groups: SegmentUpdate = nextState.reduce(
       (group, segment) => {
@@ -344,14 +331,6 @@ export class SegmentColorModeState extends DeviceOpState<
       },
     );
 
-    // colorCommands.forEach((command) =>
-    //   this.commandBus.next({
-    //     data: {
-    //       command: [command],
-    //     },
-    //   }),
-    // );
-
     const brightnessCommands = Object.entries(groups.brightnessGroups).map(
       ([key, indicies]) => {
         const indexBytes = indexToSegmentBits(indicies);
@@ -366,18 +345,16 @@ export class SegmentColorModeState extends DeviceOpState<
       },
     );
 
-    // brightnessCommands.forEach((command) =>
-    //   this.commandBus.next({
-    //     data: {
-    //       command: [command],
-    //     },
-    //   }),
-    // );
-    this.commandBus.next({
-      data: {
-        command: [...colorCommands, ...brightnessCommands],
+    return {
+      command: {
+        data: {
+          command: [...colorCommands, ...brightnessCommands],
+        },
       },
-    });
+      status: {
+        // TODO
+      },
+    };
   }
 }
 
@@ -406,7 +383,11 @@ export class ColorModeState extends DeviceOpState<
   WholeColorModeStateName,
   WholeColor
 > {
-  constructor(device: DeviceModel, opType: number = 0xaa, identifier = 0x05) {
+  constructor(
+    device: DeviceModel,
+    opType: number = 0xaa,
+    identifier = [0x05, RGBICModes.WHOLE_COLOR],
+  ) {
     super({ opType, identifier }, device, WholeColorModeStateName, {}, 'both');
   }
 
@@ -419,10 +400,6 @@ export class ColorModeState extends DeviceOpState<
   }
 
   parseOpCommand(opCommand: number[]): void {
-    if (opCommand[0] !== RGBICModes.WHOLE_COLOR) {
-      return;
-    }
-
     this.stateValue.next({
       red: opCommand[1],
       green: opCommand[2],
@@ -430,56 +407,52 @@ export class ColorModeState extends DeviceOpState<
     });
   }
 
-  protected stateToCommand(state: WholeColor): any {
+  protected stateToCommand(state: WholeColor): Optional<StateCommandAndStatus> {
     return {
-      cmd: 'colorwc',
-      data: {
-        color: {
-          r: state.red,
-          g: state.green,
-          b: state.blue,
+      command: [
+        {
+          command: 'colorwc',
+          data: {
+            color: {
+              r: state.red ?? 0,
+              g: state.green ?? 0,
+              b: state.blue ?? 0,
+            },
+            colorTemInKelvin: 0,
+          },
         },
-        colorTemInKelvin: 0,
-      },
+        {
+          data: {
+            command: [
+              asOpCode(
+                0x33,
+                this.identifier!,
+                state.red ?? 0,
+                state.green ?? 0,
+                state.blue ?? 0,
+              ),
+            ],
+          },
+        },
+      ],
+      status: [
+        {
+          state: {
+            color: {
+              red: state.red ?? 0,
+              green: state.green ?? 0,
+              blue: state.blue ?? 0,
+            },
+            mode: RGBICModes.WHOLE_COLOR,
+          },
+        },
+        {
+          op: {
+            command: [[state.red ?? 0, state.green ?? 0, state.blue ?? 0]],
+          },
+        },
+      ],
     };
-  }
-
-  setState(nextState: WholeColor) {
-    this.commandBus.next({
-      command: 'colorwc',
-      data: {
-        color: {
-          r: nextState.red ?? 0,
-          g: nextState.green ?? 0,
-          b: nextState.blue ?? 0,
-        },
-      },
-    });
-
-    this.commandBus.next({
-      command: 'pt',
-      data: {
-        opcode: 'mode',
-        value: '2',
-        val: '2',
-        modeValue: '2',
-      },
-    });
-
-    this.commandBus.next({
-      data: {
-        command: [
-          asOpCode(
-            0x33,
-            this.identifier!,
-            RGBICModes.WHOLE_COLOR,
-            nextState.red ?? 0,
-            nextState.green ?? 0,
-            nextState.blue ?? 0,
-          ),
-        ],
-      },
-    });
   }
 }
 
@@ -495,7 +468,7 @@ export class RGBICActiveState extends ModeState {
         any
       >[],
       0xaa,
-      0x05,
+      [0x05],
       true,
     );
     this.activeIdentifier?.subscribe((identifier) => {
@@ -535,6 +508,6 @@ export class RGBICActiveState extends ModeState {
       return;
     }
 
-    nextState.setState(nextState.value);
+    return nextState.setState(nextState.value);
   }
 }

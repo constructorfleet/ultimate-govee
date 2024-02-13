@@ -20,3 +20,8 @@ export type Credentials = {
   password: Password;
   clientId?: ClientId;
 };
+
+export type DeviceCommandAddresses = {
+  iotTopic?: string;
+  bleAddress?: string;
+};

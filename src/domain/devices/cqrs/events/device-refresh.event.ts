@@ -1,4 +1,4 @@
-import { Labelled, Optional } from '@govee/common';
+import { DeviceCommandAddresses, Labelled } from '@govee/common';
 
 export class DeviceRefeshEvent implements Labelled {
   label = () => `Refreshing ${this.deviceId}`;
@@ -7,6 +7,7 @@ export class DeviceRefeshEvent implements Labelled {
     readonly deviceId: string,
     readonly model: string,
     readonly goodsType: number,
-    readonly iotTopic?: Optional<string>,
+    readonly addresses: DeviceCommandAddresses,
+    readonly opIdentifiers?: number[][],
   ) {}
 }

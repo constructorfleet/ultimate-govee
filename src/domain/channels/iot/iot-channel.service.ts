@@ -20,6 +20,10 @@ export class IoTChannelService extends ChannelService<
     super(eventBus);
   }
 
+  setEnabled(enabled: boolean) {
+    // TODO
+  }
+
   onConfigChange(config: IoTData) {
     this.eventBus.publish(
       new IoTChannelChangedEvent(config, (status) => {

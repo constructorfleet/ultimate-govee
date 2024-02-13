@@ -12,7 +12,7 @@ export class ActiveState extends DeviceOpState<
   constructor(
     device: DeviceModel,
     opType: number = OpType.REPORT,
-    identifier: number = 0x01,
+    identifier: number[] = [0x01],
   ) {
     super({ opType, identifier }, device, ActiveStateName, undefined);
   }

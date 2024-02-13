@@ -66,20 +66,17 @@ export class MistLevelState extends DeviceState<
         this.logger.warn(
           'Mist level cannot be set when in Auto, changing mode to Manual',
         );
-        this.active.modes
+        return this.active.modes
           .find((mode) => mode.name === ManualModeStateName)
           ?.setState(nextState);
-        break;
       case CustomModeStateName:
-        this.active.value.setState({
+        return this.active.value.setState({
           mistLevel: nextState,
         });
-        break;
       case ManualModeStateName:
-        this.active.value.setState(nextState);
-        break;
+        return this.active.value.setState(nextState);
       default:
-        break;
+        return undefined;
     }
   }
 }

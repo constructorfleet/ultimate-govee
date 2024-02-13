@@ -1,6 +1,6 @@
 import { Subscription } from 'rxjs';
 import { Optional, asOpCode } from '@govee/common';
-import { DeviceOpState } from '../../../states';
+import { DeviceOpState, StateCommandAndStatus } from '../../../states';
 import { DeviceModel } from '../../../devices.model';
 import {
   CustomModeStateName,
@@ -21,7 +21,7 @@ export class PurifierFanSpeedState extends DeviceOpState<
     device: DeviceModel,
     private readonly active: PurifierActiveMode | undefined = undefined,
     opType: number = 0xaa,
-    identifier: number = 0x05,
+    identifier: number[] = [0x05],
   ) {
     super({ opType, identifier }, device, FanSpeedStateName, undefined);
     if (active !== undefined) {
@@ -58,37 +58,44 @@ export class PurifierFanSpeedState extends DeviceOpState<
     this.stateValue.next(speed * 25);
   }
 
-  setState(nextState: Optional<number>) {
+  protected stateToCommand(
+    nextState: Optional<number>,
+  ): Optional<StateCommandAndStatus> {
     if (this.active === undefined) {
-      // const quartile = Math.floor((nextState ?? 0) / 4);
-      this.commandBus.next({
-        data: {
-          command: [
-            asOpCode(
-              0x33,
-              this.identifier!,
-              nextState === 0 || nextState === undefined ? 16 : nextState - 1,
-            ),
-          ],
+      return {
+        command: {
+          data: {
+            command: [
+              asOpCode(
+                0x33,
+                this.identifier!,
+                nextState === 0 || nextState === undefined ? 16 : nextState - 1,
+              ),
+            ],
+          },
         },
-      });
-      return;
+        status: {
+          op: {
+            command: [
+              [nextState === 0 || nextState === undefined ? 16 : nextState - 1],
+            ],
+          },
+        },
+      };
     }
     if (this.active.value === undefined) {
       this.logger.log('Unable to determine current mode, ignoring command');
-      return;
+      return undefined;
     }
     switch (this.active.value.name) {
       case ManualModeStateName:
-        this.active.value.setState(nextState);
-        break;
+        return this.active.value.setState(nextState);
       case CustomModeStateName:
-        this.active.value.setState({
+        return this.active.value.setState({
           fanSpeed: nextState,
         });
-        break;
       default:
-        break;
+        return undefined;
     }
   }
 }

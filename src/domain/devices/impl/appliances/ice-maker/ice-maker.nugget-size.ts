@@ -1,6 +1,10 @@
-import { asOpCode } from '@govee/common';
+import { Optional, asOpCode } from '@govee/common';
 import { DeviceModel } from '../../../devices.model';
 import { DeviceOpState } from '../../../states';
+import { GoveeDeviceStateCommand } from '@govee/data';
+import { v4 as uuidv4 } from 'uuid';
+import { StateCommandAndStatus } from '../../../states/device.state';
+import { Command } from 'nest-commander';
 
 export const NuggetSizeStateName = 'nuggetSize' as const;
 export type NuggetSizeStateName = typeof NuggetSizeStateName;
@@ -24,7 +28,7 @@ export class IceMakerNuggetSizeState extends DeviceOpState<
     super(
       {
         opType: 0xaa,
-        identifier: 0x05,
+        identifier: [0x05],
       },
       device,
       NuggetSizeStateName,
@@ -43,18 +47,31 @@ export class IceMakerNuggetSizeState extends DeviceOpState<
     );
   }
 
-  setState(nextState: NuggetSize | undefined) {
+  protected stateToCommand(
+    nextState: NuggetSize | undefined,
+  ): Optional<StateCommandAndStatus> {
     if (nextState === undefined) {
       this.logger.warn('Nugget size is undefined, ignoring command');
-      return;
+      return undefined;
     }
 
-    this.commandBus.next({
-      data: {
-        command: [
-          asOpCode(0x51, this.identifier!, nuggetSizeMap[nextState.toString()]),
-        ],
+    return {
+      command: {
+        data: {
+          command: [
+            asOpCode(
+              0x51,
+              this.identifier!,
+              nuggetSizeMap[nextState.toString()],
+            ),
+          ],
+        },
       },
-    });
+      status: {
+        op: {
+          command: [[nuggetSizeMap[nextState.toString()]]],
+        },
+      },
+    };
   }
 }

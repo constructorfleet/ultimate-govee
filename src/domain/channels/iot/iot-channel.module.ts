@@ -9,9 +9,11 @@ import {
 } from './handlers';
 import { IoTChannelSagas } from './iot-channel.sagas';
 import { IoTChannelService } from './iot-channel.service';
+import { IoTChannelController } from './iot-channel.controller';
 
 @Module({
   imports: [CqrsModule, DataModule],
+  controllers: [IoTChannelController],
   providers: [
     ConfigureIoTChannelCommandHandler,
     ConnectToIoTCommandHandler,

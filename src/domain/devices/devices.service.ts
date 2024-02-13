@@ -31,6 +31,12 @@ export class DevicesService {
       .subscribe((events) => this.eventBus.publishAll(events));
   }
 
+  getByModel(model: string) {
+    return Array.from(this.deviceMap.values()).filter(
+      (device) => device.model === model,
+    );
+  }
+
   getDevice(deviceId: DeviceId) {
     return this.deviceMap.get(deviceId);
   }

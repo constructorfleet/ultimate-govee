@@ -1,6 +1,6 @@
-import { asOpCode } from '@govee/common';
+import { Optional, asOpCode } from '@govee/common';
 import { DeviceModel } from '../devices.model';
-import { DeviceOpState } from './device.state';
+import { DeviceOpState, StateCommandAndStatus } from './device.state';
 
 export const ColorRGBStateName: 'colorRGB' = 'colorRGB' as const;
 export type ColorRGBStateName = typeof ColorRGBStateName;
@@ -22,7 +22,7 @@ export type ColorRGB = {
 };
 
 export class ColorRGBState extends DeviceOpState<ColorRGBStateName, ColorRGB> {
-  constructor(device: DeviceModel, opType: number = 0xaa, identifier = 0x05) {
+  constructor(device: DeviceModel, opType: number = 0xaa, identifier = [0x05]) {
     super(
       { opType, identifier },
       device,
@@ -58,31 +58,59 @@ export class ColorRGBState extends DeviceOpState<ColorRGBStateName, ColorRGB> {
     });
   }
 
-  setState(nextState: ColorRGB) {
-    this.commandBus.next({
-      command: 'color',
-      data: {
-        color: {
-          r: nextState.red ?? 0,
-          g: nextState.green ?? 0,
-          b: nextState.blue ?? 0,
+  protected stateToCommand(
+    nextState: ColorRGB,
+  ): Optional<StateCommandAndStatus> {
+    return {
+      status: [
+        {
+          state: {
+            color: {
+              red: nextState.red ?? 0,
+              green: nextState.green ?? 0,
+              blue: nextState.blue ?? 0,
+            },
+          },
         },
-      },
-    });
-
-    this.commandBus.next({
-      data: {
-        command: [
-          asOpCode(
-            0x33,
-            this.identifier!,
-            0x03,
-            nextState.red ?? 0,
-            nextState.green ?? 0,
-            nextState.blue ?? 0,
-          ),
-        ],
-      },
-    });
+        {
+          op: {
+            command: [
+              [
+                0x02,
+                nextState.red ?? 0,
+                nextState.green ?? 0,
+                nextState.blue ?? 0,
+              ],
+            ],
+          },
+        },
+      ],
+      command: [
+        {
+          command: 'color',
+          data: {
+            color: {
+              r: nextState.red ?? 0,
+              g: nextState.green ?? 0,
+              b: nextState.blue ?? 0,
+            },
+          },
+        },
+        {
+          data: {
+            command: [
+              asOpCode(
+                0x33,
+                this.identifier!,
+                0x03,
+                nextState.red ?? 0,
+                nextState.green ?? 0,
+                nextState.blue ?? 0,
+              ),
+            ],
+          },
+        },
+      ],
+    };
   }
 }

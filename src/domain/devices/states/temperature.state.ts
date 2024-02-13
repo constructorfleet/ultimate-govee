@@ -2,6 +2,7 @@ import { Ignorable, Optional } from '@govee/common';
 import { Measurement } from '@govee/data';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState, ParseOption } from './device.state';
+import { Calibration } from '../../../data/ble/decoder/lib/decoder.constants';
 
 export const TemperatureStateName: 'temperatureData' =
   'temperatureData' as const;
@@ -30,7 +31,7 @@ export class TemperatureState extends DeviceOpState<
   constructor(
     device: DeviceModel,
     opType: Ignorable<Optional<number>> = undefined,
-    identifier: Ignorable<Optional<number>> = undefined,
+    identifier: Ignorable<Optional<number[]>> = undefined,
     parseOption: ParseOption = 'state',
   ) {
     super(
@@ -50,11 +51,16 @@ export class TemperatureState extends DeviceOpState<
 
   parseState(data: TemperatureDataType) {
     if (data?.state?.temperature !== undefined) {
-      const calibration =
-        data?.state?.temperature?.calibration ??
-        this.stateValue.value.calibration;
-      const current =
-        data?.state?.temperature?.current ?? this.stateValue.value.current;
+      let calibration100 = data?.state?.temperature?.calibration;
+      if (calibration100 !== undefined && calibration100 > 100) {
+        calibration100 /= 100;
+      }
+      const calibration = calibration100 ?? this.stateValue.value.calibration;
+      let current100 = data?.state?.temperature?.current;
+      if (current100 !== undefined && current100 > 100) {
+        current100 /= 100;
+      }
+      const current = current100 ?? this.stateValue.value.current;
       let raw: Optional<number>;
       if (current !== undefined && calibration !== undefined) {
         raw = current - calibration;

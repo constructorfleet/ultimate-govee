@@ -37,6 +37,7 @@ export class DeviceModel {
   public readonly model: string;
   public readonly modelName: string;
   public readonly iotTopic?: Optional<string>;
+  public readonly bleAddress?: Optional<string>;
   public readonly ic: number;
   public readonly goodsType: number;
   public readonly pactCode: number;

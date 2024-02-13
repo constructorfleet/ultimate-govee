@@ -1,6 +1,6 @@
 import { Optional } from '@govee/common';
 import { DeviceModel } from '../devices.model';
-import { DeviceState } from './device.state';
+import { DeviceState, StateCommandAndStatus } from './device.state';
 
 export const ColorTempStateName: 'colorTemperature' =
   'colorTemperature' as const;
@@ -26,16 +26,25 @@ export class ColorTempState extends DeviceState<
     }
   }
 
-  setState(nextState: Optional<number>) {
+  protected stateToCommand(
+    nextState: Optional<number>,
+  ): Optional<StateCommandAndStatus> {
     if (nextState === undefined) {
       this.logger.warn('Color temperature not provided, ignoring command.');
-      return;
+      return undefined;
     }
-    this.commandBus.next({
-      command: 'colorTem',
-      data: {
-        colorTemInKelvin: nextState,
+    return {
+      status: {
+        state: {
+          colorTemperature: nextState,
+        },
       },
-    });
+      command: {
+        command: 'colorTem',
+        data: {
+          colorTemInKelvin: nextState,
+        },
+      },
+    };
   }
 }

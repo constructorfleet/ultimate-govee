@@ -1,6 +1,7 @@
 import { Expose, Transform, Type } from 'class-transformer';
 import { Conditions, DecoderArgs, Operations } from './lib/types';
 import { Optional } from '@govee/common';
+import { GoveeDeviceStatus } from '../../govee-device';
 
 export const typeMappings = {
   1: ['Temperature, Humidity, Battery'],
@@ -10,16 +11,16 @@ export const typeMappings = {
   5: 'SCALE', // weight scale
   6: 'iBeacon protocol',
   7: 'acceleration',
-  8: ' battery',
-  9: ' plant sensors',
-  10: ' tire pressure monitoring system',
-  11: ' health monitoring devices',
-  12: ' energy monitoring devices',
-  13: ' window covering',
-  14: ' ON/OFF actuators',
-  15: ' air environmental monitoring devices',
-  16: ' Bluetooth tracker',
-  17: ' Button',
+  8: 'battery',
+  9: 'plant sensors',
+  10: 'tire pressure monitoring system',
+  11: 'health monitoring devices',
+  12: 'energy monitoring devices',
+  13: 'window covering',
+  14: 'ON/OFF actuators',
+  15: 'air environmental monitoring devices',
+  16: 'Bluetooth tracker',
+  17: 'Button',
   254: 'random MAC address devices',
   255: 'Unique', // unique devices
 };
@@ -39,13 +40,13 @@ export class DecoderPropertiesMetadata {
 
 export class DeviceProperty {
   @Expose({ name: 'condition' })
-  condition?: Conditions;
+  condition?: any[];
 
   @Expose({ name: 'decoder' })
   decoder!: DecoderArgs;
 
   @Expose({ name: 'post_proc' })
-  postProcessing?: Operations;
+  post_proc?: any[];
 }
 
 export class DeviceProperties {
@@ -73,6 +74,7 @@ export class DecoderDeviceSpecification {
   brand!: string;
 
   @Expose({ name: 'model' })
+  @Transform(({ value }) => value.trim())
   modelName!: string;
 
   @Expose({ name: 'model_id' })
@@ -106,6 +108,7 @@ export type DecodedProperty =
   | {
       name: string;
       unit: string;
+      value: number;
     }
   | number;
 
@@ -115,5 +118,5 @@ export type DecodedDevice = {
   model: string;
   modelName: string;
   type: string;
-  properties: Record<string, Optional<DecodedProperty>>;
+  state: GoveeDeviceStatus['state'];
 };

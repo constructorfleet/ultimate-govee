@@ -32,7 +32,7 @@ export class HumidityState extends DeviceOpState<
   constructor(
     device: DeviceModel,
     opType: Optional<number> = undefined,
-    identifier: Optional<number> = undefined,
+    identifier: Optional<number[]> = undefined,
     parseOption: ParseOption = 'state',
   ) {
     super(
@@ -53,10 +53,16 @@ export class HumidityState extends DeviceOpState<
 
   parseState(data: HumidityDataType) {
     if (data?.state?.humidity !== undefined) {
-      const calibration =
-        data?.state?.humidity?.calibration ?? this.stateValue.value.calibration;
-      const current =
-        data?.state?.humidity?.current ?? this.stateValue.value.current;
+      let calibration100 = data?.state?.humidity?.calibration;
+      if (calibration100 !== undefined && calibration100 > 100) {
+        calibration100 /= 100;
+      }
+      const calibration = calibration100 ?? this.stateValue.value.calibration;
+      let current100 = data?.state?.humidity?.current;
+      if (current100 !== undefined && current100 > 100) {
+        current100 /= 100;
+      }
+      const current = current100 ?? this.stateValue.value.current;
       let raw: Optional<number>;
       if (current !== undefined && calibration !== undefined) {
         raw = current - calibration;

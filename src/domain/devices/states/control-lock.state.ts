@@ -12,7 +12,7 @@ export class ControlLockState extends DeviceOpState<
   constructor(
     device: DeviceModel,
     opType: number = 0xaa,
-    identifier: number = 0x0a,
+    ...identifier: number[]
   ) {
     super({ opType, identifier }, device, ControlLockStateName, undefined);
   }

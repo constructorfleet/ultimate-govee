@@ -1,6 +1,11 @@
-import { Optional, asOpCode, total } from '@govee/common';
+import { ArrayRange, Optional, asOpCode, total } from '@govee/common';
 import { DeviceModel } from '../../../devices.model';
-import { ModeState, DeviceOpState, DeviceState } from '../../../states';
+import {
+  ModeState,
+  DeviceOpState,
+  DeviceState,
+  StateCommandAndStatus,
+} from '../../../states';
 import { AutoModeStateName } from '../humidifier/humidifier.modes';
 
 enum PurifierModes {
@@ -19,7 +24,7 @@ export class ManualModeState extends DeviceOpState<
   constructor(
     device: DeviceModel,
     opType: number = 0xaa,
-    identifier: number = 0x05,
+    identifier: number[] = [0x05, PurifierModes.MANUAL],
   ) {
     super({ opType, identifier }, device, ManualModeStateName, undefined);
   }
@@ -32,19 +37,26 @@ export class ManualModeState extends DeviceOpState<
     this.stateValue.next(command[command.indexOf(0x00) - 1]);
   }
 
-  setState(nextState: Optional<number>) {
+  protected stateToCommand(
+    nextState: Optional<number>,
+  ): Optional<StateCommandAndStatus> {
     if (nextState === undefined) {
       this.logger.warn('Fan speed not specified, ignoring command');
       return;
     }
 
-    this.commandBus.next({
-      data: {
-        command: [
-          asOpCode(0x33, this.identifier!, PurifierModes.MANUAL, 0, nextState),
-        ],
+    return {
+      command: {
+        data: {
+          command: [asOpCode(0x33, this.identifier!, 0, nextState)],
+        },
       },
-    });
+      status: {
+        op: {
+          command: [[0, nextState]],
+        },
+      },
+    };
   }
 }
 
@@ -72,15 +84,12 @@ export class CustomModeState extends DeviceOpState<
   constructor(
     device: DeviceModel,
     opType: number = 0xaa,
-    identifier: number = 0x05,
+    identifier: number[] = [0x05, PurifierModes.PROGRAM],
   ) {
     super({ opType, identifier }, device, CustomModeStateName, undefined);
   }
 
   parseOpCommand(opCommand: number[]): void {
-    if (opCommand[0] !== PurifierModes.PROGRAM) {
-      return;
-    }
     const command = opCommand.slice(1);
     const value: CustomMode = {
       currentProgramId: command[0],
@@ -103,7 +112,9 @@ export class CustomModeState extends DeviceOpState<
     this.stateValue.next(this.customModes.currentProgram);
   }
 
-  setState(nextState: CustomProgram | undefined) {
+  protected stateToCommand(
+    nextState: CustomProgram | undefined,
+  ): Optional<StateCommandAndStatus> {
     if (nextState === undefined || nextState?.fanSpeed === undefined) {
       this.logger.warn('Fan speed not specified, ignoring command');
       return;
@@ -144,31 +155,57 @@ export class CustomModeState extends DeviceOpState<
       [newProgram.id]: newProgram,
     };
 
-    this.commandBus.next({
-      data: {
-        command: [
-          asOpCode(
-            0x33,
-            this.identifier!,
-            PurifierModes.PROGRAM,
-            newProgram.id,
-            ...[0, 1, 2].reduce((commands, program) => {
-              commands.push(
-                ...[
-                  newPrograms[program].id,
-                  newPrograms[program].fanSpeed,
-                  Math.floor(newPrograms[program].duration / 255),
-                  newPrograms[program].duration % 255,
-                  Math.floor(newPrograms[program].remaining / 255),
-                  newPrograms[program].remaining % 255,
-                ],
-              );
-              return commands;
-            }, [] as number[]),
-          ),
-        ],
+    return {
+      command: {
+        data: {
+          command: [
+            asOpCode(
+              0x33,
+              this.identifier!,
+              newProgram.id,
+              ...[0, 1, 2].reduce((commands, program) => {
+                commands.push(
+                  ...[
+                    newPrograms[program].id,
+                    newPrograms[program].fanSpeed,
+                    Math.floor(newPrograms[program].duration / 255),
+                    newPrograms[program].duration % 255,
+                    Math.floor(newPrograms[program].remaining / 255),
+                    newPrograms[program].remaining % 255,
+                  ],
+                );
+                return commands;
+              }, [] as number[]),
+            ),
+          ],
+        },
       },
-    });
+      status: {
+        op: {
+          command: [
+            [
+              newProgram.id,
+              ...[0, 1, 2].reduce(
+                (commands, program) => {
+                  commands.push(
+                    ...[
+                      newPrograms[program].id,
+                      newPrograms[program].fanSpeed,
+                      Math.floor(newPrograms[program].duration / 255),
+                      newPrograms[program].duration % 255,
+                      undefined,
+                      undefined,
+                    ],
+                  );
+                  return commands;
+                },
+                [] as (number | undefined)[],
+              ),
+            ],
+          ],
+        },
+      },
+    };
   }
 }
 
@@ -216,6 +253,6 @@ export class PurifierActiveMode extends ModeState {
       return;
     }
 
-    nextState.setState(nextState.value);
+    return nextState.setState(nextState.value);
   }
 }

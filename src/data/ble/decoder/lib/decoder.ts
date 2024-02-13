@@ -20,6 +20,7 @@ import {
   GreaterThanEqual,
   LessThan,
   LessThanEqual,
+  ManufacturerData,
   Modulo,
   MultiplyBy,
   Substract,
@@ -27,6 +28,9 @@ import {
 } from './decoder.constants';
 import { deviceMatches } from './device.condition';
 import { propertyMatches } from './property.condition';
+import { GoveeDeviceStatus } from '../../../govee-device';
+import { Logger } from '@nestjs/common';
+import { DeviceProperty } from '../decoder.types';
 
 const reverseHexData = (hexData: string, length: number): string =>
   chunk(hexData.slice(0, length).split(''), 2)
@@ -136,6 +140,7 @@ export const postProcessing = (
   operations: Operations,
   calibration?: number,
 ): number | undefined => {
+  const logger = new Logger('postProcessing');
   if (operations.length === 0) {
     return value;
   }
@@ -182,29 +187,98 @@ export const Decoder = {
   },
   decodeProperties(
     device: DecodeDevice,
-    properties: Record<
-      string,
-      {
-        condition?: Conditions;
-        decoder: DecoderArgs;
-        postProcessing?: Operations;
-      }
-    >,
-  ): Record<string, number | undefined> {
-    const decoded: Record<string, number | undefined> = {};
-    Object.entries(properties)
+    properties: Record<string, DeviceProperty>,
+  ): GoveeDeviceStatus['state'] {
+    const logger = new Logger('Decoder.decodeProperties');
+    let calibration: number | undefined;
+    return Object.entries(properties)
       .filter(([name, value]) =>
         value.condition ? propertyMatches(device, value.condition) : true,
       )
-      .forEach(([name, value]) => {
-        decoded[name] = Decoder.decode(
-          device,
-          value.decoder,
-          value.postProcessing,
-          decoded[Calibration],
-        );
-      });
-    return decoded;
+      .reduce(
+        (decoded: GoveeDeviceStatus['state'], [name, value]) => {
+          logger.debug(`decoding ${name}`);
+          const decodedValue = Decoder.decode(
+            device,
+            value.decoder,
+            value.post_proc,
+            calibration,
+          );
+          logger.debug(`decoded ${name} : ${decodedValue}`);
+          if (decodedValue === undefined) {
+            return decoded;
+          }
+          switch (name) {
+            case 'tempc':
+            case '_tempc':
+              decoded.temperature = {
+                ...(decoded.temperature ?? {}),
+                current: decodedValue,
+                calibration:
+                  value.post_proc?.includes('.cal') ?? false
+                    ? calibration
+                    : undefined,
+              };
+              break;
+            case 'tempc1':
+            case 'tempc2':
+            case 'tempc3':
+            case 'tempc4':
+            case 'tempc5':
+            case 'tempc6':
+              decoded.tempProbes = {
+                ...(decoded.tempProbes ?? {}),
+                ...{
+                  [Number.parseInt(name.slice(-1))]: decodedValue,
+                },
+              };
+              break;
+            case 'humidity':
+              decoded.humidity = {
+                current: decodedValue,
+                calibration:
+                  value.post_proc?.includes('.cal') ?? false
+                    ? calibration
+                    : undefined,
+              };
+              break;
+            case 'battery':
+              decoded.battery = decodedValue;
+              break;
+            case '.cal':
+              calibration = decodedValue;
+              break;
+            case 'hum':
+              decoded.humidity = {
+                ...(decoded.humidity ?? {}),
+                current: decodedValue,
+                calibration:
+                  value.post_proc?.includes('.cal') ?? false
+                    ? calibration
+                    : undefined,
+              };
+              break;
+            case 'batt':
+              decoded.battery = decodedValue;
+              break;
+            case 'pm25':
+              decoded.pm25 = {
+                ...(decoded.pm25 ?? {}),
+                current: decodedValue,
+                calibration:
+                  value.post_proc?.includes('.cal') ?? false
+                    ? calibration
+                    : undefined,
+              };
+              break;
+            default:
+              logger.warn(`Unknown property ${name}`);
+              break;
+          }
+          return decoded;
+        },
+        {} as GoveeDeviceStatus['state'],
+      );
   },
   decode(
     device: DecodeDevice,

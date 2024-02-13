@@ -34,7 +34,6 @@ export const propertyMatches = (
         [[]] as Conditions[],
       )
       .some((conditionGroup) => {
-        logger.error(conditionGroup);
         return propertyMatches(device, conditionGroup);
       });
   }

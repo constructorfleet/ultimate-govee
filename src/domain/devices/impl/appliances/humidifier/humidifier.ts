@@ -30,13 +30,13 @@ const StateFactories: StateFactories = [
   (device: DeviceModel) => new PowerState(device),
   (device: DeviceModel) => new ConnectedState(device),
   (device: DeviceModel) => new WaterShortageState(device),
-  (device: DeviceModel) => new TimerState(device),
+  (device: DeviceModel) => new TimerState(device, 0x0a, 0x0b),
   (device: DeviceModel) => new ManualModeState(device),
   (device: DeviceModel) => new CustomModeState(device),
   {
     H7141: [
       (device: DeviceModel) => new NightLightState(device, 0xaa, 0x18),
-      (device: DeviceModel) => new ControlLockState(device),
+      (device: DeviceModel) => new ControlLockState(device, 0xaa, 0x0a),
     ],
     H7142: [
       (device: DeviceModel) => new NightLightState(device, 0xaa, 0x1b),

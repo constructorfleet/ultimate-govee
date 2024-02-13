@@ -1,8 +1,7 @@
 import { decode, encode } from 'base64-arraybuffer';
 import { Optional } from './types';
 
-const ArrayRange = (count: number): number[] =>
-  // eslint-disable-next-line prefer-spread
+export const ArrayRange = (count: number): number[] =>
   Array.apply(null, Array(count)).map((_, i) => i);
 
 export enum OpType {
@@ -57,8 +56,11 @@ export const chunk = <T>(codes: T[], chunkSize: number) =>
     codes.slice(i * chunkSize, i * chunkSize + chunkSize),
   );
 
-export const asOpCode = (opCode, ...values) => {
-  const cmdFrame = Buffer.from([opCode, ...values]);
+export const asOpCode = (opCode, ...values: (number | number[])[]) => {
+  const cmdFrame = Buffer.from([
+    opCode,
+    ...values.map((v) => (typeof v === 'number' ? [v] : v)).flat(),
+  ]);
   const cmdPaddedFrame = Buffer.concat([
     cmdFrame,
     Buffer.from(new Array(19 - cmdFrame.length).fill(0)),

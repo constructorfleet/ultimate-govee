@@ -5,25 +5,30 @@ import {
 } from '@nestjs/common';
 import { type EventEmitter } from 'events';
 import { BleModuleOptions } from './ble.options';
+import { DeviceId } from '@govee/common';
+import { Subject } from 'rxjs';
 
 export const BleModuleOptionsKey: string = 'Ble.Module.Options';
 
-export const { ConfigurableModuleClass, MODULE_OPTIONS_TOKEN } =
-  new ConfigurableModuleBuilder<BleModuleOptions>({
-    optionsInjectionToken: BleModuleOptionsKey,
-    moduleName: 'Ble',
-  })
-    .setClassMethodName('forRoot')
-    .setExtras(
-      {
-        isGlobal: true,
-      },
-      (definition, extras) => ({
-        ...definition,
-        global: extras?.isGlobal,
-      }),
-    )
-    .build();
+export const {
+  ConfigurableModuleClass,
+  MODULE_OPTIONS_TOKEN,
+  ASYNC_OPTIONS_TYPE,
+} = new ConfigurableModuleBuilder<BleModuleOptions>({
+  optionsInjectionToken: BleModuleOptionsKey,
+  moduleName: 'Ble',
+})
+  .setClassMethodName('forRoot')
+  .setExtras(
+    {
+      isGlobal: true,
+    },
+    (definition, extras) => ({
+      ...definition,
+      global: extras?.isGlobal,
+    }),
+  )
+  .build();
 
 export const InjectBleOptions = Inject(MODULE_OPTIONS_TOKEN);
 
@@ -345,4 +350,14 @@ export type NobleBle = {
   removeAllListeners(event?: string): EventEmitter;
 
   state: string;
+};
+
+export type BleCommand = {
+  id: DeviceId;
+  address: string;
+  serviceUuid: string;
+  dataUuid: string;
+  writeUuid: string;
+  commands: number[][];
+  response: Subject<number[][]>;
 };

@@ -14,18 +14,17 @@ export type Hygrometer = typeof Hygrometer;
 
 const stateFactories: StateFactories = [
   {
-    H5106: [
+    [DefaultFactory]: [
       (device: DeviceModel) => new TemperatureState(device),
       (device: DeviceModel) => new HumidityState(device),
       (device: DeviceModel) => new BatteryLevelState(device),
     ],
-    [DefaultFactory]: [],
   },
 ];
 
 export class HygrometerDevice extends Device {
   constructor(device: DeviceModel, eventBus: EventBus, commandBus: CommandBus) {
-    super(device, eventBus, commandBus, []);
+    super(device, eventBus, commandBus, stateFactories);
   }
 }
 
@@ -34,7 +33,7 @@ export class HygrometerFactory extends DeviceFactory<HygrometerDevice> {
   constructor() {
     super(HygrometerDevice, {
       'Home Improvement': {
-        Temp: /Hygrometer/,
+        Temp: /Hygrometer/i,
       },
     });
   }

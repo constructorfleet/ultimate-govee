@@ -19,7 +19,7 @@ export class FilterState extends DeviceOpState<FilterStateName, Filter> {
   constructor(
     device: DeviceModel,
     opType: number = 0xaa,
-    identifier: number = 0x19,
+    ...identifier: number[]
   ) {
     super({ opType, identifier }, device, FilterStateName, {});
   }

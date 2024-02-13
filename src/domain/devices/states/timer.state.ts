@@ -1,6 +1,6 @@
-import { total, Optional } from '@govee/common';
+import { total, Optional, asOpCode, ArrayRange } from '@govee/common';
 import { DeviceModel } from '../devices.model';
-import { DeviceOpState } from './device.state';
+import { DeviceOpState, StateCommandAndStatus } from './device.state';
 
 export const TimerStateName: 'timer' = 'timer' as const;
 export type TimerStateName = typeof TimerStateName;
@@ -14,7 +14,7 @@ export class TimerState extends DeviceOpState<TimerStateName, Timer> {
   constructor(
     device: DeviceModel,
     opType: number = 0xaa,
-    identifier: number = 0x0b,
+    ...identifier: number[]
   ) {
     super({ opType, identifier }, device, TimerStateName, {
       enabled: undefined,
@@ -31,5 +31,43 @@ export class TimerState extends DeviceOpState<TimerStateName, Timer> {
       enabled: opCommand[0] === 0x01,
       duration,
     });
+  }
+
+  protected stateToCommand(state: Timer): Optional<StateCommandAndStatus> {
+    if (state.enabled === undefined) {
+      this.logger.warn('Enabled not included in state, ignoring command.');
+      return undefined;
+    }
+    if (state.duration === undefined) {
+      this.logger.warn('Duration not included in state, ignoring command.');
+      return undefined;
+    }
+
+    return {
+      command: {
+        data: {
+          command: [
+            asOpCode(
+              0x33,
+              ...this.identifier!,
+              state.enabled ? 0x01 : 0x00,
+              state.duration >> 8,
+              state.duration % 256,
+            ),
+          ],
+        },
+      },
+      status: ArrayRange(15).map((x) => ({
+        op: {
+          command: [
+            [
+              state.enabled ? 0x01 : 0x00,
+              (state.duration! - x) >> 8,
+              (state.duration! - x) % 256,
+            ],
+          ],
+        },
+      })),
+    };
   }
 }

@@ -27,14 +27,18 @@ export const createPersistedFileProviders = () =>
   Object.entries(persistedFiles).map(([filePath, options]) => ({
     provide: `Persisted.${filePath}`,
     useFactory: async () => {
-      if (!existsSync(filePath)) {
-        return undefined;
+      try {
+        if (!existsSync(filePath)) {
+          return undefined;
+        }
+        const data = await readFile(filePath, { encoding: 'utf-8' });
+        if (!options.transform) {
+          return JSON.parse(data);
+        }
+        return options.transform(JSON.parse(data));
+      } catch (err) {
+        return;
       }
-      const data = await readFile(filePath, { encoding: 'utf-8' });
-      if (!options.transform) {
-        return JSON.parse(data);
-      }
-      return options.transform(JSON.parse(data));
     },
   }));
 

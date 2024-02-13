@@ -34,7 +34,7 @@ export class AirQualityDevice extends Device {
 }
 
 @Injectable()
-export class SensorFactory extends DeviceFactory<AirQualityDevice> {
+export class AirQualityFactory extends DeviceFactory<AirQualityDevice> {
   constructor() {
     super(AirQualityDevice, {
       'Home Improvement': {

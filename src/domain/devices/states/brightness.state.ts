@@ -1,6 +1,7 @@
 import { asOpCode, Optional } from '@govee/common';
 import { DeviceModel } from '../devices.model';
-import { DeviceOpState } from './device.state';
+import { DeviceOpState, StateCommandAndStatus } from './device.state';
+import { v4 as uuidv4 } from 'uuid';
 
 export const BrightnessStateName: 'brightness' = 'brightness' as const;
 export type BrightnessStateName = typeof BrightnessStateName;
@@ -18,7 +19,7 @@ export class BrightnessState extends DeviceOpState<
   constructor(
     device: DeviceModel,
     opType: number = 0xaa,
-    identifier: number = 0x04,
+    identifier: number[] = [0x04],
   ) {
     super(
       { opType, identifier },
@@ -40,21 +41,39 @@ export class BrightnessState extends DeviceOpState<
     this.stateValue.next(brightness);
   }
 
-  setState(nextState: Optional<number>) {
+  protected stateToCommand(
+    nextState: Optional<number>,
+  ): Optional<StateCommandAndStatus> {
     if (nextState === undefined) {
       return;
     }
 
-    this.commandBus.next({
-      command: 'brightness',
-      data: {
-        val: nextState,
-      },
-    });
-    this.commandBus.next({
-      data: {
-        command: [asOpCode(0x33, this.identifier!, nextState)],
-      },
-    });
+    return {
+      status: [
+        {
+          state: {
+            brightness: nextState,
+          },
+        },
+        {
+          op: {
+            command: [[nextState]],
+          },
+        },
+      ],
+      command: [
+        {
+          command: 'brightness',
+          data: {
+            val: nextState,
+          },
+        },
+        {
+          data: {
+            command: [asOpCode(0x33, this.identifier!, nextState)],
+          },
+        },
+      ],
+    };
   }
 }

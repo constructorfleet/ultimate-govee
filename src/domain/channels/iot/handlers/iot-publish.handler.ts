@@ -10,7 +10,7 @@ export class IoTPublishCommandHandler
   private readonly logger: Logger = new Logger(IoTPublishCommandHandler.name);
   constructor(private readonly service: IoTService) {}
   async execute(command: IoTPublishCommand): Promise<any> {
-    this.logger.log(`Sending to ${command.topic}`);
+    this.logger.debug(`Sending to ${command.topic}`);
     await this.service.send(command.topic, JSON.stringify(command.payload));
   }
 }

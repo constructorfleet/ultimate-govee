@@ -38,7 +38,7 @@ export class ModeState extends DeviceOpState<
     device: DeviceModel,
     modes: Optional<DeviceState<string, any>>[],
     opType: number = 0xaa,
-    identifier: number = 0x05,
+    identifier: number[] = [0x05],
     inline: boolean = false,
   ) {
     super({ opType, identifier }, device, ModeStateName, undefined, 'both');

@@ -68,6 +68,7 @@ export class GoveeDeviceService {
           hardwareVersion: settings.hardwareVersion,
           id: device.device,
           iotTopic: device.deviceExt.deviceSettings.topic,
+          bleAddress: device.deviceExt.deviceSettings.bleAddress,
           pactCode: device.pactCode,
           pactType: device.pactType,
           goodsType: device.goodsType,

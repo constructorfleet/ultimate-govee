@@ -1,6 +1,7 @@
 import { Optional } from '@govee/common';
 import { DeviceModel } from '../devices.model';
-import { DeviceState } from './device.state';
+import { DeviceState, StateCommandAndStatus } from './device.state';
+import { Command } from 'nest-commander';
 
 export const PowerStateName: 'power' = 'power' as const;
 export type PowerStateName = typeof PowerStateName;
@@ -28,23 +29,34 @@ export class PowerState extends DeviceState<PowerStateName, Optional<boolean>> {
     }
   }
 
-  setState(nextState: Optional<boolean>) {
+  protected stateToCommand(
+    nextState: Optional<boolean>,
+  ): Optional<StateCommandAndStatus> {
     if (nextState === undefined) {
       this.logger.warn('Power was not specified, ignoring command');
       return;
     }
-    this.commandBus.next({
-      command: 'turn',
-      data: {
-        value: nextState ? '1' : '0',
-      },
-    });
 
-    this.commandBus.next({
-      command: 'turn',
-      data: {
-        val: nextState === true ? '1' : '0',
+    return {
+      command: [
+        {
+          command: 'turn',
+          data: {
+            value: nextState ? '1' : '0',
+          },
+        },
+        {
+          command: 'turn',
+          data: {
+            val: nextState === true ? '1' : '0',
+          },
+        },
+      ],
+      status: {
+        state: {
+          isOn: nextState,
+        },
       },
-    });
+    };
   }
 }

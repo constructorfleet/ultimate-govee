@@ -23,7 +23,15 @@ export class DeviceController {
     return Promise.all(devices);
   }
 
-  @Get('/:id')
+  @Get('model/:model')
+  async getByModel(@Param('model') model: string) {
+    const devices = this.deviceService.getByModel(model);
+    return Promise.all(
+      devices.map((device) => device.loggableState(device.id)),
+    );
+  }
+
+  @Get(':id')
   async getDevice(
     @Param('id') deviceId: string,
     @Query('state') stateName?: string,
@@ -36,12 +44,12 @@ export class DeviceController {
     return device.state(stateName)?.value;
   }
 
-  @Post('/:id/refresh')
+  @Post(':id/refresh')
   async refreshDevice(@Param('id') deviceId: string) {
     this.deviceService.getDevice(deviceId)?.refresh();
   }
 
-  @Post('/:id/:state')
+  @Post(':id/:state')
   async setState(
     @Param('id') deviceId: string,
     @Param('state') stateName: string,

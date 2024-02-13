@@ -22,19 +22,15 @@ export class SceneModeState extends DeviceOpState<
   constructor(
     device: DeviceModel,
     opType: number = 0xaa,
-    identifier: number = 0x05,
+    identifier: number[] = [0x05, 0x04],
   ) {
     super({ opType, identifier }, device, SceneModeStateName, {});
   }
 
   parseOpCommand(opCommand: number[]): void {
-    if (opCommand[0] !== 0x04) {
-      return;
-    }
-
     this.stateValue.next({
-      sceneId: total(opCommand.slice(1, 3)),
-      sceneParamId: total(opCommand.slice(3, 5)),
+      sceneId: total(opCommand.slice(0, 2)),
+      sceneParamId: total(opCommand.slice(2, 4)),
     });
   }
 }
