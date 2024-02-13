@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { DataModule } from '@govee/data';
+import { DataModule, IoTModule } from '@govee/data';
 import {
   ConnectToIoTCommandHandler,
   IoTSubscribeCommandHandler,
@@ -12,7 +12,7 @@ import { IoTChannelService } from './iot-channel.service';
 import { IoTChannelController } from './iot-channel.controller';
 
 @Module({
-  imports: [CqrsModule, DataModule],
+  imports: [CqrsModule, IoTModule],
   controllers: [IoTChannelController],
   providers: [
     ConfigureIoTChannelCommandHandler,

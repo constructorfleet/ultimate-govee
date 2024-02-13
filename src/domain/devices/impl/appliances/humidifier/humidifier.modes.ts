@@ -120,7 +120,6 @@ export class CustomModeState extends DeviceOpState<
       this.logger.warn('Program not specified, ignoring command');
       return;
     }
-
     const newProgram: CustomProgram = {
       id: nextState?.id ?? this.customModes?.currentProgram?.id ?? 0,
       duration:
@@ -171,7 +170,6 @@ export class CustomModeState extends DeviceOpState<
               ...[0, 1, 2].reduce((commands, program) => {
                 commands.push(
                   ...[
-                    newPrograms[program].id,
                     newPrograms[program].mistLevel,
                     Math.floor(newPrograms[program].duration / 255),
                     newPrograms[program].duration % 255,
@@ -194,7 +192,6 @@ export class CustomModeState extends DeviceOpState<
                 (commands, program) => {
                   commands.push(
                     ...[
-                      newPrograms[program].id,
                       newPrograms[program].mistLevel,
                       Math.floor(newPrograms[program].duration / 255),
                       newPrograms[program].duration % 255,

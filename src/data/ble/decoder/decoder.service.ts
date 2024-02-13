@@ -39,7 +39,9 @@ export class DecoderService implements OnApplicationBootstrap {
   async decodeDevice(
     peripheral: BlePeripheral,
   ): Promise<Optional<DecodedDevice>> {
-    const modelMatch = /(H\d{4})/.exec(peripheral.advertisement.localName);
+    const modelMatch = /(H[A-Z0-9]{4})_/.exec(
+      peripheral.advertisement.localName,
+    );
     if (!modelMatch) {
       return undefined;
     }

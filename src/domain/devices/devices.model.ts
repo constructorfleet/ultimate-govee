@@ -162,7 +162,6 @@ export const IoTDevice = <TDevice extends ClassConstructor<DeviceModel>>(
 export const createDeviceModel = (
   device: GoveeDevice,
   productCategories: Record<string, Product>,
-  iotUpdater: (device: DeviceModel) => void,
 ): DeviceModel => {
   let constructor: ClassConstructor<DeviceModel> = DeviceModel;
   const refreshers: ((device: DeviceModel) => void)[] = [];
@@ -175,7 +174,6 @@ export const createDeviceModel = (
   if (device.iotTopic) {
     new Logger('createDevice').debug(device.iotTopic);
     constructor = IoTDevice(constructor);
-    refreshers.push(iotUpdater);
   }
   const product = productCategories[device.model];
   if (!product) {
@@ -187,6 +185,8 @@ export const createDeviceModel = (
     category: product?.category || 'unknown',
     categoryGroup: product?.group || 'unknown',
     modelName: product?.modelName || 'unknown',
+    bleAddress: device.blueTooth?.mac,
+    bleName: device.blueTooth?.name,
   });
   newDevice.refreshers.push(...refreshers);
   return newDevice;

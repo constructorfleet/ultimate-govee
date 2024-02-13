@@ -63,7 +63,9 @@ export const asOpCode = (opCode, ...values: (number | number[])[]) => {
   ]);
   const cmdPaddedFrame = Buffer.concat([
     cmdFrame,
-    Buffer.from(new Array(19 - cmdFrame.length).fill(0)),
+    cmdFrame.length >= 19
+      ? new Uint8Array([])
+      : Buffer.from(new Array(19 - cmdFrame.length).fill(0)),
   ]);
   return Array.from(
     Buffer.concat([

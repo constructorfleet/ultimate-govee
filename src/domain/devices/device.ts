@@ -12,6 +12,7 @@ import { DeviceOpState, DeviceState } from './states/device.state';
 import { ModeState, ModeStateName } from './states/mode.state';
 import { DeviceRefeshEvent } from './cqrs/events/device-refresh.event';
 import { DeviceStateCommandEvent } from './cqrs/events/device-state-command.event';
+import { CommandExpiredEvent } from './cqrs';
 
 class JsonLogger extends ConsoleLogger {}
 
@@ -92,11 +93,7 @@ export class Device extends BehaviorSubject<DeviceStateValues> {
       state.identifier !== undefined &&
       state.identifier !== null
     ) {
-      this.opIdentifiers.add(
-        typeof state.identifier === 'number'
-          ? [state.identifier]
-          : state.identifier,
-      );
+      this.opIdentifiers.add(state.identifier);
     }
     this.device.status.subscribe((status) => state.parse(status));
     this.states.set(state.name, state);
@@ -104,7 +101,7 @@ export class Device extends BehaviorSubject<DeviceStateValues> {
       this.stateValues.set(state.name, value);
     });
     state.clearCommand.subscribe((commandId) => {
-      // TODO
+      this.eventBus.publish(new CommandExpiredEvent(commandId));
     });
     state.commandBus.subscribe((cmd) =>
       this.eventBus.publish(
@@ -216,7 +213,7 @@ export class Device extends BehaviorSubject<DeviceStateValues> {
         ...device.status.value,
       });
     });
-    this.refreshSubject.pipe(sampleTime(1000)).subscribe(() =>
+    this.refreshSubject.pipe(sampleTime(5000)).subscribe(() =>
       this.eventBus.publish(
         new DeviceRefeshEvent(
           this.id,

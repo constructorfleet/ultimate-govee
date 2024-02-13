@@ -3,6 +3,7 @@ import { ICommand, Saga, ofType } from '@nestjs/cqrs';
 import {
   Observable,
   catchError,
+  concatMap,
   distinctUntilChanged,
   filter,
   map,
@@ -19,6 +20,7 @@ import {
   IoTPublishCommand,
 } from './commands';
 import { IoTChannelService } from './iot-channel.service';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class IoTChannelSagas {
@@ -62,7 +64,7 @@ export class IoTChannelSagas {
       filter((event) => event.addresses.iotTopic !== undefined),
       map(
         (event) =>
-          new IoTPublishCommand(event.addresses.iotTopic!, {
+          new IoTPublishCommand(uuidv4(), event.addresses.iotTopic!, {
             topic: event.addresses.iotTopic,
             msg: {
               accountTopic: this.service.getConfig()?.topic,
@@ -86,17 +88,21 @@ export class IoTChannelSagas {
       filter((event) => event.addresses.iotTopic !== undefined),
       map(
         (event) =>
-          new IoTPublishCommand(event.addresses.iotTopic!, {
-            topic: event.addresses.iotTopic,
-            msg: {
-              accountTopic: this.service.getConfig()?.topic,
-              cmd: event.command.command ?? 'ptReal',
-              cmdVersion: event.command.cmdVersion ?? 0,
-              data: event.command.data,
-              transaction: `u_${Date.now()}`,
-              type: event.command.type ?? 1,
+          new IoTPublishCommand(
+            event.command.commandId,
+            event.addresses.iotTopic!,
+            {
+              topic: event.addresses.iotTopic,
+              msg: {
+                accountTopic: this.service.getConfig()?.topic,
+                cmd: event.command.command ?? 'ptReal',
+                cmdVersion: event.command.cmdVersion ?? 0,
+                data: event.command.data,
+                transaction: `u_${Date.now()}`,
+                type: event.command.type ?? 1,
+              },
             },
-          }),
+          ),
       ),
       catchError((err, caught) => {
         this.logger.error(err, caught);

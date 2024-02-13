@@ -15,7 +15,6 @@ import { DevicesModule } from './domain/devices';
     PersistModule.forRoot(),
     CqrsModule.forRoot(),
     ConfigModule.forFeature(CredentialsConfig),
-    DataModule,
     AuthModule,
     ChannelsModule,
     DevicesModule,

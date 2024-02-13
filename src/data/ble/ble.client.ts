@@ -2,15 +2,27 @@ import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
 import {
   BehaviorSubject,
   Subject,
+  asapScheduler,
+  buffer,
   concat,
   concatMap,
   delay,
+  distinctUntilKeyChanged,
   filter,
   from,
+  groupBy,
+  interval,
   map,
   merge,
+  mergeMap,
+  observeOn,
+  of,
+  queueScheduler,
+  reduce,
   switchMap,
+  take,
   tap,
+  toArray,
 } from 'rxjs';
 import { DeltaMap, DeviceId, Optional, sleep } from '@govee/common';
 import noble from '@abandonware/noble';
@@ -26,6 +38,8 @@ import { execSync } from 'child_process';
 export class BleClient implements OnModuleDestroy {
   private readonly logger: Logger = new Logger(BleClient.name);
 
+  private seenNames: string[] = [];
+  private scanning: boolean = false;
   private connectedPeripheral: Optional<BlePeripheral> = undefined;
   readonly enabled: BehaviorSubject<boolean> = new BehaviorSubject(false);
   private readonly peripheralDiscovered: Subject<BlePeripheral> = new Subject();
@@ -33,7 +47,8 @@ export class BleClient implements OnModuleDestroy {
     new DeltaMap();
   readonly peripheralDecoded: Subject<DecodedDevice> = new Subject();
   readonly commandQueue: Subject<BleCommand> = new Subject();
-  private readonly lock: Lock<void> = new Lock();
+  private readonly lock: Lock<number> = new Lock();
+  private lockIndex: number = 0;
 
   constructor(
     @InjectBleOptions private readonly options: BleModuleOptions,
@@ -48,30 +63,52 @@ export class BleClient implements OnModuleDestroy {
       .subscribe((enabled) => {
         this.options.enabled = enabled;
       });
-    const discovery$ = this.peripheralDiscovered.pipe(
-      filter(
-        (peripheral) => this.enabled.getValue() && peripheral !== undefined,
-      ),
-      concatMap((peripheral) => from(this.recordPeripheral(peripheral))),
-      concatMap((peripheral) => from(this.decoder.decodeDevice(peripheral))),
-      filter((device) => device !== undefined),
-      map((device) => device!),
-      tap((device) => this.peripheralDecoded.next(device)),
-    );
-    const commands$ = this.commandQueue.pipe(
-      filter(() => this.enabled.getValue()),
-      concatMap((command) => from(this.sendCommand(command))),
-    );
-    merge(commands$, discovery$)
-      .pipe(tap(() => from(this.startScanning())))
+    interval(5000)
+      .pipe(
+        switchMap(() =>
+          this.scanning
+            ? from(this.stopScanning())
+            : from(this.startScanning()),
+        ),
+      )
+      .subscribe();
+    this.peripheralDiscovered
+      .pipe(
+        filter(
+          (peripheral) => this.enabled.getValue() && peripheral !== undefined,
+        ),
+        observeOn(queueScheduler),
+        tap((peripheral) =>
+          from(this.recordPeripheral(peripheral)).subscribe(),
+        ),
+        concatMap((peripheral) => from(this.decoder.decodeDevice(peripheral))),
+        filter((device) => device !== undefined),
+        map((device) => device!),
+      )
       .subscribe((event) => {
-        if (event === undefined) {
-          return;
-        }
-        if ('commands' in event) {
-          this.logger.log(`Sent ${event.commands.length} to ${event.id}`);
-        } else {
+        if (event) {
+          this.peripheralDecoded.next(event);
           this.logger.log(`Decoded ${event.id}`);
+        }
+      });
+    const commands$ = this.commandQueue
+      .pipe(
+        filter(() => this.enabled.getValue()),
+        observeOn(asapScheduler),
+        distinctUntilKeyChanged('address'),
+        concatMap((command) => from(this.sendCommand(command))),
+        tap(() =>
+          of(this.scanning)
+            .pipe(
+              filter((s) => !s),
+              map(() => from(this.startScanning())),
+            )
+            .subscribe(),
+        ),
+      )
+      .subscribe((event) => {
+        if (event) {
+          this.logger.log(`Sent ${event.commands.length} to ${event.id}`);
         }
       });
   }
@@ -80,20 +117,25 @@ export class BleClient implements OnModuleDestroy {
     peripheral: BlePeripheral,
   ): Promise<BlePeripheral> {
     if (
-      peripheral.advertisement?.localName === undefined ||
-      !/(H\d{4})/.exec(peripheral.advertisement.localName)
+      (peripheral.advertisement?.localName ?? '').length === 0 ||
+      !/(H[A-Z0-9]{4})_/.exec(peripheral.advertisement.localName)
     ) {
       return peripheral;
     }
+    if (this.seenNames.includes(peripheral.advertisement?.localName)) {
+      return peripheral;
+    }
     if (
-      (peripheral.address ?? '').length >= 0 &&
+      (peripheral.address ?? '').length > 0 &&
       !this.peripherals.has(peripheral.address)
     ) {
       this.logger.debug(`Got address ${peripheral.address}`);
       this.peripherals.set(peripheral.address, peripheral);
+      this.seenNames.push(peripheral.advertisement.localName);
       return peripheral;
     }
-    await this.lock.acquire();
+    await this.lock.acquire(this.lockIndex++ % 4);
+    await this.stopScanning();
     try {
       await peripheral.connectAsync();
       if (platform() === 'darwin') {
@@ -110,8 +152,15 @@ export class BleClient implements OnModuleDestroy {
             .split('\n')
             [btDataIndex + 1].trim()
             .replace('Address: ', '');
-          this.logger.debug(`Got address ${peripheral.address}`);
-          this.peripherals.set(peripheral.address, peripheral);
+          if (peripheral.address.length === 0) {
+            this.logger.error(peripheral);
+          } else {
+            this.logger.warn(
+              `Got address ${peripheral.address} for ${peripheral.advertisement.localName}`,
+            );
+            this.peripherals.set(peripheral.address, peripheral);
+            this.seenNames.push(peripheral.advertisement.localName);
+          }
         }
       }
       this.logger.log(
@@ -122,6 +171,7 @@ export class BleClient implements OnModuleDestroy {
     } catch (err) {
       this.logger.error(err);
     } finally {
+      await this.stopScanning();
       if (this.lock.isAcquired()) {
         this.lock.release();
       }
@@ -153,9 +203,11 @@ export class BleClient implements OnModuleDestroy {
     });
     noble.on('scanStart', () => {
       this.logger.log('Begin scanning');
+      this.scanning = true;
     });
     noble.on('scanStop', () => {
       this.logger.log('Scanning stopped');
+      this.scanning = false;
     });
     noble.on('warning', (message: string) => this.logger.warn(message));
     noble.on('discover', (peripheral: BlePeripheral) =>
@@ -166,41 +218,42 @@ export class BleClient implements OnModuleDestroy {
   }
 
   async stopScanning() {
-    if (this.enabled.getValue()) {
+    if (this.enabled.getValue() && this.scanning) {
       await noble.stopScanningAsync();
     }
   }
 
   async startScanning() {
-    if (this.enabled.getValue()) {
+    if (this.enabled.getValue() && !this.scanning) {
       return await noble.startScanningAsync();
     }
   }
 
   private async sendCommand({
     id,
+    address,
     serviceUuid,
     dataUuid,
     writeUuid,
     commands,
     response,
   }: BleCommand): Promise<Optional<{ id: string; commands: number[][] }>> {
-    const peripheral = this.peripherals.get(id);
+    const peripheral = this.peripherals.get(address);
     if (!peripheral) {
-      this.logger.debug(
-        `Device with id ${id} not found`,
+      this.logger.error(
+        `Device with address ${address} not found`,
         Array.from(this.peripherals.keys()),
       );
       return undefined;
     }
     this.logger.log(`Device with id ${id} found! Sending commands`);
     try {
-      await this.lock.acquire();
       if (!this.enabled.getValue()) {
-        this.logger.debug(`Ble is disabled, unable to send command to ${id}`);
+        this.logger.error(`Ble is disabled, unable to send command to ${id}`);
         return undefined;
       }
-
+      // await this.lock.acquire((this.lockIndex++) % 4);
+      await this.stopScanning();
       try {
         await peripheral.connectAsync();
       } catch (err) {
@@ -246,7 +299,10 @@ export class BleClient implements OnModuleDestroy {
             }),
         );
         await sleep(200);
-        this.logger.log(JSON.stringify(commands), JSON.stringify(response));
+        await dataChar.notifyAsync(false);
+        this.logger.log(id);
+        this.logger.log(JSON.stringify(commands));
+        this.logger.log(JSON.stringify(result));
         response.next(result);
         return {
           id,
@@ -262,6 +318,7 @@ export class BleClient implements OnModuleDestroy {
       this.logger.error(`Error`, err);
       return undefined;
     } finally {
+      await this.startScanning();
       if (this.lock.isAcquired()) {
         this.lock.release();
       }

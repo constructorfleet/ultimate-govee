@@ -21,6 +21,7 @@ export class ManualModeState extends DeviceOpState<
   ManualModeStateName,
   Optional<number>
 > {
+  private speedIndex: number = 0;
   constructor(
     device: DeviceModel,
     opType: number = 0xaa,
@@ -34,7 +35,8 @@ export class ManualModeState extends DeviceOpState<
       return;
     }
     const command = opCommand.slice(1);
-    this.stateValue.next(command[command.indexOf(0x00) - 1]);
+    this.speedIndex = command.indexOf(0x00) - 1;
+    this.stateValue.next(command[this.speedIndex]);
   }
 
   protected stateToCommand(
@@ -45,10 +47,13 @@ export class ManualModeState extends DeviceOpState<
       return;
     }
 
+    const filler = ArrayRange(Math.max(this.speedIndex, 1))
+      .fill(0)
+      .slice(0, this.speedIndex);
     return {
       command: {
         data: {
-          command: [asOpCode(0x33, this.identifier!, 0, nextState)],
+          command: [asOpCode(0x33, this.identifier!, filler, nextState)],
         },
       },
       status: {
@@ -166,7 +171,6 @@ export class CustomModeState extends DeviceOpState<
               ...[0, 1, 2].reduce((commands, program) => {
                 commands.push(
                   ...[
-                    newPrograms[program].id,
                     newPrograms[program].fanSpeed,
                     Math.floor(newPrograms[program].duration / 255),
                     newPrograms[program].duration % 255,
@@ -189,7 +193,6 @@ export class CustomModeState extends DeviceOpState<
                 (commands, program) => {
                   commands.push(
                     ...[
-                      newPrograms[program].id,
                       newPrograms[program].fanSpeed,
                       Math.floor(newPrograms[program].duration / 255),
                       newPrograms[program].duration % 255,

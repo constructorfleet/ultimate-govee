@@ -360,4 +360,5 @@ export type BleCommand = {
   writeUuid: string;
   commands: number[][];
   response: Subject<number[][]>;
+  priority: number;
 };

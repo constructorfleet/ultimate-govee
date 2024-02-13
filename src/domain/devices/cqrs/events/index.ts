@@ -6,3 +6,4 @@ export * from './device-status-received.event';
 export * from './light-effects-received.event';
 export * from './device-refresh.event';
 export * from './device-state-command.event';
+export * from './command-expired.event';

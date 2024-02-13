@@ -5,8 +5,8 @@ import { CommandRouter } from './command-router';
 import { BleModule } from '.';
 
 @Module({
-  imports: [GoveeAPIModule, IoTModule, BleModule.forRoot({ enabled: true })],
-  providers: [CommandRouter],
-  exports: [GoveeAPIModule, IoTModule, BleModule, CommandRouter],
+  imports: [GoveeAPIModule, BleModule.forRoot({ enabled: true })],
+  providers: [],
+  exports: [GoveeAPIModule, BleModule],
 })
 export class DataModule {}

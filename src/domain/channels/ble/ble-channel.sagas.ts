@@ -1,6 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ICommand, Saga, ofType } from '@nestjs/cqrs';
-import { Observable, catchError, filter, map, mergeMap, of } from 'rxjs';
+import {
+  Observable,
+  catchError,
+  filter,
+  map,
+  mergeMap,
+  of,
+  sampleTime,
+  tap,
+} from 'rxjs';
 import {
   BleChannelChangedEvent,
   BleChannelConfigReceivedEvent,
@@ -11,6 +20,7 @@ import { BleChannelService } from './ble-channel.service';
 import * as CQRS from '@govee/domain/devices/cqrs';
 import { BlePublishCommand, BleRecordDeviceCommand } from './commands';
 import { asOpCode, base64ToHex } from '@govee/common';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class BleChannelSagas {
@@ -55,6 +65,7 @@ export class BleChannelSagas {
   refreshDeviceFlow = (events$: Observable<any>): Observable<ICommand> =>
     events$.pipe(
       ofType(CQRS.DeviceRefeshEvent),
+      sampleTime(1000),
       filter((event) => event.addresses.bleAddress !== undefined),
       filter(
         (event) =>
@@ -63,6 +74,7 @@ export class BleChannelSagas {
       map(
         (event) =>
           new BlePublishCommand(
+            uuidv4(),
             event.deviceId,
             event.addresses.bleAddress!,
             event.opIdentifiers!.map((op) => asOpCode(0xaa, ...op)),
@@ -88,6 +100,7 @@ export class BleChannelSagas {
       map(
         (event) =>
           new BlePublishCommand(
+            event.command.commandId,
             event.id,
             event.addresses.bleAddress!,
             event.command.data.command!.map((value: number[] | string) =>

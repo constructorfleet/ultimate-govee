@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { DataModule } from '@govee/data';
+import { DataModule, GoveeAPIModule } from '@govee/data';
 import {
   ConfigureRestChannelCommandHandler,
   ModelProductQueryHandler,
@@ -11,7 +11,7 @@ import { RestChannelSagas } from './rest-channel.sagas';
 import { RestChannelService } from './rest-channel.service';
 
 @Module({
-  imports: [CqrsModule, DataModule],
+  imports: [CqrsModule, GoveeAPIModule],
   providers: [
     ModelProductQueryHandler,
     ConfigureRestChannelCommandHandler,

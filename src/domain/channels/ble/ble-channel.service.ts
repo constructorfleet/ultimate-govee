@@ -72,7 +72,12 @@ export class BleChannelService
     return this.state.peripherals[this.toPeripheralId(deviceId)] !== undefined;
   }
 
-  sendCommand(id: DeviceId, bleAddress: string, commands: number[][]) {
+  sendCommand(
+    id: DeviceId,
+    bleAddress: string,
+    commands: number[][],
+    priority: number,
+  ) {
     const device = this.devices[id];
     if (!device) {
       this.logger.error(`Device ${id} not known`);
@@ -108,6 +113,7 @@ export class BleChannelService
       writeUuid: writeCharUuid,
       commands,
       response,
+      priority,
     });
   }
 
