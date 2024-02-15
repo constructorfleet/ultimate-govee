@@ -17,6 +17,7 @@ import {
   ManualModeStateName,
   PurifierActiveMode,
 } from './purifier.modes';
+import { ModuleDestroyObservable } from '@govee/common';
 
 const StateFactories: StateFactories = [
   (device: DeviceModel) => new DisplayScheduleState(device, 0xaa, 0x16),
@@ -41,8 +42,13 @@ export type PurifierType = typeof PurifierType;
 export class PurifierDevice extends Device {
   static readonly deviceType: PurifierType = PurifierType;
 
-  constructor(device: DeviceModel, eventBus: EventBus, commandBus: CommandBus) {
-    super(device, eventBus, commandBus, StateFactories);
+  constructor(
+    device: DeviceModel,
+    eventBus: EventBus,
+    commandBus: CommandBus,
+    moduleDestroyed$: ModuleDestroyObservable,
+  ) {
+    super(device, eventBus, commandBus, moduleDestroyed$, StateFactories);
     const fanSpeedState = this.state<PurifierFanSpeedState>(FanSpeedStateName);
     if (!fanSpeedState) {
       const active = new PurifierActiveMode(device, [

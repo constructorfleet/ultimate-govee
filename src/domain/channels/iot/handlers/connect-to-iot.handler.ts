@@ -8,10 +8,11 @@ export class ConnectToIoTCommandHandler
 {
   constructor(private readonly iot: IoTService) {}
 
-  async execute(command: ConnectToIoTCommand): Promise<any> {
-    await this.iot.connect(command.iotData, command.callback);
-    if (command.topic) {
-      await this.iot.subscribe(command.topic);
-    }
+  execute(command: ConnectToIoTCommand): Promise<any> {
+    return this.iot.connect(command.iotData, command.callback).then(() => {
+      if (command.topic) {
+        return this.iot.subscribe(command.topic);
+      }
+    });
   }
 }

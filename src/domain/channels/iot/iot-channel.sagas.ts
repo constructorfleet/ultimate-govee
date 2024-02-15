@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ICommand, Saga, ofType } from '@nestjs/cqrs';
+import { ICommand, Saga, ofType, EventBus } from '@nestjs/cqrs';
 import {
   Observable,
   catchError,
@@ -8,6 +8,8 @@ import {
   filter,
   map,
   of,
+  takeUntil,
+  tap,
 } from 'rxjs';
 import * as CQRS from '@govee/domain/devices/cqrs';
 import {
@@ -21,15 +23,21 @@ import {
 } from './commands';
 import { IoTChannelService } from './iot-channel.service';
 import { v4 as uuidv4 } from 'uuid';
+import { ModuleDestroyObservable } from '@govee/common';
 
 @Injectable()
 export class IoTChannelSagas {
   private readonly logger: Logger = new Logger(IoTChannelSagas.name);
-  constructor(private readonly service: IoTChannelService) {}
+  constructor(
+    private readonly service: IoTChannelService,
+    private readonly eventBus: EventBus,
+    private readonly moduleDestroyed$: ModuleDestroyObservable,
+  ) {}
 
   @Saga()
   configureIotChannelFlow = (events$: Observable<any>): Observable<ICommand> =>
     events$.pipe(
+      takeUntil(this.moduleDestroyed$),
       ofType(IoTChannelConfigReceivedEvent),
       map((event) => new ConfigureIoTChannelCommand(event.config)),
       catchError((err, caught) => {
@@ -41,6 +49,7 @@ export class IoTChannelSagas {
   @Saga()
   connectIoTClientFlow = (events$: Observable<any>): Observable<ICommand> =>
     events$.pipe(
+      takeUntil(this.moduleDestroyed$),
       ofType(IoTChannelChangedEvent),
       distinctUntilChanged((previous, current) => current.equals(previous)),
       map(
@@ -60,6 +69,7 @@ export class IoTChannelSagas {
   @Saga()
   refreshDeviceFlow = (events$: Observable<any>): Observable<ICommand> =>
     events$.pipe(
+      takeUntil(this.moduleDestroyed$),
       ofType(CQRS.DeviceRefeshEvent),
       filter((event) => event.addresses.iotTopic !== undefined),
       map(
@@ -84,6 +94,7 @@ export class IoTChannelSagas {
   @Saga()
   publishIoTCommand = (events$: Observable<any>): Observable<ICommand> =>
     events$.pipe(
+      takeUntil(this.moduleDestroyed$),
       ofType(CQRS.DeviceStateCommandEvent),
       filter((event) => event.addresses.iotTopic !== undefined),
       map(
@@ -103,6 +114,9 @@ export class IoTChannelSagas {
               },
             },
           ),
+      ),
+      tap((command) =>
+        this.eventBus.publish(new CQRS.CommandExpiredEvent(command.commandId)),
       ),
       catchError((err, caught) => {
         this.logger.error(err, caught);

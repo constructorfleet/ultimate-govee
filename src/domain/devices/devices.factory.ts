@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Optional } from '@govee/common';
+import { ModuleDestroyObservable, Optional } from '@govee/common';
 import { CommandBus, EventBus } from '@nestjs/cqrs';
 import { AppliancesFactory } from './impl/appliances/appliances.factory';
 import { LightsFactory } from './impl/lights/lights.factory';
@@ -58,6 +58,7 @@ export class DevicesFactory {
     private readonly homeImprovementFactory: HomeImprovementFactory,
     private readonly eventBus: EventBus,
     private readonly commandBus: CommandBus,
+    private readonly moduleDestroyed$: ModuleDestroyObservable,
   ) {}
 
   create(device: DeviceModel): Optional<Device> {
@@ -81,6 +82,7 @@ export class DevicesFactory {
       device,
       this.eventBus,
       this.commandBus,
+      this.moduleDestroyed$,
       defaultStateFactories,
     );
   }

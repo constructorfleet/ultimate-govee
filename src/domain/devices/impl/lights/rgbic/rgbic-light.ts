@@ -25,6 +25,7 @@ import {
 } from './rgbic-light.modes';
 import { DeviceFactory } from '../../../device.factory';
 import { LightDevice } from '../light.device';
+import { ModuleDestroyObservable } from '@govee/common';
 
 const StateFactory: StateFactories = [
   (device: DeviceModel) => new PowerState(device),
@@ -44,8 +45,13 @@ export type RGBICLightType = typeof RGBICLightType;
 export class RGBICLightDevice extends LightDevice {
   static readonly type = RGBICLightType;
 
-  constructor(device: DeviceModel, eventBus: EventBus, commandBus: CommandBus) {
-    super(device, eventBus, commandBus, StateFactory);
+  constructor(
+    device: DeviceModel,
+    eventBus: EventBus,
+    commandBus: CommandBus,
+    moduleDestroyed$: ModuleDestroyObservable,
+  ) {
+    super(device, eventBus, commandBus, moduleDestroyed$, StateFactory);
     this.addState(
       new SegmentColorModeState(
         device,
@@ -78,6 +84,9 @@ export class RGBICLightFactory extends DeviceFactory<RGBICLightDevice> {
       'Outdoor Lighting': {
         'Strip Lights': [/Phantasy/, /RGBIC/],
         'String Lights': [/RGBIC/],
+      },
+      'Other Lights': {
+        'Car Lights': [/RGBIC/],
       },
     });
   }

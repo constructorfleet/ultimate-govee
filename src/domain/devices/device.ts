@@ -1,6 +1,11 @@
 import { BehaviorSubject, Subject, interval, sampleTime } from 'rxjs';
 import { ConsoleLogger, Logger } from '@nestjs/common';
-import { DeltaMap, Optional, hexToBase64 } from '@govee/common';
+import {
+  DeltaMap,
+  ModuleDestroyObservable,
+  Optional,
+  hexToBase64,
+} from '@govee/common';
 import { GoveeDeviceStatus } from '@govee/data';
 import DailyRotateFile from 'winston-daily-rotate-file';
 import Winston from 'winston';
@@ -202,6 +207,7 @@ export class Device extends BehaviorSubject<DeviceStateValues> {
     protected readonly device: DeviceModel,
     protected readonly eventBus: EventBus,
     protected readonly commandBus: CommandBus,
+    protected readonly moduleDestroyed$: ModuleDestroyObservable,
     stateFactories: StateFactories,
   ) {
     super({});
@@ -263,18 +269,14 @@ export class Device extends BehaviorSubject<DeviceStateValues> {
       type: this.constructor.name,
       iotTopic: this.iotTopic,
       bleAddress: this.bleAddress,
-      ...Object.fromEntries(
-        Array.from(this.stateValues.keys()).map((s) =>
-          s !== ModeStateName
-            ? [s, this.stateValues.get(s)]
-            : [
-                s,
-                (
-                  this.stateValues.get(s) as ModeState
-                )?.activeIdentifier?.getValue(),
-              ],
-        ),
-      ),
+      ...Array.from(this.states.keys()).reduce((acc, s) => {
+        if (s === ModeStateName) {
+          acc[s] = (this.states.get(s) as ModeState).activeIdentifier;
+        } else {
+          this.states.get(s)?.value;
+        }
+        return acc;
+      }, {}),
     };
     return state;
   }

@@ -51,7 +51,7 @@ export class GoveeDeviceService {
     const response = await request(
       this.config.deviceListUrl,
       goveeAuthenticatedHeaders(oauthData),
-    ).post(DeviceListResponse);
+    ).post(DeviceListResponse, 'devices.raws.json');
     return response.data as DeviceListResponse;
   }
 

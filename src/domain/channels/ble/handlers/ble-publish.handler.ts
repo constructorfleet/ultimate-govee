@@ -7,8 +7,12 @@ import {
 import { BlePublishCommand } from '../commands';
 import { Logger } from '@nestjs/common';
 import { BleChannelService } from '../ble-channel.service';
-import { CommandExpiredEvent } from '@govee/domain/devices/cqrs';
-import { interval, map, of, timer } from 'rxjs';
+import {
+  CommandExpiredEvent,
+  DeviceStatusReceivedEvent,
+} from '@govee/domain/devices/cqrs';
+import { Subject, map, reduce, timer } from 'rxjs';
+import { EventBus } from '@nestjs/cqrs';
 
 @CommandHandler(BlePublishCommand)
 @EventsHandler(CommandExpiredEvent)
@@ -20,7 +24,10 @@ export class BlePublishCommandHandler
   private readonly logger = new Logger(BlePublishCommandHandler.name);
   private expiredIds: string[] = [];
 
-  constructor(private readonly service: BleChannelService) {}
+  constructor(
+    private readonly eventBus: EventBus,
+    private readonly service: BleChannelService,
+  ) {}
 
   handle(event: CommandExpiredEvent) {
     this.expiredIds.push(event.commandId);
@@ -32,18 +39,30 @@ export class BlePublishCommandHandler
   }
 
   async execute(command: BlePublishCommand): Promise<any> {
-    if (this.expiredIds.includes(command.commandId)) {
-      this.expiredIds = this.expiredIds.splice(
-        this.expiredIds.indexOf(command.commandId),
-        1,
-      );
-      return;
-    }
+    const results$ = new Subject<number[]>();
+    results$
+      .pipe(
+        reduce((acc, opCode) => [...acc, opCode], [] as number[][]),
+        map((commands) => ({
+          id: command.id,
+          cmd: 'status',
+          model: '',
+          pactCode: 0,
+          pactType: 1,
+          state: {},
+          op: {
+            command: commands,
+          },
+        })),
+        map((status) => new DeviceStatusReceivedEvent(status)),
+      )
+      .subscribe((event) => this.eventBus.publish(event));
+
     this.service.sendCommand(
       command.id,
       command.bleAddress,
       command.commands,
-      command.priority,
+      results$,
     );
   }
 }

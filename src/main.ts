@@ -68,8 +68,12 @@ async function bootstrap() {
   const appService = app.get(AppService);
   app.enableShutdownHooks();
   // await app.startAllMicroservices();
-  await app.listen(3000);
-  appService.connect(config.username, config.password);
+  try {
+    await app.listen(3000);
+  } catch (err) {
+    await app.close();
+  }
+  await appService.connect(config.username, config.password);
 }
 
 bootstrap();

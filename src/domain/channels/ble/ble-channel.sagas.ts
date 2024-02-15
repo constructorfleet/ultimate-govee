@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ICommand, Saga, ofType } from '@nestjs/cqrs';
+import { EventBus, ICommand, Saga, ofType } from '@nestjs/cqrs';
 import {
   Observable,
   catchError,
@@ -26,7 +26,10 @@ import { v4 as uuidv4 } from 'uuid';
 export class BleChannelSagas {
   private readonly logger: Logger = new Logger(BleChannelSagas.name);
 
-  constructor(private readonly service: BleChannelService) {}
+  constructor(
+    private readonly service: BleChannelService,
+    private readonly eventBus: EventBus,
+  ) {}
 
   @Saga()
   configureBleChannelFlow = (events$: Observable<any>): Observable<ICommand> =>
@@ -107,6 +110,9 @@ export class BleChannelSagas {
               typeof value === 'string' ? base64ToHex(value) : value,
             ),
           ),
+      ),
+      tap((command) =>
+        this.eventBus.publish(new CQRS.CommandExpiredEvent(command.commandId)),
       ),
       catchError((err, caught) => {
         this.logger.error(err, caught);

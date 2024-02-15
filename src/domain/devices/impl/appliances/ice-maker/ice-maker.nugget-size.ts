@@ -5,21 +5,11 @@ import { GoveeDeviceStateCommand } from '@govee/data';
 import { v4 as uuidv4 } from 'uuid';
 import { StateCommandAndStatus } from '../../../states/device.state';
 import { Command } from 'nest-commander';
+import { NuggetSize, nuggetSizeMap } from './types';
 
 export const NuggetSizeStateName = 'nuggetSize' as const;
 export type NuggetSizeStateName = typeof NuggetSizeStateName;
 
-export enum NuggetSize {
-  SMALL = 'SMALL',
-  MEDIUM = 'MEDIUM',
-  LARGE = 'LARGE',
-}
-
-const nuggetSizeMap = {
-  SMALL: 3,
-  MEDIUM: 2,
-  LARGE: 1,
-};
 export class IceMakerNuggetSizeState extends DeviceOpState<
   NuggetSizeStateName,
   NuggetSize | undefined

@@ -6,6 +6,7 @@ import { DeviceFactory } from '../../../device.factory';
 import { PM2State } from './air-quality.pm2';
 import { TemperatureState } from './air-quality.temperature';
 import { HumidityState } from './air-quality.humidity';
+import { ModuleDestroyObservable } from '@govee/common';
 
 const StateFactories: StateFactories = [
   {
@@ -28,8 +29,9 @@ export class AirQualityDevice extends Device {
     deviceModel: DeviceModel,
     eventBus: EventBus,
     commandBus: CommandBus,
+    moduleDestroyed$: ModuleDestroyObservable,
   ) {
-    super(deviceModel, eventBus, commandBus, StateFactories);
+    super(deviceModel, eventBus, commandBus, moduleDestroyed$, StateFactories);
   }
 }
 

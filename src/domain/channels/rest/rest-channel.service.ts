@@ -14,6 +14,7 @@ export class RestChannelService extends ChannelService<
   constructor(eventBus: EventBus) {
     super(eventBus);
   }
+
   onConfigChange(config: RestChannelConfig) {
     this.eventBus.publish(new RestChannelChangedEvent(config));
   }

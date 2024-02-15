@@ -359,6 +359,5 @@ export type BleCommand = {
   dataUuid: string;
   writeUuid: string;
   commands: number[][];
-  response: Subject<number[][]>;
-  priority: number;
+  results$: Subject<number[]>;
 };

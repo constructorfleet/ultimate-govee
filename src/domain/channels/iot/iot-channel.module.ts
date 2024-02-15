@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, OnModuleDestroy } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { DataModule, IoTModule } from '@govee/data';
 import {
@@ -10,11 +10,13 @@ import {
 import { IoTChannelSagas } from './iot-channel.sagas';
 import { IoTChannelService } from './iot-channel.service';
 import { IoTChannelController } from './iot-channel.controller';
+import { ModuleDestroyObservable } from '@govee/common';
 
 @Module({
   imports: [CqrsModule, IoTModule],
   controllers: [IoTChannelController],
   providers: [
+    ModuleDestroyObservable,
     ConfigureIoTChannelCommandHandler,
     ConnectToIoTCommandHandler,
     IoTSubscribeCommandHandler,
@@ -30,4 +32,11 @@ import { IoTChannelController } from './iot-channel.controller';
     IoTChannelService,
   ],
 })
-export class IoTChannelModule {}
+export class IoTChannelModule implements OnModuleDestroy {
+  constructor(private readonly moduleDestroyed$: ModuleDestroyObservable) {}
+
+  onModuleDestroy() {
+    this.moduleDestroyed$.next();
+    this.moduleDestroyed$.complete();
+  }
+}

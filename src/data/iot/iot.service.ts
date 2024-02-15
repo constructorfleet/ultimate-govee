@@ -94,6 +94,7 @@ export class IoTService implements IoTHandler {
   @PersistResult({
     path: 'persisted',
     filename: '{0}.status.json',
+    append: true,
   })
   static recordMessage(
     deviceId: string,
@@ -104,7 +105,8 @@ export class IoTService implements IoTHandler {
 
   @PersistResult({
     path: 'persisted',
-    filename: '{0}.raw.json',
+    filename: '{0}.raw.log',
+    append: true,
   })
   static recordRawMessage(deviceId: string, message): any {
     return message;

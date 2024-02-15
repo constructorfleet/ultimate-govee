@@ -3,9 +3,9 @@ import { ConfigureBleChannelCommand } from '../commands/configure-ble-channel.co
 
 @CommandHandler(ConfigureBleChannelCommand)
 export class ConfigureBleChannelCommandHandler
-  implements ICommandHandler<ConfigureBleChannelCommand>
+  implements ICommandHandler<ConfigureBleChannelCommand, void>
 {
-  async execute(command: ConfigureBleChannelCommand): Promise<any> {
-    return undefined;
+  async execute(command: ConfigureBleChannelCommand): Promise<void> {
+    // TODO: Configure BLE Channel
   }
 }

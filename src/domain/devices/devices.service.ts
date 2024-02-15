@@ -1,7 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CommandBus, EventBus } from '@nestjs/cqrs';
-import { DeltaMap, DeviceId, Optional } from '@govee/common';
-import { map } from 'rxjs';
+import {
+  DeltaMap,
+  DeviceId,
+  ModuleDestroyObservable,
+  Optional,
+} from '@govee/common';
+import { map, takeUntil } from 'rxjs';
 import { Device } from './device';
 import { DeviceDiscoveredEvent, DeviceUpdatedEvent } from './cqrs/events';
 
@@ -16,9 +21,11 @@ export class DevicesService {
   constructor(
     private readonly commandBus: CommandBus,
     private readonly eventBus: EventBus,
+    private readonly moduleDestroyed$: ModuleDestroyObservable,
   ) {
     this.deviceMap.delta$
       .pipe(
+        takeUntil(this.moduleDestroyed$),
         map((delta) => [
           ...Array.from(delta.added.values()).map(
             (device) => new DeviceDiscoveredEvent(device),
@@ -53,38 +60,6 @@ export class DevicesService {
       return;
     }
     this.deviceMap.set(device.id, device);
+    return device;
   }
-
-  // async refreshDeviceList(
-  //   oauth: OAuthData,
-  //   iotUpdater: (deviceModel: DeviceModel) => unknown,
-  // ) {
-  //   this.logger.debug('Loading product categories');
-  //   const productCategories = await this.productApi.getProductCategories();
-  //   this.logger.debug('Loading devices');
-  //   const deviceList = await this.deviceApi.getDeviceList(oauth);
-  //   deviceList.forEach(async (apiDevice: GoveeDevice) => {
-  //     if (this.devices[apiDevice.id] === undefined) {
-  //       const device = this.devicesFactory.create(
-  //         createDeviceModel(apiDevice, productCategories, iotUpdater),
-  //       );
-  //       if (device === undefined) {
-  //         return;
-  //       }
-  //       this.eventBus.publish(new NewDeviceEvent(device));
-  //     }
-  //     await this.commandBus.execute(
-  //       new UpdateDeviceStatusCommand(apiDevice.id, {
-  //         cmd: 'status',
-  //         ...apiDevice,
-  //       }),
-  //     );
-
-  //     this.devices[apiDevice.id].deviceStatus(apiDevice);
-  //   });
-  // }
-
-  // async onDeviceStatus(message: GoveeDeviceStatus) {
-  //   await this.commandBus.execute(message);
-  // }
 }

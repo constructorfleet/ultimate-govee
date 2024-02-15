@@ -13,6 +13,7 @@ import { Version } from '../../version.info';
 import { DevicesFactory } from '../../devices.factory';
 import { DevicesService } from '../../devices.service';
 import { DeviceStatusReceivedEvent } from '../events';
+import { of } from 'rxjs';
 
 @CommandHandler(HandleDeviceConfigCommand)
 export class HandleDeviceConfigCommandHandler
@@ -33,19 +34,21 @@ export class HandleDeviceConfigCommandHandler
       `Handling device config for ${command.device.name} ${command.product.modelName}`,
     );
 
+    let device = this.service.getDevice(command.device.id);
+
     if (!this.service.getDevice(command.device.id)) {
-      this.service.setDevice(
+      device = this.service.setDevice(
         this.factory.create(
           this.createDeviceModel(command.device, command.product),
         ),
       );
     }
+
     this.eventBus.publish(new DeviceStatusReceivedEvent(command.device));
   }
 
   createDeviceModel(device: GoveeDevice, product?: Product): DeviceModel {
     let constructor: ClassConstructor<DeviceModel> = DeviceModel;
-    // const refreshers: ((device: DeviceModel) => void)[] = [];
     if (device.blueTooth) {
       constructor = BLEDevice(constructor);
     }

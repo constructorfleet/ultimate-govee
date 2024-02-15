@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, OnModuleDestroy } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { CqrsModule } from '@nestjs/cqrs';
 import { GoveeAPIModule } from '@govee/data';
@@ -11,6 +11,7 @@ import {
 } from './handlers';
 import { AuthSagas } from './auth.sagas';
 import { AuthService } from './auth.service';
+import { ModuleDestroyObservable } from '@govee/common';
 
 @Module({
   imports: [CqrsModule, ConfigModule.forFeature(AuthConfig), GoveeAPIModule],
@@ -21,6 +22,7 @@ import { AuthService } from './auth.service';
     AuthDataQueryHandler,
     AuthSagas,
     AuthService,
+    ModuleDestroyObservable,
   ],
   exports: [
     AuthenticateCommandHandler,
@@ -30,4 +32,11 @@ import { AuthService } from './auth.service';
     AuthSagas,
   ],
 })
-export class AuthModule {}
+export class AuthModule implements OnModuleDestroy {
+  constructor(private readonly moduleDestroyed$: ModuleDestroyObservable) {}
+
+  onModuleDestroy() {
+    this.moduleDestroyed$.next();
+    this.moduleDestroyed$.complete();
+  }
+}

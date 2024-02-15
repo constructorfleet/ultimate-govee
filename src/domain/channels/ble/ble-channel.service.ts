@@ -3,7 +3,7 @@ import { EventBus } from '@nestjs/cqrs';
 import { BleClient, GoveeDeviceStatus, InjectBleOptions } from '@govee/data';
 import { ChannelService } from '../channel.service';
 import { BleChannelConfig, BleChannelState } from './ble-channel.state';
-import { DeviceId, chunk, sleep } from '@govee/common';
+import { DeviceId, Optional, chunk, sleep } from '@govee/common';
 import { Subject } from 'rxjs';
 import { DeviceStatusReceivedEvent } from '@govee/domain/devices/cqrs';
 import { Device } from '../../devices';
@@ -76,35 +76,21 @@ export class BleChannelService
     id: DeviceId,
     bleAddress: string,
     commands: number[][],
-    priority: number,
+    results$: Subject<number[]>,
   ) {
     const device = this.devices[id];
     if (!device) {
       this.logger.error(`Device ${id} not known`);
-      return;
+      return results$.complete();
     }
     const serviceUuid = this.state?.serviceUUID;
     const notifyCharUuid = this.state?.dataCharacteristic;
     const writeCharUuid = this.state?.controlCharacteristic;
     if (!serviceUuid || !notifyCharUuid || !writeCharUuid) {
       this.logger.error(`Service or char not found`);
-      return;
+      return results$.complete();
     }
-    const response: Subject<number[][]> = new Subject();
-    response.subscribe((status) => {
-      const deviceStatus: GoveeDeviceStatus = {
-        id,
-        cmd: 'status',
-        model: device.model,
-        pactCode: device.pactCode,
-        pactType: device.pactType,
-        state: {},
-        op: {
-          command: status,
-        },
-      };
-      this.eventBus.publish(new DeviceStatusReceivedEvent(deviceStatus));
-    });
+
     this.bleClient.commandQueue.next({
       id: id,
       address: bleAddress,
@@ -112,8 +98,7 @@ export class BleChannelService
       dataUuid: notifyCharUuid,
       writeUuid: writeCharUuid,
       commands,
-      response,
-      priority,
+      results$,
     });
   }
 

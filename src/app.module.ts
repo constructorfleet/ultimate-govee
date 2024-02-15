@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, OnModuleDestroy } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { CqrsModule } from '@nestjs/cqrs';
 import { PersistModule } from './persist';
@@ -8,6 +8,7 @@ import { AuthModule } from './domain/auth';
 import { ChannelsModule } from './domain/channels';
 import { CredentialsConfig } from './config/govee.config';
 import { DevicesModule } from './domain/devices';
+import { ModuleDestroyObservable } from './common';
 
 @Module({
   imports: [
@@ -19,6 +20,13 @@ import { DevicesModule } from './domain/devices';
     ChannelsModule,
     DevicesModule,
   ],
-  providers: [AppService],
+  providers: [AppService, ModuleDestroyObservable],
 })
-export class AppModule {}
+export class AppModule implements OnModuleDestroy {
+  constructor(private readonly moduleDestroyed$: ModuleDestroyObservable) {}
+
+  onModuleDestroy() {
+    this.moduleDestroyed$.next();
+    this.moduleDestroyed$.complete();
+  }
+}

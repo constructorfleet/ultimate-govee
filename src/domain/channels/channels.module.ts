@@ -6,6 +6,6 @@ import { BleChannelModule } from './ble/ble-channel.module';
 
 @Module({
   imports: [CqrsModule, RestChannelModule, IoTChannelModule, BleChannelModule],
-  exports: [RestChannelModule, BleChannelModule],
+  exports: [RestChannelModule, IoTChannelModule, BleChannelModule],
 })
 export class ChannelsModule {}

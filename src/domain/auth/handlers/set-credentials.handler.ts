@@ -7,8 +7,8 @@ export class SetCredentialsCommandHandler
   implements ICommandHandler<SetCredentialsCommand>
 {
   constructor(private readonly authService: AuthService) {}
+
   async execute(command: SetCredentialsCommand): Promise<any> {
     this.authService.setCredentials(command.credentials);
-    return true;
   }
 }

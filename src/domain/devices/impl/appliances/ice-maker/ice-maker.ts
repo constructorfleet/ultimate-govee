@@ -6,10 +6,13 @@ import { DeviceModel } from '../../../devices.model';
 import { IceMakerNuggetSizeState } from './ice-maker.nugget-size';
 import { Injectable } from '@nestjs/common';
 import { IceMakerScheduleState } from './ice-maker.schedule';
+import { IceMakerStatusState } from './ice-maker.status';
+import { ModuleDestroyObservable } from '@govee/common';
 
 const stateFactories: StateFactories = [
   (device) => new IceMakerNuggetSizeState(device),
   (device) => new IceMakerScheduleState(device),
+  (device) => new IceMakerStatusState(device),
   (device) => new TemperatureState(device),
   (device) => new HumidityState(device),
 ];
@@ -181,8 +184,13 @@ export type IceMakerType = typeof IceMakerType;
 
 export class IceMakerDevice extends Device {
   static readonly deviceType: IceMakerType = IceMakerType;
-  constructor(device: DeviceModel, eventBus: EventBus, commandBus: CommandBus) {
-    super(device, eventBus, commandBus, stateFactories);
+  constructor(
+    device: DeviceModel,
+    eventBus: EventBus,
+    commandBus: CommandBus,
+    moduleDestroyed$: ModuleDestroyObservable,
+  ) {
+    super(device, eventBus, commandBus, moduleDestroyed$, stateFactories);
   }
 }
 

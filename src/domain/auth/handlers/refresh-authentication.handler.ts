@@ -2,6 +2,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { GoveeAccountService } from '@govee/data';
 import { RefreshAuthenticationCommand } from '../commands';
 import { AuthService } from '../auth.service';
+import { filter, from, map } from 'rxjs';
 
 @CommandHandler(RefreshAuthenticationCommand)
 export class RefreshAuthenticationCommandHandler
@@ -13,15 +14,16 @@ export class RefreshAuthenticationCommandHandler
   ) {}
 
   async execute(command: RefreshAuthenticationCommand): Promise<any> {
-    const oauth = await this.goveeApi.refresh(command.oauth);
-    if (!oauth) {
-      return false;
-    }
-    this.authService.setAuthData({
-      accountId: command.accountId,
-      clientId: command.clientId,
-      oauth,
-    });
-    return true;
+    from(this.goveeApi.refresh(command.oauth))
+      .pipe(
+        filter((oauthData) => oauthData !== undefined),
+        map((oauthData) => oauthData!),
+        map((oauthData) => ({
+          accountId: command.accountId,
+          clientId: command.clientId,
+          oauth: oauthData,
+        })),
+      )
+      .subscribe((authData) => this.authService.setAuthData(authData));
   }
 }

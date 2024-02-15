@@ -18,7 +18,6 @@ import { InjectDecoder } from './decoder.providers';
 import { Decoder } from './lib/decoder';
 import { DecodeDevice } from './lib/types';
 import { Optional } from '@govee/common';
-import axios, { AxiosError } from 'axios';
 
 @Injectable()
 export class DecoderService implements OnApplicationBootstrap {

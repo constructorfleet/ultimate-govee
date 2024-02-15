@@ -9,6 +9,7 @@ import { Logger } from '@nestjs/common';
 import { CQRS } from '@govee/domain/devices';
 import { AccountAuthData, AuthDataQuery } from '../../../auth';
 import { RetrieveDeviceListCommand } from '../commands';
+import { timer } from 'rxjs';
 
 @CommandHandler(RetrieveDeviceListCommand)
 export class RetrieveDeviceListCommandHandler

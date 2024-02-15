@@ -4,11 +4,11 @@ import { IoTChannelService } from '../iot-channel.service';
 
 @CommandHandler(ConfigureIoTChannelCommand)
 export class ConfigureIoTChannelCommandHandler
-  implements ICommandHandler<ConfigureIoTChannelCommand>
+  implements ICommandHandler<ConfigureIoTChannelCommand, void>
 {
   constructor(private readonly channel: IoTChannelService) {}
 
-  async execute(command: ConfigureIoTChannelCommand): Promise<any> {
-    this.channel.setConfig(command.config);
+  execute(command: ConfigureIoTChannelCommand): Promise<void> {
+    return Promise.resolve(this.channel.setConfig(command.config));
   }
 }

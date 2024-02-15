@@ -4,14 +4,13 @@ import { DevicesService } from '../../devices.service';
 
 @CommandHandler(UpdateDeviceStatusCommand)
 export class UpdateDeviceStatusCommandHandler
-  implements ICommandHandler<UpdateDeviceStatusCommand>
+  implements ICommandHandler<UpdateDeviceStatusCommand, void>
 {
   constructor(private readonly deviceService: DevicesService) {}
-  async execute(command: UpdateDeviceStatusCommand): Promise<any> {
-    const device = this.deviceService.getDevice(command.deviceId);
-    if (!device) {
-      return;
-    }
-    device.deviceStatus(command.status);
+
+  async execute(command: UpdateDeviceStatusCommand): Promise<void> {
+    this.deviceService
+      .getDevice(command.deviceId)
+      ?.deviceStatus(command.status);
   }
 }

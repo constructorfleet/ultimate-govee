@@ -1,8 +1,8 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { EventBus } from '@nestjs/cqrs';
-import { Subject, map, switchMap, timer, tap, filter } from 'rxjs';
+import { Subject, map, switchMap, timer, tap, filter, takeUntil } from 'rxjs';
 import { ConfigType } from '@nestjs/config';
-import { ClientId, Credentials } from '@govee/common';
+import { ClientId, Credentials, ModuleDestroyObservable } from '@govee/common';
 import { Md5 } from 'ts-md5';
 import { v4 as uuidv4 } from 'uuid';
 import { AccountAuthData, AuthState } from './auth.state';
@@ -27,9 +27,11 @@ export class AuthService {
     private eventBus: EventBus,
     @Inject(AuthConfig.KEY)
     private readonly config: ConfigType<typeof AuthConfig>,
+    private readonly moduleDestroyed$: ModuleDestroyObservable,
   ) {
     this.credentials
       .pipe(
+        takeUntil(this.moduleDestroyed$),
         filter((creds) => creds !== undefined),
         map(
           (creds) =>
@@ -46,6 +48,7 @@ export class AuthService {
       .subscribe((event) => this.eventBus.publish(event));
     this.authData
       .pipe(
+        takeUntil(this.moduleDestroyed$),
         filter((value) => value !== undefined),
         map((value) => value!),
         tap((authData) => {

@@ -6,6 +6,7 @@ import { Optional } from '@govee/common';
 import { IoTConfig } from './iot.config';
 import { IoTHandler } from './iot.handler';
 import { IoTData } from '../api';
+import { Subject } from 'rxjs';
 
 @Injectable()
 export class IoTClient implements OnModuleDestroy {
@@ -51,14 +52,14 @@ export class IoTClient implements OnModuleDestroy {
     iotConnection: mqtt.MqttClientConnection,
     handler: IoTHandler,
   ) {
-    iotConnection.on('connect', async () => {
+    iotConnection.on('connect', () => {
       this.logger.log('Connected to AWS IoT Core');
       this.subscriptions.forEach(async (topic) => {
         if (topic === undefined) {
           return;
         }
         this.logger.log(`Subscribing to ${topic}`);
-        iotConnection.subscribe(topic, mqtt.QoS.AtLeastOnce);
+        await iotConnection.subscribe(topic, mqtt.QoS.AtLeastOnce);
       });
       this.connected = true;
     });
@@ -84,7 +85,7 @@ export class IoTClient implements OnModuleDestroy {
     );
     iotConnection.on(
       'message',
-      async (
+      (
         topic: string,
         payload: ArrayBuffer,
         dup: boolean,
@@ -94,14 +95,14 @@ export class IoTClient implements OnModuleDestroy {
         handler.onMessage(topic, payload, dup, qos, retain);
       },
     );
-    iotConnection.on('resume', async (code: number, resumed: boolean) => {
+    iotConnection.on('resume', (code: number, resumed: boolean) => {
       this.logger.debug(
         `Connection resumed with code ${code} with ${
           resumed ? 'existing' : 'new'
         } session.`,
       );
     });
-    iotConnection.on('interrupt', async (reason: CrtError) => {
+    iotConnection.on('interrupt', (reason: CrtError) => {
       this.logger.debug(
         `Connection interrupted due to ${reason.error_name || reason.name}.`,
       );
@@ -114,13 +115,14 @@ export class IoTClient implements OnModuleDestroy {
             this.logger.warn(
               `Unexpected error with connection to MQTT broker`,
               reason,
+              reason.error_code,
             );
           },
     );
-    iotConnection.on('disconnect', async () => {
+    iotConnection.on('disconnect', () => {
       this.logger.log(`Disconnected from MQTT broker.`);
     });
-    iotConnection.on('closed', async () => {
+    iotConnection.on('closed', () => {
       this.logger.log(`Connection to MQTT broker closed.`);
     });
   }
@@ -153,6 +155,7 @@ export class IoTClient implements OnModuleDestroy {
   }
 
   async onModuleDestroy() {
+    this.connection?.removeAllListeners();
     await this.disconnect();
   }
 }

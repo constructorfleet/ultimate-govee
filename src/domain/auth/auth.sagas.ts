@@ -22,7 +22,7 @@ export class AuthSagas {
           ),
       ),
       catchError((err, caught) => {
-        this.logger.error(err, caught);
+        this.logger.error('authenticationFlow', err, caught);
         return of();
       }),
     );
@@ -40,7 +40,7 @@ export class AuthSagas {
           ),
       ),
       catchError((err, caught) => {
-        this.logger.error(err, caught);
+        this.logger.error('refreshAuthorizationFlow', err, caught);
         return of();
       }),
     );
