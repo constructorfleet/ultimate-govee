@@ -13,10 +13,17 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['@typescript-eslint', 'unicorn'],
+  plugins: ['@typescript-eslint', 'unicorn', 'unused-imports'],
   rules: {
     '@typescript-eslint/no-var-requires': 0,
     '@typescript-eslint/no-empty-function': 0,
+    'unused-imports/no-unused-imports-ts': 'warn',
+    '@typescript-eslint/no-unused-vars': [
+      'warn',
+      { vars: 'all', args: 'after-used', ignoreRestSiblings: false },
+    ],
+    'unused-imports/no-unused-imports-ts': 'warn',
+    quotes: ['warn', 'single', { avoidEscape: true }],
     '@typescript-eslint/naming-convention': [
       'error',
       { selector: 'class', format: ['PascalCase'], leadingUnderscore: 'allow' },
