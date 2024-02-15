@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import { Optional } from '@govee/common';
 import { ClassConstructor, plainToInstance } from 'class-transformer';
 import { writeFile } from 'fs/promises';
+import stringify from 'json-stringify-safe';
 
 export interface ApiResponseStatus {
   statusCode: number;
@@ -56,7 +57,7 @@ export class Request<PayloadType extends BaseRequest> {
       });
     }
     if (saveToFile) {
-      await writeFile(saveToFile, JSON.stringify(res.data, null, 2), {
+      await writeFile(saveToFile, stringify(res.data, null, 2), {
         encoding: 'utf-8',
       });
     }
@@ -82,7 +83,7 @@ export class Request<PayloadType extends BaseRequest> {
       });
     }
     if (saveToFile) {
-      await writeFile(saveToFile, JSON.stringify(res.data, null, 2), {
+      await writeFile(saveToFile, stringify(res.data, null, 2), {
         encoding: 'utf-8',
       });
     }

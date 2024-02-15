@@ -8,7 +8,6 @@ import {
 } from '../../../states';
 import { DeviceFactory } from '../../../device.factory';
 import { Injectable } from '@nestjs/common';
-import { ModuleDestroyObservable } from '@govee/common';
 
 export const Hygrometer: 'Hygrometer' = 'Hygrometer' as const;
 export type Hygrometer = typeof Hygrometer;
@@ -24,13 +23,8 @@ const stateFactories: StateFactories = [
 ];
 
 export class HygrometerDevice extends Device {
-  constructor(
-    device: DeviceModel,
-    eventBus: EventBus,
-    commandBus: CommandBus,
-    moduleDestroyed$: ModuleDestroyObservable,
-  ) {
-    super(device, eventBus, commandBus, moduleDestroyed$, stateFactories);
+  constructor(device: DeviceModel, eventBus: EventBus, commandBus: CommandBus) {
+    super(device, eventBus, commandBus, stateFactories);
   }
 }
 

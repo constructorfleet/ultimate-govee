@@ -1,6 +1,5 @@
 import {
   CommandHandler,
-  EventBus,
   EventsHandler,
   ICommandHandler,
   IEventHandler,
@@ -9,8 +8,8 @@ import { IoTService } from '@govee/data';
 import { Logger } from '@nestjs/common';
 import { IoTPublishCommand } from '../commands';
 import { CommandExpiredEvent } from '@govee/domain/devices/cqrs';
-import { map, timer, takeUntil } from 'rxjs';
-import { ModuleDestroyObservable } from '@govee/common';
+import { map, timer } from 'rxjs';
+import stringify from 'json-stringify-safe';
 
 @CommandHandler(IoTPublishCommand)
 @EventsHandler(CommandExpiredEvent)
@@ -22,18 +21,12 @@ export class IoTPublishCommandHandler
   private readonly logger: Logger = new Logger(IoTPublishCommandHandler.name);
   private expiredIds: string[] = [];
 
-  constructor(
-    private readonly service: IoTService,
-    private readonly moduleDestroyed$: ModuleDestroyObservable,
-  ) {}
+  constructor(private readonly service: IoTService) {}
 
   handle(event: CommandExpiredEvent) {
     this.expiredIds.push(event.commandId);
     timer(5000)
-      .pipe(
-        takeUntil(this.moduleDestroyed$),
-        map(() => event.commandId),
-      )
+      .pipe(map(() => event.commandId))
       .subscribe((id) =>
         this.expiredIds.splice(this.expiredIds.indexOf(id), 1),
       );
@@ -47,7 +40,7 @@ export class IoTPublishCommandHandler
       );
     } else {
       this.logger.debug(`Sending to ${command.topic}`);
-      this.service.send(command.topic, JSON.stringify(command.payload));
+      this.service.send(command.topic, stringify(command.payload));
     }
     return Promise.resolve();
   }

@@ -1,14 +1,9 @@
 /* eslint-disable func-names */
 import { NestFactory } from '@nestjs/core';
-import { ConfigType } from '@nestjs/config';
-// import { CommandBus, EventBus, QueryBus } from '@nestjs/cqrs';
 import { AppModule } from './app.module';
 import { AppService } from './app.service';
-import { CredentialsConfig } from './config/govee.config';
 import { CQRSLogger } from './common/cqrs-logger';
-import { MicroserviceOptions } from '@nestjs/microservices';
-import { IpcServer } from './ipc';
-// import { Labelled } from './common';
+import { GoveeConfig, GoveeConfiguration } from './app.config';
 
 // const getMesage = (event: Labelled, action: string): string => {
 //   if (typeof event.label === 'string') {
@@ -54,26 +49,14 @@ import { IpcServer } from './ipc';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  // app.connectMicroservice<MicroserviceOptions>({
-  //   strategy: app.get(IpcServer),
-  // });
-  const config = app.get<ConfigType<typeof CredentialsConfig>>(
-    CredentialsConfig.KEY,
-  );
+  const config = app.get<GoveeConfig>(GoveeConfiguration.provide);
   app.useLogger(
     new CQRSLogger('', {
       logLevels: ['error', 'fatal', 'log', 'verbose', 'warn'],
     }),
   );
-  const appService = app.get(AppService);
   app.enableShutdownHooks();
-  // await app.startAllMicroservices();
-  try {
-    await app.listen(3000);
-  } catch (err) {
-    await app.close();
-  }
-  await appService.connect(config.username, config.password);
+  await app.listen(3000);
 }
 
 bootstrap();

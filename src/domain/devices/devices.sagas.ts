@@ -10,17 +10,14 @@ import {
   LinkDeviceProductCommand,
   UpdateDeviceStatusCommand,
 } from './cqrs/commands';
-import { ModuleDestroyObservable } from '@govee/common';
 
 @Injectable()
 export class DevicesSagas {
   private readonly logger: Logger = new Logger(DevicesSagas.name);
-  constructor(private readonly moduleDestroyed$: ModuleDestroyObservable) {}
 
   @Saga()
   deviceReceived = (events$: Observable<any>): Observable<ICommand> =>
     events$.pipe(
-      takeUntil(this.moduleDestroyed$),
       ofType(DeviceConfigReceivedEvent),
       map((event) =>
         event.product
@@ -36,7 +33,6 @@ export class DevicesSagas {
   @Saga()
   deviceStatusReceived = (events$: Observable<any>): Observable<ICommand> =>
     events$.pipe(
-      takeUntil(this.moduleDestroyed$),
       ofType(DeviceStatusReceivedEvent),
       map(
         (event) =>

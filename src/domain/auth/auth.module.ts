@@ -11,7 +11,6 @@ import {
 } from './handlers';
 import { AuthSagas } from './auth.sagas';
 import { AuthService } from './auth.service';
-import { ModuleDestroyObservable } from '@govee/common';
 
 @Module({
   imports: [CqrsModule, ConfigModule.forFeature(AuthConfig), GoveeAPIModule],
@@ -22,7 +21,6 @@ import { ModuleDestroyObservable } from '@govee/common';
     AuthDataQueryHandler,
     AuthSagas,
     AuthService,
-    ModuleDestroyObservable,
   ],
   exports: [
     AuthenticateCommandHandler,
@@ -32,11 +30,4 @@ import { ModuleDestroyObservable } from '@govee/common';
     AuthSagas,
   ],
 })
-export class AuthModule implements OnModuleDestroy {
-  constructor(private readonly moduleDestroyed$: ModuleDestroyObservable) {}
-
-  onModuleDestroy() {
-    this.moduleDestroyed$.next();
-    this.moduleDestroyed$.complete();
-  }
-}
+export class AuthModule {}

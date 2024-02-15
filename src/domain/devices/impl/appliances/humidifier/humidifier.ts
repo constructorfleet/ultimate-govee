@@ -25,7 +25,6 @@ import {
 } from './humidifier.modes';
 import { DeviceFactory } from '../../../device.factory';
 import { HumidiferUVCState } from './humidifier.uvc';
-import { ModuleDestroyObservable } from '../../../../../common/observables/module-destroy.observable';
 
 const StateFactories: StateFactories = [
   (device: DeviceModel) => new PowerState(device),
@@ -54,13 +53,8 @@ export type HumidifierType = typeof HumidifierType;
 export class HumidifierDevice extends Device {
   static readonly deviceType: HumidifierType = HumidifierType;
 
-  constructor(
-    device: DeviceModel,
-    eventBus: EventBus,
-    commandBus: CommandBus,
-    moduleDestroyed$: ModuleDestroyObservable,
-  ) {
-    super(device, eventBus, commandBus, moduleDestroyed$, StateFactories);
+  constructor(device: DeviceModel, eventBus: EventBus, commandBus: CommandBus) {
+    super(device, eventBus, commandBus, StateFactories);
     const autoModeState = this.addState(
       new AutoModeState(device, this.state<HumidityState>(HumidityStateName)),
     );

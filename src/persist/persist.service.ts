@@ -2,6 +2,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Optional } from '@govee/common';
 import { ClassConstructor, plainToInstance } from 'class-transformer';
 import { FileReader, FileWriter } from './persist.providers';
+import stringify from 'json-stringify-safe';
 
 @Injectable()
 export class PersistService {
@@ -16,7 +17,7 @@ export class PersistService {
       return;
     }
     this.logger.debug(`Persisting to ${where}`);
-    await this.writer(where, JSON.stringify(data), { encoding: 'utf-8' });
+    await this.writer(where, stringify(data), { encoding: 'utf-8' });
   }
 
   async retreive<T>(

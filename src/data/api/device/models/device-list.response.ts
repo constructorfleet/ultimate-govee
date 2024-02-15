@@ -5,6 +5,7 @@ import {
   instanceToPlain,
   plainToInstance,
 } from 'class-transformer';
+import stringify from 'json-stringify-safe';
 import { GoveeAPIResponse } from '../../govee-api.models';
 
 export class DeviceSettings {
@@ -215,7 +216,7 @@ export class DeviceExtensionProperties {
     ({ value }) => plainToInstance(DeviceSettings, JSON.parse(value)),
     { toClassOnly: true },
   )
-  @Transform(({ value }) => JSON.stringify(instanceToPlain(value)), {
+  @Transform(({ value }) => stringify(instanceToPlain(value)), {
     toPlainOnly: true,
   })
   deviceSettings!: DeviceSettings;
@@ -224,7 +225,7 @@ export class DeviceExtensionProperties {
   @Transform(({ value }) => plainToInstance(DeviceData, JSON.parse(value)), {
     toClassOnly: true,
   })
-  @Transform(({ value }) => JSON.stringify(instanceToPlain(value)), {
+  @Transform(({ value }) => stringify(instanceToPlain(value)), {
     toPlainOnly: true,
   })
   deviceData!: DeviceData;
@@ -234,7 +235,7 @@ export class DeviceExtensionProperties {
     ({ value }) => plainToInstance(DeviceExternalResources, JSON.parse(value)),
     { toClassOnly: true },
   )
-  @Transform(({ value }) => JSON.stringify(instanceToPlain(value)), {
+  @Transform(({ value }) => stringify(instanceToPlain(value)), {
     toPlainOnly: true,
   })
   externalResources!: DeviceExternalResources;

@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { SenderSocket } from './sender.socket';
 import { SenderConfig } from './sender.config';
+import stringify from 'json-stringify-safe';
 
 @Injectable()
 export class SenderService {
@@ -18,9 +19,8 @@ export class SenderService {
   sendDeviceCommand() {}
 
   async scan() {
-    // await this.socket.send(JSON.stringify({ msg: { cmd: "devStatus", data: {} } }), 4003, '10.0.13.148');
     await this.socket.send(
-      JSON.stringify(this.config.scanCommand),
+      stringify(this.config.scanCommand),
       this.config.scanPort,
       this.config.broadcastAddress,
     );
@@ -30,7 +30,7 @@ export class SenderService {
 
   async deviceCommand(deviceAddress: string, command) {
     await this.socket.send(
-      JSON.stringify(command),
+      stringify(command),
       this.config.commandPort,
       deviceAddress,
     );

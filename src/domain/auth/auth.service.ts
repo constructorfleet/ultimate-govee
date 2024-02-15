@@ -1,8 +1,17 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { EventBus } from '@nestjs/cqrs';
-import { Subject, map, switchMap, timer, tap, filter, takeUntil } from 'rxjs';
+import {
+  Subject,
+  map,
+  switchMap,
+  timer,
+  tap,
+  filter,
+  takeUntil,
+  BehaviorSubject,
+} from 'rxjs';
 import { ConfigType } from '@nestjs/config';
-import { ClientId, Credentials, ModuleDestroyObservable } from '@govee/common';
+import { ClientId, Credentials } from '@govee/common';
 import { Md5 } from 'ts-md5';
 import { v4 as uuidv4 } from 'uuid';
 import { AccountAuthData, AuthState } from './auth.state';
@@ -20,18 +29,15 @@ export class AuthService {
   private readonly authState: AuthState = {};
   private readonly credentials: Subject<Credentials | undefined> =
     new Subject();
-  private readonly authData: Subject<AccountAuthData | undefined> =
-    new Subject();
+  private readonly authData: Subject<AccountAuthData> = new Subject();
 
   constructor(
     private eventBus: EventBus,
     @Inject(AuthConfig.KEY)
     private readonly config: ConfigType<typeof AuthConfig>,
-    private readonly moduleDestroyed$: ModuleDestroyObservable,
   ) {
     this.credentials
       .pipe(
-        takeUntil(this.moduleDestroyed$),
         filter((creds) => creds !== undefined),
         map(
           (creds) =>
@@ -40,15 +46,13 @@ export class AuthService {
               clientId: creds?.clientId ?? this.newClientId,
             }) as Required<Credentials>,
         ),
-        tap((creds) => {
-          this.authState.credentials = creds;
-        }),
         map((creds) => new CredentialsChangedEvent(creds)),
       )
-      .subscribe((event) => this.eventBus.publish(event));
+      .subscribe((event) => {
+        this.eventBus.publish(event);
+      });
     this.authData
       .pipe(
-        takeUntil(this.moduleDestroyed$),
         filter((value) => value !== undefined),
         map((value) => value!),
         tap((authData) => {

@@ -14,6 +14,7 @@ import {
 import { parseP12Certificate, request } from '../../utils';
 import { RefreshTokenResponse } from './models/refresh-token.response';
 import { decodeJWT } from './models/jwt';
+import stringify from 'json-stringify-safe';
 
 @Injectable()
 export class GoveeAccountService {
@@ -115,9 +116,7 @@ export class GoveeAccountService {
       topic = loginResponse.data.client.topic;
     } catch (err) {
       this.logger.error(
-        `Unable to authenticate with Govee. ${JSON.stringify(
-          credentials,
-        )} ${err}`,
+        `Unable to authenticate with Govee. ${stringify(credentials)} ${err}`,
         err,
       );
       throw new Error(`Unable to authenticate with Govee.`);

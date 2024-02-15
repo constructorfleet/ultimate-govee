@@ -14,13 +14,11 @@ import {
   SetLightEffctsCommandHandler,
 } from './cqrs/handlers';
 import { DeviceController } from './device.controller';
-import { ModuleDestroyObservable } from '@govee/common';
 
 @Module({
   imports: [DataModule, AppliancesModule, HomeImprovementModule, LightsModule],
   controllers: [DeviceController],
   providers: [
-    ModuleDestroyObservable,
     DevicesService,
     DevicesFactory,
     DevicesSagas,

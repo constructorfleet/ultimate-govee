@@ -10,13 +10,11 @@ import {
 import { IoTChannelSagas } from './iot-channel.sagas';
 import { IoTChannelService } from './iot-channel.service';
 import { IoTChannelController } from './iot-channel.controller';
-import { ModuleDestroyObservable } from '@govee/common';
 
 @Module({
   imports: [CqrsModule, IoTModule],
   controllers: [IoTChannelController],
   providers: [
-    ModuleDestroyObservable,
     ConfigureIoTChannelCommandHandler,
     ConnectToIoTCommandHandler,
     IoTSubscribeCommandHandler,
@@ -32,11 +30,4 @@ import { ModuleDestroyObservable } from '@govee/common';
     IoTChannelService,
   ],
 })
-export class IoTChannelModule implements OnModuleDestroy {
-  constructor(private readonly moduleDestroyed$: ModuleDestroyObservable) {}
-
-  onModuleDestroy() {
-    this.moduleDestroyed$.next();
-    this.moduleDestroyed$.complete();
-  }
-}
+export class IoTChannelModule {}

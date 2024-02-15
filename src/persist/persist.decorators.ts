@@ -3,6 +3,7 @@ import { Optional } from '@govee/common';
 import { existsSync } from 'fs';
 import { mkdir, writeFile, appendFile } from 'fs/promises';
 import { join } from 'path';
+import stringify from 'json-stringify-safe';
 
 export type PersistOptions = {
   path?: Optional<string>;
@@ -33,11 +34,11 @@ export function PersistResult(options: PersistOptions) {
       const writeData =
         options.transform === undefined ? result : options.transform(result);
       if (options.append === true) {
-        await appendFile(resolvedPath, JSON.stringify(writeData, null, 2), {
+        await appendFile(resolvedPath, stringify(writeData, null, 2), {
           ...options.writeOption,
         });
       } else {
-        await writeFile(resolvedPath, JSON.stringify(writeData, null, 2), {
+        await writeFile(resolvedPath, stringify(writeData, null, 2), {
           ...options.writeOption,
         });
       }

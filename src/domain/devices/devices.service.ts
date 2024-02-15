@@ -1,11 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CommandBus, EventBus } from '@nestjs/cqrs';
-import {
-  DeltaMap,
-  DeviceId,
-  ModuleDestroyObservable,
-  Optional,
-} from '@govee/common';
+import { DeltaMap, DeviceId, Optional } from '@govee/common';
 import { map, takeUntil } from 'rxjs';
 import { Device } from './device';
 import { DeviceDiscoveredEvent, DeviceUpdatedEvent } from './cqrs/events';
@@ -13,19 +8,15 @@ import { DeviceDiscoveredEvent, DeviceUpdatedEvent } from './cqrs/events';
 @Injectable()
 export class DevicesService {
   private readonly logger: Logger = new Logger(DevicesService.name);
+
   private readonly deviceMap: DeltaMap<DeviceId, Device> = new DeltaMap({
     isModified: (current: Device, previous: Device) =>
       current.name !== previous.name,
   });
 
-  constructor(
-    private readonly commandBus: CommandBus,
-    private readonly eventBus: EventBus,
-    private readonly moduleDestroyed$: ModuleDestroyObservable,
-  ) {
+  constructor(private readonly eventBus: EventBus) {
     this.deviceMap.delta$
       .pipe(
-        takeUntil(this.moduleDestroyed$),
         map((delta) => [
           ...Array.from(delta.added.values()).map(
             (device) => new DeviceDiscoveredEvent(device),

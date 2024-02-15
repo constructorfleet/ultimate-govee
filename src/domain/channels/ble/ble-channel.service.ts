@@ -1,14 +1,18 @@
 import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { EventBus } from '@nestjs/cqrs';
-import { BleClient, GoveeDeviceStatus, InjectBleOptions } from '@govee/data';
+import { BleClient } from '@govee/data';
 import { ChannelService } from '../channel.service';
 import { BleChannelConfig, BleChannelState } from './ble-channel.state';
-import { DeviceId, Optional, chunk, sleep } from '@govee/common';
+import { DeviceId, chunk, sleep } from '@govee/common';
 import { Subject } from 'rxjs';
 import { DeviceStatusReceivedEvent } from '@govee/domain/devices/cqrs';
 import { Device } from '../../devices';
 import { BleConfig } from '@govee/data/ble/ble.options';
 import { ConfigType } from '@nestjs/config';
+
+const serviceUUID = '000102030405060708090a0b0c0d1910';
+const dataCharUUID = '000102030405060708090a0b0c0d2b10';
+const controlCharUUID = '000102030405060708090a0b0c0d2b11';
 
 @Injectable()
 export class BleChannelService
@@ -26,10 +30,6 @@ export class BleChannelService
   ) {
     super(eventBus);
     this.state.peripherals = {};
-    this.state.serviceUUID = '000102030405060708090a0b0c0d1910';
-    this.state.dataCharacteristic = '000102030405060708090a0b0c0d2b10';
-    this.state.controlCharacteristic = '000102030405060708090a0b0c0d2b11';
-    this.state.keepAlive = 'aa010000000000000000000000000000000000ab';
     bleClient.peripheralDecoded.subscribe((peripheral) => {
       const device = this.devices[this.toDeviceId(peripheral.id)];
       if (!device) {
@@ -83,20 +83,13 @@ export class BleChannelService
       this.logger.error(`Device ${id} not known`);
       return results$.complete();
     }
-    const serviceUuid = this.state?.serviceUUID;
-    const notifyCharUuid = this.state?.dataCharacteristic;
-    const writeCharUuid = this.state?.controlCharacteristic;
-    if (!serviceUuid || !notifyCharUuid || !writeCharUuid) {
-      this.logger.error(`Service or char not found`);
-      return results$.complete();
-    }
 
     this.bleClient.commandQueue.next({
       id: id,
       address: bleAddress,
-      serviceUuid,
-      dataUuid: notifyCharUuid,
-      writeUuid: writeCharUuid,
+      serviceUuid: serviceUUID,
+      dataUuid: dataCharUUID,
+      writeUuid: controlCharUUID,
       commands,
       results$,
     });

@@ -1,11 +1,6 @@
 import { BehaviorSubject, Subject, interval, sampleTime } from 'rxjs';
 import { ConsoleLogger, Logger } from '@nestjs/common';
-import {
-  DeltaMap,
-  ModuleDestroyObservable,
-  Optional,
-  hexToBase64,
-} from '@govee/common';
+import { DeltaMap, Optional, hexToBase64 } from '@govee/common';
 import { GoveeDeviceStatus } from '@govee/data';
 import DailyRotateFile from 'winston-daily-rotate-file';
 import Winston from 'winston';
@@ -207,7 +202,6 @@ export class Device extends BehaviorSubject<DeviceStateValues> {
     protected readonly device: DeviceModel,
     protected readonly eventBus: EventBus,
     protected readonly commandBus: CommandBus,
-    protected readonly moduleDestroyed$: ModuleDestroyObservable,
     stateFactories: StateFactories,
   ) {
     super({});
@@ -219,7 +213,7 @@ export class Device extends BehaviorSubject<DeviceStateValues> {
         ...device.status.value,
       });
     });
-    this.refreshSubject.pipe(sampleTime(5000)).subscribe(() =>
+    this.refreshSubject.subscribe(() =>
       this.eventBus.publish(
         new DeviceRefeshEvent(
           this.id,
@@ -271,9 +265,9 @@ export class Device extends BehaviorSubject<DeviceStateValues> {
       bleAddress: this.bleAddress,
       ...Array.from(this.states.keys()).reduce((acc, s) => {
         if (s === ModeStateName) {
-          acc[s] = (this.states.get(s) as ModeState).activeIdentifier;
+          acc[s] = (this.states.get(s) as ModeState).value?.value;
         } else {
-          this.states.get(s)?.value;
+          acc[s] = this.states.get(s)?.value;
         }
         return acc;
       }, {}),

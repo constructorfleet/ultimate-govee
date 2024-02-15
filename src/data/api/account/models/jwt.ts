@@ -7,6 +7,7 @@ import {
   instanceToPlain,
 } from 'class-transformer';
 import { jwtDecode } from 'jwt-decode';
+import stringify from 'json-stringify-safe';
 
 export class JWTHeader {
   @Expose({ name: 'alg' })
@@ -40,7 +41,7 @@ export class JWTPayloadData {
       toClassOnly: true,
     },
   )
-  @Transform((params) => JSON.stringify(instanceToPlain(params.value)), {
+  @Transform((params) => stringify(instanceToPlain(params.value)), {
     toPlainOnly: true,
   })
   account?: string;

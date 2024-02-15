@@ -9,7 +9,6 @@ import { Logger } from '@nestjs/common';
 import { CQRS } from '@govee/domain/devices';
 import { AccountAuthData, AuthDataQuery } from '../../../auth';
 import { RetrieveDeviceListCommand } from '../commands';
-import { timer } from 'rxjs';
 
 @CommandHandler(RetrieveDeviceListCommand)
 export class RetrieveDeviceListCommandHandler
@@ -26,10 +25,7 @@ export class RetrieveDeviceListCommandHandler
   ) {}
 
   async execute(_: RetrieveDeviceListCommand): Promise<any> {
-    const authData = await this.queryBus.execute<
-      AuthDataQuery,
-      AccountAuthData | undefined
-    >(new AuthDataQuery());
+    const authData = await this.queryBus.execute(new AuthDataQuery());
     if (authData?.oauth !== undefined) {
       this.logger.log(`Getting device list`);
       const deviceList = await this.api.getDeviceList(authData.oauth);

@@ -39,10 +39,19 @@ export class BlePublishCommandHandler
   }
 
   async execute(command: BlePublishCommand): Promise<any> {
+    if (
+      command.id === '23:3B:C6:38:30:32:48:19' ||
+      command.bleAddress === 'C6:38:30:32:48:19'
+    ) {
+      this.logger.error('Sending command to Car lights');
+    }
     const results$ = new Subject<number[]>();
     results$
       .pipe(
-        reduce((acc, opCode) => [...acc, opCode], [] as number[][]),
+        reduce((acc, opCode) => {
+          console.dir({ acc, opCode });
+          return [...acc, opCode];
+        }, [] as number[][]),
         map((commands) => ({
           id: command.id,
           cmd: 'status',
@@ -54,7 +63,10 @@ export class BlePublishCommandHandler
             command: commands,
           },
         })),
-        map((status) => new DeviceStatusReceivedEvent(status)),
+        map((status) => {
+          console.dir(status);
+          return new DeviceStatusReceivedEvent(status);
+        }),
       )
       .subscribe((event) => this.eventBus.publish(event));
 

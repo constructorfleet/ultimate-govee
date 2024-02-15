@@ -1,22 +1,50 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { CommandBus } from '@nestjs/cqrs';
+import {
+  Injectable,
+  Logger,
+  OnApplicationBootstrap,
+  OnApplicationShutdown,
+} from '@nestjs/common';
+import { CommandBus, EventBus } from '@nestjs/cqrs';
 import { SetCredentialsCommand } from '@govee/domain/auth';
 import { Password, Username } from '@govee/common';
+import { fromEvent, takeUntil } from 'rxjs';
+import { GoveeConfig, InjectGoveeConfig } from './app.config';
 
 @Injectable()
-export class AppService {
+export class AppService
+  implements OnApplicationBootstrap, OnApplicationShutdown
+{
   private readonly logger: Logger = new Logger(AppService.name);
-
-  constructor(private readonly commandBus: CommandBus) {}
+  constructor(
+    @InjectGoveeConfig private readonly config: GoveeConfig,
+    private readonly commandBus: CommandBus,
+    private readonly eventBus: EventBus,
+  ) {
+    fromEvent(process, 'SIGINT')
+      .pipe(takeUntil(fromEvent(process, 'SIGTERM')))
+      .subscribe(() => this.shutdownBuses());
+  }
 
   async connect(username: Username, password: Password) {
     this.logger.log('Issuing authenticate command');
-    const result = await this.commandBus.execute(
+    await this.commandBus.execute(
       new SetCredentialsCommand({
         username,
         password,
       }),
     );
-    this.logger.log(`Result ${result}`);
+  }
+
+  private shutdownBuses() {
+    this.commandBus.subject$.complete();
+    this.eventBus.subject$.complete();
+  }
+
+  async onApplicationBootstrap() {
+    this.connect(this.config.username, this.config.password);
+  }
+
+  onApplicationShutdown(signal?: string): void {
+    this.shutdownBuses();
   }
 }
