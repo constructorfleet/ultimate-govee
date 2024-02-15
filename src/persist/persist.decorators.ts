@@ -1,7 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { Optional } from '@govee/common';
 import { existsSync } from 'fs';
-import { mkdir, writeFile } from 'fs/promises';
+import { mkdir, writeFile, appendFile } from 'fs/promises';
 import { join } from 'path';
 
 export type PersistOptions = {
@@ -10,6 +10,7 @@ export type PersistOptions = {
   writeOption?: {
     encoding?: null | undefined;
   };
+  append?: boolean;
   transform?: (data: any) => any;
 };
 
@@ -31,12 +32,15 @@ export function PersistResult(options: PersistOptions) {
       logger.debug(`Persisting result to ${resolvedPath}`);
       const writeData =
         options.transform === undefined ? result : options.transform(result);
-      await writeFile(
-        resolvedPath,
-        JSON.stringify(writeData, null, 2),
-        options.writeOption,
-      );
-
+      if (options.append === true) {
+        await appendFile(resolvedPath, JSON.stringify(writeData, null, 2), {
+          ...options.writeOption,
+        });
+      } else {
+        await writeFile(resolvedPath, JSON.stringify(writeData, null, 2), {
+          ...options.writeOption,
+        });
+      }
       return result;
     };
   };
