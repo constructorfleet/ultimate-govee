@@ -67,6 +67,7 @@ jobs:
           DEFAULT_BUMP: minor
       - name: Push to protected branch
         uses: CasperWA/push-protected@v2.15.0
+        if: steps.commit.outputs.exit_code == 0
         with:
           token: ${{ secrets.GH_TOKEN }}
           branch: main
