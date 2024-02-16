@@ -4,14 +4,15 @@ import {
   OnApplicationBootstrap,
   OnApplicationShutdown,
 } from '@nestjs/common';
-import { CommandBus, EventBus } from '@nestjs/cqrs';
+import { CommandBus, EventBus, ofType } from '@nestjs/cqrs';
 import { SetCredentialsCommand } from '@constructorfleet/ultimate-govee/domain/auth';
 import { Password, Username } from '@constructorfleet/ultimate-govee/common';
-import { fromEvent, takeUntil } from 'rxjs';
+import { Observable, fromEvent, takeUntil } from 'rxjs';
 import {
   InjectGoveeConfig,
   UltimateGoveeConfig,
 } from './ultimate-govee.config';
+import { DeviceDiscoveredEvent } from './domain/devices/cqrs';
 
 @Injectable()
 export class UltimateGoveeService
@@ -26,6 +27,10 @@ export class UltimateGoveeService
     fromEvent(process, 'SIGINT')
       .pipe(takeUntil(fromEvent(process, 'SIGTERM')))
       .subscribe(() => this.shutdownBuses());
+  }
+
+  get deviceDiscovered(): Observable<DeviceDiscoveredEvent> {
+    return this.eventBus.pipe(ofType(DeviceDiscoveredEvent));
   }
 
   async connect(username: Username, password: Password) {

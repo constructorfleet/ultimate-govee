@@ -25,39 +25,85 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Provides command and control interface for interacting with
+[Govee](https://govee.com) via Bluetooth LE, AWS IoT Core, LAN (TODO), and Govee
+OpenAPI Developer Platform (TODO).
 
-## Installation
+If a device type is known, it will be categorized and have type-specific device
+states. Supported types so far:
+
+- Purifiers
+- Humidifiers
+- RGB Lights (Bulbs, Strips, etc.)
+- RGBIC Lights (Bulbs, Strips, Glide, etc.)
+- Air Quality Monitors
+- Hygrometers
+- Ice Makers
+
+## Installing the library
 
 ```bash
-$ npm install
+$ npm install --save @constructorfleet/ultimate-govee
 ```
 
-## Running the app
+## Running the library
 
-```bash
-# development
-$ npm run start
+First, import the `UltimateGoveeModule`:
 
-# watch mode
-$ npm run start:dev
+```typescript
+@Module({
+  import: [UltimateGoveeModule]
+  ...
+})
+export class AppModule {}
+```
 
-# production mode
-$ npm run start:prod
+Then, inject the `UltimateGoveeService`:
+
+```typescript
+@Injectable()
+export class AppService {
+  constructor(private readonly govee: UltimateGoveeService, ...) {}
+}
+```
+
+Subscribe to device discovery events:
+
+```typescript
+this.govee.deviceDiscovered.subscribe((device: Device) => {
+  // Get the device value of all states
+  console.dir(device.currentState);
+  // Get a specific device state
+  device.state(FanSpeedStateName);
+
+  // Issue a command to the device state
+  device.state('mistLevel').setState(4);
+  device.state('scheduledStart').setState({
+    enabled: true,
+    startHour: 14,
+    startMinute: 30,
+  });
+});
+```
+
+Connect using the user's credentials:
+
+```typescript
+this.govee.connect(username, password);
 ```
 
 ## Test
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+$ nest test
 ```
+
+## Future Work
+
+[ ] Configure control channels on initialization and during runtime. [ ]
+Configurable controllers [ ] Specify devices to listen for [ ] Device overrides
+[ ] LAN control channel [ ] Govee OpenAPI control channel [ ] Tool for
+facilitating device support
 
 ## Support
 
@@ -67,9 +113,7 @@ and support by the amazing backers. If you'd like to join them, please
 
 ## Stay in touch
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- Author - [Teagan42](https://blog.teagantotally.rocks)
 
 ## License
 
