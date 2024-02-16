@@ -1,8 +1,10 @@
 {
-  "name": "govee",
+  "name": "ultimate-govee",
+  "displayName": "Ulitmate Govee",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",
+  "main": "dist/index.js",
   "description": "Library for interacting with Govee devices written in Typescript.",
   "license": "GPLv3",
   "author": "@Teagan423",
