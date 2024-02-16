@@ -41,10 +41,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           WITH_V: true
           DEFAULT_BUMP: minor
-          DRY_RUN: true
       - run:
-          npm version --allow-same-version=true --git-tag-version=false ${{
-          steps.tag.outputs.new_tag }}
+          npm version --allow-same-version=true --git-tag-version=false $(git describe --tags)
       - name: Commit Package Version
         id: commit
         run: |
@@ -58,13 +56,6 @@ jobs:
           else
             echo exit_code=1 >> $GITHUB_OUTPUT
           fi
-      - name: Bump version and push tag
-        uses: anothrNick/github-tag-action@1.67.0
-        if: steps.commit.outputs.exit_code == 0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          WITH_V: true
-          DEFAULT_BUMP: minor
       - name: Push to protected branch
         uses: CasperWA/push-protected@v2.15.0
         if: steps.commit.outputs.exit_code == 0
