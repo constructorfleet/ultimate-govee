@@ -5,7 +5,7 @@ import { RestChannelModule } from './rest';
 import { BleChannelModule } from './ble/ble-channel.module';
 
 @Module({
-  imports: [CqrsModule, RestChannelModule, IoTChannelModule, BleChannelModule],
-  exports: [RestChannelModule, IoTChannelModule, BleChannelModule],
+  imports: [CqrsModule, RestChannelModule, IoTChannelModule],
+  exports: [RestChannelModule, IoTChannelModule],
 })
 export class ChannelsModule {}

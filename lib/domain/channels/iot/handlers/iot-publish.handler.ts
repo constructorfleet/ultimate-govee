@@ -40,6 +40,9 @@ export class IoTPublishCommandHandler
       );
     } else {
       this.logger.debug(`Sending to ${command.topic}`);
+      if (command.topic === 'GD/d3904c1d622a109f717485bb99def37d') {
+        console.dir(command.payload);
+      }
       this.service.send(command.topic, stringify(command.payload));
     }
     return Promise.resolve();

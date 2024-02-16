@@ -10,8 +10,8 @@ import {
   ManualModeStateName,
 } from './humidifier.modes';
 
-export const mistLevel: 'mistLevel' = 'mistLevel' as const;
-export type MistLevelStateName = typeof mistLevel;
+export const MistLevelStateName: 'mistLevel' = 'mistLevel' as const;
+export type MistLevelStateName = typeof MistLevelStateName;
 
 export type MistLevel = {
   mistLevel?: number;
@@ -26,7 +26,7 @@ export class MistLevelState extends DeviceState<
     device: DeviceModel,
     readonly active: HumidifierActiveState,
   ) {
-    super(device, mistLevel, undefined);
+    super(device, MistLevelStateName, undefined);
     active?.subscribe((event) => {
       if (this.subscription !== undefined) {
         this.subscription.unsubscribe();

@@ -1,6 +1,6 @@
 import { Module, OnModuleDestroy } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { DataModule, IoTModule } from '@constructorfleet/ultimate-govee/data';
+import { IoTModule } from '@constructorfleet/ultimate-govee/data';
 import {
   ConnectToIoTCommandHandler,
   IoTSubscribeCommandHandler,

@@ -10,7 +10,7 @@ import {
 } from '@constructorfleet/ultimate-govee/common';
 import { Subject } from 'rxjs';
 import { DeviceStatusReceivedEvent } from '@constructorfleet/ultimate-govee/domain/devices/cqrs';
-import { Device } from '../../devices';
+import { Device } from '../../devices/device';
 import { BleConfig } from '@constructorfleet/ultimate-govee/data/ble/ble.options';
 import { ConfigType } from '@nestjs/config';
 

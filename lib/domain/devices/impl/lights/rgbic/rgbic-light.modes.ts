@@ -18,7 +18,6 @@ import {
   StateCommandAndStatus,
 } from '../../../states';
 import { DeviceModel } from '../../../devices.model';
-import { v4 as uuidv4 } from 'uuid';
 
 export enum RGBICModes {
   SCENE = 4,

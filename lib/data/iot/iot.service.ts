@@ -102,8 +102,11 @@ export class IoTService implements IoTHandler {
   static recordMessage(
     deviceId: string,
     message: GoveeDeviceStatus,
-  ): GoveeDeviceStatus {
-    return message;
+  ): GoveeDeviceStatus & { timestamp: number } {
+    return {
+      ...message,
+      timestamp: Date.now(),
+    };
   }
 
   @PersistResult({

@@ -13,15 +13,15 @@
     "declaration": false,
     "sourceMap": true,
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": "./lib",
     "strict": true,
     "esModuleInterop": true,
     "noImplicitAny": false,
-    "baseUrl": "./src",
+    "baseUrl": "./lib",
     "paths": {
       "@govee/*": ["./*"]
     }
   },
-  "include": ["src/**/*.spec.ts"],
+  "include": ["lib/**/*.spec.ts"],
   "exclude": [".vscode/", ".idea/"]
 }

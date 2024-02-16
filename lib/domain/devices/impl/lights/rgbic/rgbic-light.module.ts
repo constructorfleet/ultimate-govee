@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { RGBICLightFactory } from '..';
+import { RGBICLightFactory } from './rgbic-light';
 
 @Module({
   providers: [RGBICLightFactory],

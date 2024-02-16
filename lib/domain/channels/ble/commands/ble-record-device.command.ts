@@ -1,5 +1,5 @@
 import { Labelled } from '@constructorfleet/ultimate-govee/common';
-import { Device } from '../../../devices';
+import { Device } from '../../../devices/device';
 
 export class BleRecordDeviceCommand implements Labelled {
   label = () => `BLE Record Device: ${this.device.id}`;

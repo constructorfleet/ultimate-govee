@@ -6,14 +6,16 @@ import { NuggetSize, nuggetSizeMap } from './types';
 import {
   Optional,
   asOpCode,
+  hexStringToArray,
   total,
+  unpaddedHexToArray,
 } from '@constructorfleet/ultimate-govee/common';
 import { DeviceModel } from '@constructorfleet/ultimate-govee/domain/devices/devices.model';
+import MomentLib from 'moment';
 
-export const IceMakerScheduledStartStateName: 'scheduledStart' =
+export const ScheduledStartStateName: 'scheduledStart' =
   'scheduledStart' as const;
-export type IceMakerScheduledStartStateName =
-  typeof IceMakerScheduledStartStateName;
+export type ScheduledStartStateName = typeof ScheduledStartStateName;
 
 export type IceMakerScheduledStartData = {
   enabled?: boolean;
@@ -22,15 +24,27 @@ export type IceMakerScheduledStartData = {
   nuggetSize?: NuggetSize;
 };
 
+const getStartTimeUTC = (
+  startHour: number,
+  startMinute: number,
+): MomentLib.Moment => {
+  const startTime = MomentLib().hour(startHour).minute(startMinute).second(0);
+
+  if (startTime.isBefore(MomentLib())) {
+    startTime.add(1, 'day');
+  }
+  return startTime.utc();
+};
+
 export class IceMakerScheduledStart extends DeviceOpState<
-  IceMakerScheduledStartStateName,
+  ScheduledStartStateName,
   IceMakerScheduledStartData
 > {
   constructor(device: DeviceModel) {
     super(
       { opType: 0xaa, identifier: [0x23] },
       device,
-      IceMakerScheduledStartStateName,
+      ScheduledStartStateName,
       {},
       'opCode',
     );
@@ -46,11 +60,12 @@ export class IceMakerScheduledStart extends DeviceOpState<
       });
       return;
     }
-
+    const timestamp = total(opCommand.slice(3, 7));
+    const startDate = new Date(timestamp);
     this.stateValue.next({
       enabled: opCommand[0] === 0x01,
-      hourStart: 0,
-      minuteStart: 0,
+      hourStart: startDate.getHours(),
+      minuteStart: startDate.getMinutes(),
       nuggetSize:
         NuggetSize[
           Object.entries(nuggetSizeMap).find(
@@ -87,18 +102,16 @@ export class IceMakerScheduledStart extends DeviceOpState<
       }
     }
 
-    // if (state.minutesFromNow === undefined) {
-    //   this.logger.warn('minutesFromNow is not included in the state, ignoring command');
-    //   return;
-    // }
-    // if (state.hour === undefined) {
-    //   this.logger.warn('Hour not included in the state, ignoring command');
-    //   return;
-    // }
-    // if (state.minute === undefined) {
-    //   this.logger.warn('Minute not included in the state, ignoring command');
-    //   return;
-    // }
+    if (state.hourStart === undefined) {
+      this.logger.warn('hourStart not included in the state, ignoring command');
+      return;
+    }
+    if (state.minuteStart === undefined) {
+      this.logger.warn(
+        'minuteStart not included in the state, ignoring command',
+      );
+      return;
+    }
     if (state.nuggetSize === undefined) {
       this.logger.warn(
         'Nugget size not included in the state, igrnoging command',
@@ -106,59 +119,32 @@ export class IceMakerScheduledStart extends DeviceOpState<
       return;
     }
 
+    const startTime = getStartTimeUTC(state.hourStart, state.minuteStart);
+    const timestampSec = Math.round(startTime.valueOf() / 1000);
+    const minutes = MomentLib.duration(
+      startTime.diff(MomentLib().utc()),
+    ).asMinutes();
+
+    const opCodes = [
+      0x01,
+      ...[0x00, ...hexStringToArray(Math.round(minutes).toString(16))].slice(
+        -2,
+      ),
+      ...(unpaddedHexToArray(timestampSec.toString(16)) ?? []),
+      nuggetSizeMap[state.nuggetSize.toString()],
+    ];
+
     return {
       command: {
         data: {
-          command: [
-            asOpCode(
-              0x33,
-              this.identifier!,
-              0x01,
-              0,
-              0,
-              101,
-              203,
-              0,
-              0,
-              nuggetSizeMap[state.nuggetSize.toString()],
-            ),
-          ],
+          command: [asOpCode(0x33, this.identifier!, opCodes)],
         },
       },
       status: {
         op: {
-          command: [[0x01, state.hourStart, state.minuteStart, undefined]],
+          command: [opCodes],
         },
       },
     };
   }
 }
-
-/**
- * object = byteArray
- * j(enable) => a
- * k(BleUtil.n(2, 3) , true) => b
- * l(BleUtil.n(0, 4O), true) => d
- * arrby = TimeUtil.c() * 1000)
- * g(arrby[3]) => c
- * i(arrBy[4]) => e
- * h(ModeCompanion(object[7) = f
- *
- * if(enable) x(reservation)
- *
- * a => enabled
- * b = setMin
- * c = setHour
- * d = timestamp
- * e = minute
- * f = iceMod
- */
-
-/**export type IceMakerScheduledStartData = {
-  enabled?: boolean; a
-  setMinute?: number;b
-  setHour?: number; c
-  ttimestampe: d
-  minute = 3e
-  nuggetSize?: NuggetSize; = f
-};*/

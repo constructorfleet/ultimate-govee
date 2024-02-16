@@ -109,9 +109,9 @@ export class IoTChannelSagas {
             },
           ),
       ),
-      tap((command) =>
-        this.eventBus.publish(new CQRS.CommandExpiredEvent(command.commandId)),
-      ),
+      // tap((command) =>
+      //   this.eventBus.publish(new CQRS.CommandExpiredEvent(command.commandId)),
+      // ),
       catchError((err, caught) => {
         this.logger.error(err, caught);
         return of();

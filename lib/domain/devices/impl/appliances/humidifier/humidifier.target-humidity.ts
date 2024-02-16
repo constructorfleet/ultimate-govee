@@ -7,6 +7,9 @@ import {
   AutoModeStateName,
   HumidifierActiveState,
 } from './humidifier.modes';
+export const TargetHumidityStateName: 'targetHumidity' =
+  'targetHumidity' as const;
+export type TargetHumidityStatename = typeof TargetHumidityStateName;
 
 export type HumiditierHumidity = {
   current?: number;
@@ -14,7 +17,7 @@ export type HumiditierHumidity = {
 };
 
 export class TargetHumidityState extends DeviceState<
-  'targetHumidity',
+  TargetHumidityStatename,
   Optional<number>
 > {
   private subscription: Subscription | undefined;
@@ -22,7 +25,7 @@ export class TargetHumidityState extends DeviceState<
     device: DeviceModel,
     private activeState: HumidifierActiveState,
   ) {
-    super(device, 'targetHumidity', undefined);
+    super(device, TargetHumidityStateName, undefined);
     this.activeState?.subscribe((event) => {
       if (this.subscription !== undefined) {
         this.subscription.unsubscribe();
