@@ -33,5 +33,5 @@
     },
   },
   "include": ["lib/**/*"],
-  "exclude": [".vscode/", ".idea/", "**/*.spec.ts", "persisted/"],
+  "exclude": [".vscode/", ".idea/", "**/*.spec.ts", "persisted/", "assets/"],
 }

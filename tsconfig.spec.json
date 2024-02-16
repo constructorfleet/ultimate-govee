@@ -19,7 +19,8 @@
     "noImplicitAny": false,
     "baseUrl": "./lib",
     "paths": {
-      "@govee/*": ["./*"]
+      "@constructorfleet/ultimate-govee": ["lib"],
+      "@constructorfleet/ultimate-govee/*": ["lib/*"]
     }
   },
   "include": ["lib/**/*.spec.ts"],

@@ -1,11 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { CommandBus, EventBus } from '@nestjs/cqrs';
+import { EventBus } from '@nestjs/cqrs';
 import {
   DeltaMap,
   DeviceId,
   Optional,
 } from '@constructorfleet/ultimate-govee/common';
-import { map, takeUntil } from 'rxjs';
+import { map } from 'rxjs';
 import { Device } from './device';
 import { DeviceDiscoveredEvent, DeviceUpdatedEvent } from './cqrs/events';
 

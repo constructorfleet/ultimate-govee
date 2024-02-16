@@ -1,4 +1,4 @@
-import { Module, OnModuleDestroy } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { IceMakerFactory } from './ice-maker';
 
 @Module({

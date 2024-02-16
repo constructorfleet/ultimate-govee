@@ -22,15 +22,15 @@ describe('propertyMatches', () => {
       'with manufacturerData %p',
       (manufacturerData) => {
         const device = makeDevice(name, manufacturerData);
-        describe(`against conditon ['manufacturerdata', 8, 'bit', 3, 0]`, () => {
+        describe("against conditon ['manufacturerdata', 8, 'bit', 3, 0]", () => {
           const conditions = ['manufacturerdata', 8, 'bit', 3, 0] as Conditions;
-          it(`should return true`, () => {
+          it('should return true', () => {
             expect(propertyMatches(device, conditions)).toBe(true);
           });
         });
-        describe(`against conditon ['manufacturerdata', 8, 'bit', 3, 1]`, () => {
+        describe("against conditon ['manufacturerdata', 8, 'bit', 3, 1]", () => {
           const conditions = ['manufacturerdata', 8, 'bit', 3, 1] as Conditions;
-          it(`should return false`, () => {
+          it('should return false', () => {
             expect(propertyMatches(device, conditions)).toBe(false);
           });
         });
@@ -40,15 +40,15 @@ describe('propertyMatches', () => {
       'with manufacturerData %p',
       (manufacturerData) => {
         const device = makeDevice(name, manufacturerData);
-        describe(`against conditon ['manufacturerdata', 8, 'bit', 3, 0]`, () => {
+        describe("against conditon ['manufacturerdata', 8, 'bit', 3, 0]", () => {
           const conditions = ['manufacturerdata', 8, 'bit', 3, 0] as Conditions;
-          it(`should return false`, () => {
+          it('should return false', () => {
             expect(propertyMatches(device, conditions)).toBe(false);
           });
         });
-        describe(`against conditon ['manufacturerdata', 8, 'bit', 3, 1]`, () => {
+        describe("against conditon ['manufacturerdata', 8, 'bit', 3, 1]", () => {
           const conditions = ['manufacturerdata', 8, 'bit', 3, 1] as Conditions;
-          it(`should return true`, () => {
+          it('should return true', () => {
             expect(propertyMatches(device, conditions)).toBe(true);
           });
         });

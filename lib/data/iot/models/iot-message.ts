@@ -1,6 +1,10 @@
 /* trunk-ignore-all(prettier) */
 import { Expose, Transform, Type } from 'class-transformer';
-import { Optional, base64ToHex, hexToBase64 } from '@constructorfleet/ultimate-govee/common';
+import {
+  Optional,
+  base64ToHex,
+  hexToBase64,
+} from '@constructorfleet/ultimate-govee/common';
 
 export type PowerState = {
   isOn: boolean;
@@ -44,8 +48,8 @@ export type StatusCode = {
 
 export type StatusState = {
   status: Partial<StatusCurrentTemperature> &
-  Partial<StatusSetTemperature> &
-  Partial<StatusCode>;
+    Partial<StatusSetTemperature> &
+    Partial<StatusCode>;
 };
 
 export type OpCommand = {

@@ -2,7 +2,6 @@ import { Ignorable, Optional } from '@constructorfleet/ultimate-govee/common';
 import { Measurement } from '@constructorfleet/ultimate-govee/data';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState, ParseOption } from './device.state';
-import { Calibration } from '../../../data/ble/decoder/lib/decoder.constants';
 
 export const TemperatureStateName: 'temperatureData' =
   'temperatureData' as const;

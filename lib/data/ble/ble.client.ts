@@ -158,8 +158,8 @@ export class BleClient implements OnModuleDestroy {
       this.logger.error(err);
     } finally {
       await this.startScanning();
-      return peripheral;
     }
+    return peripheral;
   }
 
   private async onDisabled() {
@@ -169,7 +169,9 @@ export class BleClient implements OnModuleDestroy {
       noble.removeAllListeners();
       noble.stopScanning();
       await this.connectedPeripheral?.disconnectAsync();
-    } catch (e) {}
+    } catch (err) {
+      this.logger.error('Error disabling BLE', err);
+    }
     return false;
   }
 

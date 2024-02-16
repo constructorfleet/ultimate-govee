@@ -1,10 +1,7 @@
 import { Optional, asOpCode } from '@constructorfleet/ultimate-govee/common';
 import { DeviceModel } from '../../../devices.model';
 import { DeviceOpState } from '../../../states';
-import { GoveeDeviceStateCommand } from '@constructorfleet/ultimate-govee/data';
-import { v4 as uuidv4 } from 'uuid';
 import { StateCommandAndStatus } from '../../../states/device.state';
-import { Command } from 'nest-commander';
 import { NuggetSize, nuggetSizeMap } from './types';
 
 export const NuggetSizeStateName = 'nuggetSize' as const;

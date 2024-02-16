@@ -9,7 +9,6 @@ import { SetCredentialsCommand } from '@constructorfleet/ultimate-govee/domain/a
 import { Password, Username } from '@constructorfleet/ultimate-govee/common';
 import { fromEvent, takeUntil } from 'rxjs';
 import {
-  UltimateGoveeConfiguration,
   InjectGoveeConfig,
   UltimateGoveeConfig,
 } from './ultimate-govee.config';
@@ -48,7 +47,7 @@ export class UltimateGoveeService
     this.connect(this.config.username, this.config.password);
   }
 
-  onApplicationShutdown(signal?: string): void {
+  onApplicationShutdown(): void {
     this.shutdownBuses();
   }
 }

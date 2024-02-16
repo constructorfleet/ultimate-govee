@@ -1,6 +1,6 @@
-import { Module, OnModuleDestroy } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { CommandBus, CqrsModule, EventBus, QueryBus } from '@nestjs/cqrs';
+import { CqrsModule } from '@nestjs/cqrs';
 import { PersistModule } from './persist';
 import { UltimateGoveeService } from './ultimate-govee.service';
 import { AuthModule } from './domain/auth';

@@ -1,4 +1,4 @@
-import { Module, OnModuleDestroy } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { CqrsModule } from '@nestjs/cqrs';
 import { GoveeAPIModule } from '@constructorfleet/ultimate-govee/data';

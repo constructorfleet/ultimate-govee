@@ -1,6 +1,5 @@
-import { Expose, Transform, Type } from 'class-transformer';
-import { Conditions, DecoderArgs, Operations } from './lib/types';
-import { Optional } from '@constructorfleet/ultimate-govee/common';
+import { Expose, Transform } from 'class-transformer';
+import { Conditions, DecoderArgs } from './lib/types';
 import { GoveeDeviceStatus } from '../../govee-device';
 
 export const typeMappings = {

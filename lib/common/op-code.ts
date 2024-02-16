@@ -2,6 +2,8 @@ import { decode, encode } from 'base64-arraybuffer';
 import { Optional } from './types';
 
 export const ArrayRange = (count: number): number[] =>
+  /* trunk-ignore(eslint/prefer-spread) */
+  // eslint-disable-next-line prefer-spread
   Array.apply(null, Array(count)).map((_, i) => i);
 
 export enum OpType {

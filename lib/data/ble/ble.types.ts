@@ -1,8 +1,4 @@
-import {
-  ConfigurableModuleBuilder,
-  Inject,
-  InjectionToken,
-} from '@nestjs/common';
+import { ConfigurableModuleBuilder, Inject } from '@nestjs/common';
 import { type EventEmitter } from 'events';
 import { BleModuleOptions } from './ble.options';
 import { DeviceId } from '@constructorfleet/ultimate-govee/common';

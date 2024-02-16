@@ -1,15 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { EventBus, ICommand, Saga, ofType } from '@nestjs/cqrs';
-import {
-  Observable,
-  catchError,
-  filter,
-  map,
-  mergeMap,
-  of,
-  sampleTime,
-  tap,
-} from 'rxjs';
+import { Observable, catchError, filter, map, of, sampleTime, tap } from 'rxjs';
 import {
   BleChannelChangedEvent,
   BleChannelConfigReceivedEvent,

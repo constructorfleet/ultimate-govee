@@ -50,7 +50,7 @@ export class GoveeDiyService {
       ).get();
       return response.data;
     } catch (error) {
-      this.logger.error(`Unable to retrieve device diys`, error);
+      this.logger.error('Unable to retrieve device diys', error);
       return undefined;
     }
   }

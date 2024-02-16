@@ -1,8 +1,6 @@
 import { Optional, asOpCode } from '@constructorfleet/ultimate-govee/common';
 import { DeviceOpState } from '../../../states';
 import { DeviceModel } from '../../../devices.model';
-import { GoveeDeviceStateCommand } from '@constructorfleet/ultimate-govee/data';
-import { v4 as uuidv4 } from 'uuid';
 import { StateCommandAndStatus } from '../../../states/device.state';
 
 export const UVCStateName: 'isUVCActive' = 'isUVCActive' as const;

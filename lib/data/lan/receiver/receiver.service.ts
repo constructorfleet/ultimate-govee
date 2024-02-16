@@ -11,7 +11,7 @@ export class ReceiverService implements SocketEventHandler {
   constructor(private readonly socket: ReceiverSocket) {}
 
   async bind() {
-    this.logger.log(`Binding receiver socket...`);
+    this.logger.log('Binding receiver socket...');
     return new Promise<boolean>((resolve, reject) => {
       const subscription = this.socket.socketState.subscribe((state) => {
         this.logger.log(`Receiver socket: ${state}`);
@@ -33,13 +33,13 @@ export class ReceiverService implements SocketEventHandler {
   }
 
   onClose(): void {
-    this.logger.log(`Closed`);
+    this.logger.log('Closed');
   }
   onConnect(): void {
-    this.logger.log(`Connected`);
+    this.logger.log('Connected');
   }
   onError(err: Error): void {
-    this.logger.error(`Error`, err);
+    this.logger.error('Error', err);
   }
   onListening(): void {
     this.logger.debug('Listening');

@@ -1,10 +1,6 @@
 import { DeviceModel } from '@constructorfleet/ultimate-govee/domain/devices';
-import {
-  DeviceOpState,
-  DeviceState,
-} from '@constructorfleet/ultimate-govee/domain/devices/states';
+import { DeviceState } from '@constructorfleet/ultimate-govee/domain/devices/states';
 import { IceMakerStatusState } from './ice-maker.status';
-import { StateStatus } from '../../../../../data/iot/models/iot-message';
 import { IceMakerStatus } from './types';
 
 export const MakingIceStateName: 'makeIce' = 'makeIce' as const;
@@ -29,7 +25,7 @@ export class IceMakerMakingIceState extends DeviceState<
 
   setState(nextState: boolean | undefined) {
     if (nextState === undefined) {
-      this.logger.warn(`Value not provided, ignoring command`);
+      this.logger.warn('Value not provided, ignoring command');
       return undefined;
     }
     return this.statusState.setState(

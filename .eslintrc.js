@@ -18,6 +18,7 @@ module.exports = {
     '@typescript-eslint/no-var-requires': 0,
     '@typescript-eslint/no-empty-function': 0,
     'unused-imports/no-unused-imports-ts': 'warn',
+    '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-unused-vars': [
       'warn',
       { vars: 'all', args: 'after-used', ignoreRestSiblings: false },

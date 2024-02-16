@@ -1,7 +1,6 @@
 import { Optional } from '@constructorfleet/ultimate-govee/common';
 import { DeviceModel } from '../devices.model';
 import { DeviceState, StateCommandAndStatus } from './device.state';
-import { Command } from 'nest-commander';
 
 export const PowerStateName: 'power' = 'power' as const;
 export type PowerStateName = typeof PowerStateName;

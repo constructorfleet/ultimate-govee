@@ -58,7 +58,7 @@ export class OpenAPIService {
       return (response.data as DeviceListResponse).devices;
     } catch (error) {
       // this.logger.error(`Unable to retrieve devices from OpenAPI: ${error}`);
-      throw new Error(`Unable to retreive devices from OpenAPI`);
+      throw new Error('Unable to retreive devices from OpenAPI');
     }
   }
 
@@ -78,7 +78,7 @@ export class OpenAPIService {
       return (response.data as DeviceStateResponse).device;
     } catch (error) {
       // this.logger.error(`Unable to retrieve device from OpenAPI: ${error}`);
-      throw new Error(`Unable to retreive device from OpenAPI`);
+      throw new Error('Unable to retreive device from OpenAPI');
     }
   }
 
@@ -98,7 +98,7 @@ export class OpenAPIService {
       return (response.data as OpenAPIDeviceScenesResponse).payload;
     } catch (error) {
       // this.logger.error(`Unable to retrieve scenes from OpenAPI: ${error}`);
-      throw new Error(`Unable to retreive scenes from OpenAPI`);
+      throw new Error('Unable to retreive scenes from OpenAPI');
     }
   }
 
@@ -118,7 +118,7 @@ export class OpenAPIService {
       return (response.data as OpenAPIDeviceScenesResponse).payload;
     } catch (error) {
       // this.logger.error(`Unable to retrieve diy scenes from OpenAPI: ${error}`);
-      throw new Error(`Unable to retreive diy scenes from OpenAPI`);
+      throw new Error('Unable to retreive diy scenes from OpenAPI');
     }
   }
 }

@@ -5,10 +5,7 @@ import {
   QueryBus,
 } from '@nestjs/cqrs';
 import { GoveeEffectService } from '@constructorfleet/ultimate-govee/data';
-import {
-  AccountAuthData,
-  AuthDataQuery,
-} from '@constructorfleet/ultimate-govee/domain/auth';
+import { AuthDataQuery } from '@constructorfleet/ultimate-govee/domain/auth';
 import { LightEffectsReceivedEvent } from '@constructorfleet/ultimate-govee/domain/devices/cqrs';
 import { RetrieveLightEffectsCommand } from '../commands/retrieve-light-effects.command';
 import { concatMap, filter, from, map } from 'rxjs';

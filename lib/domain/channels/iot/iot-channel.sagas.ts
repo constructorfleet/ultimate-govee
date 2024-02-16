@@ -3,13 +3,10 @@ import { ICommand, Saga, ofType, EventBus } from '@nestjs/cqrs';
 import {
   Observable,
   catchError,
-  concatMap,
   distinctUntilChanged,
   filter,
   map,
   of,
-  takeUntil,
-  tap,
 } from 'rxjs';
 import * as CQRS from '@constructorfleet/ultimate-govee/domain/devices/cqrs';
 import {

@@ -64,8 +64,8 @@ export class GoveeAccountService {
         clientId: oauth.clientId,
       };
     } catch (err) {
-      this.logger.error(`Unable to refresh token.`, err);
-      throw new Error(`Unable to refresh token.`);
+      this.logger.error('Unable to refresh token.', err);
+      throw new Error('Unable to refresh token.');
     }
   }
 
@@ -122,7 +122,7 @@ export class GoveeAccountService {
         `Unable to authenticate with Govee. ${stringify(credentials)} ${err}`,
         err,
       );
-      throw new Error(`Unable to authenticate with Govee.`);
+      throw new Error('Unable to authenticate with Govee.');
     }
 
     try {
@@ -139,7 +139,7 @@ export class GoveeAccountService {
         clientId,
       };
     } catch (err) {
-      this.logger.error(`Unable to authenticate with Govee servers`, err);
+      this.logger.error('Unable to authenticate with Govee servers', err);
     }
     return account;
   }
@@ -153,8 +153,8 @@ export class GoveeAccountService {
       ).get(IoTCertificateResponse);
       return (response.data as IoTCertificateResponse).data;
     } catch (err) {
-      this.logger.error(`Unable to retrieve IoT certificate`, err);
-      throw new Error(`Unable to retrieve IoT certificate`);
+      this.logger.error('Unable to retrieve IoT certificate', err);
+      throw new Error('Unable to retrieve IoT certificate');
     }
   }
 }

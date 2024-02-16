@@ -7,8 +7,6 @@ import {
   HumidityState,
   StateCommandAndStatus,
 } from '../../../states';
-import { GoveeDeviceStateCommand } from '@constructorfleet/ultimate-govee/data';
-import { v4 as uuidv4 } from 'uuid';
 
 enum HumidifierModes {
   MANUAL = 1,

@@ -13,7 +13,6 @@ import { Version } from '../../version.info';
 import { DevicesFactory } from '../../devices.factory';
 import { DevicesService } from '../../devices.service';
 import { DeviceStatusReceivedEvent } from '../events';
-import { of } from 'rxjs';
 
 @CommandHandler(HandleDeviceConfigCommand)
 export class HandleDeviceConfigCommandHandler

@@ -4,6 +4,7 @@ export const sleep = async (ms: number) => {
 
 export const deepPartialCompare = <T>(a: Partial<T>, b: T): boolean => {
   for (const key in a) {
+    // eslint-disable-next-line no-prototype-builtins
     if (a.hasOwnProperty(key)) {
       if (typeof a[key] === 'object' && a[key] !== undefined) {
         // Recursively compare nested objects

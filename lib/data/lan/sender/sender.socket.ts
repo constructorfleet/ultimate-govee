@@ -19,7 +19,7 @@ export class SenderSocket {
         this.socket.send(msg, port, address, (error) => {
           console.dir({ msg, port, address, error });
           if (error) {
-            console.log(`send`, error);
+            console.log('send', error);
           } else {
             resolve();
           }

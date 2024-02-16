@@ -20,7 +20,6 @@ import {
   GreaterThanEqual,
   LessThan,
   LessThanEqual,
-  ManufacturerData,
   Modulo,
   MultiplyBy,
   Substract,

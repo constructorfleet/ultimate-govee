@@ -4,10 +4,7 @@ import {
   Optional,
   asOpCode,
 } from '@constructorfleet/ultimate-govee/common';
-import {
-  Effect,
-  GoveeDeviceStateCommand,
-} from '@constructorfleet/ultimate-govee/data';
+import { Effect } from '@constructorfleet/ultimate-govee/data';
 import {
   DeviceOpState,
   SegmentCountState,

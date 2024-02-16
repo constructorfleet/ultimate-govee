@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ICommand, Saga, ofType } from '@nestjs/cqrs';
-import { Observable, catchError, map, of, takeUntil } from 'rxjs';
+import { Observable, catchError, map, of } from 'rxjs';
 import {
   DeviceConfigReceivedEvent,
   DeviceStatusReceivedEvent,

@@ -37,7 +37,7 @@ export class GoveeDeviceService {
       const response = await this.getApiResult(oauthData);
       return GoveeDeviceService.parseResponse(response);
     } catch (err) {
-      this.logger.error(`Unable to retrieve device list`, err);
+      this.logger.error('Unable to retrieve device list', err);
       return GoveeDeviceService.parseResponse(
         this.deviceListResponse || { message: '', status: 0, devices: [] },
       );
@@ -116,7 +116,7 @@ export class GoveeDeviceService {
         } as GoveeDevice;
       } catch (err) {
         new Logger(GoveeDeviceService.name).error(err);
-        throw new Error(`Unable to parse device response`);
+        throw new Error('Unable to parse device response');
       }
     });
   }

@@ -36,7 +36,7 @@ export class GoveeProductService {
   @PersistResult({ path: 'persisted', filename: 'products.json' })
   async getProductCategories(): Promise<Record<string, Product>> {
     try {
-      this.logger.log(`Retrieving product list from Govee REST API`);
+      this.logger.log('Retrieving product list from Govee REST API');
       const productMap = GoveeProductService.parseResponse(
         await this.getApiReponse(),
       );
@@ -48,7 +48,7 @@ export class GoveeProductService {
       );
       return productMap;
     } catch (error) {
-      this.logger.error(`Error retrieving product list`, error);
+      this.logger.error('Error retrieving product list', error);
       return this.persistedProducts;
     }
   }

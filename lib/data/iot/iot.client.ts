@@ -6,7 +6,6 @@ import { Optional } from '@constructorfleet/ultimate-govee/common';
 import { IoTConfig } from './iot.config';
 import { IoTHandler } from './iot.handler';
 import { IoTData } from '../api';
-import { Subject } from 'rxjs';
 
 @Injectable()
 export class IoTClient implements OnModuleDestroy {
@@ -113,17 +112,17 @@ export class IoTClient implements OnModuleDestroy {
         ? handler.onError.bind(handler)
         : (reason: CrtError) => {
             this.logger.warn(
-              `Unexpected error with connection to MQTT broker`,
+              'Unexpected error with connection to MQTT broker',
               reason,
               reason.error_code,
             );
           },
     );
     iotConnection.on('disconnect', () => {
-      this.logger.log(`Disconnected from MQTT broker.`);
+      this.logger.log('Disconnected from MQTT broker.');
     });
     iotConnection.on('closed', () => {
-      this.logger.log(`Connection to MQTT broker closed.`);
+      this.logger.log('Connection to MQTT broker closed.');
     });
   }
 

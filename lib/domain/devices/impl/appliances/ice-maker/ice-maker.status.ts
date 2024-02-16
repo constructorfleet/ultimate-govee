@@ -1,4 +1,3 @@
-import { Optional, asOpCode } from '@constructorfleet/ultimate-govee/common';
 import { DeviceModel } from '@constructorfleet/ultimate-govee/domain/devices';
 import { DeviceOpState } from '@constructorfleet/ultimate-govee/domain/devices/states';
 import { IceMakerStatus, statusMap } from './types';

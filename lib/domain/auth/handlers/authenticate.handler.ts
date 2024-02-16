@@ -9,17 +9,6 @@ import { AuthenticateCommand } from '../commands/authenticate.command';
 import { AuthService } from '../auth.service';
 import { RestChannelConfigReceivedEvent } from '../../channels/rest/events/rest-channel-config-received.event';
 import { IoTChannelConfigReceivedEvent } from '../../channels/iot/events/iot-channel-config-received.event';
-import {
-  concatMap,
-  filter,
-  from,
-  map,
-  mergeAll,
-  mergeMap,
-  of,
-  switchMap,
-  tap,
-} from 'rxjs';
 
 @CommandHandler(AuthenticateCommand)
 export class AuthenticateCommandHandler

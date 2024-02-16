@@ -88,7 +88,7 @@ export class GoveeEffectService {
         [] as Effect[],
       );
     } catch (error) {
-      this.logger.error(`Unable to retrieve device light effects`, error);
+      this.logger.error('Unable to retrieve device light effects', error);
       return undefined;
     }
   }
@@ -135,7 +135,7 @@ export class GoveeEffectService {
         [] as Effect[],
       );
     } catch (error) {
-      this.logger.error(`Unable to retrieve device light effects`, error);
+      this.logger.error('Unable to retrieve device light effects', error);
       return undefined;
     }
   }

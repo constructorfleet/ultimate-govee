@@ -1,7 +1,6 @@
 import { asOpCode, Optional } from '@constructorfleet/ultimate-govee/common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState, StateCommandAndStatus } from './device.state';
-import { v4 as uuidv4 } from 'uuid';
 
 export const BrightnessStateName: 'brightness' = 'brightness' as const;
 export type BrightnessStateName = typeof BrightnessStateName;

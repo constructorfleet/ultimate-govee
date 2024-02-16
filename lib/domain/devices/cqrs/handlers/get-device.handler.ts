@@ -1,7 +1,6 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetDeviceQuery } from '../queries';
 import { DevicesService } from '../../devices.service';
-import { Device } from '../../device';
 
 @QueryHandler(GetDeviceQuery)
 export class GetDeviceQueryHandler implements IQueryHandler<GetDeviceQuery> {

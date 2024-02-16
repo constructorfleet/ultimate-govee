@@ -1,15 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { EventBus } from '@nestjs/cqrs';
-import {
-  Subject,
-  map,
-  switchMap,
-  timer,
-  tap,
-  filter,
-  takeUntil,
-  BehaviorSubject,
-} from 'rxjs';
+import { Subject, map, switchMap, timer, tap, filter } from 'rxjs';
 import { ConfigType } from '@nestjs/config';
 import { ClientId, Credentials } from '@constructorfleet/ultimate-govee/common';
 import { Md5 } from 'ts-md5';

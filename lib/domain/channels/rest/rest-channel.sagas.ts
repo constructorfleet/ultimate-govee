@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ICommand, Saga, ofType } from '@nestjs/cqrs';
-import { Observable, auditTime, catchError, map, of, takeUntil } from 'rxjs';
+import { Observable, auditTime, catchError, map, of } from 'rxjs';
 import {
   RefreshDeviceListEvent,
   RestChannelChangedEvent,
