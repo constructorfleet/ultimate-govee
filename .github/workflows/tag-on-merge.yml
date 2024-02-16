@@ -58,18 +58,18 @@ jobs:
           else
             echo exit_code=1 >> $GITHUB_OUTPUT
           fi
-      - name: Push to protected branch
-        uses: CasperWA/push-protected@v2.15.0
-        if: steps.commit.outputs.exit_code == 0
-        with:
-          token: ${{ secrets.GH_TOKEN }}
-          branch: main
-          force: true
-          unprotect_reviews: true
       - name: Bump version and push tag
         uses: anothrNick/github-tag-action@1.67.0
+        if: steps.commit.outputs.exit_code == 0
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           WITH_V: true
           DEFAULT_BUMP: minor
-          DRY_RUN: true
+      - name: Push to protected branch
+        uses: CasperWA/push-protected@v2.15.0
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          branch: main
+          force: true
+          tags: true
+          unprotect_reviews: true
