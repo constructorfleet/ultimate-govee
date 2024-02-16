@@ -13,6 +13,8 @@ on:
 env:
   CI: true
 
+permissions: write-all
+
 jobs:
   build:
     if: github.event.pull_request.merged == true
@@ -21,27 +23,28 @@ jobs:
         node-version:
           - 20.7.0
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
 
     steps:
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.merge_commit_sha }}
           fetch-depth: '0'
+          fetch-tags: true
       - name: Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
       - name: Bump version and push tag
         uses: anothrNick/github-tag-action@1.64.0
+        id: tag
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           WITH_V: true
           DEFAULT_BUMP: minor
+          DRY_RUN: true
       - run:
-          npm version --allow-same-version=true --git-tag-version=false $(git
-          describe --tags)
+          npm version --allow-same-version=true --git-tag-version=false ${{
+          steps.tag.outputs.new_tag }}
       - name: Commit Package Version
         id: commit
         run: |
@@ -63,3 +66,10 @@ jobs:
           branch: main
           force: true
           unprotect_reviews: true
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.64.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          WITH_V: true
+          DEFAULT_BUMP: minor
+          DRY_RUN: true
