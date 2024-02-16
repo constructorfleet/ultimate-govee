@@ -4,12 +4,13 @@
   "projects": {
     "govee": {
       "type": "library",
-      "root": "src",
+      "root": "lib",
       "entryFile": "index",
-      "sourceRoot": "src"
+      "sourceRoot": "lib"
     }
   },
   "compilerOptions": {
-    "tsConfigPath": "./tsconfig.json"
+    "tsConfigPath": "./tsconfig.json",
+    "webpack": false
   }
 }

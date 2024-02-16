@@ -7,7 +7,7 @@
     "^.+\\.(t|j)s$": "ts-jest"
   },
   "moduleNameMapper": {
-    "@govee/ipc/(.*)": "<rootDir>/../libs/ipc/src/$1",
-    "@govee/ipc": "<rootDir>/../libs/ipc/src"
+    "@constructorfleet/ultimate-govee/(.*)": "<rootDir>/../lib/ultimate-govee/$1",
+    "@constructorfleet/ultimate-govee": "<rootDir>/../lib/ultimate-govee"
   }
 }
