@@ -3,6 +3,7 @@ import { DataSource, DecodeDevice, DecoderFn, Operations } from './types';
 import { v4 as uuidv4 } from 'uuid';
 
 const makeDevice = (name: string, manufacturerData: string): DecodeDevice => ({
+  id: '0B:00:19:3D:31:51:34:F7',
   name,
   manufacturerData,
   serviceData: [
