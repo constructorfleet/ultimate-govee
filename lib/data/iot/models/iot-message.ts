@@ -1,4 +1,3 @@
-/* trunk-ignore-all(prettier) */
 import { Expose, Transform, Type } from 'class-transformer';
 import {
   Optional,

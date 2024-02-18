@@ -22,7 +22,6 @@ jobs:
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
-    # trunk-ignore(checkov/CKV2_GHA_1)
     permissions:
       actions: read
       contents: read
