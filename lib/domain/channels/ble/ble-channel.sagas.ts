@@ -26,7 +26,7 @@ export class BleChannelSagas {
   configureBleChannelFlow = (events$: Observable<any>): Observable<ICommand> =>
     events$.pipe(
       ofType(BleChannelConfigReceivedEvent),
-      map((event) => new ConfigureBleChannelCommand(event.config)),
+      map((event) => new ConfigureBleChannelCommand(false, event.config)),
       catchError((err, caught) => {
         this.logger.error(err, caught);
         return of();
@@ -37,7 +37,9 @@ export class BleChannelSagas {
   configurationChangedFlow = (events$: Observable<any>): Observable<ICommand> =>
     events$.pipe(
       ofType(BleChannelChangedEvent),
-      map((event) => new ConfigureBleChannelCommand(event.config)),
+      map(
+        (event) => new ConfigureBleChannelCommand(event.enabled, event.config),
+      ),
       catchError((err, caught) => {
         this.logger.error(err, caught);
         return of();
@@ -59,7 +61,6 @@ export class BleChannelSagas {
   refreshDeviceFlow = (events$: Observable<any>): Observable<ICommand> =>
     events$.pipe(
       ofType(CQRS.DeviceRefeshEvent),
-      sampleTime(1000),
       filter((event) => event.addresses.bleAddress !== undefined),
       filter(
         (event) =>
@@ -101,9 +102,6 @@ export class BleChannelSagas {
               typeof value === 'string' ? base64ToHex(value) : value,
             ),
           ),
-      ),
-      tap((command) =>
-        this.eventBus.publish(new CQRS.CommandExpiredEvent(command.commandId)),
       ),
       catchError((err, caught) => {
         this.logger.error(err, caught);

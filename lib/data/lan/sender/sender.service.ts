@@ -24,8 +24,6 @@ export class SenderService {
       this.config.scanPort,
       this.config.broadcastAddress,
     );
-
-    console.dir('Sent');
   }
 
   async deviceCommand(deviceAddress: string, command) {

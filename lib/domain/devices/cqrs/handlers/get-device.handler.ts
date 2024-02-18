@@ -7,6 +7,6 @@ export class GetDeviceQueryHandler implements IQueryHandler<GetDeviceQuery> {
   constructor(private readonly deviceService: DevicesService) {}
 
   async execute(query: GetDeviceQuery): Promise<any> {
-    return this.deviceService.getDevice(query.deviceId);
+    return query.deviceId.map((id) => this.deviceService.getDevice(id));
   }
 }

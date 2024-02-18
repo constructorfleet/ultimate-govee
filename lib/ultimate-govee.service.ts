@@ -13,6 +13,7 @@ import {
   UltimateGoveeConfig,
 } from './ultimate-govee.config';
 import { DeviceDiscoveredEvent } from './domain/devices/cqrs';
+import { ChannelToggle, InjectChannels } from './domain';
 
 @Injectable()
 export class UltimateGoveeService
@@ -21,12 +22,19 @@ export class UltimateGoveeService
   private readonly logger: Logger = new Logger(UltimateGoveeService.name);
   constructor(
     @InjectGoveeConfig private readonly config: UltimateGoveeConfig,
+    @InjectChannels private readonly channels: ChannelToggle,
     private readonly commandBus: CommandBus,
     private readonly eventBus: EventBus,
   ) {
     fromEvent(process, 'SIGINT')
       .pipe(takeUntil(fromEvent(process, 'SIGTERM')))
       .subscribe(() => this.shutdownBuses());
+  }
+
+  channel<ChannelName extends keyof ChannelToggle>(
+    name: ChannelName,
+  ): ChannelToggle[ChannelName] {
+    return this.channels[name];
   }
 
   get deviceDiscovered(): Observable<DeviceDiscoveredEvent> {
@@ -49,6 +57,9 @@ export class UltimateGoveeService
   }
 
   async onApplicationBootstrap() {
+    this.channel('ble').setEnabled(true);
+    this.channel('ble').setConfig({ devices: undefined });
+    this.channel('iot').setEnabled(true);
     this.connect(this.config.username, this.config.password);
   }
 

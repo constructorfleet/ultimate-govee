@@ -10,7 +10,6 @@ export class AuthDataQueryHandler implements IQueryHandler<AuthDataQuery> {
   constructor(private readonly authService: AuthService) {}
 
   async execute(_: AuthDataQuery): Promise<any> {
-    this.logger.log(`Query ${this.authService.accountAuth}`);
     return this.authService.accountAuth;
   }
 }

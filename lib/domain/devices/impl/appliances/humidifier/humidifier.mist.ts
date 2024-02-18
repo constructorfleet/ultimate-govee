@@ -55,20 +55,22 @@ export class MistLevelState extends DeviceState<
   setState(nextState: Optional<number>) {
     if (this.active.value === undefined) {
       this.logger.warn('Active state is unknown, ignoring command');
-      return;
+      return [];
     }
     if (nextState === undefined) {
       this.logger.warn('Mist level is not specified, igoring command');
-      return;
+      return [];
     }
     switch (this.active.value.name) {
       case AutoModeStateName:
         this.logger.warn(
           'Mist level cannot be set when in Auto, changing mode to Manual',
         );
-        return this.active.modes
-          .find((mode) => mode.name === ManualModeStateName)
-          ?.setState(nextState);
+        return (
+          this.active.modes
+            .find((mode) => mode.name === ManualModeStateName)
+            ?.setState(nextState) ?? []
+        );
       case CustomModeStateName:
         return this.active.value.setState({
           mistLevel: nextState,
@@ -76,7 +78,7 @@ export class MistLevelState extends DeviceState<
       case ManualModeStateName:
         return this.active.value.setState(nextState);
       default:
-        return undefined;
+        return [];
     }
   }
 }

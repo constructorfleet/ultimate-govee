@@ -10,5 +10,6 @@ export class ConnectToIoTCommand implements Labelled {
     readonly iotData: IoTData,
     readonly callback: OnIoTMessageCallback,
     readonly topic?: string,
+    readonly deviceIds?: string[],
   ) {}
 }

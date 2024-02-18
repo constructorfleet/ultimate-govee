@@ -310,7 +310,7 @@ export class HumidifierActiveState extends ModeState {
   setState(nextState: Optional<DeviceState<string, unknown>>) {
     if (nextState === undefined) {
       this.logger.warn('Next state is undefined, ignoring command');
-      return;
+      return [];
     }
     return nextState.setState(nextState.value);
   }

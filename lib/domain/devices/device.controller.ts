@@ -2,17 +2,34 @@ import {
   Body,
   Controller,
   Get,
+  HttpStatus,
   Logger,
   Param,
   Post,
   Query,
 } from '@nestjs/common';
 import { DevicesService } from './devices.service';
+import {
+  bufferCount,
+  bufferWhen,
+  filter,
+  map,
+  race,
+  reduce,
+  takeWhile,
+  timeout,
+  timer,
+} from 'rxjs';
+import { EventBus, ofType } from '@nestjs/cqrs';
+import { DeviceStateChangedEvent } from './cqrs';
 
 @Controller('devices')
 export class DeviceController {
   private readonly logger: Logger = new Logger(DeviceController.name);
-  constructor(private readonly deviceService: DevicesService) {}
+  constructor(
+    private readonly deviceService: DevicesService,
+    private readonly eventBus: EventBus,
+  ) {}
 
   @Get()
   async getAllDevices() {
@@ -55,9 +72,14 @@ export class DeviceController {
     @Param('state') stateName: string,
     @Body('state') stateData: any,
   ) {
-    this.deviceService
-      .getDevice(deviceId)
-      ?.state(stateName)
-      ?.setState(stateData);
+    const device = this.deviceService.getDevice(deviceId)?.debug(true);
+    const state = device?.state(stateName);
+    const commandId = state?.setState(stateData);
+    device?.debug(false);
+    if (!commandId) {
+      return HttpStatus.NOT_FOUND;
+    }
+
+    return { commandId };
   }
 }

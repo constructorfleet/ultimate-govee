@@ -43,15 +43,17 @@ export class TargetHumidityState extends DeviceState<
   setState(nextState: Optional<number>) {
     if (nextState === undefined) {
       this.logger.warn('Target humidity not specified, ignoring command');
-      return undefined;
+      return [];
     }
     if (this.activeState.value?.name !== AutoModeStateName) {
       this.logger.log(
         'Target humidtiy can only be set in Auto, changing to to Auto',
       );
-      return this.activeState.modes
-        .find((m) => m.name === AutoModeStateName)
-        ?.setState(nextState);
+      return (
+        this.activeState.modes
+          .find((m) => m.name === AutoModeStateName)
+          ?.setState(nextState) ?? []
+      );
     } else {
       return this.activeState.value.setState(nextState);
     }

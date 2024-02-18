@@ -1,4 +1,4 @@
-import { BehaviorSubject, Subject, interval } from 'rxjs';
+import { BehaviorSubject, Subject, debounceTime, interval, merge } from 'rxjs';
 import { ConsoleLogger, Logger } from '@nestjs/common';
 import {
   DeltaMap,
@@ -16,9 +16,7 @@ import { DeviceOpState, DeviceState } from './states/device.state';
 import { ModeState, ModeStateName } from './states/mode.state';
 import { DeviceRefeshEvent } from './cqrs/events/device-refresh.event';
 import { DeviceStateCommandEvent } from './cqrs/events/device-state-command.event';
-import { CommandExpiredEvent } from './cqrs';
-
-class JsonLogger extends ConsoleLogger {}
+import { DeviceStateChangedEvent } from './cqrs';
 
 const getLogger = (deviceId: string, deviceModel: string): Winston.Logger =>
   Winston.createLogger({
@@ -104,10 +102,19 @@ export class Device extends BehaviorSubject<DeviceStateValues> {
     state.subscribe((value) => {
       this.stateValues.set(state.name, value);
     });
-    state.clearCommand.subscribe((commandId) => {
-      this.eventBus.publish(new CommandExpiredEvent(commandId));
+    state.clearCommand.subscribe((command) => {
+      this.eventBus.publish(
+        new DeviceStateChangedEvent(
+          this,
+          command.state,
+          command.value,
+          command.commandId,
+          this.isDebug,
+        ),
+      );
     });
-    state.commandBus.subscribe((cmd) =>
+    state.commandBus.subscribe((cmd) => {
+      this.logger.error('Publishing state command');
       this.eventBus.publish(
         new DeviceStateCommandEvent(
           this.id,
@@ -129,9 +136,10 @@ export class Device extends BehaviorSubject<DeviceStateValues> {
             iotTopic: this.iotTopic,
             bleAddress: this.bleAddress,
           },
+          this.isDebug,
         ),
-      ),
-    );
+      );
+    });
     return state;
   }
 
@@ -186,7 +194,7 @@ export class Device extends BehaviorSubject<DeviceStateValues> {
 
   deviceStatus(status: GoveeDeviceStatus) {
     if (status.cmd !== 'status') {
-      this.device.refresh();
+      this.refresh();
     } else {
       this.device.status.next(status);
     }
@@ -201,6 +209,12 @@ export class Device extends BehaviorSubject<DeviceStateValues> {
   }
 
   protected stateLogger: Winston.Logger | undefined;
+  protected isDebug: boolean = false;
+
+  debug(isDebug: boolean): this {
+    this.isDebug = isDebug;
+    return this;
+  }
 
   constructor(
     protected readonly device: DeviceModel,
@@ -217,7 +231,11 @@ export class Device extends BehaviorSubject<DeviceStateValues> {
         ...device.status.value,
       });
     });
-    this.refreshSubject.subscribe(() =>
+    merge([
+      interval(60000),
+      this.refreshSubject.pipe(debounceTime(10000)),
+    ]).subscribe(() => {
+      this.logger.debug(`Refreshing state ${this.iotTopic} ${this.bleAddress}`);
       this.eventBus.publish(
         new DeviceRefeshEvent(
           this.id,
@@ -228,10 +246,10 @@ export class Device extends BehaviorSubject<DeviceStateValues> {
             bleAddress: this.bleAddress,
           },
           Array.from(this.opIdentifiers),
+          true, //this.isDebug,
         ),
-      ),
-    );
-    interval(5000).subscribe(() => this.refresh());
+      );
+    });
     this.stateValues.delta$.subscribe(() => {
       const values = Object.fromEntries(
         Array.from(this.stateValues.keys()).map((k) => [
@@ -241,7 +259,7 @@ export class Device extends BehaviorSubject<DeviceStateValues> {
       );
       this.next(values);
     });
-    this.subscribe(async (states) => {
+    this.subscribe(() => {
       if (this.stateLogger === undefined) {
         this.stateLogger = getLogger(this.id, this.model);
       }

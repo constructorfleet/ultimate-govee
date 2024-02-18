@@ -13,11 +13,9 @@ export class SenderSocket {
     port: number,
     address?: string,
   ) {
-    console.dir({ msg, port, address });
     return new Promise<void>((resolve, reject) => {
       setTimeout(() => {
         this.socket.send(msg, port, address, (error) => {
-          console.dir({ msg, port, address, error });
           if (error) {
             console.log('send', error);
           } else {

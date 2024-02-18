@@ -1,6 +1,13 @@
 import { EventBus } from '@nestjs/cqrs';
-import { BehaviorSubject, filter, map, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  distinctUntilChanged,
+  filter,
+  map,
+  share,
+} from 'rxjs';
 import { ChannelState } from './channel.state';
+import { Logger } from '@nestjs/common';
 
 const areSameConfig = <TConfig extends object>(
   data1?: TConfig,
@@ -17,34 +24,50 @@ const areSameConfig = <TConfig extends object>(
 
 export abstract class ChannelService<
   TConfig extends object,
-  TState extends ChannelState<TConfig>,
+  Togglable extends boolean = false,
 > {
-  protected readonly state: TState = {} as TState;
-  protected readonly config: BehaviorSubject<TConfig | undefined> =
-    new BehaviorSubject<TConfig | undefined>(undefined);
+  abstract readonly togglable: Togglable;
+  abstract readonly name: string;
 
-  constructor(protected readonly eventBus: EventBus) {
-    this.config
-      .pipe(
-        filter(
-          (config) =>
-            config !== undefined && !areSameConfig(this.state.config, config),
-        ),
-        map((config) => config! as TConfig),
-        tap((config) => {
-          this.state.config = config;
-        }),
-      )
-      .subscribe((config) => this.onConfigChange(config));
+  protected logger: Logger = new Logger(this.constructor.name);
+
+  private readonly state: ChannelState<TConfig> = {
+    enabled: new BehaviorSubject<boolean | undefined>(undefined),
+    config: new BehaviorSubject<TConfig | undefined>(undefined),
+  };
+  protected readonly onEnabledChanged$ = this.state.enabled.pipe(
+    filter((e) => e !== undefined),
+    map((e) => e!),
+    share(),
+  );
+
+  protected readonly onConfigChanged$ = this.state.config.pipe(
+    filter((config) => config !== undefined),
+    map((config) => config! as TConfig),
+    distinctUntilChanged(
+      (previous, current) => !areSameConfig(previous, current),
+    ),
+    share(),
+  );
+
+  constructor(
+    protected readonly eventBus: EventBus,
+    initialState?: boolean,
+    initialConfig?: TConfig,
+  ) {
+    this.state.enabled.next(initialState);
+    this.state.config.next(initialConfig);
   }
 
-  abstract onConfigChange(config: TConfig);
-
   getConfig(): TConfig | undefined {
-    return this.config.getValue();
+    return this.state.config.getValue();
   }
 
   setConfig(config: TConfig) {
-    this.config.next(config);
+    this.state.config.next(config);
+  }
+
+  setEnabled(enabled: boolean) {
+    this.state.enabled.next(enabled);
   }
 }

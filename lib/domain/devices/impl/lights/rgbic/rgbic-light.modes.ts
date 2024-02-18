@@ -509,7 +509,7 @@ export class RGBICActiveState extends ModeState {
   setState(nextState: Optional<DeviceState<string, unknown>>) {
     if (nextState === undefined) {
       this.logger.warn('Next state not specified, ignoring command');
-      return;
+      return [];
     }
 
     return nextState.setState(nextState.value);

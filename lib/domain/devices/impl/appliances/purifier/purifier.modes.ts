@@ -258,7 +258,7 @@ export class PurifierActiveMode extends ModeState {
   setState(nextState: Optional<DeviceState<string, unknown>>) {
     if (nextState === undefined) {
       this.logger.warn('Next state is not specified, ignoring command');
-      return;
+      return [];
     }
 
     return nextState.setState(nextState.value);

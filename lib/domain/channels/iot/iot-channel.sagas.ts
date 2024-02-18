@@ -7,6 +7,7 @@ import {
   filter,
   map,
   of,
+  tap,
 } from 'rxjs';
 import * as CQRS from '@constructorfleet/ultimate-govee/domain/devices/cqrs';
 import {
@@ -44,7 +45,7 @@ export class IoTChannelSagas {
   connectIoTClientFlow = (events$: Observable<any>): Observable<ICommand> =>
     events$.pipe(
       ofType(IoTChannelChangedEvent),
-      distinctUntilChanged((previous, current) => current.equals(previous)),
+      filter((event) => event.enabled === true),
       map(
         (event) =>
           new ConnectToIoTCommand(
@@ -66,16 +67,21 @@ export class IoTChannelSagas {
       filter((event) => event.addresses.iotTopic !== undefined),
       map(
         (event) =>
-          new IoTPublishCommand(uuidv4(), event.addresses.iotTopic!, {
-            topic: event.addresses.iotTopic,
-            msg: {
-              accountTopic: this.service.getConfig()?.topic,
-              cmd: 'status',
-              cmdVersion: 0,
-              transaction: `u_${Date.now()}`,
-              type: 0,
+          new IoTPublishCommand(
+            uuidv4(),
+            event.addresses.iotTopic!,
+            {
+              topic: event.addresses.iotTopic,
+              msg: {
+                accountTopic: this.service.getConfig()?.topic,
+                cmd: 'status',
+                cmdVersion: 0,
+                transaction: `u_${Date.now()}`,
+                type: 0,
+              },
             },
-          }),
+            event.debug,
+          ),
       ),
       catchError((err, caught) => {
         this.logger.error(err, caught);
@@ -104,11 +110,9 @@ export class IoTChannelSagas {
                 type: event.command.type ?? 1,
               },
             },
+            event.debug,
           ),
       ),
-      // tap((command) =>
-      //   this.eventBus.publish(new CQRS.CommandExpiredEvent(command.commandId)),
-      // ),
       catchError((err, caught) => {
         this.logger.error(err, caught);
         return of();

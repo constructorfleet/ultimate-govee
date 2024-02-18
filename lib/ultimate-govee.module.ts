@@ -14,7 +14,7 @@ import { UltimateGoveeConfiguration } from './ultimate-govee.config';
     PersistModule.forRoot(),
     CqrsModule.forRoot(),
     AuthModule,
-    ChannelsModule,
+    ChannelsModule.forRoot(),
     DevicesModule,
   ],
   providers: [UltimateGoveeConfiguration, UltimateGoveeService],

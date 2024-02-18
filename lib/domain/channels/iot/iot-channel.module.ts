@@ -10,6 +10,7 @@ import {
 import { IoTChannelSagas } from './iot-channel.sagas';
 import { IoTChannelService } from './iot-channel.service';
 import { IoTChannelController } from './iot-channel.controller';
+import { DisconnectFromIoTCommandHandler } from './handlers/disconnect-from-iot.handler';
 
 @Module({
   imports: [CqrsModule, IoTModule],
@@ -17,6 +18,7 @@ import { IoTChannelController } from './iot-channel.controller';
   providers: [
     ConfigureIoTChannelCommandHandler,
     ConnectToIoTCommandHandler,
+    DisconnectFromIoTCommandHandler,
     IoTSubscribeCommandHandler,
     IoTPublishCommandHandler,
     IoTChannelSagas,
@@ -25,6 +27,7 @@ import { IoTChannelController } from './iot-channel.controller';
   exports: [
     ConfigureIoTChannelCommandHandler,
     ConnectToIoTCommandHandler,
+    DisconnectFromIoTCommandHandler,
     IoTSubscribeCommandHandler,
     IoTChannelSagas,
     IoTChannelService,

@@ -25,3 +25,7 @@ export type DeviceCommandAddresses = {
   iotTopic?: string;
   bleAddress?: string;
 };
+
+export type Debuggable = {
+  debug?: boolean;
+};

@@ -44,8 +44,11 @@ export class IoTService implements IoTHandler {
     await this.client.create(iotData, this);
   }
 
+  async disconnect() {
+    return await this.client?.disconnect();
+  }
+
   async send(topic: string, payload: string) {
-    this.logger.debug(`Sending message to topic ${topic}`);
     await this.client?.publish(topic, payload);
   }
 

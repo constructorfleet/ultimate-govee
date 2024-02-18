@@ -58,34 +58,13 @@ export class PurifierFanSpeedState extends DeviceOpState<
     this.stateValue.next(speed * 25);
   }
 
-  protected stateToCommand(
-    nextState: Optional<number>,
-  ): Optional<StateCommandAndStatus> {
+  setState(nextState: Optional<number>): string[] {
     if (this.active === undefined) {
-      return {
-        command: {
-          data: {
-            command: [
-              asOpCode(
-                0x33,
-                this.identifier!,
-                nextState === 0 || nextState === undefined ? 16 : nextState - 1,
-              ),
-            ],
-          },
-        },
-        status: {
-          op: {
-            command: [
-              [nextState === 0 || nextState === undefined ? 16 : nextState - 1],
-            ],
-          },
-        },
-      };
+      return super.setState(nextState);
     }
     if (this.active.value === undefined) {
       this.logger.log('Unable to determine current mode, ignoring command');
-      return undefined;
+      return [];
     }
     switch (this.active.value.name) {
       case ManualModeStateName:
@@ -95,7 +74,32 @@ export class PurifierFanSpeedState extends DeviceOpState<
           fanSpeed: nextState,
         });
       default:
-        return undefined;
+        return [];
     }
+  }
+
+  protected stateToCommand(
+    nextState: Optional<number>,
+  ): Optional<StateCommandAndStatus> {
+    return {
+      command: {
+        data: {
+          command: [
+            asOpCode(
+              0x33,
+              this.identifier!,
+              nextState === 0 || nextState === undefined ? 16 : nextState - 1,
+            ),
+          ],
+        },
+      },
+      status: {
+        op: {
+          command: [
+            [nextState === 0 || nextState === undefined ? 16 : nextState - 1],
+          ],
+        },
+      },
+    };
   }
 }
