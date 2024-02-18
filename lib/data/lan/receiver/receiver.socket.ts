@@ -23,7 +23,7 @@ export class ReceiverSocket implements OnModuleDestroy {
       .addListener('connect', () =>
         this.socketState.next(ReceiverState.CONNECTED),
       )
-      .addListener('error', (err) => this.socketState.next(ReceiverState.ERROR))
+      .addListener('error', () => this.socketState.next(ReceiverState.ERROR))
       .addListener('listening', () =>
         this.socketState.next(ReceiverState.LISTENING),
       )

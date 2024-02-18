@@ -1,4 +1,3 @@
-import { Logger } from '@nestjs/common';
 import { Conditions, DecodeDevice } from './types';
 import {
   And,
@@ -13,8 +12,6 @@ import {
   ServiceData,
   UUID,
 } from './decoder.constants';
-
-const logger: Logger = new Logger('deviceMatches');
 
 export const deviceMatches = (
   device: DecodeDevice,

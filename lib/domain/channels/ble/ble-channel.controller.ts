@@ -6,7 +6,7 @@ export class BleChannelController {
   constructor(private readonly service: BleChannelService) {}
 
   @Post('config')
-  async setBleConfig(@Query('enabled') enabled: boolean) {
+  setBleConfig(@Query('enabled') enabled: boolean) {
     this.service.setEnabled(enabled);
   }
 }

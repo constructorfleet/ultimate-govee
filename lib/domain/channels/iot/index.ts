@@ -1,4 +1,3 @@
-export * from './iot-channel.sagas';
 export * from './iot-channel.service';
 export * from './events';
 export * from './commands';

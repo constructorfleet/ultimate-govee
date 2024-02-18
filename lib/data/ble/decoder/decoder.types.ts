@@ -113,6 +113,7 @@ export type DecodedProperty =
 
 export type DecodedDevice = {
   id: string;
+  address: string;
   brand: string;
   model: string;
   modelName: string;

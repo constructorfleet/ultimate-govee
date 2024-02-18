@@ -9,6 +9,6 @@ export class BleRecordDeviceCommandHandler
   constructor(private readonly service: BleChannelService) {}
 
   async execute(command: BleRecordDeviceCommand): Promise<void> {
-    this.service.recordDevice(command.device);
+    await this.service.recordDevice(command.device);
   }
 }

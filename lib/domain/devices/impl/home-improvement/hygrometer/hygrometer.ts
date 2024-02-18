@@ -3,7 +3,9 @@ import { EventBus, CommandBus } from '@nestjs/cqrs';
 import { DefaultFactory, Device, StateFactories } from '../../../device';
 import {
   BatteryLevelState,
+  ConnectedState,
   HumidityState,
+  PowerState,
   TemperatureState,
 } from '../../../states';
 import { DeviceFactory } from '../../../device.factory';
@@ -13,6 +15,8 @@ export const Hygrometer: 'Hygrometer' = 'Hygrometer' as const;
 export type Hygrometer = typeof Hygrometer;
 
 const stateFactories: StateFactories = [
+  (device) => new PowerState(device),
+  (device) => new ConnectedState(device),
   {
     [DefaultFactory]: [
       (device: DeviceModel) => new TemperatureState(device),

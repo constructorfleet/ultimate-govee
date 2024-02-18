@@ -9,6 +9,6 @@ export class SetCredentialsCommandHandler
   constructor(private readonly authService: AuthService) {}
 
   async execute(command: SetCredentialsCommand): Promise<any> {
-    this.authService.setCredentials(command.credentials);
+    await this.authService.setCredentials(command.credentials);
   }
 }

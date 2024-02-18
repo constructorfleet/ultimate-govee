@@ -6,8 +6,11 @@ import { DeviceFactory } from '../../../device.factory';
 import { PM2State } from './air-quality.pm2';
 import { TemperatureState } from './air-quality.temperature';
 import { HumidityState } from './air-quality.humidity';
+import { ConnectedState, PowerState } from '../../../states';
 
 const StateFactories: StateFactories = [
+  (device) => new PowerState(device),
+  (device) => new ConnectedState(device),
   {
     H5106: [
       (device: DeviceModel) => new TemperatureState(device),

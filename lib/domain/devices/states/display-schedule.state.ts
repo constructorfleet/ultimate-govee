@@ -42,7 +42,7 @@ export class DisplayScheduleState extends DeviceOpState<
 
   parseOpCommand(opCommand: number[]) {
     const [on, fromHour, fromMinute, toHour, toMinute] = opCommand.slice(0, 7);
-    this.stateValue.next({
+    this.stateValue$.next({
       on: on === 0x01,
       from: {
         hour: fromHour,

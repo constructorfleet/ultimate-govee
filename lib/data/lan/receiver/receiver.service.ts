@@ -12,7 +12,7 @@ export class ReceiverService implements SocketEventHandler {
 
   async bind() {
     this.logger.log('Binding receiver socket...');
-    return new Promise<boolean>((resolve, reject) => {
+    return await new Promise<boolean>((resolve, reject) => {
       const subscription = this.socket.socketState.subscribe((state) => {
         this.logger.log(`Receiver socket: ${state}`);
         switch (state) {

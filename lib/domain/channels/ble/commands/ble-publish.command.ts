@@ -8,6 +8,6 @@ export class BlePublishCommand implements Labelled {
     readonly id: string,
     readonly bleAddress: string,
     readonly commands: number[][],
-    readonly priority: number = 0,
+    readonly debug?: boolean,
   ) {}
 }

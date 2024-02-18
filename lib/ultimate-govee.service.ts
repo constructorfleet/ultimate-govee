@@ -2,31 +2,37 @@ import {
   Injectable,
   Logger,
   OnApplicationBootstrap,
-  OnApplicationShutdown,
+  OnModuleDestroy,
 } from '@nestjs/common';
 import { CommandBus, EventBus, ofType } from '@nestjs/cqrs';
 import { SetCredentialsCommand } from '@constructorfleet/ultimate-govee/domain/auth';
 import { Password, Username } from '@constructorfleet/ultimate-govee/common';
-import { Observable, fromEvent, takeUntil } from 'rxjs';
+import { Observable, interval } from 'rxjs';
 import {
   InjectGoveeConfig,
   UltimateGoveeConfig,
 } from './ultimate-govee.config';
 import { DeviceDiscoveredEvent } from './domain/devices/cqrs';
+import { ChannelToggle, InjectChannels } from './domain';
 
 @Injectable()
 export class UltimateGoveeService
-  implements OnApplicationBootstrap, OnApplicationShutdown
+  implements OnApplicationBootstrap, OnModuleDestroy
 {
   private readonly logger: Logger = new Logger(UltimateGoveeService.name);
   constructor(
     @InjectGoveeConfig private readonly config: UltimateGoveeConfig,
+    @InjectChannels private readonly channels: ChannelToggle,
     private readonly commandBus: CommandBus,
     private readonly eventBus: EventBus,
   ) {
-    fromEvent(process, 'SIGINT')
-      .pipe(takeUntil(fromEvent(process, 'SIGTERM')))
-      .subscribe(() => this.shutdownBuses());
+    interval(10000).subscribe(() => Logger.flush());
+  }
+
+  channel<ChannelName extends keyof ChannelToggle>(
+    name: ChannelName,
+  ): ChannelToggle[ChannelName] {
+    return this.channels[name];
   }
 
   get deviceDiscovered(): Observable<DeviceDiscoveredEvent> {
@@ -48,11 +54,10 @@ export class UltimateGoveeService
     this.eventBus.subject$.complete();
   }
 
-  async onApplicationBootstrap() {
-    this.connect(this.config.username, this.config.password);
-  }
+  async onApplicationBootstrap() {}
 
-  onApplicationShutdown(): void {
+  onModuleDestroy(): void {
     this.shutdownBuses();
+    Logger.flush();
   }
 }

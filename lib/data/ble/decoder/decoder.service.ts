@@ -56,8 +56,9 @@ export class DecoderService implements OnApplicationBootstrap {
       return undefined;
     }
     const device: DecodeDevice = {
+      id: peripheral.id,
       name: peripheral.advertisement.localName,
-      macAddress: peripheral.id,
+      macAddress: peripheral.address,
       uuid: peripheral.uuid,
       manufacturerData:
         peripheral.advertisement.manufacturerData?.toString('hex'),
@@ -66,14 +67,17 @@ export class DecoderService implements OnApplicationBootstrap {
     if (spec.conditions && !this.decoder.matches(device, spec.conditions)) {
       return undefined;
     }
-    return {
-      id: device.macAddress,
+    const state = this.decoder.decodeProperties(device, spec.properties ?? {});
+    const deccodedDevice: DecodedDevice = {
+      ...device,
+      address: device.macAddress,
       brand: spec.brand,
       model: spec.model,
       modelName: spec.modelName,
       type: spec.type,
-      state: this.decoder.decodeProperties(device, spec.properties ?? {}),
+      state,
     };
+    return deccodedDevice;
   }
 
   async getCommonProperties() {

@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  HttpStatus,
   Logger,
   Param,
   Post,
@@ -20,22 +21,19 @@ export class DeviceController {
     const devices = deviceIds
       .map((id) => this.deviceService.getDevice(id))
       .map((device) => device?.loggableState(device.id));
-    return Promise.all(devices);
+    return await Promise.all(devices);
   }
 
   @Get('model/:model')
   async getByModel(@Param('model') model: string) {
     const devices = this.deviceService.getByModel(model);
-    return Promise.all(
+    return await Promise.all(
       devices.map((device) => device.loggableState(device.id)),
     );
   }
 
   @Get(':id')
-  async getDevice(
-    @Param('id') deviceId: string,
-    @Query('state') stateName?: string,
-  ) {
+  getDevice(@Param('id') deviceId: string, @Query('state') stateName?: string) {
     const device = this.deviceService.getDevice(deviceId);
 
     if (!device || !stateName) {
@@ -45,19 +43,24 @@ export class DeviceController {
   }
 
   @Post(':id/refresh')
-  async refreshDevice(@Param('id') deviceId: string) {
+  refreshDevice(@Param('id') deviceId: string) {
     this.deviceService.getDevice(deviceId)?.refresh();
   }
 
   @Post(':id/:state')
-  async setState(
+  setState(
     @Param('id') deviceId: string,
     @Param('state') stateName: string,
     @Body('state') stateData: any,
   ) {
-    this.deviceService
-      .getDevice(deviceId)
-      ?.state(stateName)
-      ?.setState(stateData);
+    const device = this.deviceService.getDevice(deviceId)?.debug(true);
+    const state = device?.state(stateName);
+    const commandId = state?.setState(stateData);
+    device?.debug(false);
+    if (!commandId) {
+      return HttpStatus.NOT_FOUND;
+    }
+
+    return { commandId };
   }
 }

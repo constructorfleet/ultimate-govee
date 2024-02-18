@@ -3,8 +3,7 @@ import { Measurement } from '@constructorfleet/ultimate-govee/data';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState, ParseOption } from './device.state';
 
-export const TemperatureStateName: 'temperatureData' =
-  'temperatureData' as const;
+export const TemperatureStateName: 'temperature' = 'temperature' as const;
 export type TemperatureStateName = typeof TemperatureStateName;
 
 export type TemperatureDataType = {
@@ -49,28 +48,29 @@ export class TemperatureState extends DeviceOpState<
   }
 
   parseState(data: TemperatureDataType) {
+    const previous = this.stateValue$.getValue();
     if (data?.state?.temperature !== undefined) {
       let calibration100 = data?.state?.temperature?.calibration;
       if (calibration100 !== undefined && calibration100 > 100) {
         calibration100 /= 100;
       }
-      const calibration = calibration100 ?? this.stateValue.value.calibration;
+      const calibration = calibration100 ?? previous.calibration;
       let current100 = data?.state?.temperature?.current;
       if (current100 !== undefined && current100 > 100) {
         current100 /= 100;
       }
-      const current = current100 ?? this.stateValue.value.current;
+      const current = current100 ?? previous.current;
       let raw: Optional<number>;
       if (current !== undefined && calibration !== undefined) {
         raw = current - calibration;
       } else {
         raw = current;
       }
-      this.stateValue.next({
+      this.stateValue$.next({
         calibration,
         range: {
-          min: data?.state?.temperature?.min ?? this.stateValue.value.range.min,
-          max: data?.state?.temperature?.max ?? this.stateValue.value.range.max,
+          min: data?.state?.temperature?.min ?? previous.range.min,
+          max: data?.state?.temperature?.max ?? previous.range.max,
         },
         current,
         raw,

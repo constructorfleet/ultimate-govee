@@ -101,45 +101,11 @@ export const evaluateComparison = (
   }
 };
 
-const dataIndexIsValid = (
-  data: string,
-  index: number,
-  length: number,
-): boolean => data.length < index + length;
-
-const dataLengthIsValid = (
-  dataLength: number,
-  defaultMin: number,
-  conditions: Comparator[],
-  index: number,
-): { index: number; result: boolean } => {
-  const op = conditions[index + 1];
-  if (op?.length > 2) {
-    return {
-      index,
-      result: dataLength >= defaultMin,
-    };
-  }
-  const reqLength = Number.parseInt(conditions[index + 2], 10);
-  if (reqLength === undefined) {
-    return {
-      index: index - 1,
-      result: false,
-    };
-  }
-
-  return {
-    index: index + 2,
-    result: evaluateComparison(op, dataLength, reqLength),
-  };
-};
-
 export const postProcessing = (
   value: number,
   operations: Operations,
   calibration?: number,
 ): number | undefined => {
-  const logger = new Logger('postProcessing');
   if (operations.length === 0) {
     return value;
   }
@@ -191,7 +157,7 @@ export const Decoder = {
     const logger = new Logger('Decoder.decodeProperties');
     let calibration: number | undefined;
     return Object.entries(properties)
-      .filter(([name, value]) =>
+      .filter(([_, value]) =>
         value.condition ? propertyMatches(device, value.condition) : true,
       )
       .reduce(

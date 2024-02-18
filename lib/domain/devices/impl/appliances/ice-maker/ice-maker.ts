@@ -11,8 +11,11 @@ import {
   IceMakerStatusStateName,
 } from './ice-maker.status';
 import { IceMakerScheduledStart } from './ice-maker.scheduled-start';
+import { ConnectedState, PowerState } from '../../../states';
 
 const stateFactories: StateFactories = [
+  (device) => new PowerState(device),
+  (device) => new ConnectedState(device),
   (device) => new IceMakerNuggetSizeState(device),
   (device) => new IceMakerBasketFull(device),
   (device) => new IceMakerWaterEmpty(device),

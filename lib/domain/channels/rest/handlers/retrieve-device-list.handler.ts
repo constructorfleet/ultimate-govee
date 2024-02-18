@@ -24,6 +24,7 @@ export class RetrieveDeviceListCommandHandler
     private readonly eventBus: EventBus,
   ) {}
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async execute(_: RetrieveDeviceListCommand): Promise<any> {
     const authData = await this.queryBus.execute(new AuthDataQuery());
     if (authData?.oauth !== undefined) {

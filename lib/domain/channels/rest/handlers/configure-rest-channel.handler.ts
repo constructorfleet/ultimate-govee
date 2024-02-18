@@ -14,6 +14,6 @@ export class ConfigureRestChannelCommandHandler
 
   async execute(command: ConfigureRestChannelCommand): Promise<void> {
     this.logger.log('Setting config');
-    this.restChannel.setConfig(command.config);
+    return await this.restChannel.setConfig(command.config);
   }
 }

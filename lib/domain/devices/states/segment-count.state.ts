@@ -23,6 +23,6 @@ export class SegmentCountState extends DeviceOpState<
   }
 
   parseOpCommand(opCommand: number[]) {
-    this.stateValue.next(opCommand[2]);
+    this.stateValue$.next(opCommand[2]);
   }
 }

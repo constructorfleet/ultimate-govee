@@ -6,21 +6,19 @@ import { BlePublishCommandHandler } from './handlers/ble-publish.handler';
 import { CqrsModule } from '@nestjs/cqrs';
 import { BleRecordDeviceCommandHandler } from './handlers/ble-record-device.handler';
 import { BleChannelController } from './ble-channel.controller';
-import { ConfigModule } from '@nestjs/config';
-import { BleConfig } from '@constructorfleet/ultimate-govee/data/ble/ble.options';
+
 import { BleChannelSagas } from './ble-channel.sagas';
+import { DisableBleClientCommandHandler } from './handlers/disable-ble-client.handler';
+import { EnableBleClientCommandHandler } from './handlers/enable-ble-client.handler';
 
 @Module({
-  imports: [
-    CqrsModule,
-    BleModule.forRoot({ enabled: false }),
-    ConfigModule.forFeature(BleConfig),
-  ],
+  imports: [CqrsModule, BleModule],
   controllers: [BleChannelController],
   providers: [
     BleChannelService,
-
     BleChannelSagas,
+    DisableBleClientCommandHandler,
+    EnableBleClientCommandHandler,
     BleRecordDeviceCommandHandler,
     ConfigureBleChannelCommandHandler,
     BlePublishCommandHandler,
@@ -28,6 +26,8 @@ import { BleChannelSagas } from './ble-channel.sagas';
   exports: [
     BleChannelService,
     BleChannelSagas,
+    DisableBleClientCommandHandler,
+    EnableBleClientCommandHandler,
     BleRecordDeviceCommandHandler,
     ConfigureBleChannelCommandHandler,
     BlePublishCommandHandler,

@@ -1,4 +1,3 @@
-import { Logger } from '@nestjs/common';
 import {
   And,
   BitShift,
@@ -9,8 +8,6 @@ import {
 } from './decoder.constants';
 import { Conditions, Comparator, DecodeDevice } from './types';
 import { evaluateComparison } from './decoder';
-
-const logger: Logger = new Logger('propertyMatches');
 
 export const propertyMatches = (
   device: DecodeDevice,

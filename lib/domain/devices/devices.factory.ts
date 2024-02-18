@@ -1,5 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Optional } from '@constructorfleet/ultimate-govee/common';
 import { CommandBus, EventBus } from '@nestjs/cqrs';
 import { AppliancesFactory } from './impl/appliances/appliances.factory';
 import { LightsFactory } from './impl/lights/lights.factory';
@@ -60,7 +59,7 @@ export class DevicesFactory {
     private readonly commandBus: CommandBus,
   ) {}
 
-  create(device: DeviceModel): Optional<Device> {
+  create(device: DeviceModel): Device {
     const knownDevice = [
       this.applianceFactory,
       this.lightFactory,

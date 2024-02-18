@@ -1,9 +1,10 @@
 import {
+  Debuggable,
   DeviceCommandAddresses,
   Labelled,
 } from '@constructorfleet/ultimate-govee/common';
 
-export class DeviceRefeshEvent implements Labelled {
+export class DeviceRefeshEvent implements Labelled, Debuggable {
   label = () => `Refreshing ${this.deviceId}`;
 
   constructor(
@@ -12,5 +13,6 @@ export class DeviceRefeshEvent implements Labelled {
     readonly goodsType: number,
     readonly addresses: DeviceCommandAddresses,
     readonly opIdentifiers?: number[][],
+    readonly debug?: boolean,
   ) {}
 }

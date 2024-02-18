@@ -1,5 +1,5 @@
 import { CrtError, iot, mqtt } from 'aws-iot-device-sdk-v2';
-import { Inject, Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { EOL } from 'os';
 import { ConfigType } from '@nestjs/config';
 import { Optional } from '@constructorfleet/ultimate-govee/common';
@@ -8,7 +8,7 @@ import { IoTHandler } from './iot.handler';
 import { IoTData } from '../api';
 
 @Injectable()
-export class IoTClient implements OnModuleDestroy {
+export class IoTClient {
   private readonly logger: Logger = new Logger(IoTClient.name);
   private connection: Optional<mqtt.MqttClientConnection>;
   private connected = false;
@@ -151,10 +151,5 @@ export class IoTClient implements OnModuleDestroy {
       await this.connection.disconnect();
       this.subscriptions = [];
     }
-  }
-
-  async onModuleDestroy() {
-    this.connection?.removeAllListeners();
-    await this.disconnect();
   }
 }

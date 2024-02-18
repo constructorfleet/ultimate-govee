@@ -6,7 +6,7 @@ export class IoTChannelController {
   constructor(private readonly service: IoTChannelService) {}
 
   @Post('config')
-  async setIoTConfig(@Query('enabled') enabled: boolean) {
+  setIoTConfig(@Query('enabled') enabled: boolean) {
     this.service.setEnabled(enabled);
   }
 }
