@@ -18,8 +18,8 @@ export class TemperatureState extends BaseState {
       Math.trunc((((opCommand[2] - opCommand[3]) >> 1) / 255) * 100) / -10;
     const currentTempC = rawTempC + tempCal;
 
-    this.stateValue.next({
-      ...this.stateValue.value,
+    this.stateValue$.next({
+      ...this.stateValue$.getValue(),
       raw: rawTempC,
       calibration: tempCal,
       current: currentTempC,

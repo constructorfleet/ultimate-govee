@@ -38,7 +38,7 @@ export class ColorRGBState extends DeviceOpState<ColorRGBStateName, ColorRGB> {
 
   parseState(data: ColorRGBData) {
     if (data?.state?.color) {
-      this.stateValue.next({
+      this.stateValue$.next({
         red: data.state.color.red,
         green: data.state.color.green,
         blue: data.state.color.blue,
@@ -51,7 +51,7 @@ export class ColorRGBState extends DeviceOpState<ColorRGBStateName, ColorRGB> {
       return;
     }
 
-    this.stateValue.next({
+    this.stateValue$.next({
       red: opCommand[1],
       green: opCommand[2],
       blue: opCommand[3],

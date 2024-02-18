@@ -41,7 +41,7 @@ export class ManualModeState extends DeviceOpState<
     }
     const command = opCommand.slice(1);
     this.speedIndex = command.indexOf(0x00) - 1;
-    this.stateValue.next(command[this.speedIndex]);
+    this.stateValue$.next(command[this.speedIndex]);
   }
 
   protected stateToCommand(
@@ -119,7 +119,7 @@ export class CustomModeState extends DeviceOpState<
           ? value.programs![value.currentProgramId]
           : undefined,
     };
-    this.stateValue.next(this.customModes.currentProgram);
+    this.stateValue$.next(this.customModes.currentProgram);
   }
 
   protected stateToCommand(
@@ -235,17 +235,17 @@ export class PurifierActiveMode extends ModeState {
       }
       switch (identifier[0]) {
         case PurifierModes.MANUAL:
-          this.stateValue.next(
+          this.stateValue$.next(
             this.modes.find((mode) => mode.name === ManualModeStateName),
           );
           break;
         case PurifierModes.PROGRAM:
-          this.stateValue.next(
+          this.stateValue$.next(
             this.modes.find((mode) => mode.name === CustomModeStateName),
           );
           break;
         case PurifierModes.AUTO:
-          this.stateValue.next(
+          this.stateValue$.next(
             this.modes.find((mode) => mode.name === AutoModeStateName),
           );
           break;
@@ -258,7 +258,7 @@ export class PurifierActiveMode extends ModeState {
   setState(nextState: Optional<DeviceState<string, unknown>>) {
     if (nextState === undefined) {
       this.logger.warn('Next state is not specified, ignoring command');
-      return;
+      return [];
     }
 
     return nextState.setState(nextState.value);

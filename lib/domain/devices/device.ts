@@ -1,5 +1,5 @@
-import { BehaviorSubject, Subject, interval } from 'rxjs';
-import { ConsoleLogger, Logger } from '@nestjs/common';
+import { Subject, interval, sampleTime } from 'rxjs';
+import { Logger } from '@nestjs/common';
 import {
   DeltaMap,
   Optional,
@@ -16,9 +16,7 @@ import { DeviceOpState, DeviceState } from './states/device.state';
 import { ModeState, ModeStateName } from './states/mode.state';
 import { DeviceRefeshEvent } from './cqrs/events/device-refresh.event';
 import { DeviceStateCommandEvent } from './cqrs/events/device-state-command.event';
-import { CommandExpiredEvent } from './cqrs';
-
-class JsonLogger extends ConsoleLogger {}
+import { DeviceStateChangedEvent } from './cqrs/events/device-state-changed.event';
 
 const getLogger = (deviceId: string, deviceModel: string): Winston.Logger =>
   Winston.createLogger({
@@ -76,7 +74,7 @@ const buildStates = (
     )
     .flat();
 
-export class Device extends BehaviorSubject<DeviceStateValues> {
+export class Device {
   private readonly logger: Logger;
 
   static readonly deviceType: string = 'unknown';
@@ -86,8 +84,8 @@ export class Device extends BehaviorSubject<DeviceStateValues> {
   private readonly stateValues: DeltaMap<string, any> = new DeltaMap({
     isModified: (current, previous) => !deepEquality(current, previous),
   });
-  private readonly refreshSubject: Subject<undefined> = new Subject();
   private readonly opIdentifiers: Set<number[]> = new Set();
+  private readonly refresh$ = new Subject<void>();
 
   protected addState<TDevice extends DeviceState<string, any>>(
     state: TDevice,
@@ -104,10 +102,19 @@ export class Device extends BehaviorSubject<DeviceStateValues> {
     state.subscribe((value) => {
       this.stateValues.set(state.name, value);
     });
-    state.clearCommand.subscribe((commandId) => {
-      this.eventBus.publish(new CommandExpiredEvent(commandId));
+    state.clearCommand.subscribe((command) => {
+      this.eventBus.publish(
+        new DeviceStateChangedEvent(
+          this,
+          command.state,
+          command.value,
+          command.commandId,
+          this.isDebug,
+        ),
+      );
     });
-    state.commandBus.subscribe((cmd) =>
+    state.commandBus.subscribe((cmd) => {
+      this.logger.error('Publishing state command');
       this.eventBus.publish(
         new DeviceStateCommandEvent(
           this.id,
@@ -129,9 +136,10 @@ export class Device extends BehaviorSubject<DeviceStateValues> {
             iotTopic: this.iotTopic,
             bleAddress: this.bleAddress,
           },
+          this.isDebug,
         ),
-      ),
-    );
+      );
+    });
     return state;
   }
 
@@ -186,14 +194,27 @@ export class Device extends BehaviorSubject<DeviceStateValues> {
 
   deviceStatus(status: GoveeDeviceStatus) {
     if (status.cmd !== 'status') {
-      this.device.refresh();
+      this.refresh$.next();
     } else {
       this.device.status.next(status);
     }
   }
 
   refresh() {
-    this.refreshSubject.next(undefined);
+    this.logger.debug(`Refreshing state ${this.iotTopic} ${this.bleAddress}`);
+    this.eventBus.publish(
+      new DeviceRefeshEvent(
+        this.id,
+        this.model,
+        this.goodsType,
+        {
+          iotTopic: this.iotTopic,
+          bleAddress: this.bleAddress,
+        },
+        Array.from(this.opIdentifiers),
+        true, //this.isDebug,
+      ),
+    );
   }
 
   setState(stateName: string, nextState: any): any {
@@ -201,6 +222,12 @@ export class Device extends BehaviorSubject<DeviceStateValues> {
   }
 
   protected stateLogger: Winston.Logger | undefined;
+  protected isDebug: boolean = false;
+
+  debug(isDebug: boolean): this {
+    this.isDebug = isDebug;
+    return this;
+  }
 
   constructor(
     protected readonly device: DeviceModel,
@@ -208,7 +235,7 @@ export class Device extends BehaviorSubject<DeviceStateValues> {
     protected readonly commandBus: CommandBus,
     stateFactories: StateFactories,
   ) {
-    super({});
+    this.refresh$.pipe(sampleTime(5000)).subscribe(() => this.refresh());
     this.logger = new Logger(`${this.constructor.name}-${device.name}`);
     buildStates(stateFactories, device).forEach((state) => {
       this.addState(state);
@@ -217,31 +244,8 @@ export class Device extends BehaviorSubject<DeviceStateValues> {
         ...device.status.value,
       });
     });
-    this.refreshSubject.subscribe(() =>
-      this.eventBus.publish(
-        new DeviceRefeshEvent(
-          this.id,
-          this.model,
-          this.goodsType,
-          {
-            iotTopic: this.iotTopic,
-            bleAddress: this.bleAddress,
-          },
-          Array.from(this.opIdentifiers),
-        ),
-      ),
-    );
-    interval(5000).subscribe(() => this.refresh());
+    interval(10000).subscribe(() => this.refresh());
     this.stateValues.delta$.subscribe(() => {
-      const values = Object.fromEntries(
-        Array.from(this.stateValues.keys()).map((k) => [
-          k,
-          this.stateValues[k],
-        ]),
-      );
-      this.next(values);
-    });
-    this.subscribe(async (states) => {
       if (this.stateLogger === undefined) {
         this.stateLogger = getLogger(this.id, this.model);
       }

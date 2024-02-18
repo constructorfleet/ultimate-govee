@@ -19,14 +19,14 @@ export class IceMakerMakingIceState extends DeviceState<
       if (status === undefined) {
         return;
       }
-      this.stateValue.next(status === IceMakerStatus.MAKING_ICE);
+      this.stateValue$.next(status === IceMakerStatus.MAKING_ICE);
     });
   }
 
   setState(nextState: boolean | undefined) {
     if (nextState === undefined) {
       this.logger.warn('Value not provided, ignoring command');
-      return undefined;
+      return [];
     }
     return this.statusState.setState(
       nextState ? IceMakerStatus.MAKING_ICE : IceMakerStatus.STANDBY,

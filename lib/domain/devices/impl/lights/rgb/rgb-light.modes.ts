@@ -28,7 +28,7 @@ export class SceneModeState extends DeviceOpState<
   }
 
   parseOpCommand(opCommand: number[]): void {
-    this.stateValue.next({
+    this.stateValue$.next({
       sceneId: total(opCommand.slice(0, 2)),
       sceneParamId: total(opCommand.slice(2, 4)),
     });

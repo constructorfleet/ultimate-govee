@@ -1,4 +1,3 @@
-import { Logger } from '@nestjs/common';
 import { Optional } from '@constructorfleet/ultimate-govee/common';
 import { existsSync } from 'fs';
 import { mkdir, writeFile, appendFile } from 'fs/promises';
@@ -16,7 +15,6 @@ export type PersistOptions = {
 };
 
 export function PersistResult(options: PersistOptions) {
-  const logger: Logger = new Logger('Persist');
   return (_: any, __: string, descriptor: PropertyDescriptor) => {
     const original = descriptor.value;
     // eslint-disable-next-line func-names
@@ -30,7 +28,7 @@ export function PersistResult(options: PersistOptions) {
         (fp: string, arg: any, index: number) => fp.replace(`{${index}}`, arg),
         filePath,
       );
-      logger.debug(`Persisting result to ${resolvedPath}`);
+      // logger.debug(`Persisting result to ${resolvedPath}`);
       const writeData =
         options.transform === undefined ? result : options.transform(result);
       if (options.append === true) {

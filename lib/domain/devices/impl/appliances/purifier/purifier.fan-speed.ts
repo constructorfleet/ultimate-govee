@@ -33,17 +33,17 @@ export class PurifierFanSpeedState extends DeviceOpState<
           case CustomModeStateName:
             this.subscription = event?.subscribe((event) => {
               const speed = (event as CustomProgram)?.fanSpeed;
-              this.stateValue.next(speed ? speed * 25 : speed);
+              this.stateValue$.next(speed ? speed * 25 : speed);
             });
             break;
           case ManualModeStateName:
             this.subscription = event?.subscribe((event) => {
               const speed = event as number;
-              this.stateValue.next(speed ? speed * 25 : speed);
+              this.stateValue$.next(speed ? speed * 25 : speed);
             });
             break;
           default:
-            this.stateValue.next(undefined);
+            this.stateValue$.next(undefined);
             break;
         }
       });
@@ -55,37 +55,16 @@ export class PurifierFanSpeedState extends DeviceOpState<
       return;
     }
     const speed = opCommand[0] !== 16 ? opCommand[0] + 1 : 1;
-    this.stateValue.next(speed * 25);
+    this.stateValue$.next(speed * 25);
   }
 
-  protected stateToCommand(
-    nextState: Optional<number>,
-  ): Optional<StateCommandAndStatus> {
+  setState(nextState: Optional<number>): string[] {
     if (this.active === undefined) {
-      return {
-        command: {
-          data: {
-            command: [
-              asOpCode(
-                0x33,
-                this.identifier!,
-                nextState === 0 || nextState === undefined ? 16 : nextState - 1,
-              ),
-            ],
-          },
-        },
-        status: {
-          op: {
-            command: [
-              [nextState === 0 || nextState === undefined ? 16 : nextState - 1],
-            ],
-          },
-        },
-      };
+      return super.setState(nextState);
     }
     if (this.active.value === undefined) {
       this.logger.log('Unable to determine current mode, ignoring command');
-      return undefined;
+      return [];
     }
     switch (this.active.value.name) {
       case ManualModeStateName:
@@ -95,7 +74,32 @@ export class PurifierFanSpeedState extends DeviceOpState<
           fanSpeed: nextState,
         });
       default:
-        return undefined;
+        return [];
     }
+  }
+
+  protected stateToCommand(
+    nextState: Optional<number>,
+  ): Optional<StateCommandAndStatus> {
+    return {
+      command: {
+        data: {
+          command: [
+            asOpCode(
+              0x33,
+              this.identifier!,
+              nextState === 0 || nextState === undefined ? 16 : nextState - 1,
+            ),
+          ],
+        },
+      },
+      status: {
+        op: {
+          command: [
+            [nextState === 0 || nextState === undefined ? 16 : nextState - 1],
+          ],
+        },
+      },
+    };
   }
 }

@@ -24,6 +24,7 @@ export type DecodeService = {
 };
 
 export type DecodeDevice = {
+  id: string;
   manufacturerData: string;
   name: string;
   uuid: string;

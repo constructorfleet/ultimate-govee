@@ -9,6 +9,6 @@ export class ConfigureIoTChannelCommandHandler
   constructor(private readonly channel: IoTChannelService) {}
 
   async execute(command: ConfigureIoTChannelCommand): Promise<void> {
-    this.channel.setConfig(command.config);
+    await this.channel.setConfig(command.config);
   }
 }

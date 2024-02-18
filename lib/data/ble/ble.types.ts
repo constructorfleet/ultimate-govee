@@ -1,32 +1,8 @@
-import { ConfigurableModuleBuilder, Inject } from '@nestjs/common';
 import { type EventEmitter } from 'events';
-import { BleModuleOptions } from './ble.options';
 import { DeviceId } from '@constructorfleet/ultimate-govee/common';
 import { Subject } from 'rxjs';
 
 export const BleModuleOptionsKey: string = 'Ble.Module.Options';
-
-export const {
-  ConfigurableModuleClass,
-  MODULE_OPTIONS_TOKEN,
-  ASYNC_OPTIONS_TYPE,
-} = new ConfigurableModuleBuilder<BleModuleOptions>({
-  optionsInjectionToken: BleModuleOptionsKey,
-  moduleName: 'Ble',
-})
-  .setClassMethodName('forRoot')
-  .setExtras(
-    {
-      isGlobal: true,
-    },
-    (definition, extras) => ({
-      ...definition,
-      global: extras?.isGlobal,
-    }),
-  )
-  .build();
-
-export const InjectBleOptions = Inject(MODULE_OPTIONS_TOKEN);
 
 export type BleService = {
   uuid: string;
@@ -351,9 +327,7 @@ export type NobleBle = {
 export type BleCommand = {
   id: DeviceId;
   address: string;
-  serviceUuid: string;
-  dataUuid: string;
-  writeUuid: string;
   commands: number[][];
   results$: Subject<number[]>;
+  debug?: boolean;
 };

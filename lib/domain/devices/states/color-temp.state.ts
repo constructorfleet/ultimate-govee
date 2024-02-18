@@ -22,7 +22,7 @@ export class ColorTempState extends DeviceState<
 
   parseState(data: ColorTempData) {
     if (data?.state?.colorTemperature !== undefined) {
-      this.stateValue.next(data.state.colorTemperature);
+      this.stateValue$.next(data.state.colorTemperature);
     }
   }
 

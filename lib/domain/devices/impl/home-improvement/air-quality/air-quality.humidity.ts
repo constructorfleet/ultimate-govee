@@ -18,8 +18,8 @@ export class HumidityState extends BaseState {
       Math.trunc((((opCommand[11] - opCommand[12]) >> 1) / 255) * -100) / 10;
     const currentHumidity = rawHumidity + humidityCal;
 
-    this.stateValue.next({
-      ...this.stateValue.value,
+    this.stateValue$.next({
+      ...this.stateValue$.getValue(),
       raw: rawHumidity,
       calibration: humidityCal,
       current: currentHumidity,

@@ -13,7 +13,7 @@ export class SenderService {
   ) {}
 
   async bind() {
-    this.socket.bind();
+    await this.socket.bind();
   }
 
   sendDeviceCommand() {}
@@ -24,8 +24,6 @@ export class SenderService {
       this.config.scanPort,
       this.config.broadcastAddress,
     );
-
-    console.dir('Sent');
   }
 
   async deviceCommand(deviceAddress: string, command) {
