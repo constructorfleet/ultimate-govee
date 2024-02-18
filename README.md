@@ -66,7 +66,7 @@ this.govee.deviceDiscovered.subscribe((device: Device) => {
 Connect using the user's credentials:
 
 ```typescript
-this.govee.connect(username, password);
+await this.govee.connect(username, password);
 ```
 
 ## Test
@@ -77,7 +77,7 @@ $ nest test
 
 ## Future Work
 
-- [ ] - Configure control channels on initialization and during runtime.
+- [x] - Configure control channels on initialization and during runtime.
 - [ ] - Configurable controllers.
 - [ ] - Specify devices to listen for.
 - [ ] - Device overrides.
