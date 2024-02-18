@@ -1,4 +1,11 @@
-import { BehaviorSubject, Observer, Subject, Subscription } from 'rxjs';
+import {
+  BehaviorSubject,
+  Connectable,
+  Observer,
+  Subject,
+  Subscription,
+  connectable,
+} from 'rxjs';
 import {
   Optional,
   Ignorable,
@@ -61,7 +68,7 @@ export const filterCommands = (
       );
     });
 
-type CommandResult<TValue> = {
+type CommandResult = {
   state: string;
   value: any;
   commandId: string;
@@ -78,10 +85,12 @@ export class DeviceState<StateName extends string, StateValue> {
       }
     >[]
   > = new Map();
-  protected readonly stateValue: BehaviorSubject<StateValue>;
+  protected readonly stateValue$: BehaviorSubject<StateValue>;
+  protected readonly stateValue: Connectable<StateValue>;
   readonly commandBus: Subject<Omit<GoveeDeviceCommand, 'deviceId'>> =
     new Subject();
-  readonly clearCommand: Subject<CommandResult<StateValue>> = new Subject();
+  protected readonly clearCommand$: Subject<CommandResult> = new Subject();
+  readonly clearCommand = connectable(this.clearCommand$);
 
   subscribe(
     observerOrNext?:
@@ -92,7 +101,7 @@ export class DeviceState<StateName extends string, StateValue> {
   }
 
   public get value(): StateValue {
-    return this.stateValue.getValue();
+    return this.stateValue$.getValue();
   }
 
   constructor(
@@ -100,14 +109,15 @@ export class DeviceState<StateName extends string, StateValue> {
     public readonly name: StateName,
     initialValue: StateValue,
   ) {
-    this.stateValue = new BehaviorSubject(initialValue);
+    this.stateValue$ = new BehaviorSubject(initialValue);
+    this.stateValue = connectable(this.stateValue$);
     this.device.status?.subscribe((status) => this.parse(status));
     this.clearCommand.subscribe(({ commandId }) =>
       this.pendingCommands.delete(commandId),
     );
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, class-methods-use-this
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
   parseState(data: unknown) {
     // no-op
   }
@@ -122,7 +132,7 @@ export class DeviceState<StateName extends string, StateValue> {
     )?.[0];
     this.parseState(data);
     if (commandId !== undefined) {
-      this.clearCommand.next({
+      this.clearCommand$.next({
         commandId,
         state: this.name,
         value: this.value,
@@ -154,6 +164,7 @@ export class DeviceState<StateName extends string, StateValue> {
     });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   protected stateToCommand(state: StateValue): Optional<StateCommandAndStatus> {
     return undefined;
   }
@@ -190,7 +201,7 @@ export class DeviceOpState<
     this.identifier = identifier;
   }
 
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars, no-unused-vars
   parseOpCommand(opCommand: number[]) {}
 
   parse(data: OpCommandData) {
@@ -207,7 +218,7 @@ export class DeviceOpState<
         )?.[0];
         this.parseOpCommand(command);
         if (commandId !== undefined) {
-          this.clearCommand.next({
+          this.clearCommand$.next({
             commandId,
             state: this.name,
             value: this.value,

@@ -15,6 +15,7 @@ module.exports = {
   },
   plugins: ['@typescript-eslint', 'unicorn', 'unused-imports'],
   rules: {
+    'require-await': 'error',
     '@typescript-eslint/no-var-requires': 0,
     '@typescript-eslint/no-empty-function': 0,
     'unused-imports/no-unused-imports-ts': 'warn',
@@ -30,6 +31,7 @@ module.exports = {
       { selector: 'class', format: ['PascalCase'], leadingUnderscore: 'allow' },
       { selector: 'method', format: ['camelCase'], leadingUnderscore: 'allow' },
     ],
+    'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
   },
   overrides: [
     {

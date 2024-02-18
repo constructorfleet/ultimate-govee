@@ -24,13 +24,13 @@ export class ConnectedState extends DeviceState<
 
   parseState(data: IsConnectedType) {
     if (data?.state?.isConnected !== undefined) {
-      this.stateValue.next(data?.state?.isConnected);
+      this.stateValue$.next(data?.state?.isConnected);
     } else if (data?.state?.isOnline !== undefined) {
-      this.stateValue.next(data?.state?.isOnline);
+      this.stateValue$.next(data?.state?.isOnline);
     } else if (data?.state?.connected !== undefined) {
-      this.stateValue.next(data?.state?.connected);
+      this.stateValue$.next(data?.state?.connected);
     } else if (data?.state?.online !== undefined) {
-      this.stateValue.next(data?.state?.online);
+      this.stateValue$.next(data?.state?.online);
     }
   }
 }

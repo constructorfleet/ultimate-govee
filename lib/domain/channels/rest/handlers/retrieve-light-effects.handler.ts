@@ -8,7 +8,6 @@ import { GoveeEffectService } from '@constructorfleet/ultimate-govee/data';
 import { AuthDataQuery } from '@constructorfleet/ultimate-govee/domain/auth';
 import { LightEffectsReceivedEvent } from '@constructorfleet/ultimate-govee/domain/devices/cqrs';
 import { RetrieveLightEffectsCommand } from '../commands/retrieve-light-effects.command';
-import { concatMap, filter, from, map } from 'rxjs';
 
 @CommandHandler(RetrieveLightEffectsCommand)
 export class RetrieveLightEffectsCommandHandler
@@ -21,26 +20,18 @@ export class RetrieveLightEffectsCommandHandler
   ) {}
 
   async execute(command: RetrieveLightEffectsCommand): Promise<void> {
-    from(this.queryBus.execute(new AuthDataQuery()))
-      .pipe(
-        filter((auth) => auth !== undefined),
-        map((auth) => auth!),
-        concatMap((auth) =>
-          from(
-            this.api.getEffects(
-              auth.oauth,
-              command.device.model,
-              command.device.goodsType,
-              command.device.id,
-            ),
-          ).pipe(
-            map(
-              (effects) =>
-                new LightEffectsReceivedEvent(command.device.id, effects ?? []),
-            ),
-          ),
-        ),
-      )
-      .subscribe((event) => this.eventBus.publish(event));
+    const authData = await this.queryBus.execute(new AuthDataQuery());
+    if (authData === undefined) {
+      return;
+    }
+    const effects = await this.api.getEffects(
+      authData,
+      command.device.model,
+      command.device.goodsType,
+      command.device.id,
+    );
+    this.eventBus.publish(
+      new LightEffectsReceivedEvent(command.device.id, effects ?? []),
+    );
   }
 }

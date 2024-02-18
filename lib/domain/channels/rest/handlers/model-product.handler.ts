@@ -18,12 +18,12 @@ export class ModelProductQueryHandler
 
   async execute(query: ModelProductQuery): Promise<Product | undefined> {
     if (Date.now() - this.lastUpdated > REFRESH_INTERVAL) {
-      return this.api.getProductCategories().then((productMap) => {
+      return await this.api.getProductCategories().then((productMap) => {
         this.productMap = productMap;
         return productMap[query.device.model];
       });
     }
 
-    return Promise.resolve(this.productMap[query.device.model]);
+    return this.productMap[query.device.model];
   }
 }

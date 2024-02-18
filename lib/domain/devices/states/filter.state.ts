@@ -26,8 +26,8 @@ export class FilterState extends DeviceOpState<FilterStateName, Filter> {
 
   parseState(data: FilterExpiredType) {
     if (data?.state?.filterExpired !== undefined) {
-      this.stateValue.next({
-        ...this.stateValue.value,
+      this.stateValue$.next({
+        ...this.stateValue$.getValue(),
         expired: data?.state?.filterExpired,
       });
     }
@@ -36,7 +36,7 @@ export class FilterState extends DeviceOpState<FilterStateName, Filter> {
   parseOpCommandmand(opCommand: number[]) {
     const filterLife = opCommand[4];
     const expired = opCommand[2] === 0x01;
-    this.stateValue.next({
+    this.stateValue$.next({
       expired,
       filterLife,
     });

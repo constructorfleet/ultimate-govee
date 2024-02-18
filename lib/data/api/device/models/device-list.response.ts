@@ -7,6 +7,7 @@ import {
 } from 'class-transformer';
 import stringify from 'json-stringify-safe';
 import { GoveeAPIResponse } from '../../govee-api.models';
+import { TransformBoolean } from '@constructorfleet/ultimate-govee/common';
 
 export class DeviceSettings {
   @Expose({ name: 'wifiName' })
@@ -31,11 +32,7 @@ export class DeviceSettings {
   pactCode!: number;
 
   @Expose({ name: 'boilWaterCompletedNotiOnOff' })
-  @Transform(
-    ({ value }) =>
-      [null, undefined].includes(value) ? undefined : value.toString() === '1',
-    { toClassOnly: true },
-  )
+  @TransformBoolean
   @Transform(
     ({ value }) => (value === undefined ? undefined : `${value ? '1' : '0'}`),
     {
@@ -45,11 +42,7 @@ export class DeviceSettings {
   notifyWaterBoiling?: boolean;
 
   @Expose({ name: 'completionNotiOnOff' })
-  @Transform(
-    ({ value }) =>
-      [null, undefined].includes(value) ? undefined : value.toString() === '1',
-    { toClassOnly: true },
-  )
+  @TransformBoolean
   @Transform(
     ({ value }) => (value === undefined ? undefined : `${value ? '1' : '0'}`),
     {
@@ -59,11 +52,7 @@ export class DeviceSettings {
   notifyComplete?: boolean;
 
   @Expose({ name: 'autoShutDownOnOff' })
-  @Transform(
-    ({ value }) =>
-      [null, undefined].includes(value) ? undefined : value.toString() === '1',
-    { toClassOnly: true },
-  )
+  @TransformBoolean
   @Transform(
     ({ value }) => (value === undefined ? undefined : `${value ? '1' : '0'}`),
     {
@@ -73,11 +62,7 @@ export class DeviceSettings {
   automaticShutDown?: boolean;
 
   @Expose({ name: 'filterExpireOnOff' })
-  @Transform(
-    ({ value }) =>
-      [null, undefined].includes(value) ? undefined : value.toString() === '1',
-    { toClassOnly: true },
-  )
+  @TransformBoolean
   @Transform(
     ({ value }) => (value === undefined ? undefined : `${value ? '1' : '0'}`),
     {
@@ -87,6 +72,7 @@ export class DeviceSettings {
   filterExpired?: boolean;
 
   @Expose({ name: 'playState' })
+  @TransformBoolean
   playState?: boolean;
 
   @Expose({ name: 'wifiSoftVersion' })
@@ -117,11 +103,7 @@ export class DeviceSettings {
   model!: string;
 
   @Expose({ name: 'waterShortageOnOff' })
-  @Transform(
-    ({ value }) =>
-      [null, undefined].includes(value) ? undefined : value.toString() === '1',
-    { toClassOnly: true },
-  )
+  @TransformBoolean
   @Transform(
     ({ value }) => (value === undefined ? undefined : `${value ? '1' : '0'}`),
     {
@@ -175,12 +157,14 @@ export class DeviceSettings {
 
 export class DeviceData {
   @Expose({ name: 'online' })
+  @TransformBoolean
   isOnline!: boolean;
 
   @Expose({ name: 'isOnOff' })
   isOn?: number;
 
   @Expose({ name: 'bind' })
+  @TransformBoolean
   bind?: boolean;
 
   @Expose({ name: 'tem' })

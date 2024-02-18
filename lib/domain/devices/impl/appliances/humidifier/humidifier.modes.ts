@@ -31,7 +31,7 @@ export class ManualModeState extends DeviceOpState<
 
   parseOpCommand(opCommand: number[]): void {
     const command = opCommand.slice(1);
-    this.stateValue.next(command[command.indexOf(0x00) - 1]);
+    this.stateValue$.next(command[command.indexOf(0x00) - 1]);
   }
 
   protected stateToCommand(nextState: number): Optional<StateCommandAndStatus> {
@@ -108,7 +108,7 @@ export class CustomModeState extends DeviceOpState<
           ? value.programs![value.currentProgramId]
           : undefined,
     };
-    this.stateValue.next(this.customModes.currentProgram);
+    this.stateValue$.next(this.customModes.currentProgram);
   }
 
   protected stateToCommand(
@@ -227,7 +227,7 @@ export class AutoModeState extends DeviceOpState<AutoModeStateName, AutoMode> {
   }
 
   parseOpCommand(opCommand: number[]) {
-    this.stateValue.next({
+    this.stateValue$.next({
       targetHumidity: opCommand[0],
     });
   }
@@ -287,17 +287,17 @@ export class HumidifierActiveState extends ModeState {
       const modeIdentifier = identifier[identifier.indexOf(0x00) - 1];
       switch (modeIdentifier) {
         case HumidifierModes.MANUAL:
-          this.stateValue.next(
+          this.stateValue$.next(
             this.modes.find((mode) => mode.name === ManualModeStateName),
           );
           break;
         case HumidifierModes.PROGRAM:
-          this.stateValue.next(
+          this.stateValue$.next(
             this.modes.find((mode) => mode.name === CustomModeStateName),
           );
           break;
         case HumidifierModes.AUTO:
-          this.stateValue.next(
+          this.stateValue$.next(
             this.modes.find((mode) => mode.name === AutoModeStateName),
           );
           break;

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import { EventBus } from '@nestjs/cqrs';
 import {
   BleClient,
@@ -13,7 +13,10 @@ import { Device } from '../../devices/device';
 import { BleChannelChangedEvent } from './events';
 
 @Injectable()
-export class BleChannelService extends ChannelService<BleChannelConfig, true> {
+export class BleChannelService
+  extends ChannelService<BleChannelConfig, true>
+  implements OnModuleDestroy
+{
   readonly togglable: true = true as const;
   readonly name: 'ble' = 'ble' as const;
 
@@ -78,7 +81,7 @@ export class BleChannelService extends ChannelService<BleChannelConfig, true> {
     commands: number[][],
     results$: Subject<number[]>,
   ) {
-    const device = this.devices[id];
+    const device = this.devices[bleAddress];
     if (!device) {
       this.logger.error(`Device ${id} not known`);
       return results$.complete();
@@ -90,5 +93,9 @@ export class BleChannelService extends ChannelService<BleChannelConfig, true> {
       commands,
       results$,
     });
+  }
+
+  onModuleDestroy() {
+    this.setEnabled(false);
   }
 }

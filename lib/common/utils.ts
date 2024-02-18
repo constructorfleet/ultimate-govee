@@ -1,5 +1,7 @@
+import { Transform } from 'class-transformer';
+
 export const sleep = async (ms: number) => {
-  return new Promise<void>((resolve) => setTimeout(() => resolve(), ms));
+  return await new Promise<void>((resolve) => setTimeout(() => resolve(), ms));
 };
 
 export const deepPartialCompare = <T>(a: Partial<T>, b: T): boolean => {
@@ -19,3 +21,11 @@ export const deepPartialCompare = <T>(a: Partial<T>, b: T): boolean => {
   }
   return true;
 };
+
+export const TransformBoolean = Transform(
+  ({ value }) =>
+    value === undefined || value === null
+      ? undefined
+      : ['1', 1, 'true', true, 'on'].includes(value),
+  { toClassOnly: true },
+);

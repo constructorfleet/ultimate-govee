@@ -10,6 +10,6 @@ export class ConfigureBleChannelCommandHandler
 
   async execute(command: ConfigureBleChannelCommand): Promise<void> {
     this.client.filterPeripherals = () => true;
-    this.client.enabled.next(command.enabled);
+    await this.client.enabled.next(command.enabled);
   }
 }

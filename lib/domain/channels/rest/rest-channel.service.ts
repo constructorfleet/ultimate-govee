@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { EventBus } from '@nestjs/cqrs';
 import { ChannelService } from '../channel.service';
 import { RestChannelChangedEvent } from './events/rest-channel-changed.event';

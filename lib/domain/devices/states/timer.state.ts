@@ -32,7 +32,7 @@ export class TimerState extends DeviceOpState<TimerStateName, Timer> {
     if (opCommand.length <= 3) {
       duration = total(opCommand.slice(1, 3));
     }
-    this.stateValue.next({
+    this.stateValue$.next({
       enabled: opCommand[0] === 0x01,
       duration,
     });

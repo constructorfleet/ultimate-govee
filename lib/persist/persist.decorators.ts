@@ -1,4 +1,3 @@
-import { Logger } from '@nestjs/common';
 import { Optional } from '@constructorfleet/ultimate-govee/common';
 import { existsSync } from 'fs';
 import { mkdir, writeFile, appendFile } from 'fs/promises';
@@ -16,7 +15,6 @@ export type PersistOptions = {
 };
 
 export function PersistResult(options: PersistOptions) {
-  const logger: Logger = new Logger('Persist');
   return (_: any, __: string, descriptor: PropertyDescriptor) => {
     const original = descriptor.value;
     // eslint-disable-next-line func-names

@@ -13,7 +13,7 @@ export class SenderService {
   ) {}
 
   async bind() {
-    this.socket.bind();
+    await this.socket.bind();
   }
 
   sendDeviceCommand() {}

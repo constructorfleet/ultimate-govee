@@ -1,4 +1,4 @@
-import { DynamicModule, Global, Module, Provider } from '@nestjs/common';
+import { DynamicModule, Global, Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { IoTChannelModule } from './iot';
 import { RestChannelModule } from './rest';
@@ -9,7 +9,7 @@ import { TogglableChannelsProvider } from './channel.providers';
 @Global()
 @Module({})
 export class ChannelsModule {
-  static async forRoot(): Promise<DynamicModule> {
+  static forRoot(): DynamicModule {
     return {
       module: ChannelsModule,
       imports: [

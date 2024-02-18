@@ -22,9 +22,9 @@ export class BatteryLevelState extends DeviceState<
 
   parseState(data: BatteryType) {
     if (data?.battery !== undefined) {
-      this.stateValue.next(data.battery);
+      this.stateValue$.next(data.battery);
     } else if (data?.state?.battery !== undefined) {
-      this.stateValue.next(data.state.battery);
+      this.stateValue$.next(data.state.battery);
     }
   }
 }

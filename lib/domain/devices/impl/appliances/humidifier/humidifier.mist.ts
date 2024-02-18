@@ -35,18 +35,18 @@ export class MistLevelState extends DeviceState<
       switch (event?.name) {
         case CustomModeStateName:
           this.subscription = event?.subscribe((event) => {
-            this.stateValue.next(
+            this.stateValue$.next(
               (event as CustomMode)?.currentProgram?.mistLevel,
             );
           });
           break;
         case ManualModeStateName:
           this.subscription = event?.subscribe((event) => {
-            this.stateValue.next(event as Optional<number>);
+            this.stateValue$.next(event as Optional<number>);
           });
           break;
         default:
-          this.stateValue.next(undefined);
+          this.stateValue$.next(undefined);
           break;
       }
     });

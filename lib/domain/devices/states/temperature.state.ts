@@ -48,7 +48,7 @@ export class TemperatureState extends DeviceOpState<
   }
 
   parseState(data: TemperatureDataType) {
-    const previous = this.stateValue.getValue();
+    const previous = this.stateValue$.getValue();
     if (data?.state?.temperature !== undefined) {
       let calibration100 = data?.state?.temperature?.calibration;
       if (calibration100 !== undefined && calibration100 > 100) {
@@ -66,7 +66,7 @@ export class TemperatureState extends DeviceOpState<
       } else {
         raw = current;
       }
-      this.stateValue.next({
+      this.stateValue$.next({
         calibration,
         range: {
           min: data?.state?.temperature?.min ?? previous.range.min,

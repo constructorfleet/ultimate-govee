@@ -40,6 +40,6 @@ export class EnableBleClientCommandHandler
     } else {
       this.bleClient.filterPeripherals = () => true;
     }
-    this.bleClient.enabled.next(true);
+    return await this.bleClient.enabled.next(true);
   }
 }

@@ -1,26 +1,20 @@
 import { EventBus } from '@nestjs/cqrs';
-import {
-  BehaviorSubject,
-  distinctUntilChanged,
-  filter,
-  map,
-  share,
-} from 'rxjs';
+import { BehaviorSubject, filter, map, share } from 'rxjs';
 import { ChannelState } from './channel.state';
 import { Logger } from '@nestjs/common';
 
-const areSameConfig = <TConfig extends object>(
-  data1?: TConfig,
-  data2?: TConfig,
-): boolean => {
-  if (data1 === undefined && data2 === undefined) {
-    return true;
-  }
-  if (data1 === undefined || data2 === undefined) {
-    return false;
-  }
-  return Object.entries(data1).every(([k, v]) => data2[k] === v);
-};
+// const areSameConfig = <TConfig extends object>(
+//   data1?: TConfig,
+//   data2?: TConfig,
+// ): boolean => {
+//   if (data1 === undefined && data2 === undefined) {
+//     return true;
+//   }
+//   if (data1 === undefined || data2 === undefined) {
+//     return false;
+//   }
+//   return Object.entries(data1).every(([k, v]) => data2[k] === v);
+// };
 
 export abstract class ChannelService<
   TConfig extends object,
@@ -44,9 +38,9 @@ export abstract class ChannelService<
   protected readonly onConfigChanged$ = this.state.config.pipe(
     filter((config) => config !== undefined),
     map((config) => config! as TConfig),
-    distinctUntilChanged(
-      (previous, current) => !areSameConfig(previous, current),
-    ),
+    // distinctUntilChanged(
+    //   (previous, current) => !areSameConfig(previous, current),
+    // ),
     share(),
   );
 
@@ -69,5 +63,9 @@ export abstract class ChannelService<
 
   setEnabled(enabled: boolean) {
     this.state.enabled.next(enabled);
+  }
+
+  get isEnabled(): boolean {
+    return this.state.enabled.getValue() === true;
   }
 }

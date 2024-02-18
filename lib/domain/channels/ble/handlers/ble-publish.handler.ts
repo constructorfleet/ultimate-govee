@@ -12,7 +12,7 @@ import {
   DeviceStatusReceivedEvent,
 } from '@constructorfleet/ultimate-govee/domain/devices/cqrs';
 import { Subject, map, reduce, timer } from 'rxjs';
-import { EventBus, CommandBus } from '@nestjs/cqrs';
+import { EventBus } from '@nestjs/cqrs';
 
 @CommandHandler(BlePublishCommand)
 @EventsHandler(CommandExpiredEvent)
@@ -66,7 +66,7 @@ export class BlePublishCommandHandler
         this.eventBus.publish(event);
       });
     command.debug && this.logger.debug(command.commands);
-    this.service.sendCommand(
+    await this.service.sendCommand(
       command.id,
       command.bleAddress,
       command.commands,

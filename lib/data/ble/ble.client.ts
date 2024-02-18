@@ -1,16 +1,14 @@
-import { Inject, Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import {
   BehaviorSubject,
   Subject,
-  asapScheduler,
   concatMap,
+  delay,
   distinctUntilKeyChanged,
   filter,
   from,
   interval,
   map,
-  observeOn,
-  queueScheduler,
   switchMap,
   tap,
 } from 'rxjs';
@@ -33,7 +31,7 @@ const STATE_UNKNOWN = 'unknown';
 const STATE_POWERED_ON = 'poweredOn';
 
 @Injectable()
-export class BleClient implements OnModuleDestroy {
+export class BleClient {
   private readonly logger: Logger = new Logger(BleClient.name);
 
   private seenNames: string[] = [];
@@ -72,7 +70,7 @@ export class BleClient implements OnModuleDestroy {
       .pipe(
         filter(() => this.state.getValue() === STATE_POWERED_ON),
         filter(() => this.enabled.getValue()),
-        concatMap(() => this.stopScanning()),
+        tap(async () => await this.stopScanning()),
         tap(() => {
           try {
             noble.reset();
@@ -80,7 +78,9 @@ export class BleClient implements OnModuleDestroy {
             // no-op
           }
         }),
-        concatMap(() => this.startScanning()),
+        delay(1000),
+        filter(() => this.enabled.getValue()),
+        tap(async () => await this.startScanning()),
       )
       .subscribe();
     this.peripheralDiscovered
@@ -89,7 +89,6 @@ export class BleClient implements OnModuleDestroy {
           (peripheral) => this.enabled.getValue() && peripheral !== undefined,
         ),
         filter((peripheral) => this.peripheralFilter(peripheral)),
-        observeOn(queueScheduler),
         concatMap((peripheral) => from(this.decodePeripheral(peripheral))),
         filter((device) => device !== undefined),
         map((device) => device!),
@@ -103,7 +102,6 @@ export class BleClient implements OnModuleDestroy {
     this.commandQueue
       .pipe(
         filter(() => this.enabled.getValue()),
-        observeOn(asapScheduler),
         distinctUntilKeyChanged('address'),
         concatMap((command) => from(this.sendCommand(command))),
       )
@@ -169,7 +167,7 @@ export class BleClient implements OnModuleDestroy {
             .replace('Address: ', '');
           if (peripheral.address.length !== 0) {
             {
-              this.logger.error(
+              this.logger.debug(
                 `Got address ${peripheral.address} for ${peripheral.advertisement.localName}`,
               );
               this.peripherals.set(peripheral.id, peripheral);
@@ -184,7 +182,7 @@ export class BleClient implements OnModuleDestroy {
       await peripheral.disconnectAsync();
       this.connectedPeripheral = undefined;
     } catch (err) {
-      this.logger.error(err);
+      this.logger.error(`Error while retrieving address: ${err}`);
     } finally {
       await this.startScanning();
     }
@@ -319,11 +317,5 @@ export class BleClient implements OnModuleDestroy {
     } finally {
       await this.startScanning();
     }
-  }
-
-  async onModuleDestroy() {
-    await this.onDisabled();
-    this.commandQueue.complete();
-    this.peripheralDiscovered.complete();
   }
 }

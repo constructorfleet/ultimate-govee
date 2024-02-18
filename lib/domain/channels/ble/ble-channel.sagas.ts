@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { EventBus, ICommand, Saga, ofType } from '@nestjs/cqrs';
-import { Observable, catchError, filter, map, of, sampleTime, tap } from 'rxjs';
+import { Observable, filter, map } from 'rxjs';
 import {
   BleChannelChangedEvent,
   BleChannelConfigReceivedEvent,
@@ -8,10 +8,11 @@ import {
 import { ConfigureBleChannelCommand } from './commands/configure-ble-channel.command';
 import { DeviceDiscoveredEvent } from '@constructorfleet/ultimate-govee/domain/devices/cqrs';
 import { BleChannelService } from './ble-channel.service';
-import * as CQRS from '@constructorfleet/ultimate-govee/domain/devices/cqrs';
 import { BlePublishCommand, BleRecordDeviceCommand } from './commands';
 import { asOpCode, base64ToHex } from '@constructorfleet/ultimate-govee/common';
 import { v4 as uuidv4 } from 'uuid';
+import { DeviceRefeshEvent } from '../../devices/cqrs/events/device-refresh.event';
+import { DeviceStateCommandEvent } from '../../devices/cqrs/events/device-state-command.event';
 
 @Injectable()
 export class BleChannelSagas {
@@ -27,10 +28,10 @@ export class BleChannelSagas {
     events$.pipe(
       ofType(BleChannelConfigReceivedEvent),
       map((event) => new ConfigureBleChannelCommand(false, event.config)),
-      catchError((err, caught) => {
-        this.logger.error(err, caught);
-        return of();
-      }),
+      // catchError((err, caught) => {
+      //   this.logger.error(err, caught);
+      //   return of();
+      // }),
     );
 
   @Saga()
@@ -40,10 +41,10 @@ export class BleChannelSagas {
       map(
         (event) => new ConfigureBleChannelCommand(event.enabled, event.config),
       ),
-      catchError((err, caught) => {
-        this.logger.error(err, caught);
-        return of();
-      }),
+      // catchError((err, caught) => {
+      //   this.logger.error(err, caught);
+      //   return of();
+      // }),
     );
 
   @Saga()
@@ -51,16 +52,16 @@ export class BleChannelSagas {
     events$.pipe(
       ofType(DeviceDiscoveredEvent),
       map((event) => new BleRecordDeviceCommand(event.device)),
-      catchError((err, caught) => {
-        this.logger.error(err, caught);
-        return of();
-      }),
+      // catchError((err, caught) => {
+      //   this.logger.error(err, caught);
+      //   return of();
+      // }),
     );
 
   @Saga()
   refreshDeviceFlow = (events$: Observable<any>): Observable<ICommand> =>
     events$.pipe(
-      ofType(CQRS.DeviceRefeshEvent),
+      ofType(DeviceRefeshEvent),
       filter((event) => event.addresses.bleAddress !== undefined),
       filter(
         (event) =>
@@ -75,16 +76,16 @@ export class BleChannelSagas {
             event.opIdentifiers!.map((op) => asOpCode(0xaa, ...op)),
           ),
       ),
-      catchError((err, caught) => {
-        this.logger.error(err, caught);
-        return of();
-      }),
+      // catchError((err, caught) => {
+      //   this.logger.error(err, caught);
+      //   return of();
+      // }),
     );
 
   @Saga()
   publishBleCommand = (events$: Observable<any>): Observable<ICommand> =>
     events$.pipe(
-      ofType(CQRS.DeviceStateCommandEvent),
+      ofType(DeviceStateCommandEvent),
       filter((event) => event.addresses.bleAddress !== undefined),
       filter(
         (event) =>
@@ -103,9 +104,9 @@ export class BleChannelSagas {
             ),
           ),
       ),
-      catchError((err, caught) => {
-        this.logger.error(err, caught);
-        return of();
-      }),
+      // catchError((err, caught) => {
+      //   this.logger.error(err, caught);
+      //   return of();
+      // }),
     );
 }

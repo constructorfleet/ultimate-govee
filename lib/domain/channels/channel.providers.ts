@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { Inject, Provider } from '@nestjs/common';
-import { DiscoveryService } from '@nestjs/core';
 import { ChannelService } from './channel.service';
 import { ChannelToggle, TogglableChannels } from './channel.types';
 import { RestChannelService } from './rest';
@@ -13,9 +12,9 @@ export const InjectChannels = Inject(TogglableChannelsKey);
 
 export const TogglableChannelsProvider: Provider = {
   provide: TogglableChannelsKey,
-  useFactory: async (
+  useFactory: (
     ...channelServices: ChannelService<any, boolean>[]
-  ): Promise<ChannelToggle> => {
+  ): ChannelToggle => {
     const togglableChannelServices = channelServices
       .filter((provider) => provider.togglable === true)
       .map((provider) => provider as TogglableChannels);
