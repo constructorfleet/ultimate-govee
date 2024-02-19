@@ -24,6 +24,7 @@ describe('deviceMatches', () => {
           describe('"0188ec000101ac08ec0949"', () => {
             const manufacturerData = '0188ec000101ac08ec0949';
             const device: DecodeDevice = {
+              id: '0B:00:19:3D:31:51:34:F7',
               manufacturerData,
               name,
               serviceData: [
@@ -46,6 +47,7 @@ describe('deviceMatches', () => {
             '0188ec000101ac08ec09',
           ])('%p', (manufacturerData) => {
             const device: DecodeDevice = {
+              id: '0B:00:19:3D:31:51:34:F7',
               manufacturerData,
               name,
               serviceData: [
@@ -67,6 +69,7 @@ describe('deviceMatches', () => {
         '%p',
         (name: string) => {
           const device: DecodeDevice = {
+            id: '0B:00:19:3D:31:51:34:F7',
             manufacturerData:
               '010001010d20c75f4c000215494e54454c4c495f524f434b535f48575075f2ff0c',
             name,
@@ -107,6 +110,7 @@ describe('deviceMatches', () => {
           describe('"010001010d01cdb4"', () => {
             const manufacturerData = '010001010d01cdb4';
             const device: DecodeDevice = {
+              id: '0B:00:19:3D:31:51:34:F7',
               manufacturerData,
               name,
               serviceData: [
@@ -131,6 +135,7 @@ describe('deviceMatches', () => {
             '011001010d01cdb4',
           ])('%s', (manufacturerData) => {
             const device: DecodeDevice = {
+              id: '0B:00:19:3D:31:51:34:F7',
               manufacturerData,
               name,
               serviceData: [
@@ -152,6 +157,7 @@ describe('deviceMatches', () => {
         '%p',
         (name: string) => {
           const device: DecodeDevice = {
+            id: '0B:00:19:3D:31:51:34:F7',
             manufacturerData:
               '010001010d20c75f4c000215494e54454c4c495f524f434b535f48575075f2ff0c',
             name,
@@ -216,6 +222,7 @@ describe('deviceMatches', () => {
             'cf040400417f205600ffff2c01069100ffff2c010',
           ])('%p', (manufacturerData) => {
             const device: DecodeDevice = {
+              id: '0B:00:19:3D:31:51:34:F7',
               manufacturerData,
               name,
               serviceData: [
@@ -243,6 +250,7 @@ describe('deviceMatches', () => {
             'cf040400417f205600ffff2c01049100ffff2c010',
           ])('%s', (manufacturerData) => {
             const device: DecodeDevice = {
+              id: '0B:00:19:3D:31:51:34:F7',
               manufacturerData,
               name,
               serviceData: [
@@ -264,6 +272,7 @@ describe('deviceMatches', () => {
         '%p',
         (name: string) => {
           const device: DecodeDevice = {
+            id: '0B:00:19:3D:31:51:34:F7',
             manufacturerData:
               '010001010d20c75f4c000215494e54454c4c495f524f434b535f48575075f2ff0c',
             name,
@@ -307,6 +316,7 @@ describe('deviceMatches', () => {
             '88ec001b0a9b196402',
           ])('%p', (manufacturerData) => {
             const device: DecodeDevice = {
+              id: '0B:00:19:3D:31:51:34:F7',
               manufacturerData,
               name,
               serviceData: [
@@ -335,6 +345,7 @@ describe('deviceMatches', () => {
             'cf040400417f205600ffff2c01049100ffff2c010',
           ])('%s', (manufacturerData) => {
             const device: DecodeDevice = {
+              id: '0B:00:19:3D:31:51:34:F7',
               manufacturerData,
               name,
               serviceData: [
@@ -356,6 +367,7 @@ describe('deviceMatches', () => {
         '%p',
         (name: string) => {
           const device: DecodeDevice = {
+            id: '0B:00:19:3D:31:51:34:F7',
             manufacturerData:
               '010001010d20c75f4c000215494e54454c4c495f524f434b535f48575075f2ff0c',
             name,
