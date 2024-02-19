@@ -17,5 +17,9 @@ export const {
 } = new ConfigurableModuleBuilder<BleChannelModuleOptions>({
   optionsInjectionToken: 'BleChannel.Module.Options',
 })
+  .setExtras({ isGlobal: true }, (definition, extras) => ({
+    ...definition,
+    global: extras.isGlobal,
+  }))
   .setClassMethodName('forRoot')
   .build();
