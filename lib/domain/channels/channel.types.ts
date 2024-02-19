@@ -1,10 +1,19 @@
 import { BehaviorSubject } from 'rxjs';
 import { BleChannelService } from './ble/ble-channel.service';
-import { BleChannelModuleOptions } from './ble/ble-channel.types';
+import {
+  OPTIONS_TYPE as BleModuleOptions,
+  ASYNC_OPTIONS_TYPE as AsyncBleModuleOptions,
+} from './ble/ble-channel.types';
 import { IoTChannelService } from './iot/iot-channel.service';
-import { IoTChannelModuleOptions } from './iot/iot-channel.types';
+import {
+  OPTIONS_TYPE as IoTModuleOptions,
+  ASYNC_OPTIONS_TYPE as AsyncIoTModuleOptions,
+} from './iot/iot-channel.types';
 import { RestChannelService } from './rest/rest-channel.service';
-import { RestChannelModuleOptions } from './rest/rest-channel.types';
+import {
+  OPTIONS_TYPE as RestModuleOptions,
+  ASYNC_OPTIONS_TYPE as AsyncRestModuleOptions,
+} from './rest/rest-channel.types';
 import { ConfigurableModuleBuilder } from '@nestjs/common';
 
 export type TogglableChannels = Extract<
@@ -26,9 +35,9 @@ export type Togglable = {
 };
 
 export type ChannelModuleOptions = {
-  ble: BleChannelModuleOptions;
-  iot: IoTChannelModuleOptions;
-  rest: RestChannelModuleOptions;
+  ble?: typeof BleModuleOptions | typeof AsyncBleModuleOptions;
+  iot?: typeof IoTModuleOptions | typeof AsyncIoTModuleOptions;
+  rest?: typeof RestModuleOptions | typeof AsyncRestModuleOptions;
 };
 
 export const {

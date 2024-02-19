@@ -1,6 +1,6 @@
 import { ConfigurableModuleBuilder } from '@nestjs/common';
 export type AuthModuleOptions = {
-  refreshMargin: number;
+  refreshMargin?: number;
 };
 
 export const {
@@ -12,4 +12,8 @@ export const {
   optionsInjectionToken: 'Auth.Module.Options',
 })
   .setClassMethodName('forRoot')
+  .setExtras({ isGlobal: true }, (definition, extras) => ({
+    ...definition,
+    global: extras.isGlobal,
+  }))
   .build();

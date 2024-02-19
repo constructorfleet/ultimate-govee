@@ -1,7 +1,7 @@
 import { EventBus } from '@nestjs/cqrs';
 import { BehaviorSubject, filter, map, share } from 'rxjs';
-import { ChannelState } from './channel.state';
-import { Logger } from '@nestjs/common';
+import { ChannelState } from './channel.types';
+import { Logger, OnApplicationBootstrap } from '@nestjs/common';
 
 // const areSameConfig = <TConfig extends object>(
 //   data1?: TConfig,
@@ -19,7 +19,8 @@ import { Logger } from '@nestjs/common';
 export abstract class ChannelService<
   TConfig extends object,
   Togglable extends boolean = false,
-> {
+> implements OnApplicationBootstrap
+{
   abstract readonly togglable: Togglable;
   abstract readonly name: string;
 
@@ -46,11 +47,13 @@ export abstract class ChannelService<
 
   constructor(
     protected readonly eventBus: EventBus,
-    initialState?: boolean,
-    initialConfig?: TConfig,
-  ) {
-    this.state.enabled.next(initialState);
-    this.state.config.next(initialConfig);
+    private readonly initialState?: boolean,
+    private readonly initialConfig?: TConfig,
+  ) {}
+
+  onApplicationBootstrap() {
+    this.state.enabled.next(this.initialState);
+    this.state.config.next(this.initialConfig);
   }
 
   getConfig(): TConfig | undefined {

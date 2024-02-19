@@ -5,7 +5,10 @@ import { GoveeAccountConfig } from './govee-account.configuration';
 import { GoveeAccountService } from './govee-account.service';
 
 @Module({
-  imports: [ConfigModule.forFeature(GoveeAccountConfig), PersistModule],
+  imports: [
+    ConfigModule.forFeature(GoveeAccountConfig),
+    PersistModule.forRoot({ rootDirectory: 'persisted' }),
+  ],
   providers: [GoveeAccountService],
   exports: [GoveeAccountService],
 })

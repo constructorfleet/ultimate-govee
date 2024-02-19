@@ -22,21 +22,18 @@ export class BleChannelService
   private readonly peripherals: Record<string, DecodedDevice> = {};
 
   constructor(
-    @InjectEnabled enabled: boolean,
-    @InjectDeviceIds deviceIds: string[],
     private readonly bleClient: BleClient,
     eventBus: EventBus,
+    @InjectEnabled enabled?: boolean,
+    @InjectDeviceIds deviceIds?: string[],
   ) {
     super(eventBus, enabled, { devices: deviceIds });
-    combineLatest(this.onConfigChanged$, this.onEnabledChanged$)
+    combineLatest([this.onConfigChanged$, this.onEnabledChanged$])
       .pipe(
-        map(
-          (value) =>
-            new BleChannelChangedEvent(
-              (value as any[])[0],
-              (value as any[])[1],
-            ),
-        ),
+        map(([config, enabled]) => {
+          console.dir({ config, enabled });
+          return new BleChannelChangedEvent(enabled, config);
+        }),
       )
       .subscribe((event) => this.eventBus.publish(event));
 

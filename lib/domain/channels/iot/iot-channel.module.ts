@@ -8,14 +8,14 @@ import {
 import { IoTChannelService } from './iot-channel.service';
 import { IoTChannelController } from './iot-channel.controller';
 import { IoTChannelConfigReceivedEventHandler } from './handlers/iot-channel-config-received.handler';
-import { IoTChannelConfigEnabledProfovider } from './iot-channel.providers';
+import { IoTChannelConfigEnabledProvider } from './iot-channel.providers';
 import { ConfigurableModuleClass } from './iot-channel.types';
 
 @Module({
   imports: [CqrsModule, IoTModule],
   controllers: [IoTChannelController],
   providers: [
-    IoTChannelConfigEnabledProfovider,
+    IoTChannelConfigEnabledProvider,
     ConfigureIoTChannelCommandHandler,
     IoTSubscribeCommandHandler,
     IoTChannelConfigReceivedEventHandler,

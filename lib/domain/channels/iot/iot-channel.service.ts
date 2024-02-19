@@ -3,7 +3,7 @@ import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import stringify from 'json-stringify-safe';
 import { ChannelService } from '../channel.service';
-import { combineLatest, switchMap } from 'rxjs';
+import { combineLatest, concatMap, from } from 'rxjs';
 import { DeviceStatusReceivedEvent } from '../../devices/cqrs/events/device-status-received.event';
 import { DeviceRefeshEvent } from '../../devices/cqrs/events/device-refresh.event';
 import { v4 as uuidv4 } from 'uuid';
@@ -28,13 +28,14 @@ export class IoTChannelService
     eventBus: EventBus,
   ) {
     super(eventBus, enabled);
-    combineLatest(this.onConfigChanged$, this.onEnabledChanged$)
+    combineLatest([this.onConfigChanged$, this.onEnabledChanged$])
       .pipe(
-        switchMap((value) =>
-          (value as []).at(1)
-            ? this.connect((value as []).at(0) as unknown as IoTData)
-            : this.disconnect(),
-        ),
+        concatMap(([iotData, enabled]) => {
+          if (enabled) {
+            return from(this.connect(iotData));
+          }
+          return from(this.disconnect());
+        }),
       )
       .subscribe();
   }

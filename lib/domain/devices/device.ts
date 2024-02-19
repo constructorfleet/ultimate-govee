@@ -256,7 +256,6 @@ export class Device {
   }
 
   @PersistResult({
-    path: 'persisted',
     filename: '{0}.state.json',
   })
   loggableState(deviceId: string) {

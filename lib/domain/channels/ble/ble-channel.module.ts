@@ -11,8 +11,8 @@ import { BleChannelSagas } from './ble-channel.sagas';
 import { DisableBleClientCommandHandler } from './handlers/disable-ble-client.handler';
 import { EnableBleClientCommandHandler } from './handlers/enable-ble-client.handler';
 import {
-  BleChannelConfigDeviceIdsProfovider,
-  BleChannelConfigEnabledProfovider,
+  BleChannelConfigDeviceIdsProvider,
+  BleChannelConfigEnabledProvider,
 } from './ble-channel.providers';
 import { ConfigurableModuleClass } from './ble-channel.types';
 
@@ -20,8 +20,8 @@ import { ConfigurableModuleClass } from './ble-channel.types';
   imports: [CqrsModule, BleModule],
   controllers: [BleChannelController],
   providers: [
-    BleChannelConfigDeviceIdsProfovider,
-    BleChannelConfigEnabledProfovider,
+    BleChannelConfigDeviceIdsProvider,
+    BleChannelConfigEnabledProvider,
     BleChannelService,
     BleChannelSagas,
     DisableBleClientCommandHandler,

@@ -1,6 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { join } from 'path';
 import { InjectPersisted, PersistResult } from '~ultimate-govee-persist';
 import { Optional } from '~ultimate-govee-common';
 import { GoveeDeviceConfig } from './govee-device.config';
@@ -22,7 +21,7 @@ export class GoveeDeviceService {
     @Inject(GoveeDeviceConfig.KEY)
     private readonly config: ConfigType<typeof GoveeDeviceConfig>,
     @InjectPersisted({
-      filename: join('persisted', 'devices.json'),
+      filename: 'devices.json',
     })
     private readonly deviceListResponse: Optional<DeviceListResponse>,
     private readonly diyService: GoveeDiyService,
@@ -42,7 +41,6 @@ export class GoveeDeviceService {
   }
 
   @PersistResult({
-    path: 'persisted',
     filename: 'devices.json',
   })
   private async getApiResult(
