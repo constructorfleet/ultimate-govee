@@ -18,6 +18,7 @@ jobs:
           node-version: 20.7.0
           registry-url: https://registry.npmjs.org
       - run: npm ci
+      - run: npm run prepublishOnly
       - run:
           npm version --allow-same-version=true --git-tag-version=false $(git
           describe --tags)
