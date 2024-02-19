@@ -4,10 +4,10 @@ import { IceMakerStatusState } from './ice-maker.status';
 import { IceMakerStatus } from './types';
 
 export const MakingIceStateName: 'makeIce' = 'makeIce' as const;
-export type MakingIceStatename = typeof MakingIceStateName;
+export type MakingIceStateName = typeof MakingIceStateName;
 
 export class IceMakerMakingIceState extends DeviceState<
-  MakingIceStatename,
+  MakingIceStateName,
   boolean | undefined
 > {
   constructor(

@@ -4,10 +4,10 @@ import { IceMakerStatus, statusMap } from './types';
 
 export const IceMakerStatusStateName: 'iceMakerStatus' =
   'iceMakerStatus' as const;
-export type IceMakerStatusStatename = typeof IceMakerStatusStateName;
+export type IceMakerStatusStateName = typeof IceMakerStatusStateName;
 
 export class IceMakerStatusState extends DeviceOpState<
-  IceMakerStatusStatename,
+  IceMakerStatusStateName,
   IceMakerStatus | undefined
 > {
   constructor(device: DeviceModel) {

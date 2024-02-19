@@ -9,7 +9,7 @@ import {
 } from './humidifier.modes';
 export const TargetHumidityStateName: 'targetHumidity' =
   'targetHumidity' as const;
-export type TargetHumidityStatename = typeof TargetHumidityStateName;
+export type TargetHumidityStateName = typeof TargetHumidityStateName;
 
 export type HumiditierHumidity = {
   current?: number;

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CommandBus, EventBus } from '@nestjs/cqrs';
 import { DeviceModel } from '../../../devices.model';
 import {
+  ActiveState,
   ConnectedState,
   ControlLockState,
   DisplayScheduleState,
@@ -21,8 +22,9 @@ import {
 } from './purifier.modes';
 
 const StateFactories: StateFactories = [
-  (device) => new PowerState(device),
-  (device) => new ConnectedState(device),
+  (device: DeviceModel) => new PowerState(device),
+  (device: DeviceModel) => new ConnectedState(device),
+  (device: DeviceModel) => new ActiveState(device),
   (device: DeviceModel) => new DisplayScheduleState(device, 0xaa, 0x16),
   {
     H7126: [

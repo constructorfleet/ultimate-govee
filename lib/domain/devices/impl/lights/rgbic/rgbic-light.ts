@@ -9,6 +9,7 @@ import {
   SegmentCountState,
   SegmentCountStateName,
   ColorTempState,
+  ActiveState,
 } from '../../../states';
 import { DeviceModel } from '../../../devices.model';
 import {
@@ -29,6 +30,7 @@ import { LightDevice } from '../light.device';
 const StateFactory: StateFactories = [
   (device: DeviceModel) => new PowerState(device),
   (device: DeviceModel) => new ConnectedState(device),
+  (device: DeviceModel) => new ActiveState(device),
   (device: DeviceModel) => new BrightnessState(device),
   (device: DeviceModel) => new ColorTempState(device),
   (device: DeviceModel) => new SegmentCountState(device),
