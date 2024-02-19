@@ -17,7 +17,7 @@ export type HumiditierHumidity = {
 };
 
 export class TargetHumidityState extends DeviceState<
-  TargetHumidityStatename,
+  TargetHumidityStateName,
   Optional<number>
 > {
   private subscription: Subscription | undefined;
