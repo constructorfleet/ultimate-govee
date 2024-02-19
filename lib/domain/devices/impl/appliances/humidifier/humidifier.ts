@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CommandBus, EventBus } from '@nestjs/cqrs';
 import {
+  ActiveState,
   ConnectedState,
   ControlLockState,
   DisplayScheduleState,
@@ -29,6 +30,7 @@ import { HumidiferUVCState } from './humidifier.uvc';
 const StateFactories: StateFactories = [
   (device: DeviceModel) => new PowerState(device),
   (device: DeviceModel) => new ConnectedState(device),
+  (device: DeviceModel) => new ActiveState(device),
   (device: DeviceModel) => new WaterShortageState(device),
   (device: DeviceModel) => new TimerState(device, 0x0a, 0x0b),
   (device: DeviceModel) => new ManualModeState(device),
