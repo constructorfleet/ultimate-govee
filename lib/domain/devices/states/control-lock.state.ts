@@ -1,8 +1,4 @@
-import {
-  OpType,
-  asOpCode,
-  Optional,
-} from '@constructorfleet/ultimate-govee/common';
+import { OpType, asOpCode, Optional } from '~ultimate-govee/common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
 

@@ -1,12 +1,8 @@
 import { ClassConstructor } from 'class-transformer';
 import { BehaviorSubject } from 'rxjs';
 import { Logger } from '@nestjs/common';
-import { Optional } from '@constructorfleet/ultimate-govee/common';
-import {
-  GoveeDevice,
-  GoveeDeviceStatus,
-  Product,
-} from '@constructorfleet/ultimate-govee/data';
+import { Optional } from '~ultimate-govee/common';
+import { GoveeDevice, GoveeDeviceStatus, Product } from '~ultimate-govee/data';
 import { Version } from './version.info';
 
 export class ProductModel {

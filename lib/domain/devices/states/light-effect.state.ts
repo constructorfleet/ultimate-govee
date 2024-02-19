@@ -1,10 +1,6 @@
-import {
-  DeltaMap,
-  Optional,
-  total,
-} from '@constructorfleet/ultimate-govee/common';
+import { DeltaMap, Optional, total } from '~ultimate-govee/common';
 import { BehaviorSubject } from 'rxjs';
-import { Effect } from '@constructorfleet/ultimate-govee/data';
+import { Effect } from '~ultimate-govee/data';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
 

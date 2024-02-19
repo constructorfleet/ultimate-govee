@@ -2,7 +2,7 @@ import {
   Debuggable,
   DeviceCommandAddresses,
   Labelled,
-} from '@constructorfleet/ultimate-govee/common';
+} from '~ultimate-govee/common';
 
 export class DeviceRefeshEvent implements Labelled, Debuggable {
   label = () => `Refreshing ${this.deviceId}`;

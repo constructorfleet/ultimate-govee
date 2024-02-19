@@ -1,9 +1,5 @@
-import {
-  Credentials,
-  ClientId,
-  AccountId,
-} from '@constructorfleet/ultimate-govee/common';
-import { OAuthData } from '@constructorfleet/ultimate-govee/data';
+import { Credentials, ClientId, AccountId } from '~ultimate-govee/common';
+import { OAuthData } from '~ultimate-govee/data';
 
 export type AccountAuthData = {
   clientId: ClientId;

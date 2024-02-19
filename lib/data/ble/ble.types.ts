@@ -1,5 +1,5 @@
 import { type EventEmitter } from 'events';
-import { DeviceId } from '@constructorfleet/ultimate-govee/common';
+import { DeviceId } from '~ultimate-govee/common';
 import { Subject } from 'rxjs';
 
 export const BleModuleOptionsKey: string = 'Ble.Module.Options';

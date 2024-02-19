@@ -1,4 +1,4 @@
-import { OpType, Optional } from '@constructorfleet/ultimate-govee/common';
+import { OpType, Optional } from '~ultimate-govee/common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
 

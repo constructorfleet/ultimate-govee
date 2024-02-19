@@ -1,7 +1,7 @@
 import { Subject } from 'rxjs';
-import { Optional } from '@constructorfleet/ultimate-govee/common';
+import { Optional } from '~ultimate-govee/common';
 import { NumericState } from '../../../states/numeric.state';
-import { Measurement } from '@constructorfleet/ultimate-govee/data';
+import { Measurement } from '~ultimate-govee/data';
 
 export const PM25StateName: 'pm25' = 'pm25' as const;
 export type PM25StateName = typeof PM25StateName;

@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { DisableBleClientCommand } from '../commands/disable-ble-client.command';
-import { BleClient } from '@constructorfleet/ultimate-govee/data';
+import { BleClient } from '~ultimate-govee/data';
 
 @CommandHandler(DisableBleClientCommand)
 export class DisableBleClientCommandHandler

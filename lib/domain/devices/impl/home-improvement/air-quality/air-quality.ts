@@ -15,7 +15,7 @@ import {
   PowerStateName,
   TemperatureStateName,
 } from '../../../states';
-import { Optional } from '@constructorfleet/ultimate-govee/common';
+import { Optional } from '~ultimate-govee/common';
 
 const StateFactories: StateFactories = [
   (device) => new PowerState(device),

@@ -1,7 +1,7 @@
 {
   "name": "@constructorfleet/ultimate-govee",
   "displayName": "Ulitmate Govee",
-  "version": "0.4.7",
+  "version": "0.4.8",
   "private": false,
   "type": "commonjs",
   "main": "dist/index.js",
@@ -107,8 +107,8 @@
     "@abandonware/noble": "^1.9.2-24"
   },
   "_moduleAliases": {
-    "@constructorfleet/ultimate-govee/common": "dist/common",
-    "@constructorfleet/ultimate-govee/data": "dist/data",
-    "@constructorfleet/ultimate-govee/domain": "dist/domain"
+    "~ultimate-govee/common": "dist/common",
+    "~ultimate-govee/data": "dist/data",
+    "~ultimate-govee/domain": "dist/domain"
   }
 }

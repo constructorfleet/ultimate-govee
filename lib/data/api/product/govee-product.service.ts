@@ -2,10 +2,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { plainToInstance } from 'class-transformer';
 import { join } from 'path';
-import {
-  InjectPersisted,
-  PersistResult,
-} from '@constructorfleet/ultimate-govee/persist';
+import { InjectPersisted, PersistResult } from '~ultimate-govee/persist';
 import { GoveeProductConfig } from './govee-product.config';
 import { request } from '../../utils';
 import {

@@ -17,7 +17,7 @@ import { BlePeripheral } from '..';
 import { InjectDecoder } from './decoder.providers';
 import { Decoder } from './lib/decoder';
 import { DecodeDevice } from './lib/types';
-import { Optional } from '@constructorfleet/ultimate-govee/common';
+import { Optional } from '~ultimate-govee/common';
 
 @Injectable()
 export class DecoderService implements OnApplicationBootstrap {

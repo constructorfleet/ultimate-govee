@@ -1,4 +1,4 @@
-import { total } from '@constructorfleet/ultimate-govee/common';
+import { total } from '~ultimate-govee/common';
 import { DeviceOpState } from '../../../states';
 import { DeviceModel } from '../../../devices.model';
 

@@ -28,7 +28,7 @@ import {
   ManualModeStateName,
   PurifierActiveMode,
 } from './purifier.modes';
-import { Optional } from '@constructorfleet/ultimate-govee/common';
+import { Optional } from '~ultimate-govee/common';
 
 const StateFactories: StateFactories = [
   (device: DeviceModel) => new PowerState(device),

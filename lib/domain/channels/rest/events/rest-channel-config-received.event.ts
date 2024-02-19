@@ -1,4 +1,4 @@
-import { Labelled } from '@constructorfleet/ultimate-govee/common';
+import { Labelled } from '~ultimate-govee/common';
 import { RestChannelConfig } from '../rest-channel.state';
 import { ChannelConfigReceivedEvent } from '../../channel-config-received.event';
 

@@ -28,8 +28,8 @@
     "baseUrl": "lib",
     "rootDir": "./lib",
     "paths": {
-      "@constructorfleet/ultimate-govee": ["./index.js"],
-      "@constructorfleet/ultimate-govee/*": ["./*"],
+      "~ultimate-govee": ["./index.js"],
+      "~ultimate-govee/*": ["./*"],
     },
   },
   "include": ["lib/*"],

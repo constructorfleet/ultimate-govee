@@ -1,9 +1,4 @@
-import {
-  total,
-  Optional,
-  asOpCode,
-  ArrayRange,
-} from '@constructorfleet/ultimate-govee/common';
+import { total, Optional, asOpCode, ArrayRange } from '~ultimate-govee/common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState, StateCommandAndStatus } from './device.state';
 
