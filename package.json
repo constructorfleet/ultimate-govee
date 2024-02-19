@@ -1,10 +1,11 @@
 {
   "name": "@constructorfleet/ultimate-govee",
   "displayName": "Ulitmate Govee",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "private": false,
   "type": "commonjs",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "description": "Library for interacting with Govee devices written in Typescript.",
   "license": "GPL-3.0-or-later",
   "author": "@Teagan42",
