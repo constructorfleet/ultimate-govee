@@ -8,6 +8,7 @@ import { DeviceStatusReceivedEvent } from '../../devices/cqrs/events/device-stat
 import { DeviceRefeshEvent } from '../../devices/cqrs/events/device-refresh.event';
 import { v4 as uuidv4 } from 'uuid';
 import { DeviceStateCommandEvent } from '../../devices/cqrs/events/device-state-command.event';
+import { InjectEnabled } from './iot-channel.providers';
 
 @EventsHandler(DeviceRefeshEvent, DeviceStateCommandEvent)
 @Injectable()
@@ -22,10 +23,11 @@ export class IoTChannelService
   readonly name: 'iot' = 'iot' as const;
 
   constructor(
+    @InjectEnabled enabled: boolean,
     private readonly iot: IoTService,
     eventBus: EventBus,
   ) {
-    super(eventBus);
+    super(eventBus, enabled);
     combineLatest([this.onConfigChanged$, this.onEnabledChanged$])
       .pipe(
         switchMap(([iotData, enabled]) =>
