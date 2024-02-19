@@ -1,4 +1,4 @@
-import { Debuggable } from '~ultimate-govee/common';
+import { Debuggable } from '~ultimate-govee-common';
 import { Device } from '../../device';
 
 export class DeviceStateChangedEvent implements Debuggable {

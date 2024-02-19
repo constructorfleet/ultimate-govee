@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Optional } from '~ultimate-govee/common';
+import { Optional } from '~ultimate-govee-common';
 import { CommandBus, EventBus } from '@nestjs/cqrs';
 import { RGBLightFactory } from './rgb/rgb-light';
 import { FactoryType } from '../../device.factory';

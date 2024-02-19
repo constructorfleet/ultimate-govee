@@ -6,7 +6,7 @@ import {
   hexStringToArray,
   total,
   unpaddedHexToArray,
-} from '~ultimate-govee/common';
+} from '~ultimate-govee-common';
 import { DeviceModel } from '../../../devices.model';
 import MomentLib from 'moment';
 

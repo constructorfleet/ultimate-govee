@@ -1,5 +1,5 @@
-import { chunk, total, Optional, asOpCode } from '~ultimate-govee/common';
-import { Effect } from '~ultimate-govee/data';
+import { chunk, total, Optional, asOpCode } from '~ultimate-govee-common';
+import { Effect } from '~ultimate-govee-data';
 import {
   DeviceOpState,
   SegmentCountState,

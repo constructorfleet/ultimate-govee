@@ -1,4 +1,4 @@
-import { BleModule } from '~ultimate-govee/data/ble';
+import { BleModule } from '~ultimate-govee-data/ble';
 import { Module } from '@nestjs/common';
 import { BleChannelService } from './ble-channel.service';
 import { ConfigureBleChannelCommandHandler } from './handlers/configure-ble-channel.handler';

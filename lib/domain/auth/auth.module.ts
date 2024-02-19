@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { CqrsModule } from '@nestjs/cqrs';
-import { GoveeAPIModule } from '~ultimate-govee/data';
+import { GoveeAPIModule } from '~ultimate-govee-data';
 import { AuthConfig } from './auth.config';
 import {
   AuthDataQueryHandler,

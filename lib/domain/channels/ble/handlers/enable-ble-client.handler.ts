@@ -6,8 +6,8 @@ import {
   ICommandHandler,
   IEventHandler,
 } from '@nestjs/cqrs';
-import { DeviceId } from '~ultimate-govee/common';
-import { BleClient, BlePeripheral } from '~ultimate-govee/data';
+import { DeviceId } from '~ultimate-govee-common';
+import { BleClient, BlePeripheral } from '~ultimate-govee-data';
 
 @EventsHandler(DeviceConfigReceivedEvent)
 @CommandHandler(EnableBleClientCommand)

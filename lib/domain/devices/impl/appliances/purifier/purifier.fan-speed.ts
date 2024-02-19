@@ -1,5 +1,5 @@
 import { Subscription } from 'rxjs';
-import { Optional, asOpCode } from '~ultimate-govee/common';
+import { Optional, asOpCode } from '~ultimate-govee-common';
 import { DeviceOpState, StateCommandAndStatus } from '../../../states';
 import { DeviceModel } from '../../../devices.model';
 import {

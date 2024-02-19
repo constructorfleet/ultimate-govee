@@ -1,4 +1,4 @@
-import { DeviceId } from '~ultimate-govee/common';
+import { DeviceId } from '~ultimate-govee-common';
 
 export type WiFiData = {
   name?: string;

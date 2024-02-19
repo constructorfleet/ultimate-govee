@@ -9,7 +9,7 @@ import { ConfigureBleChannelCommand } from './commands/configure-ble-channel.com
 import { DeviceDiscoveredEvent } from '../../devices/cqrs';
 import { BleChannelService } from './ble-channel.service';
 import { BlePublishCommand, BleRecordDeviceCommand } from './commands';
-import { asOpCode, base64ToHex } from '~ultimate-govee/common';
+import { asOpCode, base64ToHex } from '~ultimate-govee-common';
 import { v4 as uuidv4 } from 'uuid';
 import { DeviceRefeshEvent } from '../../devices/cqrs/events/device-refresh.event';
 import { DeviceStateCommandEvent } from '../../devices/cqrs/events/device-state-command.event';

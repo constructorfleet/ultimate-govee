@@ -1,4 +1,4 @@
-import { Optional, asOpCode } from '~ultimate-govee/common';
+import { Optional, asOpCode } from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState, StateCommandAndStatus } from './device.state';
 

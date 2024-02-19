@@ -1,9 +1,9 @@
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import { EventBus } from '@nestjs/cqrs';
-import { BleClient, DecodedDevice } from '~ultimate-govee/data';
+import { BleClient, DecodedDevice } from '~ultimate-govee-data';
 import { ChannelService } from '../channel.service';
 import { BleChannelConfig } from './ble-channel.state';
-import { DeviceId, chunk } from '~ultimate-govee/common';
+import { DeviceId, chunk } from '~ultimate-govee-common';
 import { Subject, combineLatest, map } from 'rxjs';
 import { DeviceStatusReceivedEvent } from '../../devices/cqrs';
 import { Device } from '../../devices/device';

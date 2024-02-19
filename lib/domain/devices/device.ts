@@ -1,12 +1,12 @@
 import { Subject, interval, sampleTime } from 'rxjs';
 import { Logger } from '@nestjs/common';
-import { DeltaMap, Optional, hexToBase64 } from '~ultimate-govee/common';
-import { GoveeDeviceStatus } from '~ultimate-govee/data';
+import { DeltaMap, Optional, hexToBase64 } from '~ultimate-govee-common';
+import { GoveeDeviceStatus } from '~ultimate-govee-data';
 import DailyRotateFile from 'winston-daily-rotate-file';
 import Winston from 'winston';
 import { deepEquality } from '@santi100/equal-lib';
 import { CommandBus, EventBus } from '@nestjs/cqrs';
-import { PersistResult } from '~ultimate-govee/persist';
+import { PersistResult } from '~ultimate-govee-persist';
 import { DeviceModel } from './devices.model';
 import { DeviceOpState, DeviceState } from './states/device.state';
 import { ModeState, ModeStateName } from './states/mode.state';

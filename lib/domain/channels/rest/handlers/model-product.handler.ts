@@ -1,5 +1,5 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { GoveeProductService, Product } from '~ultimate-govee/data';
+import { GoveeProductService, Product } from '~ultimate-govee-data';
 import { ModelProductQuery } from '../queries';
 
 const REFRESH_INTERVAL = 24 * 60 * 60 * 1000; // 24 hours

@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { InjectPersisted, PersistResult } from '~ultimate-govee/persist';
+import { InjectPersisted, PersistResult } from '~ultimate-govee-persist';
 import {
   GoveeAccountConfig,
   GoveeCredentials,

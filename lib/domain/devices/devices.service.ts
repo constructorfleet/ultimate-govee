@@ -1,11 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { EventBus, QueryBus } from '@nestjs/cqrs';
-import { DeltaMap, DeviceId, Optional } from '~ultimate-govee/common';
+import { DeltaMap, DeviceId, Optional } from '~ultimate-govee-common';
 import { map } from 'rxjs';
 import { Device } from './device';
 import { DeviceDiscoveredEvent, DeviceUpdatedEvent } from './cqrs/events';
 import { ModelProductQuery } from '../channels/rest/queries/model-product.query';
-import { GoveeDevice, Product } from '~ultimate-govee/data';
+import { GoveeDevice, Product } from '~ultimate-govee-data';
 import { ClassConstructor } from 'class-transformer';
 import { BLEDevice, DeviceModel, IoTDevice, WiFiDevice } from './devices.model';
 import { Version } from './version.info';

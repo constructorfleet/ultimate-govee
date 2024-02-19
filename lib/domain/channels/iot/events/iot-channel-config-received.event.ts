@@ -1,5 +1,5 @@
-import { IoTData } from '~ultimate-govee/data';
-import { Labelled } from '~ultimate-govee/common';
+import { IoTData } from '~ultimate-govee-data';
+import { Labelled } from '~ultimate-govee-common';
 import { ChannelConfigReceivedEvent } from '../../channel-config-received.event';
 
 export class IoTChannelConfigReceivedEvent
