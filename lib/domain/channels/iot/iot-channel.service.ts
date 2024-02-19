@@ -1,4 +1,4 @@
-import { IoTData, IoTService } from '~ultimate-govee/data';
+import { IoTData, IoTService } from '~ultimate-govee-data';
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import stringify from 'json-stringify-safe';

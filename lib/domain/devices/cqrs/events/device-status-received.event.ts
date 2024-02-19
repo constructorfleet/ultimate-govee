@@ -1,5 +1,5 @@
-import { Labelled } from '~ultimate-govee/common';
-import { GoveeDeviceStatus } from '~ultimate-govee/data';
+import { Labelled } from '~ultimate-govee-common';
+import { GoveeDeviceStatus } from '~ultimate-govee-data';
 import stringify from 'json-stringify-safe';
 
 export class DeviceStatusReceivedEvent implements Labelled {

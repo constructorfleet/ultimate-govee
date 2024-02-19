@@ -1,9 +1,9 @@
 import { Subject } from 'rxjs';
-import { Optional } from '~ultimate-govee/common';
+import { Optional } from '~ultimate-govee-common';
 import { Type } from '@nestjs/common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
-import { GoveeDeviceStatus } from '~ultimate-govee/data';
+import { GoveeDeviceStatus } from '~ultimate-govee-data';
 
 type StateValue = Optional<number>;
 type OpCodeParserFn = (

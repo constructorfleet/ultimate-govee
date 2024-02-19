@@ -1,4 +1,4 @@
-import { ArrayRange, Optional, asOpCode, total } from '~ultimate-govee/common';
+import { ArrayRange, Optional, asOpCode, total } from '~ultimate-govee-common';
 import { DeviceModel } from '../../../devices.model';
 import {
   ModeState,

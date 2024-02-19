@@ -1,4 +1,4 @@
-import { Credentials, Labelled } from '~ultimate-govee/common';
+import { Credentials, Labelled } from '~ultimate-govee-common';
 
 export class CredentialsChangedEvent implements Labelled {
   label = 'Credentials Changed';

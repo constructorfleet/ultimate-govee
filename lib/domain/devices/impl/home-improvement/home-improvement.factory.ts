@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Optional } from '~ultimate-govee/common';
+import { Optional } from '~ultimate-govee-common';
 import { CommandBus, EventBus } from '@nestjs/cqrs';
 import { FactoryType } from '../../device.factory';
 import { AirQualityFactory } from './air-quality/air-quality';

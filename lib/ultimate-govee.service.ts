@@ -5,8 +5,8 @@ import {
   OnModuleDestroy,
 } from '@nestjs/common';
 import { CommandBus, EventBus, ofType } from '@nestjs/cqrs';
-import { SetCredentialsCommand } from '~ultimate-govee/domain/auth';
-import { Password, Username } from '~ultimate-govee/common';
+import { SetCredentialsCommand } from '~ultimate-govee-domain/auth';
+import { Password, Username } from '~ultimate-govee-common';
 import { Observable, interval } from 'rxjs';
 import {
   InjectGoveeConfig,

@@ -1,4 +1,4 @@
-import { Labelled } from '~ultimate-govee/common';
+import { Labelled } from '~ultimate-govee-common';
 import { Device } from '../../device';
 
 export class DeviceDiscoveredEvent implements Labelled {

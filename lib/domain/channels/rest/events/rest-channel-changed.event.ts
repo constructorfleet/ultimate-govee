@@ -1,4 +1,4 @@
-import { Labelled } from '~ultimate-govee/common';
+import { Labelled } from '~ultimate-govee-common';
 import { RestChannelConfig } from '../rest-channel.state';
 
 export class RestChannelChangedEvent implements Labelled {

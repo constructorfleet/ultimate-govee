@@ -7,7 +7,7 @@ import {
 } from 'class-transformer';
 import stringify from 'json-stringify-safe';
 import { GoveeAPIResponse } from '../../govee-api.models';
-import { TransformBoolean } from '~ultimate-govee/common';
+import { TransformBoolean } from '~ultimate-govee-common';
 
 export class DeviceSettings {
   @Expose({ name: 'wifiName' })

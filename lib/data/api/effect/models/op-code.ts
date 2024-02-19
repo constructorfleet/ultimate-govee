@@ -1,4 +1,4 @@
-import { Optional, base64ToHex, chunk, asOpCode } from '~ultimate-govee/common';
+import { Optional, base64ToHex, chunk, asOpCode } from '~ultimate-govee-common';
 
 export const rebuildOpCode = (
   code?: number,

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { GoveeAPIModule } from '~ultimate-govee/data';
+import { GoveeAPIModule } from '~ultimate-govee-data';
 import {
   ConfigureRestChannelCommandHandler,
   ModelProductQueryHandler,

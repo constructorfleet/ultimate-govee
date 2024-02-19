@@ -1,5 +1,5 @@
-import { Measurement } from '~ultimate-govee/data';
-import { unpaddedHexToArray, Optional } from '~ultimate-govee/common';
+import { Measurement } from '~ultimate-govee-data';
+import { unpaddedHexToArray, Optional } from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState, ParseOption } from './device.state';
 

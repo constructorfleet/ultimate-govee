@@ -1,5 +1,5 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { IoTService } from '~ultimate-govee/data';
+import { IoTService } from '~ultimate-govee-data';
 import { IoTSubscribeCommand } from '../commands';
 
 @CommandHandler(IoTSubscribeCommand)

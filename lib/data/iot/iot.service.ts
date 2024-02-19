@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
-import { Optional, unpaddedHexToArray } from '~ultimate-govee/common';
+import { Optional, unpaddedHexToArray } from '~ultimate-govee-common';
 import { PersistResult } from '../../persist';
 import { IoTData } from '../api';
 import { IoTClient } from './iot.client';

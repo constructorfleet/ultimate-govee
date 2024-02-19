@@ -2,7 +2,7 @@ import { CrtError, iot, mqtt } from 'aws-iot-device-sdk-v2';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { EOL } from 'os';
 import { ConfigType } from '@nestjs/config';
-import { Optional } from '~ultimate-govee/common';
+import { Optional } from '~ultimate-govee-common';
 import { IoTConfig } from './iot.config';
 import { IoTHandler } from './iot.handler';
 import { IoTData } from '../api';

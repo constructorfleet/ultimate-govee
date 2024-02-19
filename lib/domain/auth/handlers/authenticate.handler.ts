@@ -4,7 +4,7 @@ import {
   ICommandHandler,
   IEvent,
 } from '@nestjs/cqrs';
-import { GoveeAccountService } from '~ultimate-govee/data';
+import { GoveeAccountService } from '~ultimate-govee-data';
 import { AuthenticateCommand } from '../commands/authenticate.command';
 import { AuthService } from '../auth.service';
 import { RestChannelConfigReceivedEvent } from '../../channels/rest/events/rest-channel-config-received.event';

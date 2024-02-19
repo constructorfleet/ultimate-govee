@@ -1,4 +1,4 @@
-import { Labelled } from '~ultimate-govee/common';
+import { Labelled } from '~ultimate-govee-common';
 import { BleChannelConfig } from '../ble-channel.state';
 
 export class BleChannelConfigReceivedEvent implements Labelled {

@@ -4,7 +4,7 @@ import {
   ICommandHandler,
   QueryBus,
 } from '@nestjs/cqrs';
-import { GoveeDeviceService } from '~ultimate-govee/data';
+import { GoveeDeviceService } from '~ultimate-govee-data';
 import { Logger } from '@nestjs/common';
 import { AuthDataQuery } from '../../../auth';
 import { RetrieveDeviceListCommand } from '../commands';

@@ -1,7 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { instanceToPlain } from 'class-transformer';
-import { PersistResult } from '~ultimate-govee/persist';
+import { PersistResult } from '~ultimate-govee-persist';
 import { request } from '../../utils';
 // import { EffectListResponse } from './models/effect-list.response';
 import { GoveeDiyConfig } from './govee-diy.config';

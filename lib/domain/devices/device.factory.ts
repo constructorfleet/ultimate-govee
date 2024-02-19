@@ -1,5 +1,5 @@
 import { ClassConstructor } from 'class-transformer';
-import { Optional } from '~ultimate-govee/common';
+import { Optional } from '~ultimate-govee-common';
 import { CommandBus, EventBus } from '@nestjs/cqrs';
 import { DeviceModel } from './devices.model';
 import { Device } from './device';
