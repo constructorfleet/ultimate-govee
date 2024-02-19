@@ -3,7 +3,6 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { IoTChannelModule } from './iot';
 import { RestChannelModule } from './rest';
 import { BleChannelModule } from './ble/ble-channel.module';
-import { DiscoveryModule } from '@nestjs/core';
 import { TogglableChannelsProvider } from './channel.providers';
 
 @Global()
@@ -13,7 +12,6 @@ export class ChannelsModule {
     return {
       module: ChannelsModule,
       imports: [
-        DiscoveryModule,
         CqrsModule,
         RestChannelModule,
         BleChannelModule,
