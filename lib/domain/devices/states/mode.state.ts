@@ -55,10 +55,10 @@ export class ModeState extends DeviceOpState<
   constructor(
     device: DeviceModel,
     modes: Optional<DeviceState<string, any>>[],
-    private readonly identifierMap: ModeIdMap = defaultModeIdMap,
     opType: number = 0xaa,
     identifier: number[] = [0x05],
     inline: boolean = false,
+    private readonly identifierMap: ModeIdMap = defaultModeIdMap,
   ) {
     super({ opType, identifier }, device, ModeStateName, undefined, 'both');
     this.modes = definedStates(modes);
