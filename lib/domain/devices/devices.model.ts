@@ -68,7 +68,7 @@ export class DeviceModel {
   get productData(): Optional<ProductModel> {
     return this.product;
   }
-  set productData(product: ProductModel) {
+  set productData(product: Optional<ProductModel>) {
     this.product = product;
   }
 
