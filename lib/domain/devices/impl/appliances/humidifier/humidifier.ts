@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CommandBus, EventBus } from '@nestjs/cqrs';
 import {
   ActiveState,
+  ActiveStateName,
   ConnectedState,
   ConnectedStateName,
   ControlLockState,
@@ -123,6 +124,9 @@ export class HumidifierDevice extends Device implements Humidifier {
   get [ControlLockStateName](): Optional<ControlLockState> {
     return this.state(ControlLockStateName);
   }
+  get [ActiveStateName](): Optional<ActiveState> {
+    return this.state(ActiveStateName);
+  }
 }
 
 @Injectable()
@@ -151,4 +155,5 @@ export type Humidifier = {
   [NightLightStateName]: Optional<NightLightState>;
   [ControlLockStateName]: Optional<ControlLockState>;
   [TimerStateName]: Optional<TimerState>;
+  [ActiveStateName]: Optional<ActiveState>;
 };
