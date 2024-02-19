@@ -28,22 +28,11 @@
     "baseUrl": "lib",
     "rootDir": "./lib",
     "paths": {
-      "@constructorfleet/ultimate-govee": [
-        "./index.js"
-      ],
-      "@constructorfleet/ultimate-govee/*": [
-        "./*"
-      ],
+      "@constructorfleet/ultimate-govee": ["./index.js"],
+      "@constructorfleet/ultimate-govee/*": ["./*"],
     },
   },
-  "include": [
-    "lib/*"
-  ],
-  "exclude": [
-    ".vscode/",
-    ".idea/",
-    "**/*.spec.ts",
-    "persisted/",
-    "assets/"
-  ],
+  "files": ["dist/**/*"],
+  "include": ["lib/*"],
+  "exclude": [".vscode/", ".idea/", "**/*.spec.ts", "persisted/", "assets/"],
 }
