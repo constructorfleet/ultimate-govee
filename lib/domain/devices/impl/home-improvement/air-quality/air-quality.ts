@@ -3,7 +3,7 @@ import { CommandBus, EventBus } from '@nestjs/cqrs';
 import { DeviceModel } from '../../../devices.model';
 import { DefaultFactory, Device, StateFactories } from '../../../device';
 import { DeviceFactory } from '../../../device.factory';
-import { PM2State, PM2StateName } from './air-quality.pm2';
+import { PM25State, PM25StateName } from './air-quality.pm25';
 import { TemperatureState } from './air-quality.temperature';
 import { HumidityState } from './air-quality.humidity';
 import {
@@ -24,7 +24,7 @@ const StateFactories: StateFactories = [
     H5106: [
       (device: DeviceModel) => new TemperatureState(device),
       (device: DeviceModel) => new HumidityState(device),
-      (device: DeviceModel) => new PM2State(device),
+      (device: DeviceModel) => new PM25State(device),
     ],
     [DefaultFactory]: [],
   },
@@ -49,8 +49,10 @@ export class AirQualityDevice extends Device implements AirQualitySensor {
   get [TemperatureStateName](): Optional<TemperatureState> {
     return this.state(TemperatureStateName);
   }
-  get [PM2StateName](): Optional<DeviceOpState<'pm2', number | undefined>> {
-    return this.state(PM2StateName);
+  get [PM25StateName](): Optional<
+    DeviceOpState<PM25StateName, number | undefined>
+  > {
+    return this.state(PM25StateName);
   }
   get [PowerStateName](): Optional<PowerState> {
     return this.state(PowerStateName);
@@ -73,7 +75,7 @@ export class AirQualityFactory extends DeviceFactory<AirQualityDevice> {
 export type AirQualitySensor = {
   [HumidityStateName]: Optional<HumidityState>;
   [TemperatureStateName]: Optional<TemperatureState>;
-  [PM2StateName]: Optional<DeviceOpState<PM2StateName, Optional<number>>>;
+  [PM25StateName]: Optional<DeviceOpState<PM25StateName, Optional<number>>>;
   [PowerStateName]: Optional<PowerState>;
   [ConnectedStateName]: Optional<ConnectedState>;
 };
