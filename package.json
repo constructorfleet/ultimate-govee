@@ -1,7 +1,7 @@
 {
   "name": "@constructorfleet/ultimate-govee",
   "displayName": "Ulitmate Govee",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "private": false,
   "type": "commonjs",
   "main": "dist/index.js",
@@ -19,7 +19,7 @@
     "devices"
   ],
   "scripts": {
-    "build": "rimraf ./dist && tsc && npx tsc-alias",
+    "build": "rimraf ./dist && tsc",
     "prepublishOnly": "nest build && npm run lint && npm run format && npm run test",
     "format": "prettier --write \"test/**/*.ts\" \"lib/**/*.ts\"",
     "lint": "eslint \"{lib,test}/**/*.ts\" --fix",
@@ -100,7 +100,6 @@
     "ts-jest": "^29.1.0",
     "ts-loader": "^9.4.3",
     "ts-node": "^10.9.1",
-    "tsc-alias": "^1.8.8",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.3.3"
   },
