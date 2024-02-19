@@ -1,7 +1,7 @@
 {
   "name": "@constructorfleet/ultimate-govee",
   "displayName": "Ulitmate Govee",
-  "version": "0.3.12",
+  "version": "0.3.13",
   "private": false,
   "type": "commonjs",
   "main": "lib/index.js",
