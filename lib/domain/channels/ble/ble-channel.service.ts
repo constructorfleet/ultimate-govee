@@ -8,7 +8,7 @@ import { ChannelService } from '../channel.service';
 import { BleChannelConfig } from './ble-channel.state';
 import { DeviceId, chunk } from '@constructorfleet/ultimate-govee/common';
 import { Subject, combineLatest, map } from 'rxjs';
-import { DeviceStatusReceivedEvent } from '@constructorfleet/ultimate-govee/domain/devices/cqrs';
+import { DeviceStatusReceivedEvent } from '../../devices/cqrs';
 import { Device } from '../../devices/device';
 import { BleChannelChangedEvent } from './events';
 

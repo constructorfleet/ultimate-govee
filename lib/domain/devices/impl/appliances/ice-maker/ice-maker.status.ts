@@ -1,5 +1,5 @@
-import { DeviceModel } from '@constructorfleet/ultimate-govee/domain/devices';
-import { DeviceOpState } from '@constructorfleet/ultimate-govee/domain/devices/states';
+import { DeviceModel } from '../../../devices.model';
+import { DeviceOpState } from '../../../states';
 import { IceMakerStatus, statusMap } from './types';
 
 export const IceMakerStatusStateName: 'iceMakerStatus' =

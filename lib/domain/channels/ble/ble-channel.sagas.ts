@@ -6,7 +6,7 @@ import {
   BleChannelConfigReceivedEvent,
 } from './events';
 import { ConfigureBleChannelCommand } from './commands/configure-ble-channel.command';
-import { DeviceDiscoveredEvent } from '@constructorfleet/ultimate-govee/domain/devices/cqrs';
+import { DeviceDiscoveredEvent } from '../../devices/cqrs';
 import { BleChannelService } from './ble-channel.service';
 import { BlePublishCommand, BleRecordDeviceCommand } from './commands';
 import { asOpCode, base64ToHex } from '@constructorfleet/ultimate-govee/common';

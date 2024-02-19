@@ -1,4 +1,4 @@
-import { DeviceModel } from '@constructorfleet/ultimate-govee/domain/devices';
+import { DeviceModel } from '../../../devices.model';
 import { EventBus, CommandBus } from '@nestjs/cqrs';
 import { DefaultFactory, Device, StateFactories } from '../../../device';
 import {

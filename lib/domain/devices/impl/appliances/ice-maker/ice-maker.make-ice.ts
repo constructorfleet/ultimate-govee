@@ -1,5 +1,5 @@
-import { DeviceModel } from '@constructorfleet/ultimate-govee/domain/devices';
-import { DeviceState } from '@constructorfleet/ultimate-govee/domain/devices/states';
+import { DeviceModel } from '../../../devices.model';
+import { DeviceState } from '../../../states';
 import { IceMakerStatusState } from './ice-maker.status';
 import { IceMakerStatus } from './types';
 

@@ -1,4 +1,4 @@
-import { DeviceConfigReceivedEvent } from '@constructorfleet/ultimate-govee/domain/devices/cqrs';
+import { DeviceConfigReceivedEvent } from '../../../devices/cqrs';
 import { EnableBleClientCommand } from '../commands/enable-ble-client.command';
 import {
   CommandHandler,
