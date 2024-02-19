@@ -1,4 +1,4 @@
-import { Optional } from '@constructorfleet/ultimate-govee/common';
+import { Optional } from '~ultimate-govee/common';
 import { existsSync } from 'fs';
 import { mkdir, writeFile, appendFile } from 'fs/promises';
 import { join } from 'path';

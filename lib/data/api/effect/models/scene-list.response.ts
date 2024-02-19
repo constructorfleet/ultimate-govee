@@ -1,5 +1,5 @@
 import { Expose, Transform, Type } from 'class-transformer';
-import { Optional } from '@constructorfleet/ultimate-govee/common';
+import { Optional } from '~ultimate-govee/common';
 import { GoveeAPIResponse } from '../../govee-api.models';
 import { rebuildOpCode } from './op-code';
 

@@ -10,14 +10,14 @@ import {
   Optional,
   Ignorable,
   deepPartialCompare,
-} from '@constructorfleet/ultimate-govee/common';
+} from '~ultimate-govee/common';
 import { Logger } from '@nestjs/common';
 import {
   GoveeDeviceCommand,
   GoveeDeviceStateCommand,
   GoveeDeviceStatus,
   GoveeStatusForStateCommand,
-} from '@constructorfleet/ultimate-govee/data';
+} from '~ultimate-govee/data';
 import { DeviceModel } from '../devices.model';
 import { v4 as uuidv4 } from 'uuid';
 

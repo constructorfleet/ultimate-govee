@@ -1,4 +1,4 @@
-import { Optional } from '@constructorfleet/ultimate-govee/common';
+import { Optional } from '~ultimate-govee/common';
 import { Subscription } from 'rxjs';
 import { DeviceState } from '../../../states';
 import { DeviceModel } from '../../../devices.model';

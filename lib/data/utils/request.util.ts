@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { Optional } from '@constructorfleet/ultimate-govee/common';
+import { Optional } from '~ultimate-govee/common';
 import { ClassConstructor, plainToInstance } from 'class-transformer';
 import { writeFile } from 'fs/promises';
 import stringify from 'json-stringify-safe';

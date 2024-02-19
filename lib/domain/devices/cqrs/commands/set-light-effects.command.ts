@@ -1,5 +1,5 @@
-import { DeviceId, Labelled } from '@constructorfleet/ultimate-govee/common';
-import { Effect } from '@constructorfleet/ultimate-govee/data';
+import { DeviceId, Labelled } from '~ultimate-govee/common';
+import { Effect } from '~ultimate-govee/data';
 
 export class SetLightEffectsCommand implements Labelled {
   label = () => `Set Effects for ${this.deviceId}`;

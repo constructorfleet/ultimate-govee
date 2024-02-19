@@ -12,12 +12,7 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import {
-  DeltaMap,
-  DeviceId,
-  Optional,
-  sleep,
-} from '@constructorfleet/ultimate-govee/common';
+import { DeltaMap, DeviceId, Optional, sleep } from '~ultimate-govee/common';
 import noble from '@abandonware/noble';
 import { platform } from 'os';
 import { BleCommand, BlePeripheral } from './ble.types';

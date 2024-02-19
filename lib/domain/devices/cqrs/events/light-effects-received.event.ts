@@ -1,5 +1,5 @@
-import { DeviceId, Labelled } from '@constructorfleet/ultimate-govee/common';
-import { Effect } from '@constructorfleet/ultimate-govee/data';
+import { DeviceId, Labelled } from '~ultimate-govee/common';
+import { Effect } from '~ultimate-govee/data';
 
 export class LightEffectsReceivedEvent implements Labelled {
   label = () => `Received Effects for ${this.deviceId}`;

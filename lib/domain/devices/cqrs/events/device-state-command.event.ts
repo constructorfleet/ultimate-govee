@@ -3,8 +3,8 @@ import {
   DeviceCommandAddresses,
   DeviceId,
   Labelled,
-} from '@constructorfleet/ultimate-govee/common';
-import { GoveeDeviceCommand } from '@constructorfleet/ultimate-govee/data';
+} from '~ultimate-govee/common';
+import { GoveeDeviceCommand } from '~ultimate-govee/data';
 
 export class DeviceStateCommandEvent implements Labelled, Debuggable {
   label = () => `State ${this.stateName}`;

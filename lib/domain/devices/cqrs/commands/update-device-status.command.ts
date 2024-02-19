@@ -1,5 +1,5 @@
-import { DeviceId, Labelled } from '@constructorfleet/ultimate-govee/common';
-import { GoveeDeviceStatus } from '@constructorfleet/ultimate-govee/data';
+import { DeviceId, Labelled } from '~ultimate-govee/common';
+import { GoveeDeviceStatus } from '~ultimate-govee/data';
 
 export class UpdateDeviceStatusCommand implements Labelled {
   label = () => `Update ${this.deviceId} Status`;

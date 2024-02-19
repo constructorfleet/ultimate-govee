@@ -4,7 +4,7 @@ import {
   ICommandHandler,
   QueryBus,
 } from '@nestjs/cqrs';
-import { GoveeEffectService } from '@constructorfleet/ultimate-govee/data';
+import { GoveeEffectService } from '~ultimate-govee/data';
 import { AuthDataQuery } from '../../../auth';
 import { LightEffectsReceivedEvent } from '../../../devices/cqrs';
 import { RetrieveLightEffectsCommand } from '../commands/retrieve-light-effects.command';

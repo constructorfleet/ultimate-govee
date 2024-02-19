@@ -1,7 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { PersistResult } from '@constructorfleet/ultimate-govee/persist';
-import { Optional } from '@constructorfleet/ultimate-govee/common';
+import { PersistResult } from '~ultimate-govee/persist';
+import { Optional } from '~ultimate-govee/common';
 import { request } from '../../utils';
 import {
   EffectCategory,

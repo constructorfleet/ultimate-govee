@@ -15,7 +15,7 @@ import {
 } from '../../../states';
 import { DeviceFactory } from '../../../device.factory';
 import { Injectable } from '@nestjs/common';
-import { Optional } from '@constructorfleet/ultimate-govee/common';
+import { Optional } from '~ultimate-govee/common';
 
 export const Hygrometer: 'Hygrometer' = 'Hygrometer' as const;
 export type Hygrometer = typeof Hygrometer;

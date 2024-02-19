@@ -1,4 +1,4 @@
-import { Labelled } from '@constructorfleet/ultimate-govee/common';
+import { Labelled } from '~ultimate-govee/common';
 import { Device } from '../../../devices/device';
 
 export class RetrieveLightEffectsCommand implements Labelled {

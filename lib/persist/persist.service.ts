@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { Optional } from '@constructorfleet/ultimate-govee/common';
+import { Optional } from '~ultimate-govee/common';
 import { ClassConstructor, plainToInstance } from 'class-transformer';
 import { FileReader, FileWriter } from './persist.providers';
 import stringify from 'json-stringify-safe';

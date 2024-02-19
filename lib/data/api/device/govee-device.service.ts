@@ -1,11 +1,8 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { join } from 'path';
-import {
-  InjectPersisted,
-  PersistResult,
-} from '@constructorfleet/ultimate-govee/persist';
-import { Optional } from '@constructorfleet/ultimate-govee/common';
+import { InjectPersisted, PersistResult } from '~ultimate-govee/persist';
+import { Optional } from '~ultimate-govee/common';
 import { GoveeDeviceConfig } from './govee-device.config';
 import {
   GoveeAPIDevice,

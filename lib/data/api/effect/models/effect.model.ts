@@ -1,4 +1,4 @@
-import { Optional } from '@constructorfleet/ultimate-govee/common';
+import { Optional } from '~ultimate-govee/common';
 
 export type Effect = {
   name: string;

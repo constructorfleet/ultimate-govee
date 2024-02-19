@@ -1,5 +1,5 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { GoveeAccountService } from '@constructorfleet/ultimate-govee/data';
+import { GoveeAccountService } from '~ultimate-govee/data';
 import { RefreshAuthenticationCommand } from '../commands';
 import { AuthService } from '../auth.service';
 

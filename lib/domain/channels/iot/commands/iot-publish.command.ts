@@ -1,4 +1,4 @@
-import { Debuggable, Labelled } from '@constructorfleet/ultimate-govee/common';
+import { Debuggable, Labelled } from '~ultimate-govee/common';
 
 export class IoTPublishCommand implements Labelled, Debuggable {
   label = () => `Publishing to ${this.topic}`;

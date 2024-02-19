@@ -1,4 +1,4 @@
-import { Labelled } from '@constructorfleet/ultimate-govee/common';
+import { Labelled } from '~ultimate-govee/common';
 
 export class BlePublishCommand implements Labelled {
   label = () => `BLE Publishing commands to ${this.id}`;

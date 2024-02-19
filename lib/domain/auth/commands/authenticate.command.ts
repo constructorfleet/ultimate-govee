@@ -1,9 +1,4 @@
-import {
-  ClientId,
-  Labelled,
-  Password,
-  Username,
-} from '@constructorfleet/ultimate-govee/common';
+import { ClientId, Labelled, Password, Username } from '~ultimate-govee/common';
 
 export class AuthenticateCommand implements Labelled {
   label = 'Authenticate';

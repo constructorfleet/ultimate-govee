@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { IoTModule } from '@constructorfleet/ultimate-govee/data';
+import { IoTModule } from '~ultimate-govee/data';
 import {
   IoTSubscribeCommandHandler,
   ConfigureIoTChannelCommandHandler,

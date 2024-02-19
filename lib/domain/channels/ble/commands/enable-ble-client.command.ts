@@ -1,4 +1,4 @@
-import { DeviceId, Labelled } from '@constructorfleet/ultimate-govee/common';
+import { DeviceId, Labelled } from '~ultimate-govee/common';
 export class EnableBleClientCommand implements Labelled {
   label = 'Enable BLE Client';
 

@@ -1,5 +1,5 @@
-import { Labelled } from '@constructorfleet/ultimate-govee/common';
-import { GoveeDevice } from '@constructorfleet/ultimate-govee/data';
+import { Labelled } from '~ultimate-govee/common';
+import { GoveeDevice } from '~ultimate-govee/data';
 import { Logger } from '@nestjs/common';
 
 export class ModelProductQuery implements Labelled {

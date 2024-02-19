@@ -1,4 +1,4 @@
-import { Credentials, Labelled } from '@constructorfleet/ultimate-govee/common';
+import { Credentials, Labelled } from '~ultimate-govee/common';
 
 export class SetCredentialsCommand implements Labelled {
   label = 'Set Credentials';
