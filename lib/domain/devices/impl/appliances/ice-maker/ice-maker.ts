@@ -33,6 +33,7 @@ import {
   MakingIceStateName,
 } from './ice-maker.make-ice';
 import { Optional } from '../../../../../common/types';
+import { NuggetSize } from './types';
 
 const stateFactories: StateFactories = [
   (device) => new PowerState(device),
@@ -50,6 +51,9 @@ export type IceMakerType = typeof IceMakerType;
 
 export class IceMakerDevice extends Device implements IceMaker {
   static readonly deviceType: IceMakerType = IceMakerType;
+  get NuggetSize(): typeof NuggetSize {
+    return NuggetSize;
+  }
   constructor(device: DeviceModel, eventBus: EventBus, commandBus: CommandBus) {
     super(device, eventBus, commandBus, stateFactories);
     this.addState(this.state<IceMakerStatusState>(IceMakerStatusStateName)!);
@@ -91,6 +95,7 @@ export class IceMakerFactory extends DeviceFactory<IceMakerDevice> {
   }
 }
 export type IceMaker = {
+  NuggetSize: typeof NuggetSize;
   [BasketFullStateName]: Optional<IceMakerBasketFull>;
   [MakingIceStateName]: Optional<IceMakerMakingIceState>;
   [NuggetSizeStateName]: Optional<IceMakerNuggetSizeState>;
