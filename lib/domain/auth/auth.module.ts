@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { CqrsModule } from '@nestjs/cqrs';
 import { GoveeAPIModule } from '~ultimate-govee-data';
-import { AuthConfig } from './auth.config';
 import {
   AuthDataQueryHandler,
   AuthenticateCommandHandler,
@@ -11,10 +9,13 @@ import {
 } from './handlers';
 import { AuthSagas } from './auth.sagas';
 import { AuthService } from './auth.service';
+import { ConfigurableModuleClass } from './auth.types';
+import { AuthRefreshMarginProvider } from './auth.providers';
 
 @Module({
-  imports: [CqrsModule, ConfigModule.forFeature(AuthConfig), GoveeAPIModule],
+  imports: [CqrsModule, GoveeAPIModule],
   providers: [
+    AuthRefreshMarginProvider,
     AuthenticateCommandHandler,
     RefreshAuthenticationCommandHandler,
     SetCredentialsCommandHandler,
@@ -30,4 +31,4 @@ import { AuthService } from './auth.service';
     AuthSagas,
   ],
 })
-export class AuthModule {}
+export class AuthModule extends ConfigurableModuleClass {}
