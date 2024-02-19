@@ -7,11 +7,19 @@ import {
   PowerState,
   ColorTempState,
   ActiveState,
+  ActiveStateName,
+  BrightnessStateName,
+  ColorRGBStateName,
+  ColorTempStateName,
+  ConnectedStateName,
+  PowerStateName,
 } from '../../../states';
 import { DeviceModel } from '../../../devices.model';
 import { StateFactories } from '../../../device';
 import { DeviceFactory } from '../../../device.factory';
 import { LightDevice } from '../light.device';
+import { SceneModeState, SceneModeStateName } from './rgb-light.modes';
+import { Optional } from '../../../../../common/types';
 
 const StateFactory: StateFactories = [
   (device: DeviceModel) => new PowerState(device),
@@ -25,11 +33,32 @@ const StateFactory: StateFactories = [
 export const RGBLightType: 'rgb' = 'rgb' as const;
 export type RGBLightType = typeof RGBLightType;
 
-export class RGBLightDevice extends LightDevice {
+export class RGBLightDevice extends LightDevice implements RGBLight {
   static readonly type: RGBLightType = RGBLightType;
 
   constructor(device: DeviceModel, eventBus: EventBus, commandBus: CommandBus) {
     super(device, eventBus, commandBus, StateFactory);
+  }
+  get [PowerStateName](): Optional<PowerState> {
+    return this.state(PowerStateName);
+  }
+  get [ConnectedStateName](): Optional<ConnectedState> {
+    return this.state(ConnectedStateName);
+  }
+  get [BrightnessStateName](): Optional<BrightnessState> {
+    return this.state(BrightnessStateName);
+  }
+  get [ColorRGBStateName](): Optional<ColorRGBState> {
+    return this.state(ColorRGBStateName);
+  }
+  get [ColorTempStateName](): Optional<ColorTempState> {
+    return this.state(ColorTempStateName);
+  }
+  get [SceneModeStateName](): Optional<SceneModeState> {
+    return this.state(SceneModeStateName);
+  }
+  get [ActiveStateName](): Optional<ActiveState> {
+    return this.state(ActiveStateName);
   }
 }
 
@@ -46,3 +75,12 @@ export class RGBLightFactory extends DeviceFactory<RGBLightDevice> {
     });
   }
 }
+export type RGBLight = {
+  [PowerStateName]: Optional<PowerState>;
+  [ConnectedStateName]: Optional<ConnectedState>;
+  [BrightnessStateName]: Optional<BrightnessState>;
+  [ColorRGBStateName]: Optional<ColorRGBState>;
+  [ColorTempStateName]: Optional<ColorTempState>;
+  [SceneModeStateName]: Optional<SceneModeState>;
+  [ActiveStateName]: Optional<ActiveState>;
+};

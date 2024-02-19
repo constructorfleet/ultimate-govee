@@ -4,9 +4,9 @@ import {
   DeviceStates as IceMakerDeviceStates,
 } from './ice-maker';
 import { Device } from '../../device';
-import { PurifierStates } from './purifier/index';
-import { HumidifierStates } from './humidifier/index';
-import { IceMakerStates } from './ice-maker/index';
+import { Purifier } from './purifier/purifier';
+import { Humidifier } from './humidifier/humidifier';
+import { IceMaker } from './ice-maker/ice-maker';
 import {
   Devices as HumidifierDevices,
   DeviceStates as HumidifierDeviceStates,
@@ -18,7 +18,7 @@ import {
 
 export * from './appliances.factory';
 export * from './appliances.module';
-export { PurifierStates, HumidifierStates, IceMakerStates };
+export { Purifier, Humidifier, IceMaker };
 
 export const Devices: Type<Device>[] = [
   ...IceMakerDevices,

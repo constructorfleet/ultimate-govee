@@ -5,12 +5,12 @@ export * from './ultimate-govee.config';
 export {
   Devices,
   DeviceStates,
-  HumidifierStates,
-  IceMakerStates,
-  PurifierStates,
-  AirQualityStates,
-  HygrometerStates,
-  RGBLightStates,
-  RGBICLightStates,
+  Humidifier,
+  IceMaker,
+  Purifier,
+  AirQualitySensor,
+  HygrometerSensor,
+  RGBLight,
+  RGBICLight,
 } from './domain';
 export { Device };

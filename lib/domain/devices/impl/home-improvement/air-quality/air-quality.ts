@@ -3,10 +3,19 @@ import { CommandBus, EventBus } from '@nestjs/cqrs';
 import { DeviceModel } from '../../../devices.model';
 import { DefaultFactory, Device, StateFactories } from '../../../device';
 import { DeviceFactory } from '../../../device.factory';
-import { PM2State } from './air-quality.pm2';
+import { PM2State, PM2StateName } from './air-quality.pm2';
 import { TemperatureState } from './air-quality.temperature';
 import { HumidityState } from './air-quality.humidity';
-import { ConnectedState, PowerState } from '../../../states';
+import {
+  ConnectedState,
+  ConnectedStateName,
+  DeviceOpState,
+  HumidityStateName,
+  PowerState,
+  PowerStateName,
+  TemperatureStateName,
+} from '../../../states';
+import { Optional } from '@constructorfleet/ultimate-govee/common';
 
 const StateFactories: StateFactories = [
   (device) => new PowerState(device),
@@ -24,7 +33,7 @@ const StateFactories: StateFactories = [
 export const AirQualityType: 'airQuality' = 'airQuality' as const;
 export type AirQualityType = typeof AirQualityType;
 
-export class AirQualityDevice extends Device {
+export class AirQualityDevice extends Device implements AirQualitySensor {
   static readonly deviceType: AirQualityType = AirQualityType;
 
   constructor(
@@ -33,6 +42,21 @@ export class AirQualityDevice extends Device {
     commandBus: CommandBus,
   ) {
     super(deviceModel, eventBus, commandBus, StateFactories);
+  }
+  get [HumidityStateName](): Optional<HumidityState> {
+    return this.state(HumidityStateName);
+  }
+  get [TemperatureStateName](): Optional<TemperatureState> {
+    return this.state(TemperatureStateName);
+  }
+  get [PM2StateName](): Optional<DeviceOpState<'pm2', number | undefined>> {
+    return this.state(PM2StateName);
+  }
+  get [PowerStateName](): Optional<PowerState> {
+    return this.state(PowerStateName);
+  }
+  get [ConnectedStateName](): Optional<ConnectedState> {
+    return this.state(ConnectedStateName);
   }
 }
 
@@ -46,3 +70,10 @@ export class AirQualityFactory extends DeviceFactory<AirQualityDevice> {
     });
   }
 }
+export type AirQualitySensor = {
+  [HumidityStateName]: Optional<HumidityState>;
+  [TemperatureStateName]: Optional<TemperatureState>;
+  [PM2StateName]: Optional<DeviceOpState<PM2StateName, Optional<number>>>;
+  [PowerStateName]: Optional<PowerState>;
+  [ConnectedStateName]: Optional<ConnectedState>;
+};
