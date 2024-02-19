@@ -33,12 +33,5 @@
     },
   },
   "include": ["lib/*"],
-  "exclude": [
-    ".vscode/",
-    ".idea/",
-    "**/*.spec.ts",
-    "persisted/",
-    "assets/",
-    "tsconfig.json",
-  ],
+  "exclude": [".vscode/", ".idea/", "**/*.spec.ts", "persisted/", "assets/"],
 }
