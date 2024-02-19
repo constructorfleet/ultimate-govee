@@ -32,7 +32,13 @@
       "@constructorfleet/ultimate-govee/*": ["./*"],
     },
   },
-  "files": ["dist/**/*"],
   "include": ["lib/*"],
-  "exclude": [".vscode/", ".idea/", "**/*.spec.ts", "persisted/", "assets/"],
+  "exclude": [
+    ".vscode/",
+    ".idea/",
+    "**/*.spec.ts",
+    "persisted/",
+    "assets/",
+    "tsconfig.json",
+  ],
 }
