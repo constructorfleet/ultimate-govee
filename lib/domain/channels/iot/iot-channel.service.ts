@@ -28,10 +28,12 @@ export class IoTChannelService
     eventBus: EventBus,
   ) {
     super(eventBus, enabled);
-    combineLatest([this.onConfigChanged$, this.onEnabledChanged$])
+    combineLatest(this.onConfigChanged$, this.onEnabledChanged$)
       .pipe(
-        switchMap(([iotData, enabled]) =>
-          enabled ? this.connect(iotData) : this.disconnect(),
+        switchMap((value) =>
+          (value as []).at(1)
+            ? this.connect((value as []).at(0) as unknown as IoTData)
+            : this.disconnect(),
         ),
       )
       .subscribe();

@@ -28,9 +28,15 @@ export class BleChannelService
     eventBus: EventBus,
   ) {
     super(eventBus, enabled, { devices: deviceIds });
-    combineLatest([this.onConfigChanged$, this.onEnabledChanged$])
+    combineLatest(this.onConfigChanged$, this.onEnabledChanged$)
       .pipe(
-        map(([config, enabled]) => new BleChannelChangedEvent(enabled, config)),
+        map(
+          (value) =>
+            new BleChannelChangedEvent(
+              (value as any[])[0],
+              (value as any[])[1],
+            ),
+        ),
       )
       .subscribe((event) => this.eventBus.publish(event));
 
