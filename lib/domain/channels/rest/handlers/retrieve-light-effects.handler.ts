@@ -5,8 +5,8 @@ import {
   QueryBus,
 } from '@nestjs/cqrs';
 import { GoveeEffectService } from '@constructorfleet/ultimate-govee/data';
-import { AuthDataQuery } from '@constructorfleet/ultimate-govee/domain/auth';
-import { LightEffectsReceivedEvent } from '@constructorfleet/ultimate-govee/domain/devices/cqrs';
+import { AuthDataQuery } from '../../../auth';
+import { LightEffectsReceivedEvent } from '../../../devices/cqrs';
 import { RetrieveLightEffectsCommand } from '../commands/retrieve-light-effects.command';
 
 @CommandHandler(RetrieveLightEffectsCommand)

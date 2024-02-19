@@ -1,7 +1,4 @@
-import {
-  DeviceOpState,
-  StateCommandAndStatus,
-} from '@constructorfleet/ultimate-govee/domain/devices/states';
+import { DeviceOpState, StateCommandAndStatus } from '../../../states';
 import { NuggetSize, nuggetSizeMap } from './types';
 import {
   Optional,
@@ -10,7 +7,7 @@ import {
   total,
   unpaddedHexToArray,
 } from '@constructorfleet/ultimate-govee/common';
-import { DeviceModel } from '@constructorfleet/ultimate-govee/domain/devices/devices.model';
+import { DeviceModel } from '../../../devices.model';
 import MomentLib from 'moment';
 
 export const ScheduledStartStateName: 'scheduledStart' =

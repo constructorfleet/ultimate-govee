@@ -6,9 +6,9 @@ import {
 } from '@nestjs/cqrs';
 import { GoveeDeviceService } from '@constructorfleet/ultimate-govee/data';
 import { Logger } from '@nestjs/common';
-import { CQRS } from '@constructorfleet/ultimate-govee/domain/devices';
 import { AuthDataQuery } from '../../../auth';
 import { RetrieveDeviceListCommand } from '../commands';
+import { DeviceConfigReceivedEvent } from '../../../devices/cqrs/events/device-config-received.event';
 
 @CommandHandler(RetrieveDeviceListCommand)
 export class RetrieveDeviceListCommandHandler
@@ -32,7 +32,7 @@ export class RetrieveDeviceListCommandHandler
       const deviceList = await this.api.getDeviceList(authData.oauth);
       this.logger.log(`Got ${deviceList.length} devices`);
       deviceList
-        .map((device) => new CQRS.DeviceConfigReceivedEvent(device))
+        .map((device) => new DeviceConfigReceivedEvent(device))
         .forEach((event) => this.eventBus.publish(event));
     }
   }

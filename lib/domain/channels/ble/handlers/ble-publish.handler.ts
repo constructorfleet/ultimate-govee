@@ -10,7 +10,7 @@ import { BleChannelService } from '../ble-channel.service';
 import {
   CommandExpiredEvent,
   DeviceStatusReceivedEvent,
-} from '@constructorfleet/ultimate-govee/domain/devices/cqrs';
+} from '../../../devices/cqrs';
 import { Subject, map, reduce, timer } from 'rxjs';
 import { EventBus } from '@nestjs/cqrs';
 
