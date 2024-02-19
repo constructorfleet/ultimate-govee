@@ -3,11 +3,11 @@ import { Optional } from '@constructorfleet/ultimate-govee/common';
 import { NumericState } from '../../../states/numeric.state';
 import { Measurement } from '@constructorfleet/ultimate-govee/data';
 
-export const PM2StateName: 'pm2' = 'pm2' as const;
-export type PM2StateName = typeof PM2StateName;
+export const PM25StateName: 'pm25' = 'pm25' as const;
+export type PM25StateName = typeof PM25StateName;
 
-export const PM2State = NumericState(
-  PM2StateName,
+export const PM25State = NumericState(
+  PM25StateName,
   (opCommand: number[], stateValue: Subject<Optional<number>>) => {
     if (opCommand.every((code) => code === 0x00)) {
       return;
