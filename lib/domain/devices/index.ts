@@ -25,6 +25,7 @@ import {
   ControlLockState,
   ControlLockStateName,
 } from './states/control-lock.state';
+import { DeviceState, DeviceOpState } from './states/device.state';
 import {
   DisplayScheduleState,
   DisplayScheduleStateName,
@@ -65,6 +66,8 @@ export {
   HygrometerSensor,
   RGBICLight,
   RGBLight,
+  DeviceState,
+  DeviceOpState,
   ActiveState,
   ActiveStateName,
   BatteryLevelState,

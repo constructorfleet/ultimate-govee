@@ -24,6 +24,8 @@ export {
   ColorTempStateName,
   ControlLockState,
   ControlLockStateName,
+  DeviceState,
+  DeviceOpState,
   DisplayScheduleState,
   DisplayScheduleStateName,
   FilterState,
