@@ -10,6 +10,7 @@ import {
   ControlLockStateName,
   DisplayScheduleState,
   DisplayScheduleStateName,
+  ModeStateName,
   NightLightState,
   NightLightStateName,
   PowerState,
@@ -97,6 +98,9 @@ export class PurifierDevice extends Device implements Purifier {
   get [ControlLockStateName](): Optional<ControlLockState> {
     return this.state(ControlLockStateName);
   }
+  get [ModeStateName](): Optional<PurifierActiveMode> {
+    return this.state(ModeStateName);
+  }
 }
 
 @Injectable()
@@ -120,4 +124,5 @@ export type Purifier = {
   [FanSpeedStateName]: Optional<PurifierFanSpeedState>;
   [NightLightStateName]: Optional<NightLightState>;
   [ControlLockStateName]: Optional<ControlLockState>;
+  [ModeStateName]: Optional<PurifierActiveMode>;
 };

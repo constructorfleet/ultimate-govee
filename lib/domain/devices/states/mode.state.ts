@@ -24,6 +24,21 @@ const definedStates = (
 ): DeviceState<string, any>[] =>
   states.filter((state) => state !== undefined) as DeviceState<string, any>[];
 
+export type ModeIdMap = (
+  state: ModeState,
+) => Optional<DeviceState<string, any>>;
+export const defaultModeIdMap: ModeIdMap = (
+  state: ModeState,
+): Optional<DeviceState<string, any>> => {
+  return state.modes
+    .map((mode) => mode as DeviceOpState<string, any>)
+    .find((mode) =>
+      state.activeIdentifier
+        .getValue()
+        ?.every((i, index) => mode.identifier?.at(index) === i),
+    );
+};
+
 export class ModeState extends DeviceOpState<
   ModeStateName,
   Optional<DeviceState<string, unknown>>
@@ -33,10 +48,14 @@ export class ModeState extends DeviceOpState<
   );
   readonly modes: DeviceState<string, any>[];
   protected readonly inline: boolean;
+  get activeMode(): Optional<DeviceState<string, any>> {
+    return this.identifierMap(this);
+  }
 
   constructor(
     device: DeviceModel,
     modes: Optional<DeviceState<string, any>>[],
+    private readonly identifierMap: ModeIdMap = defaultModeIdMap,
     opType: number = 0xaa,
     identifier: number[] = [0x05],
     inline: boolean = false,
