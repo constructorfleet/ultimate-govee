@@ -7,7 +7,7 @@
   "main": "lib/index.js",
   "description": "Library for interacting with Govee devices written in Typescript.",
   "license": "GPL-3.0-or-later",
-  "author": "@Teagan423",
+  "author": "@Teagan42",
   "engines": {
     "node": ">=20.7.0"
   },
