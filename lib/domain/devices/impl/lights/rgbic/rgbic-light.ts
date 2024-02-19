@@ -10,6 +10,13 @@ import {
   SegmentCountStateName,
   ColorTempState,
   ActiveState,
+  ActiveStateName,
+  BrightnessStateName,
+  ColorTempStateName,
+  ConnectedStateName,
+  ModeStateName,
+  PowerStateName,
+  LightEffectState,
 } from '../../../states';
 import { DeviceModel } from '../../../devices.model';
 import {
@@ -26,6 +33,7 @@ import {
 } from './rgbic-light.modes';
 import { DeviceFactory } from '../../../device.factory';
 import { LightDevice } from '../light.device';
+import { Optional } from '../../../../../common/types';
 
 const StateFactory: StateFactories = [
   (device: DeviceModel) => new PowerState(device),
@@ -43,7 +51,7 @@ const StateFactory: StateFactories = [
 export const RGBICLightType: 'rgbic' = 'rgbic' as const;
 export type RGBICLightType = typeof RGBICLightType;
 
-export class RGBICLightDevice extends LightDevice {
+export class RGBICLightDevice extends LightDevice implements RGBICLight {
   static readonly type = RGBICLightType;
 
   constructor(device: DeviceModel, eventBus: EventBus, commandBus: CommandBus) {
@@ -63,6 +71,42 @@ export class RGBICLightDevice extends LightDevice {
         this.state(LightEffectStateName),
       ]),
     );
+  }
+  get [PowerStateName](): Optional<PowerState> {
+    return this.state(PowerStateName);
+  }
+  get [ConnectedStateName](): Optional<ConnectedState> {
+    return this.state(ConnectedStateName);
+  }
+  get [ActiveStateName](): Optional<ActiveState> {
+    return this.state(ActiveStateName);
+  }
+  get [BrightnessStateName](): Optional<BrightnessState> {
+    return this.state(BrightnessStateName);
+  }
+  get [ColorTempStateName](): Optional<ColorTempState> {
+    return this.state(ColorTempStateName);
+  }
+  get [SegmentCountStateName](): Optional<SegmentCountState> {
+    return this.state(SegmentCountStateName);
+  }
+  get [WholeColorModeStateName](): Optional<ColorModeState> {
+    return this.state(WholeColorModeStateName);
+  }
+  get [LightEffectStateName](): Optional<LightEffectState> {
+    return this.state(LightEffectStateName);
+  }
+  get [MicModeStateName](): Optional<MicModeState> {
+    return this.state(MicModeStateName);
+  }
+  get [AdvancedColorModeStateName](): Optional<AdvancedColorModeState> {
+    return this.state(AdvancedColorModeStateName);
+  }
+  get [ModeStateName](): Optional<RGBICActiveState> {
+    return this.state(ModeStateName);
+  }
+  get [SegmentColorModeStateName](): Optional<SegmentColorModeState> {
+    return this.state(SegmentColorModeStateName);
   }
 }
 
@@ -87,3 +131,17 @@ export class RGBICLightFactory extends DeviceFactory<RGBICLightDevice> {
     });
   }
 }
+export type RGBICLight = {
+  [PowerStateName]: Optional<PowerState>;
+  [ConnectedStateName]: Optional<ConnectedState>;
+  [ActiveStateName]: Optional<ActiveState>;
+  [BrightnessStateName]: Optional<BrightnessState>;
+  [ColorTempStateName]: Optional<ColorTempState>;
+  [SegmentCountStateName]: Optional<SegmentCountState>;
+  [WholeColorModeStateName]: Optional<ColorModeState>;
+  [LightEffectStateName]: Optional<LightEffectState>;
+  [MicModeStateName]: Optional<MicModeState>;
+  [AdvancedColorModeStateName]: Optional<AdvancedColorModeState>;
+  [ModeStateName]: Optional<RGBICActiveState>;
+  [SegmentColorModeStateName]: Optional<SegmentColorModeState>;
+};

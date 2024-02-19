@@ -1,7 +1,7 @@
 import { Type } from '@nestjs/common';
 import { Device } from '../../device';
-import { AirQualityStates } from './air-quality/index';
-import { HygrometerStates } from './hygrometer/index';
+import { AirQualitySensor } from './air-quality/air-quality';
+import { HygrometerSensor } from './hygrometer/hygrometer';
 import {
   Devices as AirQualityDevices,
   DeviceStates as AirQualityDeviceStates,
@@ -13,7 +13,7 @@ import {
 
 export * from './home-improvement.factory';
 export * from './home-improvement.module';
-export { AirQualityStates, HygrometerStates };
+export { AirQualitySensor, HygrometerSensor };
 export const Devices: Type<Device>[] = [
   ...AirQualityDevices,
   ...HygrometerDevices,

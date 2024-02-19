@@ -9,13 +9,13 @@ import {
 } from './home-improvement';
 import { Devices as LightDevices, DeviceStates as LightStates } from './lights';
 import { Device } from '../device';
-import { HumidifierStates } from './appliances/humidifier/index';
-import { PurifierStates } from './appliances/purifier/index';
-import { IceMakerStates } from './appliances/ice-maker/index';
-import { AirQualityStates } from './home-improvement/air-quality/index';
-import { HygrometerStates } from './home-improvement/hygrometer/index';
-import { RGBLightStates } from './lights/rgb/index';
-import { RGBICLightStates } from './lights/rgbic/index';
+import { Humidifier } from './appliances/humidifier/humidifier';
+import { Purifier } from './appliances/purifier/purifier';
+import { IceMaker } from './appliances/ice-maker/ice-maker';
+import { AirQualitySensor } from './home-improvement/air-quality/air-quality';
+import { HygrometerSensor } from './home-improvement/hygrometer/hygrometer';
+import { RGBLight } from './lights/rgb/rgb-light';
+import { RGBICLight } from './lights/rgbic/rgbic-light';
 
 export { AppliancesFactory, AppliancesModule } from './appliances';
 export {
@@ -30,13 +30,13 @@ export const Devices: Type<Device>[] = [
   ...LightDevices,
 ];
 export {
-  HumidifierStates,
-  PurifierStates,
-  IceMakerStates,
-  AirQualityStates,
-  HygrometerStates,
-  RGBLightStates,
-  RGBICLightStates,
+  Humidifier,
+  Purifier,
+  IceMaker,
+  AirQualitySensor,
+  HygrometerSensor,
+  RGBLight,
+  RGBICLight,
 };
 export const DeviceStates: string[] = [
   ...ApplianceStates,

@@ -8,12 +8,12 @@ import {
   DeviceStates as RGBICLightDeviceStates,
 } from './rgbic';
 import { Device } from '../../device';
-import { RGBLightStates } from './rgb/index';
-import { RGBICLightStates } from './rgbic/index';
+import { RGBLight } from './rgb/rgb-light';
+import { RGBICLight } from './rgbic/rgbic-light';
 export * from './lights.factory';
 export * from './lights.module';
 
-export { RGBLightStates, RGBICLightStates };
+export { RGBLight, RGBICLight };
 export const Devices: Type<Device>[] = [
   ...RGBICLightDevices,
   ...RGBLightDevices,

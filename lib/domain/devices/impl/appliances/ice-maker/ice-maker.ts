@@ -2,16 +2,37 @@ import { CommandBus, EventBus } from '@nestjs/cqrs';
 import { Device, StateFactories } from '../../../device';
 import { DeviceFactory } from '../../../device.factory';
 import { DeviceModel } from '../../../devices.model';
-import { IceMakerNuggetSizeState } from './ice-maker.nugget-size';
+import {
+  IceMakerNuggetSizeState,
+  NuggetSizeStateName,
+} from './ice-maker.nugget-size';
 import { Injectable } from '@nestjs/common';
-import { IceMakerBasketFull } from './ice-maker.basket-full';
+import {
+  BasketFullStateName,
+  IceMakerBasketFull,
+} from './ice-maker.basket-full';
 import { IceMakerWaterEmpty } from './ice-maker.water-empty';
 import {
   IceMakerStatusState,
   IceMakerStatusStateName,
 } from './ice-maker.status';
-import { IceMakerScheduledStart } from './ice-maker.scheduled-start';
-import { ActiveState, ConnectedState, PowerState } from '../../../states';
+import {
+  IceMakerScheduledStart,
+  ScheduledStartStateName,
+} from './ice-maker.scheduled-start';
+import {
+  ActiveState,
+  ActiveStateName,
+  ConnectedState,
+  ConnectedStateName,
+  PowerState,
+  PowerStateName,
+} from '../../../states';
+import {
+  IceMakerMakingIceState,
+  MakingIceStateName,
+} from './ice-maker.make-ice';
+import { Optional } from '../../../../../common/types';
 
 const stateFactories: StateFactories = [
   (device) => new PowerState(device),
@@ -27,11 +48,35 @@ const stateFactories: StateFactories = [
 export const IceMakerType: 'ice-maker' = 'ice-maker' as const;
 export type IceMakerType = typeof IceMakerType;
 
-export class IceMakerDevice extends Device {
+export class IceMakerDevice extends Device implements IceMaker {
   static readonly deviceType: IceMakerType = IceMakerType;
   constructor(device: DeviceModel, eventBus: EventBus, commandBus: CommandBus) {
     super(device, eventBus, commandBus, stateFactories);
     this.addState(this.state<IceMakerStatusState>(IceMakerStatusStateName)!);
+  }
+  get [BasketFullStateName](): Optional<IceMakerBasketFull> {
+    return this.state(BasketFullStateName);
+  }
+  get [MakingIceStateName](): Optional<IceMakerMakingIceState> {
+    return this.state(MakingIceStateName);
+  }
+  get [NuggetSizeStateName](): Optional<IceMakerNuggetSizeState> {
+    return this.state(NuggetSizeStateName);
+  }
+  get [ScheduledStartStateName](): Optional<IceMakerScheduledStart> {
+    return this.state(ScheduledStartStateName);
+  }
+  get [IceMakerStatusStateName](): Optional<IceMakerStatusState> {
+    return this.state(IceMakerStatusStateName);
+  }
+  get [PowerStateName](): Optional<PowerState> {
+    return this.state(PowerStateName);
+  }
+  get [ConnectedStateName](): Optional<ConnectedState> {
+    return this.state(ConnectedStateName);
+  }
+  get [ActiveStateName](): Optional<ActiveState> {
+    return this.state(ActiveStateName);
   }
 }
 
@@ -45,3 +90,13 @@ export class IceMakerFactory extends DeviceFactory<IceMakerDevice> {
     });
   }
 }
+export type IceMaker = {
+  [BasketFullStateName]: Optional<IceMakerBasketFull>;
+  [MakingIceStateName]: Optional<IceMakerMakingIceState>;
+  [NuggetSizeStateName]: Optional<IceMakerNuggetSizeState>;
+  [ScheduledStartStateName]: Optional<IceMakerScheduledStart>;
+  [IceMakerStatusStateName]: Optional<IceMakerStatusState>;
+  [PowerStateName]: Optional<PowerState>;
+  [ConnectedStateName]: Optional<ConnectedState>;
+  [ActiveStateName]: Optional<ActiveState>;
+};

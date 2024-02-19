@@ -3,26 +3,26 @@ import * as cqrs from './cqrs';
 import { Devices as ImplDevices, DeviceStates as ImplStates } from './impl';
 import { Device } from './device';
 import { DeviceStates as CommonStates } from './states';
-import { HumidifierStates } from './impl/appliances/humidifier/index';
-import { IceMakerStates } from './impl/appliances/ice-maker/index';
-import { PurifierStates } from './impl/appliances/purifier/index';
-import { AirQualityStates } from './impl/home-improvement/air-quality/index';
-import { HygrometerStates } from './impl/home-improvement/hygrometer/index';
-import { RGBICLightStates } from './impl/lights/rgbic/index';
-import { RGBLightStates } from './impl/lights/rgb/index';
+import { Humidifier } from './impl/appliances/humidifier/humidifier';
+import { IceMaker } from './impl/appliances/ice-maker/ice-maker';
+import { Purifier } from './impl/appliances/purifier/purifier';
+import { AirQualitySensor } from './impl/home-improvement/air-quality/air-quality';
+import { HygrometerSensor } from './impl/home-improvement/hygrometer/hygrometer';
+import { RGBICLight } from './impl/lights/rgbic/rgbic-light';
+import { RGBLight } from './impl/lights/rgb/rgb-light';
 
 export * from './devices.module';
 export * from './devices.service';
 export * from './devices.model';
 export * from './states';
 export {
-  HumidifierStates,
-  IceMakerStates,
-  PurifierStates,
-  AirQualityStates,
-  HygrometerStates,
-  RGBICLightStates,
-  RGBLightStates,
+  Humidifier,
+  IceMaker,
+  Purifier,
+  AirQualitySensor,
+  HygrometerSensor,
+  RGBICLight,
+  RGBLight,
 };
 
 export const CQRS = cqrs;
