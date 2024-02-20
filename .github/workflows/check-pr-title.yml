@@ -11,6 +11,9 @@ on:
 jobs:
   conventional-title:
     runs-on: ubuntu-latest
+    if:
+      ${{ github.actor != 'dependabot[bot]' && github.actor !=
+      'dependabot-preview[bot]' }}
     permissions:
       statuses: write
     steps:
