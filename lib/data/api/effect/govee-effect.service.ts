@@ -43,7 +43,6 @@ export class GoveeEffectService {
   }
 
   @PersistResult({
-    path: 'persisted',
     filename: '{3}.effects.json',
     // transform: (data) => instanceToPlain(data),
   })
@@ -94,7 +93,6 @@ export class GoveeEffectService {
   }
 
   @PersistResult({
-    path: 'persisted',
     filename: '{3}.scenes.json',
     // transform: (data) => instanceToPlain(data),
   })

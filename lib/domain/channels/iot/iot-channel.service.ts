@@ -3,11 +3,12 @@ import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import stringify from 'json-stringify-safe';
 import { ChannelService } from '../channel.service';
-import { combineLatest, switchMap } from 'rxjs';
+import { combineLatest, concatMap, from } from 'rxjs';
 import { DeviceStatusReceivedEvent } from '../../devices/cqrs/events/device-status-received.event';
 import { DeviceRefeshEvent } from '../../devices/cqrs/events/device-refresh.event';
 import { v4 as uuidv4 } from 'uuid';
 import { DeviceStateCommandEvent } from '../../devices/cqrs/events/device-state-command.event';
+import { InjectEnabled } from './iot-channel.providers';
 
 @EventsHandler(DeviceRefeshEvent, DeviceStateCommandEvent)
 @Injectable()
@@ -22,15 +23,19 @@ export class IoTChannelService
   readonly name: 'iot' = 'iot' as const;
 
   constructor(
+    @InjectEnabled enabled: boolean,
     private readonly iot: IoTService,
     eventBus: EventBus,
   ) {
-    super(eventBus);
+    super(eventBus, enabled);
     combineLatest([this.onConfigChanged$, this.onEnabledChanged$])
       .pipe(
-        switchMap(([iotData, enabled]) =>
-          enabled ? this.connect(iotData) : this.disconnect(),
-        ),
+        concatMap(([iotData, enabled]) => {
+          if (enabled) {
+            return from(this.connect(iotData));
+          }
+          return from(this.disconnect());
+        }),
       )
       .subscribe();
   }

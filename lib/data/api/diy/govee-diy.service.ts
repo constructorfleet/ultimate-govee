@@ -17,7 +17,6 @@ export class GoveeDiyService {
   ) {}
 
   @PersistResult({
-    path: 'persisted',
     filename: 'diys.json',
     transform: (data) => instanceToPlain(data),
   })

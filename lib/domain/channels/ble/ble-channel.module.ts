@@ -10,11 +10,18 @@ import { BleChannelController } from './ble-channel.controller';
 import { BleChannelSagas } from './ble-channel.sagas';
 import { DisableBleClientCommandHandler } from './handlers/disable-ble-client.handler';
 import { EnableBleClientCommandHandler } from './handlers/enable-ble-client.handler';
+import {
+  BleChannelConfigDeviceIdsProvider,
+  BleChannelConfigEnabledProvider,
+} from './ble-channel.providers';
+import { ConfigurableModuleClass } from './ble-channel.types';
 
 @Module({
   imports: [CqrsModule, BleModule],
   controllers: [BleChannelController],
   providers: [
+    BleChannelConfigDeviceIdsProvider,
+    BleChannelConfigEnabledProvider,
     BleChannelService,
     BleChannelSagas,
     DisableBleClientCommandHandler,
@@ -33,4 +40,4 @@ import { EnableBleClientCommandHandler } from './handlers/enable-ble-client.hand
     BlePublishCommandHandler,
   ],
 })
-export class BleChannelModule {}
+export class BleChannelModule extends ConfigurableModuleClass {}

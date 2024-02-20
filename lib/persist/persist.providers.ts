@@ -1,6 +1,17 @@
 import { FactoryProvider, Inject } from '@nestjs/common';
 import { existsSync } from 'fs';
 import { readFile, writeFile } from 'fs/promises';
+import { PersistModuleOptions, PersistModuleOptionsKey } from './persist.types';
+import { join } from 'path';
+
+export const RootDirectoryKey = 'Persist.Root.Directory';
+export const InjectRootDirectory = Inject(RootDirectoryKey);
+export const RootDirectoryProvider: FactoryProvider = {
+  provide: RootDirectoryKey,
+  inject: [PersistModuleOptionsKey],
+  useFactory: (options: PersistModuleOptions): string =>
+    options.rootDirectory ?? './',
+};
 
 export type FileReader = typeof readFile;
 
@@ -26,12 +37,14 @@ const persistedFiles: Record<string, PersistedFile> = {};
 export const createPersistedFileProviders = () =>
   Object.entries(persistedFiles).map(([filePath, options]) => ({
     provide: `Persisted.${filePath}`,
-    useFactory: async () => {
+    inject: [RootDirectoryKey],
+    useFactory: async (rootDirectory: string) => {
+      const fullFilePath = join(rootDirectory ?? '.', filePath);
       try {
-        if (!existsSync(filePath)) {
+        if (!existsSync(fullFilePath)) {
           return undefined;
         }
-        const data = await readFile(filePath, { encoding: 'utf-8' });
+        const data = await readFile(fullFilePath, { encoding: 'utf-8' });
         if (!options.transform) {
           return JSON.parse(data);
         }
