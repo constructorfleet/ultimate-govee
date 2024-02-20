@@ -47,3 +47,14 @@ export {
   WaterShortageStateName,
 } from './domain';
 export { Device };
+export {
+  DeltaMap,
+  DeltaSet,
+  mapForEach,
+  processElements,
+  startDelta,
+  filterDelta,
+  mapDelta,
+  tapDelta,
+  processDelta,
+} from './common';
