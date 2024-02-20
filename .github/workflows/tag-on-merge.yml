@@ -15,7 +15,6 @@ permissions: write-all
 
 jobs:
   build:
-    if: github.event.pull_request.merged == true
     strategy:
       matrix:
         node-version:
