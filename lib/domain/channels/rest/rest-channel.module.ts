@@ -9,10 +9,17 @@ import {
 } from './handlers';
 import { RestChannelSagas } from './rest-channel.sagas';
 import { RestChannelService } from './rest-channel.service';
+import {
+  RestChannelConfigAuthProvider,
+  RestChannelConfigEnabledProvider,
+} from './rest-channel.providers';
+import { ConfigurableModuleClass } from './rest-channel.types';
 
 @Module({
   imports: [CqrsModule, GoveeAPIModule],
   providers: [
+    RestChannelConfigAuthProvider,
+    RestChannelConfigEnabledProvider,
     ModelProductQueryHandler,
     ConfigureRestChannelCommandHandler,
     RetrieveDeviceListCommandHandler,
@@ -29,4 +36,4 @@ import { RestChannelService } from './rest-channel.service';
     RestChannelService,
   ],
 })
-export class RestChannelModule {}
+export class RestChannelModule extends ConfigurableModuleClass {}

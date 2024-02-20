@@ -95,7 +95,6 @@ export class IoTService implements IoTHandler {
   }
 
   @PersistResult({
-    path: 'persisted',
     filename: '{0}.status.json',
     append: true,
   })
@@ -110,7 +109,6 @@ export class IoTService implements IoTHandler {
   }
 
   @PersistResult({
-    path: 'persisted',
     filename: '{0}.raw.log',
     append: true,
   })

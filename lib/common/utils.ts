@@ -29,3 +29,13 @@ export const TransformBoolean = Transform(
       : ['1', 1, 'true', true, 'on'].includes(value),
   { toClassOnly: true },
 );
+
+export const isAsyncModuleOptions = <TOptions extends object>(
+  options?: TOptions,
+): boolean =>
+  options !== undefined &&
+  ('useFactory' in options ||
+    'useValue' in options ||
+    'useClass' in options ||
+    'useExisting' in options ||
+    'imports' in options);
