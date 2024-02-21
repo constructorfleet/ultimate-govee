@@ -102,6 +102,7 @@
     "typescript": "^5.3.3"
   },
   "optionalDependencies": {
+    "@abandonware/bluetooth-hci-socket": "0.5.3-11",
     "@abandonware/noble": "^1.9.2-24"
   },
   "_moduleAliases": {

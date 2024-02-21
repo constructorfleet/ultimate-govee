@@ -13,9 +13,8 @@ import {
   tap,
 } from 'rxjs';
 import { DeltaMap, DeviceId, Optional, sleep } from '~ultimate-govee-common';
-import noble from '@abandonware/noble';
 import { platform } from 'os';
-import { BleCommand, BlePeripheral } from './ble.types';
+import { BleCommand, BlePeripheral, NobleBle } from './ble.types';
 import { DecoderService } from './decoder/decoder.service';
 import { DecodedDevice } from './decoder';
 import { execSync } from 'child_process';
@@ -29,6 +28,7 @@ const STATE_POWERED_ON = 'poweredOn';
 export class BleClient {
   private readonly logger: Logger = new Logger(BleClient.name);
 
+  private noble: Optional<NobleBle> = undefined;
   private seenNames: string[] = [];
   private scanning: boolean = false;
   private state: BehaviorSubject<string> = new BehaviorSubject(STATE_UNKNOWN);
@@ -51,7 +51,7 @@ export class BleClient {
   ) {
     this.state.subscribe((state) => {
       if (state !== STATE_POWERED_ON) {
-        noble.removeAllListeners();
+        this.noble?.removeAllListeners();
       }
     });
     this.enabled
@@ -68,7 +68,7 @@ export class BleClient {
         tap(async () => await this.stopScanning()),
         tap(() => {
           try {
-            noble.reset();
+            this.noble?.reset();
           } catch (_) {
             // no-op
           }
@@ -188,8 +188,8 @@ export class BleClient {
     this.logger.log('BLE disabled');
     this.state.next(STATE_UNKNOWN);
     try {
-      noble.removeAllListeners();
-      noble.stopScanning();
+      this.noble?.removeAllListeners();
+      this.noble?.stopScanning();
       await this.connectedPeripheral?.disconnectAsync();
     } catch (err) {
       this.logger.error('Error disabling BLE', err);
@@ -199,21 +199,24 @@ export class BleClient {
 
   private async onEnabled() {
     this.logger.log('BLE enabled');
-    this.state.next(noble.state);
-    noble.on('stateChange', (state) => {
+    if (this.noble === undefined) {
+      this.noble = await import('@abandonware/noble');
+    }
+    this.state.next(this.noble?.state);
+    this.noble?.on('stateChange', (state) => {
       this.state.next(state);
       this.logger.warn(`State changed to ${state}`);
     });
-    noble.on('scanStart', () => {
+    this.noble?.on('scanStart', () => {
       this.logger.debug('Begin scanning');
       this.scanning = true;
     });
-    noble.on('scanStop', () => {
+    this.noble?.on('scanStop', () => {
       this.logger.debug('Scanning stopped');
       this.scanning = false;
     });
-    noble.on('warning', (message: string) => this.logger.warn(message));
-    noble.on('discover', (peripheral: BlePeripheral) =>
+    this.noble?.on('warning', (message: string) => this.logger.warn(message));
+    this.noble?.on('discover', (peripheral: BlePeripheral) =>
       this.peripheralDiscovered.next(peripheral),
     );
     await this.startScanning();
@@ -222,13 +225,13 @@ export class BleClient {
 
   async stopScanning() {
     if (this.enabled.getValue() && this.scanning) {
-      await noble.stopScanningAsync();
+      await this.noble?.stopScanningAsync();
     }
   }
 
   async startScanning() {
     if (this.enabled.getValue() && this.state.getValue() === STATE_POWERED_ON) {
-      return await noble.startScanningAsync();
+      return await this.noble?.startScanningAsync();
     }
   }
 
