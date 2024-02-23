@@ -1,5 +1,6 @@
 import { ConfigurableModuleBuilder, Module } from '@nestjs/common';
 import { PersistService } from './persist.service';
+
 import {
   FileReader,
   FileWriter,
@@ -9,7 +10,7 @@ import {
 } from './persist.providers';
 import {
   PersistContext,
-  PersistModuleOptions as ModuleOptions,
+  PersistModuleOptions,
   PersistModuleOptionsKey,
 } from './persist.types';
 
@@ -18,7 +19,7 @@ export const {
   OPTIONS_TYPE,
   ASYNC_OPTIONS_TYPE,
   MODULE_OPTIONS_TOKEN,
-} = new ConfigurableModuleBuilder<ModuleOptions>({
+} = new ConfigurableModuleBuilder<PersistModuleOptions>({
   moduleName: 'PersistModule',
   optionsInjectionToken: PersistModuleOptionsKey,
 })
@@ -39,8 +40,8 @@ export const {
   .setClassMethodName('forRoot')
   .build();
 
-export const PersistModuleOptions = typeof OPTIONS_TYPE;
 export const AsyncPersistModuleOptions = typeof ASYNC_OPTIONS_TYPE;
+export { PersistModuleOptions };
 
 @Module({
   providers: [PersistService, FileReader, FileWriter, RootDirectoryProvider],
