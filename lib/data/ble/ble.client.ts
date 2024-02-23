@@ -50,8 +50,12 @@ export class BleClient {
     private readonly decoder: DecoderService,
   ) {
     this.state.subscribe((state) => {
-      if (state !== STATE_POWERED_ON) {
-        this.noble?.removeAllListeners();
+      if (state !== STATE_POWERED_ON && this.noble !== undefined) {
+        try {
+          this.noble?.removeAllListeners();
+        } catch (err) {
+          this.logger.warn(err);
+        }
       }
     });
     this.enabled
