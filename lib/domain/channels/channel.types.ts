@@ -14,7 +14,6 @@ import {
   OPTIONS_TYPE as RestModuleOptions,
   ASYNC_OPTIONS_TYPE as AsyncRestModuleOptions,
 } from './rest/rest-channel.types';
-import { ConfigurableModuleBuilder } from '@nestjs/common';
 
 export type TogglableChannels = Extract<
   BleChannelService | IoTChannelService | RestChannelService,
@@ -39,19 +38,3 @@ export type ChannelModuleOptions = {
   iot?: typeof IoTModuleOptions | typeof AsyncIoTModuleOptions;
   rest?: typeof RestModuleOptions | typeof AsyncRestModuleOptions;
 };
-
-export const {
-  ConfigurableModuleClass,
-  ASYNC_OPTIONS_TYPE,
-  OPTIONS_TYPE,
-  MODULE_OPTIONS_TOKEN,
-} = new ConfigurableModuleBuilder<ChannelModuleOptions>({
-  moduleName: 'ChannelModule',
-  optionsInjectionToken: 'Channel.Module.Options',
-})
-  .setExtras({ isGlobal: true }, (definition, extras) => ({
-    ...definition,
-    global: extras.isGlobal,
-  }))
-  .setClassMethodName('forRoot')
-  .build();

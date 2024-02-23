@@ -10,7 +10,7 @@ export const {
   ASYNC_OPTIONS_TYPE,
   OPTIONS_TYPE,
   MODULE_OPTIONS_TOKEN,
-} = new ConfigurableModuleBuilder({
+} = new ConfigurableModuleBuilder<RestChannelModuleOptions>({
   moduleName: 'RestChannelModule',
   optionsInjectionToken: 'RestChannel.Module.Options',
 })

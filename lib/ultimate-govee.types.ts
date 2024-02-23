@@ -1,19 +1,18 @@
-import { OPTIONS_TYPE as ChannelModuleOptions } from './domain/channels/channel.types';
+import { ChannelModuleOptions } from './domain/channels/channel.types';
 import {
   OPTIONS_TYPE as AuthModuleOptions,
   ASYNC_OPTIONS_TYPE as AsyncAuthModuleOptions,
 } from './domain/auth/auth.types';
 import { ConfigurableModuleBuilder } from '@nestjs/common';
 import {
-  PersistModuleOptions,
-  AsyncPersistModuleOptions,
+  OPTIONS_TYPE as PersistModuleOptions,
+  ASYNC_OPTIONS_TYPE as AsyncPersistModuleOptions,
 } from './persist/persist.module';
-export { AsyncPersistModuleOptions, PersistModuleOptions } from './persist';
 
 export type UltimateGoveeModuleOptions = {
   persist?: typeof PersistModuleOptions | typeof AsyncPersistModuleOptions;
   auth?: typeof AuthModuleOptions | typeof AsyncAuthModuleOptions;
-  channels?: typeof ChannelModuleOptions;
+  channels?: ChannelModuleOptions;
 };
 
 export const {
