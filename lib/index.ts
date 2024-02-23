@@ -1,5 +1,9 @@
 import 'module-alias/register';
 import {
+  AsyncPersistModuleOptions,
+  PersistModuleOptions,
+} from './persist/persist.module';
+import {
   BleChannelModuleOptions,
   AsyncBleChannelModuleOptions,
   IoTChannelModuleOptions,
@@ -10,6 +14,8 @@ export {
   AsyncBleChannelModuleOptions,
   IoTChannelModuleOptions,
   AsyncIoTChannelModuleOptions,
+  PersistModuleOptions,
+  AsyncPersistModuleOptions,
 };
 export * from './ultimate-govee.module';
 export * from './ultimate-govee.service';
