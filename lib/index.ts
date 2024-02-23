@@ -1,5 +1,16 @@
 import 'module-alias/register';
-import { Device } from './domain/devices/device';
+import {
+  BleChannelModuleOptions,
+  AsyncBleChannelModuleOptions,
+  IoTChannelModuleOptions,
+  AsyncIoTChannelModuleOptions,
+} from './domain';
+export {
+  BleChannelModuleOptions,
+  AsyncBleChannelModuleOptions,
+  IoTChannelModuleOptions,
+  AsyncIoTChannelModuleOptions,
+};
 export * from './ultimate-govee.module';
 export * from './ultimate-govee.service';
 export * from './ultimate-govee.config';
@@ -46,7 +57,7 @@ export {
   WaterShortageState,
   WaterShortageStateName,
 } from './domain';
-export { Device };
+export { Device } from './domain/devices/device';
 export {
   DeltaMap,
   DeltaSet,
