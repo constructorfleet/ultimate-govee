@@ -5,14 +5,13 @@ import {
 } from './domain/auth/auth.types';
 import { ConfigurableModuleBuilder } from '@nestjs/common';
 import {
-  AsyncPersistModuleOptionsType,
-  PersistModuleOptionsType,
-} from '~ultimate-govee-persist';
+  PersistModuleOptions,
+  AsyncPersistModuleOptions,
+} from './persist/persist.module';
+export { AsyncPersistModuleOptions, PersistModuleOptions } from './persist';
 
 export type UltimateGoveeModuleOptions = {
-  persist?:
-    | typeof PersistModuleOptionsType
-    | typeof AsyncPersistModuleOptionsType;
+  persist?: typeof PersistModuleOptions | typeof AsyncPersistModuleOptions;
   auth?: typeof AuthModuleOptions | typeof AsyncAuthModuleOptions;
   channels?: typeof ChannelModuleOptions;
 };

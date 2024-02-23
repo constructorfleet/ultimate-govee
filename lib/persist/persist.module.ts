@@ -9,7 +9,7 @@ import {
 } from './persist.providers';
 import {
   PersistContext,
-  PersistModuleOptions,
+  PersistModuleOptions as ModuleOptions,
   PersistModuleOptionsKey,
 } from './persist.types';
 
@@ -18,7 +18,7 @@ export const {
   OPTIONS_TYPE,
   ASYNC_OPTIONS_TYPE,
   MODULE_OPTIONS_TOKEN,
-} = new ConfigurableModuleBuilder<PersistModuleOptions>({
+} = new ConfigurableModuleBuilder<ModuleOptions>({
   moduleName: 'PersistModule',
   optionsInjectionToken: PersistModuleOptionsKey,
 })
@@ -39,8 +39,8 @@ export const {
   .setClassMethodName('forRoot')
   .build();
 
-export const PersistModuleOptionsType = OPTIONS_TYPE;
-export const AsyncPersistModuleOptionsType = ASYNC_OPTIONS_TYPE;
+export const PersistModuleOptions = typeof OPTIONS_TYPE;
+export const AsyncPersistModuleOptions = typeof ASYNC_OPTIONS_TYPE;
 
 @Module({
   providers: [PersistService, FileReader, FileWriter, RootDirectoryProvider],
