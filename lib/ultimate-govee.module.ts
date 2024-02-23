@@ -4,11 +4,11 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { PersistModule } from './persist';
 import { UltimateGoveeService } from './ultimate-govee.service';
 import { AuthModule } from './domain/auth';
-import { ChannelsModule } from './domain/channels';
 import { DevicesModule } from './domain/devices';
 import { UltimateGoveeConfiguration } from './ultimate-govee.config';
 import { ConfigurableModuleClass, OPTIONS_TYPE } from './ultimate-govee.types';
 import { isAsyncModuleOptions } from '~ultimate-govee-common';
+import { IoTChannelModule } from '~ultimate-govee-domain';
 
 @Module({
   imports: [ConfigModule.forRoot(), CqrsModule.forRoot(), DevicesModule],
@@ -28,7 +28,12 @@ export class UltimateGoveeModule extends ConfigurableModuleClass {
               ...(options.persist ?? {}),
             })
           : PersistModule.forRootAsync(options.persist ?? {}),
-        ChannelsModule.forRoot(options.channels ?? {}),
+        !isAsyncModuleOptions(options.channels?.iot ?? {})
+          ? IoTChannelModule.forRoot(options?.channels?.iot ?? {})
+          : IoTChannelModule.forRootAsync(options?.channels?.iot ?? {}),
+        !isAsyncModuleOptions(options.channels?.ble ?? {})
+          ? IoTChannelModule.forRoot(options?.channels?.ble ?? {})
+          : IoTChannelModule.forRootAsync(options?.channels?.ble ?? {}),
         DevicesModule,
       ],
       providers: [UltimateGoveeConfiguration, UltimateGoveeService],

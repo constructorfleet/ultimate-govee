@@ -69,3 +69,8 @@ export {
   tapDelta,
   processDelta,
 } from './common';
+import {
+  ASYNC_OPTIONS_TYPE as AsyncPersistModuleOptions,
+  OPTIONS_TYPE as PersistModuleOptions,
+} from './persist';
+export { PersistModuleOptions, AsyncPersistModuleOptions };
