@@ -1,26 +1,30 @@
 import { BleChannelModule } from './ble/ble-channel.module';
 import { IoTChannelModule } from './iot/iot-channel.module';
 import { RestChannelModule } from './rest/rest-channel.module';
-import { ChannelModuleOptions } from './channel.types';
-import { RestChannelConfigEnabledProvider } from './channel.providers';
-import { ConfigurableModuleBuilder, Module } from '@nestjs/common';
-
-export const {
-  ConfigurableModuleClass,
-  OPTIONS_TYPE,
-  ASYNC_OPTIONS_TYPE,
-  MODULE_OPTIONS_TOKEN,
-} = new ConfigurableModuleBuilder<ChannelModuleOptions>()
-  .setClassMethodName('forRoot')
-  .setExtras({ isGlobal: true }, (definition, extras) => ({
-    ...definition,
-    global: extras.isGlobal,
-  }))
-  .build();
+import {
+  BleChannelConfigEnabledProvider,
+  IoTChannelConfigEnabledProvider,
+  RestChannelConfigEnabledProvider,
+  TogglableChannelsProvider,
+} from './channel.providers';
+import { ConfigurableModuleClass } from './channel.const';
+import { Module } from '@nestjs/common';
 
 @Module({
   imports: [BleChannelModule, IoTChannelModule, RestChannelModule],
-  providers: [RestChannelConfigEnabledProvider],
-  exports: [BleChannelModule, IoTChannelModule, RestChannelModule],
+  providers: [
+    TogglableChannelsProvider,
+    TogglableChannelsProvider,
+    RestChannelConfigEnabledProvider,
+    IoTChannelConfigEnabledProvider,
+    BleChannelConfigEnabledProvider,
+  ],
+  exports: [
+    BleChannelModule,
+    IoTChannelModule,
+    RestChannelModule,
+    TogglableChannelsProvider,
+    TogglableChannelsProvider,
+  ],
 })
 export class ChannelModule extends ConfigurableModuleClass {}
