@@ -14,7 +14,7 @@ import {
   BleChannelConfigDeviceIdsProvider,
   BleChannelConfigEnabledProvider,
 } from './ble-channel.providers';
-import { ConfigurableModuleClass } from './ble-channel.types';
+import { ConfigurableModuleClass } from './ble-channel.const';
 
 @Module({
   imports: [CqrsModule, BleModule],
