@@ -48,6 +48,7 @@ export class UltimateGoveeModule extends ConfigurableModuleClass {
         DevicesModule,
       ],
       providers: [UltimateGoveeConfiguration, UltimateGoveeService],
+      exports: [UltimateGoveeConfiguration, UltimateGoveeService],
     };
   }
 }
