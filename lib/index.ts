@@ -1,9 +1,5 @@
 import 'module-alias/register';
 import {
-  AsyncPersistModuleOptions,
-  PersistModuleOptions,
-} from './persist/persist.module';
-import {
   BleChannelModuleOptions,
   AsyncBleChannelModuleOptions,
   IoTChannelModuleOptions,
@@ -79,4 +75,3 @@ import {
   ASYNC_OPTIONS_TYPE as AsyncPersistModuleOptions,
   OPTIONS_TYPE as PersistModuleOptions,
 } from './persist';
-export { PersistModuleOptions, AsyncPersistModuleOptions };
