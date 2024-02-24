@@ -202,10 +202,14 @@ export class BleClient {
   }
 
   private async onEnabled() {
-    this.logger.log('BLE enabled');
     if (this.noble === undefined) {
       this.noble = await import('@abandonware/noble');
     }
+    await sleep(100);
+    if (this.noble?.on === undefined) {
+      return;
+    }
+    this.logger.log('BLE enabled');
     this.state.next(this.noble?.state);
     this.noble?.on('stateChange', (state) => {
       this.state.next(state);

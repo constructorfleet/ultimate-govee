@@ -4,12 +4,12 @@ import {
 } from './domain/auth/auth.types';
 import { ConfigurableModuleBuilder } from '@nestjs/common';
 import {
-  ChannelsModuleOptionsType,
-  AsyncCHannelsModuleOptionsType,
-} from './domain/channels/index';
-export {
-  ChannelsModuleOptionsType,
-  AsyncCHannelsModuleOptionsType,
+  IoTChannelModuleOptions,
+  AsyncIoTChannelModuleOptions,
+  AsyncBleChannelModuleOptions,
+  BleChannelModuleOptions,
+  RestChannelModuleOptions,
+  AsyncRestChannelModuleOptions,
 } from './domain/channels/index';
 import {
   OPTIONS_TYPE as PersistModuleOptions,
@@ -19,9 +19,13 @@ import {
 export type UltimateGoveeModuleOptions = {
   persist?: typeof PersistModuleOptions | typeof AsyncPersistModuleOptions;
   auth?: typeof AuthModuleOptions | typeof AsyncAuthModuleOptions;
-  channels?:
-    | typeof ChannelsModuleOptionsType
-    | typeof AsyncCHannelsModuleOptionsType;
+  channels?: {
+    iot: typeof IoTChannelModuleOptions | typeof AsyncIoTChannelModuleOptions;
+    ble: typeof BleChannelModuleOptions | typeof AsyncBleChannelModuleOptions;
+    rest?:
+      | typeof RestChannelModuleOptions
+      | typeof AsyncRestChannelModuleOptions;
+  };
 };
 
 export const {
