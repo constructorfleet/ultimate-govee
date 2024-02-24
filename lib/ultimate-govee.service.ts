@@ -13,19 +13,26 @@ import {
   UltimateGoveeConfig,
 } from './ultimate-govee.config';
 import { DeviceDiscoveredEvent } from './domain/devices/cqrs';
-import { ChannelToggle, InjectChannels } from './domain';
+import { IoTChannelService, BleChannelService } from './domain';
+import { ModuleRef } from '@nestjs/core';
+import { ChannelToggle } from '~ultimate-govee-domain/channels/channel.types';
 
 @Injectable()
 export class UltimateGoveeService
   implements OnApplicationBootstrap, OnModuleDestroy
 {
+  private readonly channels: ChannelToggle;
   private readonly logger: Logger = new Logger(UltimateGoveeService.name);
   constructor(
     @InjectGoveeConfig private readonly config: UltimateGoveeConfig,
-    @InjectChannels private readonly channels: ChannelToggle,
+    private readonly moduleRef: ModuleRef,
     private readonly commandBus: CommandBus,
     private readonly eventBus: EventBus,
   ) {
+    this.channels = {
+      ble: moduleRef.get(BleChannelService, { strict: false }),
+      iot: moduleRef.get(IoTChannelService, { strict: false }),
+    };
     interval(10000).subscribe(() => Logger.flush());
   }
 
