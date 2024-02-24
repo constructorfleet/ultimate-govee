@@ -1,9 +1,5 @@
 import 'module-alias/register';
 import {
-  AsyncPersistModuleOptions,
-  PersistModuleOptions,
-} from './persist/persist.module';
-import {
   BleChannelModuleOptions,
   AsyncBleChannelModuleOptions,
   IoTChannelModuleOptions,
@@ -75,3 +71,7 @@ export {
   tapDelta,
   processDelta,
 } from './common';
+import {
+  ASYNC_OPTIONS_TYPE as AsyncPersistModuleOptions,
+  OPTIONS_TYPE as PersistModuleOptions,
+} from './persist';

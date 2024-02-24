@@ -3,7 +3,7 @@ import { BleChannelService } from './ble/ble-channel.service';
 import {
   OPTIONS_TYPE as BleModuleOptions,
   ASYNC_OPTIONS_TYPE as AsyncBleModuleOptions,
-} from './ble/ble-channel.types';
+} from './ble/ble-channel.const';
 import { IoTChannelService } from './iot/iot-channel.service';
 import {
   OPTIONS_TYPE as IoTModuleOptions,

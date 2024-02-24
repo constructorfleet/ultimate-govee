@@ -3,7 +3,7 @@ import { ConfigurableModuleBuilder } from '@nestjs/common';
 
 export type RestChannelConfig = Omit<AccountAuthData, 'oauth'>;
 
-export type RestChannelModuleOptions = Record<string, never>;
+export type RestChannelModuleOptions = Partial<RestChannelConfig>;
 
 export const {
   ConfigurableModuleClass,
