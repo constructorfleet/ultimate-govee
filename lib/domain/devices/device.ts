@@ -247,7 +247,7 @@ export class Device extends Subject<Device> {
       if (this.stateLogger === undefined) {
         this.stateLogger = getLogger(this.id, this.model);
       }
-      this.stateLogger.info({
+      this.logger.error({
         deviceId: this.id,
         name: this.name,
         model: this.model,
