@@ -1,9 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { EventBus, QueryBus } from '@nestjs/cqrs';
+import { EventBus, EventsHandler, IEventHandler, QueryBus } from '@nestjs/cqrs';
 import { DeltaMap, DeviceId, Optional } from '~ultimate-govee-common';
 import { map } from 'rxjs';
 import { Device } from './device';
-import { DeviceDiscoveredEvent, DeviceUpdatedEvent } from './cqrs/events';
+import {
+  DeviceDiscoveredEvent,
+  DeviceStatusReceivedEvent,
+  DeviceUpdatedEvent,
+} from './cqrs/events';
 import { ModelProductQuery } from '../channels/rest/queries/model-product.query';
 import { GoveeDevice, Product } from '~ultimate-govee-data';
 import { ClassConstructor } from 'class-transformer';
@@ -12,7 +16,10 @@ import { Version } from './version.info';
 import { DevicesFactory } from './devices.factory';
 
 @Injectable()
-export class DevicesService {
+@EventsHandler(DeviceStatusReceivedEvent)
+export class DevicesService
+  implements IEventHandler<DeviceStatusReceivedEvent>
+{
   private readonly logger: Logger = new Logger(DevicesService.name);
 
   private readonly deviceMap: DeltaMap<DeviceId, Device> = new DeltaMap({
@@ -34,6 +41,15 @@ export class DevicesService {
         ]),
       )
       .subscribe((events) => this.eventBus.publishAll(events));
+  }
+  handle(event: DeviceStatusReceivedEvent) {
+    this.logger.debug('Received event', event);
+    const device = this.getDevice(event.deviceStatus.id);
+    if (!device) {
+      this.logger.error(`Unknown device id ${event.deviceStatus.id}`);
+      return;
+    }
+    device.deviceStatus(event.deviceStatus);
   }
 
   getByModel(model: string) {

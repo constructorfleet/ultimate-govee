@@ -13,7 +13,6 @@ async function bootstrap() {
       channels: {
         ble: {
           enabled: true,
-          deviceIds: undefined,
         },
         iot: {
           enabled: true,
