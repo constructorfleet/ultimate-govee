@@ -111,6 +111,7 @@ export class DeviceState<StateName extends string, StateValue> {
   ) {
     this.stateValue$ = new BehaviorSubject(initialValue);
     this.stateValue = connectable(this.stateValue$);
+    this.stateValue.connect();
     this.device.status?.subscribe((status) => this.parse(status));
     this.clearCommand.subscribe(({ commandId }) =>
       this.pendingCommands.delete(commandId),
