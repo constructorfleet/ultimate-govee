@@ -251,12 +251,12 @@ export class BleClient {
     debug,
   }: BleCommand): Promise<void> {
     if (!this.enabled.getValue()) {
-      this.logger.error(`Ble is disabled, unable to send command to ${id}`);
+      this.logger.warn(`Ble is disabled, unable to send command to ${id}`);
       return results$.complete();
     }
     const peripheral = this.peripherals.get(address);
     if (!peripheral) {
-      this.logger.error(
+      this.logger.warn(
         `Device ${id} with address ${address} not yet discovered`,
       );
       return results$.complete();

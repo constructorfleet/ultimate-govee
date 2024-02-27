@@ -110,7 +110,6 @@ export class GoveeDeviceService {
           },
         } as GoveeDevice;
       } catch (err) {
-        new Logger(GoveeDeviceService.name).error(err);
         throw new Error('Unable to parse device response');
       }
     });
