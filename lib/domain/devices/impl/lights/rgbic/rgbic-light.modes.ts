@@ -1,4 +1,10 @@
-import { chunk, total, Optional, asOpCode } from '~ultimate-govee-common';
+import {
+  chunk,
+  total,
+  Optional,
+  asOpCode,
+  OpType,
+} from '~ultimate-govee-common';
 import { Effect } from '~ultimate-govee-data';
 import {
   DeviceOpState,
@@ -21,7 +27,7 @@ export enum RGBICModes {
 export class SceneModeState extends LightEffectState {
   constructor(
     device: DeviceModel,
-    opType: number = 0xaa,
+    opType: number = OpType.REPORT,
     identifier: number[] = [0x05, RGBICModes.SCENE],
   ) {
     super(device, opType, identifier);
@@ -93,7 +99,7 @@ export type MicMode = {
 export class MicModeState extends DeviceOpState<MicModeStateName, MicMode> {
   constructor(
     device: DeviceModel,
-    opType: number = 0xaa,
+    opType: number = OpType.REPORT,
     identifier: number[] = [0x05, RGBICModes.MIC],
   ) {
     super({ opType, identifier }, device, MicModeStateName, {});
@@ -135,7 +141,7 @@ export class MicModeState extends DeviceOpState<MicModeStateName, MicMode> {
         data: {
           command: [
             asOpCode(
-              0x33,
+              OpType.COMMAND,
               this.identifier!,
               next.micScene,
               next.sensitivity,
@@ -181,7 +187,7 @@ export class AdvancedColorModeState extends DeviceOpState<
 > {
   constructor(
     deviceModel: DeviceModel,
-    opType: number = 0xaa,
+    opType: number = OpType.REPORT,
     identifier: number[] = [0x05, RGBICModes.ADVANCED_COLOR],
   ) {
     super(
@@ -236,7 +242,7 @@ export class SegmentColorModeState extends DeviceOpState<
   constructor(
     device: DeviceModel,
     segmentCount: SegmentCountState,
-    opType: number = 0xaa,
+    opType: number = OpType.REPORT,
     identifier: number[] = [0xa5],
   ) {
     super({ opType, identifier }, device, SegmentColorModeStateName, []);
@@ -313,7 +319,7 @@ export class SegmentColorModeState extends DeviceOpState<
         };
         const indexBytes = indexToSegmentBits(indicies);
         return asOpCode(
-          0x33,
+          OpType.COMMAND,
           0x05,
           RGBICModes.SEGMENT_COLOR,
           1,
@@ -334,7 +340,7 @@ export class SegmentColorModeState extends DeviceOpState<
       ([key, indicies]) => {
         const indexBytes = indexToSegmentBits(indicies);
         return asOpCode(
-          0x33,
+          OpType.COMMAND,
           0x05,
           RGBICModes.SEGMENT_COLOR,
           2,
@@ -384,7 +390,7 @@ export class ColorModeState extends DeviceOpState<
 > {
   constructor(
     device: DeviceModel,
-    opType: number = 0xaa,
+    opType: number = OpType.REPORT,
     identifier = [0x05, RGBICModes.WHOLE_COLOR],
   ) {
     super({ opType, identifier }, device, WholeColorModeStateName, {}, 'both');
@@ -424,7 +430,7 @@ export class ColorModeState extends DeviceOpState<
           data: {
             command: [
               asOpCode(
-                0x33,
+                OpType.COMMAND,
                 this.identifier!,
                 state.red ?? 0,
                 state.green ?? 0,

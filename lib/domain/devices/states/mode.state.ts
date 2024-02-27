@@ -2,6 +2,7 @@ import { Optional } from '~ultimate-govee-common';
 import { BehaviorSubject } from 'rxjs';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState, DeviceState } from './device.state';
+import { OpType } from '../../../common/op-code';
 
 export const ModeStateName: 'mode' = 'mode' as const;
 export type ModeStateName = typeof ModeStateName;
@@ -55,7 +56,7 @@ export class ModeState extends DeviceOpState<
   constructor(
     device: DeviceModel,
     modes: Optional<DeviceState<string, any>>[],
-    opType: number = 0xaa,
+    opType: number = OpType.REPORT,
     identifier: number[] = [0x05],
     inline: boolean = false,
     private readonly identifierMap: ModeIdMap = defaultModeIdMap,

@@ -1,4 +1,4 @@
-import { Optional, asOpCode } from '~ultimate-govee-common';
+import { Optional, asOpCode, OpType } from '~ultimate-govee-common';
 import { DeviceModel } from '../../../devices.model';
 import { DeviceOpState } from '../../../states';
 import { StateCommandAndStatus } from '../../../states/device.state';
@@ -14,7 +14,7 @@ export class IceMakerNuggetSizeState extends DeviceOpState<
   constructor(device: DeviceModel) {
     super(
       {
-        opType: 0xaa,
+        opType: OpType.REPORT,
         identifier: [0x05],
       },
       device,
@@ -47,7 +47,7 @@ export class IceMakerNuggetSizeState extends DeviceOpState<
         data: {
           command: [
             asOpCode(
-              0x51,
+              OpType.COMMAND,
               this.identifier!,
               nuggetSizeMap[nextState.toString()],
             ),

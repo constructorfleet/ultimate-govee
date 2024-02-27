@@ -20,7 +20,7 @@ states. Supported types so far:
 ## Installing the library
 
 ```bash
-$ npm install --save @constructorfleet/ultimate-govee
+npm install --save @constructorfleet/ultimate-govee
 ```
 
 ## Running the library
@@ -72,12 +72,12 @@ this.govee.connect(username, password);
 ## Test
 
 ```bash
-$ nest test
+nest test
 ```
 
 ## Future Work
 
-- [ ] - Configure control channels on initialization and during runtime.
+- [x] - Configure control channels on initialization and during runtime.
 - [ ] - Configurable controllers.
 - [ ] - Specify devices to listen for.
 - [ ] - Device overrides.

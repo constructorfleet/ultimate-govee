@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { Effect } from '~ultimate-govee-data';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
+import { OpType } from '../../../common/op-code';
 
 export const LightEffectStateName: 'lightEffect' = 'lightEffect' as const;
 export type LightEffectStateName = typeof LightEffectStateName;
@@ -17,7 +18,7 @@ export class LightEffectState extends DeviceOpState<
     new BehaviorSubject<number | undefined>(undefined);
   constructor(
     device: DeviceModel,
-    opType: Optional<number> = 0xaa,
+    opType: Optional<number> = OpType.REPORT,
     identifier: Optional<number[]> = [0x05],
   ) {
     super({ opType, identifier }, device, LightEffectStateName, {});

@@ -31,7 +31,6 @@ export class BleChannelService
     combineLatest([this.onConfigChanged$, this.onEnabledChanged$])
       .pipe(
         map(([config, enabled]) => {
-          console.dir({ config, enabled });
           return new BleChannelChangedEvent(enabled, config);
         }),
       )

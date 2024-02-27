@@ -1,5 +1,6 @@
 import { DeviceModel } from '../../../devices.model';
 import { DeviceOpState } from '../../../states';
+import { OpType } from '~ultimate-govee-common/op-code';
 
 export const BasketFullStateName = 'basketFull' as const;
 export type BasketFullStateName = typeof BasketFullStateName;
@@ -11,7 +12,7 @@ export class IceMakerBasketFull extends DeviceOpState<
   constructor(device: DeviceModel) {
     super(
       {
-        opType: 0xaa,
+        opType: OpType.REPORT,
         identifier: [31, 7],
       },
       device,

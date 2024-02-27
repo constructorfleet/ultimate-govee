@@ -171,12 +171,6 @@ export class DeviceState<StateName extends string, StateValue> {
   }
 }
 
-export type OpCommandData = {
-  op?: {
-    command?: number[][];
-  };
-} & MessageData;
-
 export type OpCommandIdentifier = {
   opType?: Ignorable<Optional<number>>;
   identifier?: Ignorable<Optional<number[]>>;
@@ -205,7 +199,7 @@ export class DeviceOpState<
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars, no-unused-vars
   parseOpCommand(opCommand: number[]) {}
 
-  parse(data: OpCommandData) {
+  parse(data: MessageData) {
     const commands = data.op?.command ?? [];
     if (['both', 'opCode'].includes(this.parseOption)) {
       this.filterOpCommands(commands).forEach((command) => {

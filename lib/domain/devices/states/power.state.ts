@@ -1,6 +1,6 @@
-import { Optional } from '~ultimate-govee-common';
+import { OpType, Optional } from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
-import { DeviceState, StateCommandAndStatus } from './device.state';
+import { DeviceOpState, StateCommandAndStatus } from './device.state';
 
 export const PowerStateName: 'power' = 'power' as const;
 export type PowerStateName = typeof PowerStateName;
@@ -13,9 +13,16 @@ export type PowerType = {
   };
 };
 
-export class PowerState extends DeviceState<PowerStateName, Optional<boolean>> {
-  constructor(device: DeviceModel) {
-    super(device, PowerStateName, undefined);
+export class PowerState extends DeviceOpState<
+  PowerStateName,
+  Optional<boolean>
+> {
+  constructor(
+    device: DeviceModel,
+    opType: number = OpType.REPORT,
+    identifier: number[] = [0x01],
+  ) {
+    super({ opType, identifier }, device, PowerStateName, undefined, 'both');
   }
 
   parseState(data: PowerType) {

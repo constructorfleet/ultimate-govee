@@ -1,6 +1,7 @@
 import { asOpCode, Optional } from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState, StateCommandAndStatus } from './device.state';
+import { OpType } from '../../../common/op-code';
 
 export const BrightnessStateName: 'brightness' = 'brightness' as const;
 export type BrightnessStateName = typeof BrightnessStateName;
@@ -17,7 +18,7 @@ export class BrightnessState extends DeviceOpState<
 > {
   constructor(
     device: DeviceModel,
-    opType: number = 0xaa,
+    opType: number = OpType.REPORT,
     identifier: number[] = [0x04],
   ) {
     super(
@@ -69,7 +70,7 @@ export class BrightnessState extends DeviceOpState<
         },
         {
           data: {
-            command: [asOpCode(0x33, this.identifier!, nextState)],
+            command: [asOpCode(OpType.COMMAND, this.identifier!, nextState)],
           },
         },
       ],

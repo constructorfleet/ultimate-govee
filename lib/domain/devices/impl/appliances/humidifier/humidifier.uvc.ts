@@ -1,4 +1,4 @@
-import { Optional, asOpCode } from '~ultimate-govee-common';
+import { Optional, asOpCode, OpType } from '~ultimate-govee-common';
 import { DeviceOpState } from '../../../states';
 import { DeviceModel } from '../../../devices.model';
 import { StateCommandAndStatus } from '../../../states/device.state';
@@ -12,7 +12,7 @@ export class HumidiferUVCState extends DeviceOpState<
 > {
   constructor(
     device: DeviceModel,
-    opType: number = 0xaa,
+    opType: number = OpType.REPORT,
     identifier: number[] = [0x1a],
   ) {
     super({ opType, identifier }, device, UVCStateName, undefined);
