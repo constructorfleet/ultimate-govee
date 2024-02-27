@@ -1,5 +1,6 @@
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
+import { OpType } from '../../../common/op-code';
 
 export const FilterStateName: 'filter' = 'filter' as const;
 export type FilterStateName = typeof FilterStateName;
@@ -18,7 +19,7 @@ export type FilterExpiredType = {
 export class FilterState extends DeviceOpState<FilterStateName, Filter> {
   constructor(
     device: DeviceModel,
-    opType: number = 0xaa,
+    opType: number = OpType.REPORT,
     ...identifier: number[]
   ) {
     super({ opType, identifier }, device, FilterStateName, {});

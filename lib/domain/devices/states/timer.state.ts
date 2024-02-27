@@ -1,6 +1,7 @@
 import { total, Optional, asOpCode, ArrayRange } from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState, StateCommandAndStatus } from './device.state';
+import { OpType } from '../../../common/op-code';
 
 export const TimerStateName: 'timer' = 'timer' as const;
 export type TimerStateName = typeof TimerStateName;
@@ -13,7 +14,7 @@ export type Timer = {
 export class TimerState extends DeviceOpState<TimerStateName, Timer> {
   constructor(
     device: DeviceModel,
-    opType: number = 0xaa,
+    opType: number = OpType.REPORT,
     ...identifier: number[]
   ) {
     super({ opType, identifier }, device, TimerStateName, {
@@ -48,7 +49,7 @@ export class TimerState extends DeviceOpState<TimerStateName, Timer> {
         data: {
           command: [
             asOpCode(
-              0x33,
+              OpType.COMMAND,
               ...this.identifier!,
               state.enabled ? 0x01 : 0x00,
               state.duration >> 8,

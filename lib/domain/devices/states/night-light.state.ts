@@ -1,4 +1,4 @@
-import { Optional, asOpCode } from '~ultimate-govee-common';
+import { OpType, Optional, asOpCode } from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState, StateCommandAndStatus } from './device.state';
 
@@ -16,7 +16,7 @@ export class NightLightState extends DeviceOpState<
 > {
   constructor(
     device: DeviceModel,
-    opType: number = 0xaa,
+    opType: number = OpType.REPORT,
     ...identifier: number[]
   ) {
     super({ opType, identifier }, device, NightLightStateName, {
@@ -53,7 +53,7 @@ export class NightLightState extends DeviceOpState<
         data: {
           command: [
             asOpCode(
-              this.opType,
+              OpType.COMMAND,
               ...this.identifier!,
               state.on ? 0x01 : 0x00,
               state.brightness,

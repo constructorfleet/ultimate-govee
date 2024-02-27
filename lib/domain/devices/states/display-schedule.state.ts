@@ -1,4 +1,4 @@
-import { Optional, asOpCode } from '~ultimate-govee-common';
+import { OpType, Optional, asOpCode } from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState, StateCommandAndStatus } from './device.state';
 
@@ -24,7 +24,7 @@ export class DisplayScheduleState extends DeviceOpState<
 > {
   constructor(
     device: DeviceModel,
-    opType: number = 0xaa,
+    opType: number = OpType.REPORT,
     ...identifier: number[]
   ) {
     super({ opType, identifier }, device, DisplayScheduleStateName, {
@@ -88,7 +88,7 @@ export class DisplayScheduleState extends DeviceOpState<
         data: {
           command: [
             asOpCode(
-              0x33,
+              OpType.COMMAND,
               ...this.identifier!,
               state.on ? 0x01 : 0x00,
               state.from.hour ?? 0x00,

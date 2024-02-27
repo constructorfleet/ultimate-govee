@@ -1,6 +1,6 @@
-import { OpType, Optional } from '~ultimate-govee-common';
+import { OpType, Optional, asOpCode } from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
-import { DeviceOpState } from './device.state';
+import { DeviceOpState, StateCommandAndStatus } from './device.state';
 
 export const ActiveStateName: 'isActive' = 'isActive' as const;
 export type ActiveStateName = typeof ActiveStateName;
@@ -14,10 +14,38 @@ export class ActiveState extends DeviceOpState<
     opType: number = OpType.REPORT,
     identifier: number[] = [0x01],
   ) {
-    super({ opType, identifier }, device, ActiveStateName, undefined);
+    super({ opType, identifier }, device, ActiveStateName, undefined, 'both');
   }
 
   parseOpCommand(opCommand: number[]) {
     this.stateValue$.next(opCommand[0] === 0x01);
+  }
+
+  protected stateToCommand(
+    state: Optional<boolean>,
+  ): Optional<StateCommandAndStatus> {
+    if (state === undefined) {
+      this.logger.warn('state not provided, skipping command.');
+      return;
+    }
+
+    return {
+      command: {
+        data: {
+          command: [
+            asOpCode(
+              OpType.COMMAND,
+              this.identifier!,
+              state === true ? 0x01 : 0x00,
+            ),
+          ],
+        },
+      },
+      status: {
+        op: {
+          command: [[state === true ? 0x01 : 0x00]],
+        },
+      },
+    };
   }
 }

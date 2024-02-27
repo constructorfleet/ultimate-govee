@@ -1,6 +1,7 @@
 import { Optional, asOpCode } from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState, StateCommandAndStatus } from './device.state';
+import { OpType } from '../../../common/op-code';
 
 export const ColorRGBStateName: 'colorRGB' = 'colorRGB' as const;
 export type ColorRGBStateName = typeof ColorRGBStateName;
@@ -22,7 +23,11 @@ export type ColorRGB = {
 };
 
 export class ColorRGBState extends DeviceOpState<ColorRGBStateName, ColorRGB> {
-  constructor(device: DeviceModel, opType: number = 0xaa, identifier = [0x05]) {
+  constructor(
+    device: DeviceModel,
+    opType: number = OpType.REPORT,
+    identifier = [0x05],
+  ) {
     super(
       { opType, identifier },
       device,
