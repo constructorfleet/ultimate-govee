@@ -7,7 +7,12 @@ on:
       - opened
 jobs:
   add_comment:
-    name: Add Comment
+    if: >-
+      github.event.pull_request.user.login != 'dependabot[bot]' &&
+      !contains(github.event.pull_request.labels.*.name, 'major') &&
+      !contains(github.event.pull_request.labels.*.name, 'minor') &&
+      !contains(github.event.pull_request.labels.*.path, 'patch')
+    name: Comment requesting versioning label
     runs-on: ubuntu-latest
     steps:
       - uses: mshick/add-pr-comment@v1
@@ -16,3 +21,16 @@ jobs:
             Please set a versioning label of either `major`, `minor`, or `patch`
             to the pull request.
           repo-token: ${{ secrets.GITHUB_TOKEN }}
+  dependabot:
+    if: >-
+      github.event.pull_request.user.login == 'dependabot[bot]'
+    name: 'Dependabot: Add Label and Upate Title'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add 'patch' label to PR
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          PR: ${{ github.event.pull_request.html_url }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          gh pr edit $PR --add-label 'patch' --title "fix: ${PR_TITLE}"
