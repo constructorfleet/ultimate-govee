@@ -52,7 +52,10 @@ export const RGBICLightType: 'rgbic' = 'rgbic' as const;
 export type RGBICLightType = typeof RGBICLightType;
 
 export class RGBICLightDevice extends LightDevice implements RGBICLight {
-  static readonly type = RGBICLightType;
+  static readonly deviceType = RGBICLightType;
+  get deviceType(): string {
+    return RGBICLightDevice.deviceType;
+  }
 
   constructor(device: DeviceModel, eventBus: EventBus, commandBus: CommandBus) {
     super(device, eventBus, commandBus, StateFactory);

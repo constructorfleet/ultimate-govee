@@ -67,6 +67,9 @@ export type HumidifierType = typeof HumidifierType;
 
 export class HumidifierDevice extends Device implements Humidifier {
   static readonly deviceType: HumidifierType = HumidifierType;
+  get deviceType(): string {
+    return HumidifierDevice.deviceType;
+  }
 
   constructor(device: DeviceModel, eventBus: EventBus, commandBus: CommandBus) {
     super(device, eventBus, commandBus, StateFactories);
