@@ -114,7 +114,7 @@ export class Device extends Subject<Device> {
       );
     });
     state.commandBus.subscribe((cmd) => {
-      this.logger.error('Publishing state command');
+      this.logger.debug('Publishing state command');
       this.eventBus.publish(
         new DeviceStateCommandEvent(
           this.id,
@@ -251,7 +251,7 @@ export class Device extends Subject<Device> {
       if (this.stateLogger === undefined) {
         this.stateLogger = getLogger(this.id, this.model);
       }
-      this.logger.error({
+      this.logger.debug({
         deviceId: this.id,
         name: this.name,
         model: this.model,

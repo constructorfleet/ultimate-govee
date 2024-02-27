@@ -18,10 +18,6 @@ export class RestChannelSagas {
     events$.pipe(
       ofType(RestChannelConfigReceivedEvent),
       map((event) => new ConfigureRestChannelCommand(event.config)),
-      // catchError((err, caught) => {
-      //   this.logger.error(err, caught);
-      //   return of();
-      // }),
     );
 
   @Saga()
@@ -29,10 +25,6 @@ export class RestChannelSagas {
     events$.pipe(
       ofType(RestChannelChangedEvent),
       map(() => new RetrieveDeviceListCommand()),
-      // catchError((err, caught) => {
-      //   this.logger.error(err, caught);
-      //   return of();
-      // }),
     );
 
   @Saga()
@@ -41,9 +33,5 @@ export class RestChannelSagas {
       ofType(RefreshDeviceListEvent),
       auditTime(30000),
       map(() => new RetrieveDeviceListCommand()),
-      // catchError((err, caught) => {
-      //   this.logger.error(err, caught);
-      //   return of();
-      // }),
     );
 }
