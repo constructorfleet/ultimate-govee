@@ -28,7 +28,7 @@ export type DeviceConstructorArgs = {
   category: string;
   categoryGroup: string;
   version: Version;
-  deviceUpdate: <T>(device: T) => Promise<void>;
+  // deviceUpdate: <T>(device: T) => Promise<void>;
 } & GoveeDeviceStatus;
 
 export class DeviceModel {
