@@ -4,6 +4,7 @@ import {
   AsyncBleChannelModuleOptions,
   IoTChannelModuleOptions,
   AsyncIoTChannelModuleOptions,
+  Devices,
 } from './domain';
 export {
   BleChannelModuleOptions,
@@ -75,3 +76,6 @@ import {
   ASYNC_OPTIONS_TYPE as AsyncPersistModuleOptions,
   OPTIONS_TYPE as PersistModuleOptions,
 } from './persist';
+export const DeviceTypes = Object.fromEntries(
+  Devices.map((device) => [device.name, device]),
+);

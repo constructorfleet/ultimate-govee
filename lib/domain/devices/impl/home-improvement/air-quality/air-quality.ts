@@ -35,6 +35,9 @@ export type AirQualityType = typeof AirQualityType;
 
 export class AirQualityDevice extends Device implements AirQualitySensor {
   static readonly deviceType: AirQualityType = AirQualityType;
+  get deviceType(): string {
+    return AirQualityDevice.deviceType;
+  }
 
   constructor(
     deviceModel: DeviceModel,
