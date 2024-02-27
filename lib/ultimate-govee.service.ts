@@ -13,9 +13,11 @@ import {
   UltimateGoveeConfig,
 } from './ultimate-govee.config';
 import { DeviceDiscoveredEvent } from './domain/devices/cqrs';
-import { IoTChannelService, BleChannelService } from './domain';
+import { IoTChannelService, BleChannelService, DeviceModel } from './domain';
 import { ModuleRef } from '@nestjs/core';
 import { ChannelToggle } from '~ultimate-govee-domain/channels/channel.types';
+import { DevicesService } from './domain/devices/devices.service';
+import { Device } from './domain/devices/device';
 
 @Injectable()
 export class UltimateGoveeService
@@ -25,6 +27,7 @@ export class UltimateGoveeService
   private readonly logger: Logger = new Logger(UltimateGoveeService.name);
   constructor(
     @InjectGoveeConfig private readonly config: UltimateGoveeConfig,
+    private readonly deviceService: DevicesService,
     moduleRef: ModuleRef,
     private readonly commandBus: CommandBus,
     private readonly eventBus: EventBus,
@@ -44,6 +47,10 @@ export class UltimateGoveeService
 
   get deviceDiscovered(): Observable<DeviceDiscoveredEvent> {
     return this.eventBus.pipe(ofType(DeviceDiscoveredEvent));
+  }
+
+  constructDevice(deviceModel: DeviceModel): Device {
+    return this.deviceService.createDeviceFromModel(deviceModel);
   }
 
   async connect(username: Username, password: Password) {
