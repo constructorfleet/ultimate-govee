@@ -17,7 +17,7 @@ export type PersistOptions = {
 
 export function PersistResult(options: PersistOptions) {
   return (_: any, __: string, descriptor: PropertyDescriptor) => {
-    if (process.env.NODE_ENV === 'jest') {
+    if (process.env.NODE_ENV === 'test') {
       return;
     }
     const original = descriptor.value;
