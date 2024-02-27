@@ -75,6 +75,10 @@ export class Device extends Subject<Device> {
 
   static readonly deviceType: string = 'unknown';
 
+  get deviceType(): string {
+    return Device.deviceType;
+  }
+
   private readonly states: DeltaMap<string, DeviceState<string, any>> =
     new DeltaMap();
   private readonly stateValues: DeltaMap<string, any> = new DeltaMap({

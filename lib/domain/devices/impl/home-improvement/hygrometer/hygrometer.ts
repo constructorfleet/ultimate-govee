@@ -33,6 +33,10 @@ const stateFactories: StateFactories = [
 ];
 
 export class HygrometerDevice extends Device implements HygrometerSensor {
+  static readonly deviceType: string = Hygrometer;
+  get deviceType(): string {
+    return HygrometerDevice.deviceType;
+  }
   constructor(device: DeviceModel, eventBus: EventBus, commandBus: CommandBus) {
     super(device, eventBus, commandBus, stateFactories);
   }

@@ -51,6 +51,9 @@ export type IceMakerType = typeof IceMakerType;
 
 export class IceMakerDevice extends Device implements IceMaker {
   static readonly deviceType: IceMakerType = IceMakerType;
+  get deviceType(): string {
+    return IceMakerDevice.deviceType;
+  }
   get NuggetSize(): typeof NuggetSize {
     return NuggetSize;
   }

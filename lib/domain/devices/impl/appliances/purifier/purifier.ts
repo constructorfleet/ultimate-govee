@@ -55,6 +55,9 @@ export type PurifierType = typeof PurifierType;
 
 export class PurifierDevice extends Device implements Purifier {
   static readonly deviceType: PurifierType = PurifierType;
+  get deviceType(): string {
+    return PurifierDevice.deviceType;
+  }
 
   constructor(device: DeviceModel, eventBus: EventBus, commandBus: CommandBus) {
     super(device, eventBus, commandBus, StateFactories);

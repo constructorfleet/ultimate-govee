@@ -34,7 +34,10 @@ export const RGBLightType: 'rgb' = 'rgb' as const;
 export type RGBLightType = typeof RGBLightType;
 
 export class RGBLightDevice extends LightDevice implements RGBLight {
-  static readonly type: RGBLightType = RGBLightType;
+  static readonly deviceType: RGBLightType = RGBLightType;
+  get deviceType(): string {
+    return RGBLightDevice.deviceType;
+  }
 
   constructor(device: DeviceModel, eventBus: EventBus, commandBus: CommandBus) {
     super(device, eventBus, commandBus, StateFactory);
