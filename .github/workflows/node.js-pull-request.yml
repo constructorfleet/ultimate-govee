@@ -14,6 +14,7 @@ env:
 
 jobs:
   build:
+    if: github.event.pull_request.user.login != 'Dependabot[bot]'
     strategy:
       matrix:
         node-version:
