@@ -1,5 +1,5 @@
-import { Subject, interval, sampleTime } from 'rxjs';
-import { Logger } from '@nestjs/common';
+import { Subject, Subscription, interval, sampleTime } from 'rxjs';
+import { Logger, OnModuleDestroy } from '@nestjs/common';
 import { DeltaMap, Optional, hexToBase64 } from '~ultimate-govee-common';
 import { GoveeDeviceStatus } from '~ultimate-govee-data';
 import DailyRotateFile from 'winston-daily-rotate-file';
@@ -70,7 +70,7 @@ const buildStates = (
     )
     .flat();
 
-export class Device extends Subject<Device> {
+export class Device extends Subject<Device> implements OnModuleDestroy {
   private readonly logger: Logger;
 
   static readonly deviceType: string = 'unknown';
@@ -86,6 +86,7 @@ export class Device extends Subject<Device> {
   });
   private readonly opIdentifiers: Set<number[]> = new Set();
   private readonly refresh$ = new Subject<void>();
+  private readonly subscriptions: Subscription[] = [];
 
   protected addState<TDevice extends DeviceState<string, any>>(
     state: TDevice,
@@ -97,49 +98,57 @@ export class Device extends Subject<Device> {
     ) {
       this.opIdentifiers.add(state.identifier);
     }
-    this.device.status.subscribe((status) => state.parse(status));
+    this.subscriptions.push(
+      this.device.status.subscribe((status) => state.parse(status)),
+    );
     this.states.set(state.name, state);
-    state.subscribe((value) => {
-      this.stateValues.set(state.name, value);
-    });
-    state.clearCommand.subscribe((command) => {
-      this.eventBus.publish(
-        new DeviceStateChangedEvent(
-          this,
-          command.state,
-          command.value,
-          command.commandId,
-          this.isDebug,
-        ),
-      );
-    });
-    state.commandBus.subscribe((cmd) => {
-      this.logger.debug('Publishing state command');
-      this.eventBus.publish(
-        new DeviceStateCommandEvent(
-          this.id,
-          state.name,
-          {
-            deviceId: this.id,
-            commandId: cmd.commandId,
-            command: cmd.command,
-            cmdVersion: cmd.cmdVersion ?? 0,
-            type: cmd.type ?? 1,
-            data: {
-              ...cmd.data,
-              ...(cmd.data.command !== undefined
-                ? { command: cmd.data.command.map((x) => hexToBase64(x)) }
-                : {}),
+    this.subscriptions.push(
+      state.subscribe((value) => {
+        this.stateValues.set(state.name, value);
+      }),
+    );
+    this.subscriptions.push(
+      state.clearCommand.subscribe((command) => {
+        this.eventBus.publish(
+          new DeviceStateChangedEvent(
+            this,
+            command.state,
+            command.value,
+            command.commandId,
+            this.isDebug,
+          ),
+        );
+      }),
+    );
+    this.subscriptions.push(
+      state.commandBus.subscribe((cmd) => {
+        this.logger.debug('Publishing state command');
+        this.eventBus.publish(
+          new DeviceStateCommandEvent(
+            this.id,
+            state.name,
+            {
+              deviceId: this.id,
+              commandId: cmd.commandId,
+              command: cmd.command,
+              cmdVersion: cmd.cmdVersion ?? 0,
+              type: cmd.type ?? 1,
+              data: {
+                ...cmd.data,
+                ...(cmd.data.command !== undefined
+                  ? { command: cmd.data.command.map((x) => hexToBase64(x)) }
+                  : {}),
+              },
             },
-          },
-          {
-            iotTopic: this.iotTopic,
-            bleAddress: this.bleAddress,
-          },
-          this.isDebug,
-        ),
-      );
-    });
+            {
+              iotTopic: this.iotTopic,
+              bleAddress: this.bleAddress,
+            },
+            this.isDebug,
+          ),
+        );
+      }),
+    );
     return state;
   }
 
@@ -245,20 +254,22 @@ export class Device extends Subject<Device> {
         ...device.status.value,
       });
     });
-    interval(10000).subscribe(() => this.refresh());
-    this.stateValues.delta$.subscribe(() => {
-      this.next(this);
-      if (this.stateLogger === undefined) {
-        this.stateLogger = getLogger(this.id, this.model);
-      }
-      this.logger.debug({
-        deviceId: this.id,
-        name: this.name,
-        model: this.model,
-        type: this.constructor.name,
-        states: this.loggableState(this.id),
-      });
-    });
+    this.subscriptions.push(interval(10000).subscribe(() => this.refresh()));
+    this.subscriptions.push(
+      this.stateValues.delta$.subscribe(() => {
+        this.next(this);
+        if (this.stateLogger === undefined) {
+          this.stateLogger = getLogger(this.id, this.model);
+        }
+        this.logger.debug({
+          deviceId: this.id,
+          name: this.name,
+          model: this.model,
+          type: this.constructor.name,
+          states: this.loggableState(this.id),
+        });
+      }),
+    );
   }
 
   @PersistResult({
@@ -282,5 +293,9 @@ export class Device extends Subject<Device> {
       }, {}),
     };
     return state;
+  }
+
+  onModuleDestroy() {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 }
