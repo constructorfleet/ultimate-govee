@@ -7,6 +7,8 @@ on:
       - opened
 jobs:
   add_comment:
+    if: >-
+      github.event.pull_request.user.login != 'dependabot[bot]'
     name: Add Comment
     runs-on: ubuntu-latest
     steps:
@@ -16,3 +18,16 @@ jobs:
             Please set a versioning label of either `major`, `minor`, or `patch`
             to the pull request.
           repo-token: ${{ secrets.GITHUB_TOKEN }}
+  dependabot:
+    if: >-
+      github.event.pull_request.user.login == 'dependabot[bot]'
+    name: Add Comment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add 'patch' label to PR
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          PR: ${{ github.event.pull_request.html_url }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          gh pr edit $PR --add-label 'patch' --title "fix: ${PR_TITLE}"
