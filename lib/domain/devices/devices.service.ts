@@ -76,12 +76,21 @@ export class DevicesService
   }
 
   async discoverDevice(goveeDevice: GoveeDevice): Promise<Device> {
-    let device = this.getDevice(goveeDevice.id);
+    const device = this.getDevice(goveeDevice.id);
     if (device === undefined) {
       const deviceModel = await this.createDeviceModel(goveeDevice);
-      device = this.setDevice(this.factory.create(deviceModel));
-      this.eventBus.publish(new DeviceDiscoveredEvent(device));
+      return this.createDeviceFromModel(deviceModel);
     }
+    return device;
+  }
+
+  createDeviceFromModel(deviceModel: DeviceModel): Device {
+    let device = this.getDevice(deviceModel.id);
+    if (device !== undefined) {
+      return device;
+    }
+    device = this.setDevice(this.factory.create(deviceModel));
+    this.eventBus.publish(new DeviceDiscoveredEvent(device));
     return device;
   }
 

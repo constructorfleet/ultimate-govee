@@ -226,7 +226,7 @@ export class Device extends Subject<Device> {
   }
 
   constructor(
-    protected readonly device: DeviceModel,
+    readonly device: DeviceModel,
     protected readonly eventBus: EventBus,
     protected readonly commandBus: CommandBus,
     stateFactories: StateFactories,
