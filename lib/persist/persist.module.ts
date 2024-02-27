@@ -8,11 +8,7 @@ import {
   RootDirectoryProvider,
   createPersistedFileProviders,
 } from './persist.providers';
-import {
-  PersistContext,
-  PersistModuleOptions,
-  PersistModuleOptionsKey,
-} from './persist.types';
+import { PersistModuleOptions, PersistModuleOptionsKey } from './persist.types';
 
 export const {
   ConfigurableModuleClass,
@@ -48,11 +44,16 @@ export { PersistModuleOptions };
   exports: [PersistService],
 })
 export class PersistModule extends ConfigurableModuleClass {
+  private static rootDirectory: string = '.';
+  static get persistRootDirectory(): string {
+    return this.rootDirectory;
+  }
+
   constructor(
     @InjectRootDirectory
     rootDirectory?: string,
   ) {
     super();
-    PersistContext.rootDirectory = rootDirectory ?? '.';
+    PersistModule.rootDirectory = rootDirectory ?? '.';
   }
 }

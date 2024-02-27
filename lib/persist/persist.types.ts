@@ -3,7 +3,3 @@ export type PersistModuleOptions = {
 };
 
 export const PersistModuleOptionsKey = 'Persist.Module.Options';
-
-export const PersistContext: PersistModuleOptions = {
-  rootDirectory: '.',
-};
