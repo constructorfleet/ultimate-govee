@@ -4,7 +4,6 @@ import {
   AsyncBleChannelModuleOptions,
   IoTChannelModuleOptions,
   AsyncIoTChannelModuleOptions,
-  Devices,
 } from './domain';
 export {
   BleChannelModuleOptions,
@@ -76,6 +75,10 @@ import {
   ASYNC_OPTIONS_TYPE as AsyncPersistModuleOptions,
   OPTIONS_TYPE as PersistModuleOptions,
 } from './persist';
-export const DeviceTypes = Object.fromEntries(
-  Devices.map((device) => [device.name, device]),
-);
+export { IceMakerDevice } from './domain/devices/impl/appliances/ice-maker/ice-maker';
+export { AirQualityDevice } from './domain/devices/impl/home-improvement/air-quality/air-quality';
+export { HygrometerDevice } from './domain/devices/impl/home-improvement/hygrometer/hygrometer';
+export { RGBLightDevice } from './domain/devices/impl/lights/rgb/rgb-light';
+export { RGBICLightDevice } from './domain/devices/impl/lights/rgbic/rgbic-light';
+export { HumidifierDevice } from './domain/devices/impl/appliances/humidifier/humidifier';
+export { PurifierDevice } from './domain/devices/impl/appliances/purifier/purifier';
