@@ -66,7 +66,6 @@ export const decodeJWT = (token?: string): JWTPayload | undefined => {
   try {
     return jwtDecode<JWTPayload>(token, {});
   } catch (error) {
-    new Logger('decodeJWT').error('RestClient', 'decodeJWT', error);
     return undefined;
   }
 };

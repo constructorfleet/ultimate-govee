@@ -28,10 +28,6 @@ export class BleChannelSagas {
     events$.pipe(
       ofType(BleChannelConfigReceivedEvent),
       map((event) => new ConfigureBleChannelCommand(false, event.config)),
-      // catchError((err, caught) => {
-      //   this.logger.error(err, caught);
-      //   return of();
-      // }),
     );
 
   @Saga()
@@ -41,10 +37,6 @@ export class BleChannelSagas {
       map(
         (event) => new ConfigureBleChannelCommand(event.enabled, event.config),
       ),
-      // catchError((err, caught) => {
-      //   this.logger.error(err, caught);
-      //   return of();
-      // }),
     );
 
   @Saga()
@@ -52,10 +44,6 @@ export class BleChannelSagas {
     events$.pipe(
       ofType(DeviceDiscoveredEvent),
       map((event) => new BleRecordDeviceCommand(event.device)),
-      // catchError((err, caught) => {
-      //   this.logger.error(err, caught);
-      //   return of();
-      // }),
     );
 
   @Saga()
@@ -76,10 +64,6 @@ export class BleChannelSagas {
             event.opIdentifiers!.map((op) => asOpCode(0xaa, ...op)),
           ),
       ),
-      // catchError((err, caught) => {
-      //   this.logger.error(err, caught);
-      //   return of();
-      // }),
     );
 
   @Saga()
@@ -104,9 +88,5 @@ export class BleChannelSagas {
             ),
           ),
       ),
-      // catchError((err, caught) => {
-      //   this.logger.error(err, caught);
-      //   return of();
-      // }),
     );
 }
