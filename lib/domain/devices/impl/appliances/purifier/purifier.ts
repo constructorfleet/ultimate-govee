@@ -10,6 +10,10 @@ import {
   ControlLockStateName,
   DisplayScheduleState,
   DisplayScheduleStateName,
+  FilterExpiredState,
+  FilterExpiredStateName,
+  FilterLifeState,
+  FilterLifeStateName,
   ModeStateName,
   NightLightState,
   NightLightStateName,
@@ -35,11 +39,13 @@ const StateFactories: StateFactories = [
   (device: DeviceModel) => new ConnectedState(device),
   (device: DeviceModel) => new ActiveState(device),
   (device: DeviceModel) => new DisplayScheduleState(device, 0xaa, 0x16),
+  (device: DeviceModel) => new FilterExpiredState(device),
   {
     H7126: [
       (device: DeviceModel) => new ManualModeState(device),
       (device: DeviceModel) => new CustomModeState(device),
       (device: DeviceModel) => new TimerState(device, 0xaa, 0x26),
+      (device: DeviceModel) => new FilterLifeState(device, 0xaa, 0x19),
     ],
     [DefaultFactory]: [
       (device: DeviceModel) => new PurifierFanSpeedState(device),
@@ -104,6 +110,12 @@ export class PurifierDevice extends Device implements Purifier {
   get [ModeStateName](): Optional<PurifierActiveMode> {
     return this.state(ModeStateName);
   }
+  get [FilterExpiredStateName](): Optional<FilterExpiredState> {
+    return this.state(FilterExpiredStateName);
+  }
+  get [FilterLifeStateName](): Optional<FilterLifeState> {
+    return this.state(FilterLifeStateName);
+  }
 }
 
 @Injectable()
@@ -128,4 +140,6 @@ export type Purifier = {
   [NightLightStateName]: Optional<NightLightState>;
   [ControlLockStateName]: Optional<ControlLockState>;
   [ModeStateName]: Optional<PurifierActiveMode>;
+  [FilterExpiredStateName]: Optional<FilterExpiredState>;
+  [FilterLifeStateName]: Optional<FilterLifeState>;
 };
