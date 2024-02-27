@@ -3,7 +3,7 @@ import { existsSync } from 'fs';
 import { mkdir, writeFile, appendFile } from 'fs/promises';
 import { join } from 'path';
 import stringify from 'json-stringify-safe';
-import { PersistContext } from './persist.types';
+import { PersistModule } from './persist.module';
 
 export type PersistOptions = {
   path?: Optional<string>;
@@ -25,9 +25,9 @@ export function PersistResult(options: PersistOptions) {
     descriptor.value = async function (...args: any[]) {
       const result = await original.apply(this, args);
       const dirPath =
-        PersistContext.rootDirectory !== undefined && options.path !== undefined
-          ? join(PersistContext.rootDirectory, options.path)
-          : PersistContext.rootDirectory ?? options.path;
+        options.path !== undefined
+          ? join(PersistModule.persistRootDirectory, options.path)
+          : PersistModule.persistRootDirectory;
 
       if (dirPath !== undefined && !existsSync(dirPath)) {
         await mkdir(dirPath, { recursive: true });
