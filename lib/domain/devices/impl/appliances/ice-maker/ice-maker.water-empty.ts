@@ -1,5 +1,6 @@
 import { DeviceModel } from '../../../devices.model';
 import { DeviceOpState, WaterShortageStateName } from '../../../states';
+import { OpType } from '~ultimate-govee-common/op-code';
 
 export class IceMakerWaterEmpty extends DeviceOpState<
   WaterShortageStateName,
@@ -8,7 +9,7 @@ export class IceMakerWaterEmpty extends DeviceOpState<
   constructor(device: DeviceModel) {
     super(
       {
-        opType: 0xaa,
+        opType: OpType.REPORT,
         identifier: [31, 6],
       },
       device,

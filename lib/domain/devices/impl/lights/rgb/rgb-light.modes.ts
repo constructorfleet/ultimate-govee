@@ -1,4 +1,4 @@
-import { total } from '~ultimate-govee-common';
+import { total, OpType } from '~ultimate-govee-common';
 import { DeviceOpState } from '../../../states';
 import { DeviceModel } from '../../../devices.model';
 
@@ -21,7 +21,7 @@ export class SceneModeState extends DeviceOpState<
 > {
   constructor(
     device: DeviceModel,
-    opType: number = 0xaa,
+    opType: number = OpType.REPORT,
     identifier: number[] = [0x05, 0x04],
   ) {
     super({ opType, identifier }, device, SceneModeStateName, {});

@@ -1,6 +1,7 @@
 import { DeviceModel } from '../../../devices.model';
 import { DeviceOpState } from '../../../states';
 import { IceMakerStatus, statusMap } from './types';
+import { OpType } from '~ultimate-govee-common/op-code';
 
 export const IceMakerStatusStateName: 'iceMakerStatus' =
   'iceMakerStatus' as const;
@@ -12,7 +13,7 @@ export class IceMakerStatusState extends DeviceOpState<
 > {
   constructor(device: DeviceModel) {
     super(
-      { opType: 0xaa, identifier: [0x19] },
+      { opType: OpType.REPORT, identifier: [0x19] },
       device,
       IceMakerStatusStateName,
       undefined,

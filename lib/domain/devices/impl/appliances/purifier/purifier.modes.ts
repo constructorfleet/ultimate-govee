@@ -1,4 +1,10 @@
-import { ArrayRange, Optional, asOpCode, total } from '~ultimate-govee-common';
+import {
+  ArrayRange,
+  Optional,
+  asOpCode,
+  total,
+  OpType,
+} from '~ultimate-govee-common';
 import { DeviceModel } from '../../../devices.model';
 import {
   ModeState,
@@ -24,7 +30,7 @@ export class ManualModeState extends DeviceOpState<
   private speedIndex: number = 0;
   constructor(
     device: DeviceModel,
-    opType: number = 0xaa,
+    opType: number = OpType.REPORT,
     identifier: number[] = [0x05, PurifierModes.MANUAL],
   ) {
     super({ opType, identifier }, device, ManualModeStateName, undefined);
@@ -53,7 +59,9 @@ export class ManualModeState extends DeviceOpState<
     return {
       command: {
         data: {
-          command: [asOpCode(0x33, this.identifier!, filler, nextState)],
+          command: [
+            asOpCode(OpType.COMMAND, this.identifier!, filler, nextState),
+          ],
         },
       },
       status: {
@@ -88,7 +96,7 @@ export class CustomModeState extends DeviceOpState<
   private customModes: CustomMode = {};
   constructor(
     device: DeviceModel,
-    opType: number = 0xaa,
+    opType: number = OpType.REPORT,
     identifier: number[] = [0x05, PurifierModes.PROGRAM],
   ) {
     super({ opType, identifier }, device, CustomModeStateName, undefined);
@@ -165,7 +173,7 @@ export class CustomModeState extends DeviceOpState<
         data: {
           command: [
             asOpCode(
-              0x33,
+              OpType.COMMAND,
               this.identifier!,
               newProgram.id,
               ...[0, 1, 2].reduce((commands, program) => {
