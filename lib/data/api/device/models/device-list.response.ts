@@ -161,7 +161,8 @@ export class DeviceData {
   isOnline!: boolean;
 
   @Expose({ name: 'isOnOff' })
-  isOn?: number;
+  @TransformBoolean
+  isOn?: boolean;
 
   @Expose({ name: 'bind' })
   @TransformBoolean

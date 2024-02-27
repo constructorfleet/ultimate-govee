@@ -1,5 +1,5 @@
 import { Subscription } from 'rxjs';
-import { Optional, asOpCode } from '~ultimate-govee-common';
+import { Optional, asOpCode, OpType } from '~ultimate-govee-common';
 import { DeviceOpState, StateCommandAndStatus } from '../../../states';
 import { DeviceModel } from '../../../devices.model';
 import {
@@ -20,7 +20,7 @@ export class PurifierFanSpeedState extends DeviceOpState<
   constructor(
     device: DeviceModel,
     private readonly active: PurifierActiveMode | undefined = undefined,
-    opType: number = 0xaa,
+    opType: number = OpType.REPORT,
     identifier: number[] = [0x05],
   ) {
     super({ opType, identifier }, device, FanSpeedStateName, undefined);

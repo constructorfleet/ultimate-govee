@@ -1,4 +1,4 @@
-import { Optional, asOpCode } from '~ultimate-govee-common';
+import { Optional, asOpCode, OpType } from '~ultimate-govee-common';
 import { DeviceModel } from '../../../devices.model';
 import {
   ModeState,
@@ -23,7 +23,7 @@ export class ManualModeState extends DeviceOpState<
 > {
   constructor(
     device: DeviceModel,
-    opType: number = 0xaa,
+    opType: number = OpType.REPORT,
     identifier: number[] = [0x05, HumidifierModes.MANUAL],
   ) {
     super({ opType, identifier }, device, ManualModeStateName, undefined);
@@ -51,7 +51,11 @@ export class ManualModeState extends DeviceOpState<
       command: {
         data: {
           command: [
-            asOpCode(0x33, ...(this.identifier as number[])!, nextState),
+            asOpCode(
+              OpType.COMMAND,
+              ...(this.identifier as number[])!,
+              nextState,
+            ),
           ],
         },
       },
@@ -82,7 +86,7 @@ export class CustomModeState extends DeviceOpState<
   private customModes: CustomMode = {};
   constructor(
     device: DeviceModel,
-    opType: number = 0xaa,
+    opType: number = OpType.REPORT,
     identifier: number[] = [0x05, HumidifierModes.PROGRAM],
   ) {
     super({ opType, identifier }, device, CustomModeStateName, undefined);
@@ -161,7 +165,7 @@ export class CustomModeState extends DeviceOpState<
         data: {
           command: [
             asOpCode(
-              0x33,
+              OpType.COMMAND,
               this.identifier!,
               // HumidifierModes.PROGRAM,
               newProgram.id,

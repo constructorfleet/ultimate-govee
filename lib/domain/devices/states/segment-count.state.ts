@@ -1,6 +1,7 @@
 import { Optional } from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
+import { OpType } from '../../../common/op-code';
 
 export const SegmentCountStateName: 'segmentCount' = 'segmentCount' as const;
 export type SegmentCountStateName = typeof SegmentCountStateName;
@@ -16,7 +17,7 @@ export class SegmentCountState extends DeviceOpState<
 > {
   constructor(
     device: DeviceModel,
-    opType: number = 0xaa,
+    opType: number = OpType.REPORT,
     identifier: number[] = [0x11],
   ) {
     super({ opType, identifier }, device, SegmentCountStateName, undefined);

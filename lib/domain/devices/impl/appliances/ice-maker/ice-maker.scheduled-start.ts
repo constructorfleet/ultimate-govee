@@ -6,6 +6,7 @@ import {
   hexStringToArray,
   total,
   unpaddedHexToArray,
+  OpType,
 } from '~ultimate-govee-common';
 import { DeviceModel } from '../../../devices.model';
 import MomentLib from 'moment';
@@ -39,7 +40,7 @@ export class IceMakerScheduledStart extends DeviceOpState<
 > {
   constructor(device: DeviceModel) {
     super(
-      { opType: 0xaa, identifier: [0x23] },
+      { opType: OpType.REPORT, identifier: [0x23] },
       device,
       ScheduledStartStateName,
       {},
@@ -87,7 +88,7 @@ export class IceMakerScheduledStart extends DeviceOpState<
         return {
           command: {
             data: {
-              command: [asOpCode(0x33, this.identifier!, 0x00)],
+              command: [asOpCode(OpType.COMMAND, this.identifier!, 0x00)],
             },
           },
           status: {
@@ -134,7 +135,7 @@ export class IceMakerScheduledStart extends DeviceOpState<
     return {
       command: {
         data: {
-          command: [asOpCode(0x33, this.identifier!, opCodes)],
+          command: [asOpCode(OpType.COMMAND, this.identifier!, opCodes)],
         },
       },
       status: {
