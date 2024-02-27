@@ -4,9 +4,14 @@
 name: Tag on Merge
 
 on:
-  push:
+  pull_request:
     branches:
       - main
+    types:
+      - closed
+  # push:
+  #   branches:
+  #     - main
 
 env:
   CI: true
@@ -14,7 +19,15 @@ env:
 permissions: write-all
 
 jobs:
-  build:
+  version_tag:
+    if: github.event.pull_request.merged == true
+    env:
+      MAJOR_BUMP:
+        ${{ contains(github.event.pull_request.labels.*.name, 'major') }}
+      MINOR_BUMP:
+        ${{ contains(github.event.pull_request.labels.*.name, 'minor') }}
+      PATCH_BUMP:
+        ${{ contains(github.event.pull_request.labels.*.name, 'patch') }}
     strategy:
       matrix:
         node-version:
@@ -30,13 +43,27 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Bump version and push tag
+      - name: Bump major version and push tag
+        if: contains(github.event.pull_request.labels.*.name, 'major')
         uses: anothrNick/github-tag-action@1.64.0
-        id: tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          WITH_V: true
+          DEFAULT_BUMP: major
+      - name: Bump minor version and push tag
+        if: contains(github.event.pull_request.labels.*.name, 'minor')
+        uses: anothrNick/github-tag-action@1.64.0
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           WITH_V: true
           DEFAULT_BUMP: minor
+      - name: Bump patch version and push tag
+        if: contains(github.event.pull_request.labels.*.name, 'patch')
+        uses: anothrNick/github-tag-action@1.64.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          WITH_V: true
+          DEFAULT_BUMP: patch
       - run:
           npm version --allow-same-version=true --git-tag-version=false $(git
           describe --tags)
