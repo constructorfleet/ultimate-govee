@@ -17,6 +17,9 @@ export type PersistOptions = {
 
 export function PersistResult(options: PersistOptions) {
   return (_: any, __: string, descriptor: PropertyDescriptor) => {
+    if (process.env.NODE_ENV === 'jest') {
+      return;
+    }
     const original = descriptor.value;
     // eslint-disable-next-line func-names
     descriptor.value = async function (...args: any[]) {
