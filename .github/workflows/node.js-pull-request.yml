@@ -14,6 +14,7 @@ env:
 
 jobs:
   build:
+    if: github.event.pull_request.user.login != 'Dependabot[bot]'
     strategy:
       matrix:
         node-version:
@@ -32,5 +33,3 @@ jobs:
       - run: npm run lint
       - name: Jest coverage report
         uses: ArtiomTr/jest-coverage-report-action@v2
-        with:
-          github-token: ${{ secrets.GH_TOKEN }}
