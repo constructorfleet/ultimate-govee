@@ -25,7 +25,7 @@ export class UltimateGoveeService
   private readonly logger: Logger = new Logger(UltimateGoveeService.name);
   constructor(
     @InjectGoveeConfig private readonly config: UltimateGoveeConfig,
-    private readonly moduleRef: ModuleRef,
+    moduleRef: ModuleRef,
     private readonly commandBus: CommandBus,
     private readonly eventBus: EventBus,
   ) {
@@ -61,7 +61,16 @@ export class UltimateGoveeService
     this.eventBus.subject$.complete();
   }
 
-  async onApplicationBootstrap() {}
+  async onApplicationBootstrap() {
+    this.channel('ble').setEnabled(this.config.connections.ble);
+    this.channel('iot').setEnabled(this.config.connections.iot);
+    if (
+      (this.config.username ?? '').length > 0 &&
+      (this.config.password ?? '').length > 0
+    ) {
+      await this.connect(this.config.username, this.config.password);
+    }
+  }
 
   onModuleDestroy(): void {
     this.shutdownBuses();
