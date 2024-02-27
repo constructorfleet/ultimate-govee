@@ -6,7 +6,8 @@ import { ColorTempStateName } from './color-temp.state';
 import { ConnectedStateName } from './connected.state';
 import { ControlLockStateName } from './control-lock.state';
 import { DisplayScheduleStateName } from './display-schedule.state';
-import { FilterStateName } from './filter.state';
+import { FilterExpiredStateName } from './filter-expired.state';
+import { FilterLifeStateName } from './filter-life.state';
 import { HumidityStateName } from './humidity.state';
 import { NightLightStateName } from './night-light.state';
 import { PowerStateName } from './power.state';
@@ -24,7 +25,8 @@ export * from './connected.state';
 export * from './control-lock.state';
 export * from './device.state';
 export * from './display-schedule.state';
-export * from './filter.state';
+export * from './filter-expired.state';
+export * from './filter-life.state';
 export * from './humidity.state';
 export * from './light-effect.state';
 export * from './mode.state';
@@ -45,7 +47,8 @@ export const DeviceStates: string[] = [
   ConnectedStateName,
   ControlLockStateName,
   DisplayScheduleStateName,
-  FilterStateName,
+  FilterExpiredStateName,
+  FilterLifeStateName,
   HumidityStateName,
   NightLightStateName,
   PowerStateName,
