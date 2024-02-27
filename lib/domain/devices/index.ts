@@ -30,7 +30,14 @@ import {
   DisplayScheduleState,
   DisplayScheduleStateName,
 } from './states/display-schedule.state';
-import { FilterState, FilterStateName } from './states/filter.state';
+import {
+  FilterExpiredState,
+  FilterExpiredStateName,
+} from './states/filter-expired.state';
+import {
+  FilterLifeState,
+  FilterLifeStateName,
+} from './states/filter-life.state';
 import { HumidityState, HumidityStateName } from './states';
 import {
   LightEffectState,
@@ -82,8 +89,10 @@ export {
   ControlLockStateName,
   DisplayScheduleState,
   DisplayScheduleStateName,
-  FilterState,
-  FilterStateName,
+  FilterExpiredState,
+  FilterExpiredStateName,
+  FilterLifeState,
+  FilterLifeStateName,
   HumidityState,
   HumidityStateName,
   LightEffectState,
