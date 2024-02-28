@@ -5,6 +5,9 @@ inputs:
     description: The type of version bump
     required: false
     default: patch
+  GH_TOKEN:
+    description: GitHub token
+    required: true
 runs:
   using: composite
   steps:
@@ -12,7 +15,7 @@ runs:
       id: new_version
       uses: anothrNick/github-tag-action@1.64.0
       env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        GITHUB_TOKEN: ${{ inputs.GH_TOKEN }}
         WITH_V: 'true'
         DEFAULT_BUMP: ${{ inputs.bump }}
         DRY_RUN: 'true'
@@ -38,14 +41,14 @@ runs:
     - name: Bump version and push tag
       uses: anothrNick/github-tag-action@1.64.0
       env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        GITHUB_TOKEN: ${{ inputs.GH_TOKEN }}
         WITH_V: ${{ true }}
         DEFAULT_BUMP: ${{ inputs.bump }}
     - name: Push to protected branch
       uses: CasperWA/push-protected@v2.15.0
       if: steps.commit.outputs.exit_code == 0
       with:
-        token: ${{ secrets.GH_TOKEN }}
+        token: ${{ inputs.GH_TOKEN }}
         branch: main
         force: true
         tags: true
