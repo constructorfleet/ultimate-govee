@@ -6,6 +6,7 @@ import {
   UltimateGoveeConfig,
   UltimateGoveeConfiguration,
 } from './ultimate-govee.config';
+import { CQRSLogger } from '~ultimate-govee-common';
 
 async function bootstrap() {
   const app = await NestFactory.create(
@@ -19,6 +20,9 @@ async function bootstrap() {
         },
       },
     }),
+    {
+      logger: new CQRSLogger(),
+    },
   );
   app.enableShutdownHooks();
   await app.listen(3000);
@@ -26,10 +30,10 @@ async function bootstrap() {
   const config = app.get<UltimateGoveeConfig>(
     UltimateGoveeConfiguration.provide,
   );
-  // service.channel('ble').setEnabled(true);
-  // service.channel('ble').setConfig({ devices: undefined });
-  // service.channel('iot').setEnabled(true);
   await service.connect(config.username, config.password);
+  service.channel('ble').setEnabled(true);
+  // service.channel('ble').setConfig({ devices: undefined });
+  service.channel('iot').setEnabled(true);
 }
 
 bootstrap();

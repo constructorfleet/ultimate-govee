@@ -1,9 +1,4 @@
-import {
-  Injectable,
-  Logger,
-  OnApplicationBootstrap,
-  OnModuleDestroy,
-} from '@nestjs/common';
+import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
 import { CommandBus, EventBus, ofType } from '@nestjs/cqrs';
 import { SetCredentialsCommand } from '~ultimate-govee-domain/auth';
 import { Password, Username } from '~ultimate-govee-common';
@@ -20,9 +15,7 @@ import { DevicesService } from './domain/devices/devices.service';
 import { Device } from './domain/devices/device';
 
 @Injectable()
-export class UltimateGoveeService
-  implements OnApplicationBootstrap, OnModuleDestroy
-{
+export class UltimateGoveeService implements OnModuleDestroy {
   private readonly channels: ChannelToggle;
   private readonly logger: Logger = new Logger(UltimateGoveeService.name);
   constructor(
@@ -66,17 +59,6 @@ export class UltimateGoveeService
   private shutdownBuses() {
     this.commandBus.subject$.complete();
     this.eventBus.subject$.complete();
-  }
-
-  async onApplicationBootstrap() {
-    this.channel('ble').setEnabled(this.config.connections.ble);
-    this.channel('iot').setEnabled(this.config.connections.iot);
-    if (
-      (this.config.username ?? '').length > 0 &&
-      (this.config.password ?? '').length > 0
-    ) {
-      await this.connect(this.config.username, this.config.password);
-    }
   }
 
   onModuleDestroy(): void {
