@@ -192,8 +192,10 @@ export class BleClient {
     this.logger.log('BLE disabled');
     this.state.next(STATE_UNKNOWN);
     try {
-      this.noble?.removeAllListeners();
-      this.noble?.stopScanning();
+      if (this.noble !== undefined) {
+        this.noble?.removeAllListeners();
+        this.noble?.stopScanning();
+      }
       await this.connectedPeripheral?.disconnectAsync();
     } catch (err) {
       this.logger.error('Error disabling BLE', err);

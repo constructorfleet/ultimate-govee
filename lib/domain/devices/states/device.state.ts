@@ -1,10 +1,11 @@
 import {
   BehaviorSubject,
-  Connectable,
+  Observable,
   Observer,
   Subject,
   Subscription,
   connectable,
+  share,
 } from 'rxjs';
 import {
   Optional,
@@ -86,7 +87,7 @@ export class DeviceState<StateName extends string, StateValue> {
     >[]
   > = new Map();
   protected readonly stateValue$: BehaviorSubject<StateValue>;
-  protected readonly stateValue: Connectable<StateValue>;
+  protected readonly stateValue: Observable<StateValue>;
   readonly commandBus: Subject<Omit<GoveeDeviceCommand, 'deviceId'>> =
     new Subject();
   protected readonly clearCommand$: Subject<CommandResult> = new Subject();
@@ -110,8 +111,7 @@ export class DeviceState<StateName extends string, StateValue> {
     initialValue: StateValue,
   ) {
     this.stateValue$ = new BehaviorSubject(initialValue);
-    this.stateValue = connectable(this.stateValue$);
-    this.stateValue.connect();
+    this.stateValue = this.stateValue$.pipe(share());
     this.device.status?.subscribe((status) => this.parse(status));
     this.clearCommand.subscribe(({ commandId }) =>
       this.pendingCommands.delete(commandId),
