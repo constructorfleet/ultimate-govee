@@ -45,3 +45,4 @@ jobs:
               || contains(github.event.pull_request.labels.*.name, 'minor') && 'minor'
               || 'patch'
             }}
+          token: ${{ secrets.GH_TOKEN }}
