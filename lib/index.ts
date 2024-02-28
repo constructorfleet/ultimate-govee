@@ -60,6 +60,22 @@ export {
   TemperatureStateName,
   WaterShortageState,
   WaterShortageStateName,
+  PM25StateName,
+  BasketFullStateName,
+  NuggetSizeStateName,
+  MakingIceStateName,
+  IceMakerStatusStateName,
+  ScheduledStartStateName,
+  AutoModeStateName,
+  ManualModeStateName,
+  CustomModeStateName,
+  MistLevelStateName,
+  UVCStateName,
+  SceneModeStateName,
+  WholeColorModeStateName,
+  SegmentColorModeStateName,
+  AdvancedColorModeStateName,
+  MicModeStateName,
 } from './domain';
 export { Device } from './domain/devices/device';
 export {

@@ -11,7 +11,14 @@ import { UVCStateName } from './humidifier.uvc';
 import { Device } from '../../../device';
 
 export const Devices: Type<Device>[] = [HumidifierDevice];
-export { Humidifier };
+export {
+  Humidifier,
+  AutoModeStateName,
+  CustomModeStateName,
+  ManualModeStateName,
+  MistLevelStateName,
+  UVCStateName,
+};
 export const DeviceStates: string[] = [
   MistLevelStateName,
   AutoModeStateName,

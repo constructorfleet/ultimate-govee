@@ -8,7 +8,14 @@ import { ScheduledStartStateName } from './ice-maker.scheduled-start';
 import { IceMakerStatusStateName } from './ice-maker.status';
 
 export const Devices: Type<Device>[] = [IceMakerDevice];
-export { IceMaker };
+export {
+  IceMaker,
+  BasketFullStateName,
+  MakingIceStateName,
+  NuggetSizeStateName,
+  ScheduledStartStateName,
+  IceMakerStatusStateName,
+};
 export const DeviceStates: string[] = [
   BasketFullStateName,
   MakingIceStateName,

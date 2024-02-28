@@ -1,6 +1,25 @@
 import { Type } from '@nestjs/common';
 import * as cqrs from './cqrs';
-import { Devices as ImplDevices, DeviceStates as ImplStates } from './impl';
+import {
+  AdvancedColorModeStateName,
+  AutoModeStateName,
+  BasketFullStateName,
+  CustomModeStateName,
+  IceMakerStatusStateName,
+  Devices as ImplDevices,
+  DeviceStates as ImplStates,
+  MakingIceStateName,
+  ManualModeStateName,
+  MicModeStateName,
+  MistLevelStateName,
+  NuggetSizeStateName,
+  PM25StateName,
+  SceneModeStateName,
+  ScheduledStartStateName,
+  SegmentColorModeStateName,
+  UVCStateName,
+  WholeColorModeStateName,
+} from './impl';
 import { Device } from './device';
 import { DeviceStates as CommonStates } from './states';
 import { Humidifier } from './impl/appliances/humidifier/humidifier';
@@ -107,6 +126,22 @@ export {
   TemperatureStateName,
   WaterShortageState,
   WaterShortageStateName,
+  PM25StateName,
+  BasketFullStateName,
+  NuggetSizeStateName,
+  MakingIceStateName,
+  IceMakerStatusStateName,
+  ScheduledStartStateName,
+  AutoModeStateName,
+  ManualModeStateName,
+  CustomModeStateName,
+  MistLevelStateName,
+  UVCStateName,
+  SceneModeStateName,
+  WholeColorModeStateName,
+  SegmentColorModeStateName,
+  AdvancedColorModeStateName,
+  MicModeStateName,
 };
 
 export const CQRS = cqrs;

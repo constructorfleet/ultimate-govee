@@ -4,5 +4,5 @@ import { Device } from '../../../device';
 import { PM25StateName } from './air-quality.pm25';
 
 export const Devices: Type<Device>[] = [AirQualityDevice];
-export { AirQualitySensor };
+export { AirQualitySensor, PM25StateName };
 export const DeviceStates: string[] = [PM25StateName];
