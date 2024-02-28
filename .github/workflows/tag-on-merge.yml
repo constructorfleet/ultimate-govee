@@ -21,13 +21,6 @@ permissions: write-all
 jobs:
   version_tag:
     if: github.event.pull_request.merged == true
-    env:
-      MAJOR_BUMP:
-        ${{ contains(github.event.pull_request.labels.*.name, 'major') }}
-      MINOR_BUMP:
-        ${{ contains(github.event.pull_request.labels.*.name, 'minor') }}
-      PATCH_BUMP:
-        ${{ contains(github.event.pull_request.labels.*.name, 'patch') }}
     strategy:
       matrix:
         node-version:
@@ -43,49 +36,12 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Bump major version and push tag
-        if: contains(github.event.pull_request.labels.*.name, 'major')
-        uses: anothrNick/github-tag-action@1.64.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          WITH_V: true
-          DEFAULT_BUMP: major
-      - name: Bump minor version and push tag
-        if: contains(github.event.pull_request.labels.*.name, 'minor')
-        uses: anothrNick/github-tag-action@1.64.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          WITH_V: true
-          DEFAULT_BUMP: minor
-      - name: Bump patch version and push tag
-        if: contains(github.event.pull_request.labels.*.name, 'patch')
-        uses: anothrNick/github-tag-action@1.64.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          WITH_V: true
-          DEFAULT_BUMP: patch
-      - run:
-          npm version --allow-same-version=true --git-tag-version=false $(git
-          describe --tags)
-      - name: Commit Package Version
-        id: commit
-        run: |
-          exit_code=1
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          if [[ -n "$(git status --porcelain package.json)" ]]; then
-            git add package.json
-            git add package-lock.json
-            git commit -m "[ci skip] chore(package.json): update package json"
-            exit_code=0
-          fi
-          echo "exit_code=${exit_code}" >> "$GITHUB_OUTPUT"
-      - name: Push to protected branch
-        uses: CasperWA/push-protected@v2.15.0
-        if: steps.commit.outputs.exit_code == 0
+      - name: Bump version
+        uses: ./github/actions/bump-version
         with:
-          token: ${{ secrets.GH_TOKEN }}
-          branch: main
-          force: true
-          tags: true
-          unprotect_reviews: true
+          bump: |
+            ${{
+              contains(github.event.pull_request.labels.*.name, 'major') && 'major'
+              || contains(github.event.pull_request.labels.*.name, 'minor') && 'minor'
+              || 'patch'
+            }}
