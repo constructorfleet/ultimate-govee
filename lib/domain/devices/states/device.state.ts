@@ -1,16 +1,17 @@
 import {
-  BehaviorSubject,
   Observer,
   Subject,
   Subscription,
   connectable,
+  distinctUntilChanged,
 } from 'rxjs';
 import {
   Optional,
   Ignorable,
+  ForwardBehaviorSubject,
   deepPartialCompare,
 } from '~ultimate-govee-common';
-import { Logger } from '@nestjs/common';
+import { Logger, OnModuleDestroy } from '@nestjs/common';
 import {
   GoveeDeviceCommand,
   GoveeDeviceStateCommand,
@@ -19,6 +20,7 @@ import {
 } from '~ultimate-govee-data';
 import { DeviceModel } from '../devices.model';
 import { v4 as uuidv4 } from 'uuid';
+import { deepEquality } from '@santi100/equal-lib';
 
 type MessageData = Partial<GoveeDeviceStatus>;
 
@@ -73,7 +75,9 @@ type CommandResult = {
   commandId: string;
 };
 
-export class DeviceState<StateName extends string, StateValue> {
+export class DeviceState<StateName extends string, StateValue>
+  implements OnModuleDestroy
+{
   protected readonly logger: Logger = new Logger(this.constructor.name);
 
   protected readonly pendingCommands: Map<
@@ -84,18 +88,28 @@ export class DeviceState<StateName extends string, StateValue> {
       }
     >[]
   > = new Map();
-  protected readonly stateValue: BehaviorSubject<StateValue>;
+  protected readonly stateValue: ForwardBehaviorSubject<StateValue>;
   readonly commandBus: Subject<Omit<GoveeDeviceCommand, 'deviceId'>> =
     new Subject();
   protected readonly clearCommand$: Subject<CommandResult> = new Subject();
   readonly clearCommand = connectable(this.clearCommand$);
+  protected readonly subsbscriptions: Subscription[] = [];
 
   subscribe(
     observerOrNext?:
       | Partial<Observer<StateValue>>
       | ((value: StateValue) => void),
   ): Subscription {
-    return this.stateValue.subscribe(observerOrNext);
+    const sub = this.stateValue
+      .pipe(
+        distinctUntilChanged((previous, current) =>
+          deepEquality(previous, current),
+        ),
+      )
+      .subscribe(observerOrNext);
+
+    this.subsbscriptions.push(sub);
+    return sub;
   }
 
   public get value(): StateValue {
@@ -107,10 +121,12 @@ export class DeviceState<StateName extends string, StateValue> {
     public readonly name: StateName,
     initialValue: StateValue,
   ) {
-    this.stateValue = new BehaviorSubject(initialValue);
-    this.device.status?.subscribe((status) => this.parse(status));
-    this.clearCommand.subscribe(({ commandId }) =>
-      this.pendingCommands.delete(commandId),
+    this.stateValue = new ForwardBehaviorSubject(initialValue);
+    this.subsbscriptions.push(
+      this.device.status?.subscribe((status) => this.parse(status)),
+      this.clearCommand.subscribe(({ commandId }) =>
+        this.pendingCommands.delete(commandId),
+      ),
     );
   }
 
@@ -164,6 +180,12 @@ export class DeviceState<StateName extends string, StateValue> {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   protected stateToCommand(state: StateValue): Optional<StateCommandAndStatus> {
     return undefined;
+  }
+
+  onModuleDestroy() {
+    this.subsbscriptions
+      .filter((sub) => sub !== undefined)
+      .forEach((sub) => sub.unsubscribe());
   }
 }
 
