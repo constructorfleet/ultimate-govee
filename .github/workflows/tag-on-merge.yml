@@ -69,15 +69,12 @@ jobs:
             git add package.json
             git add package-lock.json
             git commit -m "[ci skip] chore(package.json): update package json"
+            git tag -a "${{ env.NEW_TAG }}"" -m "${{ env.NEW_TAG }}"
             exit_code=0
           fi
           echo "exit_code=${exit_code}" >> "$GITHUB_OUTPUT"
-      - name: Bump version and push tag
-        uses: anothrNick/github-tag-action@1.67.0
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          WITH_V: 'true'
-          DEFAULT_BUMP: ${{ env.bump }}
+          NEW_TAG: ${{ steps.new_version.outputs.new_tag}}
       - name: Push to protected branch
         uses: CasperWA/push-protected@v2.15.0
         if: steps.commit.outputs.exit_code == 0
