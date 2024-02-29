@@ -14,7 +14,7 @@ runs:
     - name: Bump version and get tag
       id: new_version
       uses: anothrNick/github-tag-action@1.64.0
-      env:
+      with:
         GITHUB_TOKEN: ${{ inputs.GH_TOKEN }}
         WITH_V: 'true'
         DEFAULT_BUMP: ${{ inputs.bump }}
@@ -22,7 +22,8 @@ runs:
     - name: NPM version
       shell: bash
       run:
-        npm version --allow-same-version=true --git-tag-version=false $NEW_TAG
+        npm version --allow-same-version=true --git-tag-version=false ${{
+        env.NEW_TAG }}
       env:
         NEW_TAG: ${{ steps.new_version.outputs.new_tag}}
     - name: Commit Package Version
@@ -41,7 +42,7 @@ runs:
         echo "exit_code=${exit_code}" >> "$GITHUB_OUTPUT"
     - name: Bump version and push tag
       uses: anothrNick/github-tag-action@1.64.0
-      env:
+      with:
         GITHUB_TOKEN: ${{ inputs.GH_TOKEN }}
         WITH_V: 'true'
         DEFAULT_BUMP: ${{ inputs.bump }}
