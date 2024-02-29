@@ -21,6 +21,7 @@ import {
   CustomModeStateName,
   ManualModeStateName,
   MistLevelStateName,
+  TargetHumidityStateName,
   UVCStateName,
 } from './appliances/humidifier';
 import { SceneModeStateName } from './lights/rgb';
@@ -57,6 +58,7 @@ export {
   ManualModeStateName,
   CustomModeStateName,
   MistLevelStateName,
+  TargetHumidityStateName,
   UVCStateName,
   SceneModeStateName,
   WholeColorModeStateName,
