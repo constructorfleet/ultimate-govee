@@ -1,4 +1,10 @@
-import { Subject, Subscription, interval, sampleTime } from 'rxjs';
+import {
+  BehaviorSubject,
+  Subject,
+  Subscription,
+  interval,
+  sampleTime,
+} from 'rxjs';
 import { Logger, OnModuleDestroy } from '@nestjs/common';
 import { DeltaMap, Optional, hexToBase64 } from '~ultimate-govee-common';
 import { GoveeDeviceStatus } from '~ultimate-govee-data';
@@ -13,6 +19,9 @@ import { ModeState, ModeStateName } from './states/mode.state';
 import { DeviceRefeshEvent } from './cqrs/events/device-refresh.event';
 import { DeviceStateCommandEvent } from './cqrs/events/device-state-command.event';
 import { DeviceStateChangedEvent } from './cqrs/events/device-state-changed.event';
+import { DeviceStateValues, DeviceStates, DeviceType } from './devices.types';
+import { Version } from './version.info';
+import stringify from 'json-stringify-safe';
 
 const getLogger = (deviceId: string, deviceModel: string): Winston.Logger =>
   Winston.createLogger({
@@ -34,9 +43,6 @@ const getLogger = (deviceId: string, deviceModel: string): Winston.Logger =>
       }),
     ],
   });
-
-export type DeviceStates = Record<string, DeviceState<string, any>>;
-export type DeviceStateValues = Record<string, unknown>;
 
 export const DefaultFactory: 'default' = 'default' as const;
 
@@ -70,7 +76,10 @@ const buildStates = (
     )
     .flat();
 
-export class Device extends Subject<Device> implements OnModuleDestroy {
+export class Device<States extends DeviceStates = DeviceStates>
+  extends BehaviorSubject<Optional<Device<States>>>
+  implements DeviceType<States>, OnModuleDestroy
+{
   private readonly logger: Logger;
 
   static readonly deviceType: string = 'unknown';
@@ -79,14 +88,16 @@ export class Device extends Subject<Device> implements OnModuleDestroy {
     return Device.deviceType;
   }
 
-  private readonly states: DeltaMap<string, DeviceState<string, any>> =
-    new DeltaMap();
-  private readonly stateValues: DeltaMap<string, any> = new DeltaMap({
-    isModified: (current, previous) => !deepEquality(current, previous),
-  });
+  private readonly deviceStates: DeltaMap<string, DeviceState<string, any>> =
+    new DeltaMap({
+      isModified: (current, previous) =>
+        !deepEquality(current.value, previous.value),
+    });
   private readonly opIdentifiers: Set<number[]> = new Set();
   private readonly refresh$ = new Subject<void>();
   private readonly subscriptions: Subscription[] = [];
+  protected stateLogger: Winston.Logger | undefined;
+  protected isDebug: boolean = false;
 
   protected addState<TDevice extends DeviceState<string, any>>(
     state: TDevice,
@@ -101,17 +112,17 @@ export class Device extends Subject<Device> implements OnModuleDestroy {
     this.subscriptions.push(
       this.device.status.subscribe((status) => state.parse(status)),
     );
-    this.states.set(state.name, state);
+    this.deviceStates.set(state.name, state);
     this.subscriptions.push(
-      state.subscribe((value) => {
-        this.stateValues.set(state.name, value);
+      state.subscribe(() => {
+        this.next(this);
       }),
     );
     this.subscriptions.push(
       state.clearCommand.subscribe((command) => {
         this.eventBus.publish(
           new DeviceStateChangedEvent(
-            this,
+            this as unknown as Device<DeviceStates>,
             command.state,
             command.value,
             command.commandId,
@@ -184,21 +195,30 @@ export class Device extends Subject<Device> implements OnModuleDestroy {
     return this.device.bleAddress;
   }
 
-  get currentState() {
-    return Array.from(this.states.entries()).reduce((s, [k, v]) => {
-      if (k === ModeStateName) {
-        s[k] = (v as ModeState).activeIdentifier;
-      } else {
-        s[k] = v.value;
-      }
-      return s;
-    }, {});
+  get version(): Version {
+    return this.device.version;
+  }
+
+  get states(): States {
+    return Object.fromEntries(
+      Array.from(this.deviceStates.entries()),
+    ) as States;
+  }
+
+  currentStates(): DeviceStateValues<States> {
+    const result = Object.fromEntries(
+      Object.entries(this.states ?? {}).map(([k, v]) => [
+        k,
+        k === ModeStateName ? (v as ModeState)?.activeMode?.name : v?.value,
+      ]),
+    ) as DeviceStateValues<States>;
+    return result;
   }
 
   state<TState extends DeviceState<string, any> = DeviceState<string, any>>(
     stateName: string,
   ): Optional<TState> {
-    return this.states.get(stateName) as TState;
+    return this.deviceStates.get(stateName) as TState;
   }
 
   deviceStatus(status: GoveeDeviceStatus) {
@@ -230,9 +250,6 @@ export class Device extends Subject<Device> implements OnModuleDestroy {
     return this.state(stateName)?.setState(nextState);
   }
 
-  protected stateLogger: Winston.Logger | undefined;
-  protected isDebug: boolean = false;
-
   debug(isDebug: boolean): this {
     this.isDebug = isDebug;
     return this;
@@ -244,7 +261,8 @@ export class Device extends Subject<Device> implements OnModuleDestroy {
     protected readonly commandBus: CommandBus,
     stateFactories: StateFactories,
   ) {
-    super();
+    super(undefined);
+    this.next(this);
     this.refresh$.pipe(sampleTime(5000)).subscribe(() => this.refresh());
     this.logger = new Logger(`${this.constructor.name}-${device.name}`);
     buildStates(stateFactories, device).forEach((state) => {
@@ -256,26 +274,21 @@ export class Device extends Subject<Device> implements OnModuleDestroy {
     });
     this.subscriptions.push(interval(10000).subscribe(() => this.refresh()));
     this.subscriptions.push(
-      this.stateValues.delta$.subscribe(() => {
+      this.deviceStates.delta$.subscribe(() => {
         this.next(this);
-        if (this.stateLogger === undefined) {
-          this.stateLogger = getLogger(this.id, this.model);
-        }
-        this.logger.debug({
-          deviceId: this.id,
-          name: this.name,
-          model: this.model,
-          type: this.constructor.name,
-          states: this.loggableState(this.id),
-        });
       }),
     );
+    this.subscribe(async (device) => {
+      if (device !== undefined && 'logState' in device) {
+        await device?.logState();
+      }
+    });
   }
 
   @PersistResult({
     filename: '{0}.state.json',
   })
-  loggableState(deviceId: string) {
+  async loggableState(deviceId: string) {
     const state = {
       deviceId,
       name: this.name,
@@ -283,16 +296,16 @@ export class Device extends Subject<Device> implements OnModuleDestroy {
       type: this.constructor.name,
       iotTopic: this.iotTopic,
       bleAddress: this.bleAddress,
-      ...Array.from(this.states.keys()).reduce((acc, s) => {
-        if (s === ModeStateName) {
-          acc[s] = (this.states.get(s) as ModeState).value?.value;
-        } else {
-          acc[s] = this.states.get(s)?.value;
-        }
-        return acc;
-      }, {}),
+      states: JSON.parse(stringify((await this.currentStates()) ?? {})),
     };
     return state;
+  }
+
+  async logState() {
+    if (this.stateLogger === undefined) {
+      this.stateLogger = getLogger(this.id, this.model);
+    }
+    this.logger.debug(await this.loggableState(this.id));
   }
 
   onModuleDestroy() {

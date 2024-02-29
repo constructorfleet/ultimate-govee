@@ -49,7 +49,7 @@ const stateFactories: StateFactories = [
 export const IceMakerType: 'ice-maker' = 'ice-maker' as const;
 export type IceMakerType = typeof IceMakerType;
 
-export class IceMakerDevice extends Device implements IceMaker {
+export class IceMakerDevice extends Device<IceMakerStates> implements IceMaker {
   static readonly deviceType: IceMakerType = IceMakerType;
   get deviceType(): string {
     return IceMakerDevice.deviceType;
@@ -88,7 +88,10 @@ export class IceMakerDevice extends Device implements IceMaker {
 }
 
 @Injectable()
-export class IceMakerFactory extends DeviceFactory<IceMakerDevice> {
+export class IceMakerFactory extends DeviceFactory<
+  IceMakerDevice,
+  Omit<IceMaker, 'NuggetSize'>
+> {
   constructor() {
     super(IceMakerDevice, {
       'Home Appliances': {
@@ -97,8 +100,8 @@ export class IceMakerFactory extends DeviceFactory<IceMakerDevice> {
     });
   }
 }
-export type IceMaker = {
-  NuggetSize: typeof NuggetSize;
+
+export type IceMakerStates = {
   [BasketFullStateName]: Optional<IceMakerBasketFull>;
   [MakingIceStateName]: Optional<IceMakerMakingIceState>;
   [NuggetSizeStateName]: Optional<IceMakerNuggetSizeState>;
@@ -108,3 +111,7 @@ export type IceMaker = {
   [ConnectedStateName]: Optional<ConnectedState>;
   [ActiveStateName]: Optional<ActiveState>;
 };
+
+export type IceMaker = {
+  NuggetSize: typeof NuggetSize;
+} & IceMakerStates;

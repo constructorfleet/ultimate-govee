@@ -22,7 +22,7 @@ export class IceMakerStatusState extends DeviceOpState<
   }
 
   parseOpCommand(opCommand: number[]): void {
-    this.stateValue$.next(
+    this.stateValue.next(
       IceMakerStatus[
         Object.entries(statusMap).find(
           ([_, num]) => num === opCommand[0],

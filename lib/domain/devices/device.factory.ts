@@ -3,28 +3,32 @@ import { Optional } from '~ultimate-govee-common';
 import { CommandBus, EventBus } from '@nestjs/cqrs';
 import { DeviceModel } from './devices.model';
 import { Device } from './device';
+import { DeviceStates } from './devices.types';
 
 export type GroupMatcher = RegExp | RegExp[] | true;
 
 export type GroupMatchers = Record<string, GroupMatcher>;
 export type CategoryMatchers = Record<string, GroupMatchers>;
 
-export type FactoryType = {
+export type FactoryType<States extends DeviceStates> = {
   create: (
     device: DeviceModel,
     eventaBus: EventBus,
     commandBus: CommandBus,
-  ) => Optional<Device>;
+  ) => Optional<Device<States>>;
 };
 
-export class DeviceFactory<TDevice extends Device> {
-  private static factories: FactoryType[] = [];
+export class DeviceFactory<
+  TDevice extends Device<TStates>,
+  TStates extends DeviceStates,
+> {
+  private static factories: FactoryType<DeviceStates>[] = [];
 
   constructor(
-    private readonly typeConstructor: ClassConstructor<Device>,
+    private readonly typeConstructor: ClassConstructor<TDevice>,
     private readonly matchers: CategoryMatchers,
   ) {
-    DeviceFactory.factories.push(this);
+    DeviceFactory.factories.push(this as FactoryType<DeviceStates>);
   }
 
   create(
@@ -49,7 +53,11 @@ export class DeviceFactory<TDevice extends Device> {
       }
     }
     const constructor = this.typeConstructor;
-    const newDevice = new constructor(device, eventBus, commandBus) as TDevice;
+    const newDevice = new constructor(
+      device,
+      eventBus,
+      commandBus,
+    ) as unknown as TDevice;
     return newDevice;
   }
 }

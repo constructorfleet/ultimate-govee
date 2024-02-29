@@ -17,7 +17,6 @@ export * from './ultimate-govee.module';
 export * from './ultimate-govee.service';
 export * from './ultimate-govee.config';
 export {
-  Devices,
   DeviceStates,
   Humidifier,
   IceMaker,
@@ -88,6 +87,8 @@ export {
   mapDelta,
   tapDelta,
   processDelta,
+  Optional,
+  PartialBehaviorSubject,
 } from './common';
 import {
   ASYNC_OPTIONS_TYPE as AsyncPersistModuleOptions,

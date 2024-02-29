@@ -33,7 +33,10 @@ const StateFactories: StateFactories = [
 export const AirQualityType: 'airQuality' = 'airQuality' as const;
 export type AirQualityType = typeof AirQualityType;
 
-export class AirQualityDevice extends Device implements AirQualitySensor {
+export class AirQualityDevice
+  extends Device<AirQualitySensor>
+  implements AirQualitySensor
+{
   static readonly deviceType: AirQualityType = AirQualityType;
   get deviceType(): string {
     return AirQualityDevice.deviceType;
@@ -66,7 +69,10 @@ export class AirQualityDevice extends Device implements AirQualitySensor {
 }
 
 @Injectable()
-export class AirQualityFactory extends DeviceFactory<AirQualityDevice> {
+export class AirQualityFactory extends DeviceFactory<
+  AirQualityDevice,
+  AirQualitySensor
+> {
   constructor() {
     super(AirQualityDevice, {
       'Home Improvement': {

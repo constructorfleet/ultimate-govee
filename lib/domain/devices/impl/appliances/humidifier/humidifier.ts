@@ -65,7 +65,7 @@ const StateFactories: StateFactories = [
 export const HumidifierType: 'humidifer' = 'humidifer' as const;
 export type HumidifierType = typeof HumidifierType;
 
-export class HumidifierDevice extends Device implements Humidifier {
+export class HumidifierDevice extends Device<Humidifier> implements Humidifier {
   static readonly deviceType: HumidifierType = HumidifierType;
   get deviceType(): string {
     return HumidifierDevice.deviceType;
@@ -133,7 +133,10 @@ export class HumidifierDevice extends Device implements Humidifier {
 }
 
 @Injectable()
-export class HumidifierFactory extends DeviceFactory<HumidifierDevice> {
+export class HumidifierFactory extends DeviceFactory<
+  HumidifierDevice,
+  Humidifier
+> {
   constructor() {
     super(HumidifierDevice, {
       'Home Appliances': {

@@ -25,7 +25,7 @@ export class ActiveState extends DeviceOpState<
 
   parseState(data: ActiveData): void {
     if (data.state?.isOn !== undefined) {
-      this.stateValue$.next(data.state.isOn);
+      this.stateValue.next(data.state.isOn);
     }
   }
 
@@ -33,7 +33,7 @@ export class ActiveState extends DeviceOpState<
     if (![0x00, 0x01].includes(opCommand[0])) {
       return;
     }
-    this.stateValue$.next(opCommand[0] === 0x01);
+    this.stateValue.next(opCommand[0] === 0x01);
   }
 
   protected stateToCommand(
