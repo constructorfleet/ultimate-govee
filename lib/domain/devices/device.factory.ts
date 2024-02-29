@@ -3,14 +3,14 @@ import { Optional } from '~ultimate-govee-common';
 import { CommandBus, EventBus } from '@nestjs/cqrs';
 import { DeviceModel } from './devices.model';
 import { Device } from './device';
-import { DeviceStates } from './devices.types';
+import { DeviceStatesType } from './devices.types';
 
 export type GroupMatcher = RegExp | RegExp[] | true;
 
 export type GroupMatchers = Record<string, GroupMatcher>;
 export type CategoryMatchers = Record<string, GroupMatchers>;
 
-export type FactoryType<States extends DeviceStates> = {
+export type FactoryType<States extends DeviceStatesType> = {
   create: (
     device: DeviceModel,
     eventaBus: EventBus,
@@ -20,15 +20,15 @@ export type FactoryType<States extends DeviceStates> = {
 
 export class DeviceFactory<
   TDevice extends Device<TStates>,
-  TStates extends DeviceStates,
+  TStates extends DeviceStatesType,
 > {
-  private static factories: FactoryType<DeviceStates>[] = [];
+  private static factories: FactoryType<DeviceStatesType>[] = [];
 
   constructor(
     private readonly typeConstructor: ClassConstructor<TDevice>,
     private readonly matchers: CategoryMatchers,
   ) {
-    DeviceFactory.factories.push(this as FactoryType<DeviceStates>);
+    DeviceFactory.factories.push(this as FactoryType<DeviceStatesType>);
   }
 
   create(
