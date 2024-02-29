@@ -49,6 +49,7 @@ export class DeviceModel {
   public readonly refreshers: ((device: this) => void)[] = [];
 
   constructor(args: DeviceConstructorArgs) {
+    this.status = new BehaviorSubject(args as GoveeDeviceStatus);
     this.id = args.id;
     this.name = args.name;
     this.model = args.model;
@@ -61,7 +62,6 @@ export class DeviceModel {
     this.version = args.version;
     this.category = args.category;
     this.categoryGroup = args.categoryGroup;
-    this.status = new BehaviorSubject(args as GoveeDeviceStatus);
   }
 
   private product: Optional<ProductModel>;

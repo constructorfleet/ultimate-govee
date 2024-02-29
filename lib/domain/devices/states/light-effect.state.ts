@@ -23,10 +23,10 @@ export class LightEffectState extends DeviceOpState<
   ) {
     super({ opType, identifier }, device, LightEffectStateName, {});
     this.activeEffectCode.subscribe((effectCode) =>
-      this.stateValue$.next(this.effects.get(effectCode ?? -1) ?? {}),
+      this.stateValue.next(this.effects.get(effectCode ?? -1) ?? {}),
     );
     this.effects.delta$.subscribe(() => {
-      this.stateValue$.next(this.stateValue$.getValue());
+      this.stateValue.next(this.stateValue.getValue());
     });
   }
 

@@ -30,6 +30,6 @@ export class FilterLifeState extends DeviceOpState<
       this.logger.warn(`Received invalid value for filter life: ${filterLife}`);
       return;
     }
-    this.stateValue$.next(filterLife);
+    this.stateValue.next(filterLife);
   }
 }

@@ -33,17 +33,17 @@ export class PurifierFanSpeedState extends DeviceOpState<
           case CustomModeStateName:
             this.subscription = event?.subscribe((event) => {
               const speed = (event as CustomProgram)?.fanSpeed;
-              this.stateValue$.next(speed ? speed * 25 : speed);
+              this.stateValue.next(speed ? speed * 25 : speed);
             });
             break;
           case ManualModeStateName:
             this.subscription = event?.subscribe((event) => {
               const speed = event as number;
-              this.stateValue$.next(speed ? speed * 25 : speed);
+              this.stateValue.next(speed ? speed * 25 : speed);
             });
             break;
           default:
-            this.stateValue$.next(undefined);
+            this.stateValue.next(undefined);
             break;
         }
       });
@@ -55,7 +55,7 @@ export class PurifierFanSpeedState extends DeviceOpState<
       return;
     }
     const speed = opCommand[0] !== 16 ? opCommand[0] + 1 : 1;
-    this.stateValue$.next(speed * 25);
+    this.stateValue.next(speed * 25);
   }
 
   setState(nextState: Optional<number>): string[] {

@@ -1,4 +1,3 @@
-import { Type } from '@nestjs/common';
 import * as cqrs from './cqrs';
 import {
   AdvancedColorModeStateName,
@@ -6,7 +5,6 @@ import {
   BasketFullStateName,
   CustomModeStateName,
   IceMakerStatusStateName,
-  Devices as ImplDevices,
   DeviceStates as ImplStates,
   MakingIceStateName,
   ManualModeStateName,
@@ -20,7 +18,6 @@ import {
   UVCStateName,
   WholeColorModeStateName,
 } from './impl';
-import { Device } from './device';
 import { DeviceStates as CommonStates } from './states';
 import { Humidifier } from './impl/appliances/humidifier/humidifier';
 import { IceMaker } from './impl/appliances/ice-maker/ice-maker';
@@ -145,7 +142,6 @@ export {
 };
 
 export const CQRS = cqrs;
-export const Devices: Type<Device>[] = [...ImplDevices, Device];
 export const DeviceStates: string[] = [...ImplStates, ...CommonStates].reduce(
   (acc, cur) => {
     if (!acc.includes(cur)) {

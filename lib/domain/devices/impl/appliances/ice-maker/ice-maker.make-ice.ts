@@ -19,7 +19,7 @@ export class IceMakerMakingIceState extends DeviceState<
       if (status === undefined) {
         return;
       }
-      this.stateValue$.next(status === IceMakerStatus.MAKING_ICE);
+      this.stateValue.next(status === IceMakerStatus.MAKING_ICE);
     });
   }
 

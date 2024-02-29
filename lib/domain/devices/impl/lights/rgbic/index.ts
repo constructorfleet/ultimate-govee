@@ -1,6 +1,4 @@
-import { Type } from '@nestjs/common';
-import { Device } from '../../../device';
-import { RGBICLightDevice, RGBICLight } from './rgbic-light';
+import { RGBICLight } from './rgbic-light';
 import {
   AdvancedColorModeStateName,
   MicModeStateName,
@@ -8,7 +6,7 @@ import {
   WholeColorModeStateName,
 } from './rgbic-light.modes';
 
-export const Devices: Type<Device>[] = [RGBICLightDevice];
+// export const Devices: Type<Device>[] = [RGBICLightDevice];
 export {
   RGBICLight,
   WholeColorModeStateName,

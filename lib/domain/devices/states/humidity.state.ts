@@ -58,25 +58,25 @@ export class HumidityState extends DeviceOpState<
         calibration100 /= 100;
       }
       const calibration =
-        calibration100 ?? this.stateValue$.getValue().calibration;
+        calibration100 ?? this.stateValue.getValue().calibration;
       let current100 = data?.state?.humidity?.current;
       if (current100 !== undefined && current100 > 100) {
         current100 /= 100;
       }
-      const current = current100 ?? this.stateValue$.getValue().current;
+      const current = current100 ?? this.stateValue.getValue().current;
       let raw: Optional<number>;
       if (current !== undefined && calibration !== undefined) {
         raw = current - calibration;
       } else {
         raw = current;
       }
-      this.stateValue$.next({
+      this.stateValue.next({
         calibration,
         range: {
           min:
-            data?.state?.humidity?.min ?? this.stateValue$.getValue().range.min,
+            data?.state?.humidity?.min ?? this.stateValue.getValue().range.min,
           max:
-            data?.state?.humidity?.max ?? this.stateValue$.getValue().range.max,
+            data?.state?.humidity?.max ?? this.stateValue.getValue().range.max,
         },
         current,
         raw,
@@ -86,10 +86,10 @@ export class HumidityState extends DeviceOpState<
       const { code } = data.state.status;
       const codes = unpaddedHexToArray(code);
       if (codes !== undefined) {
-        const calibration = this.stateValue$.getValue().calibration ?? 0;
+        const calibration = this.stateValue.getValue().calibration ?? 0;
         const [humdidity] = codes.slice(2, 3);
-        this.stateValue$.next({
-          ...this.stateValue$.getValue(),
+        this.stateValue.next({
+          ...this.stateValue.getValue(),
           current: humdidity + calibration,
           raw: humdidity,
           calibration,

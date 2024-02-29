@@ -32,7 +32,10 @@ const stateFactories: StateFactories = [
   },
 ];
 
-export class HygrometerDevice extends Device implements HygrometerSensor {
+export class HygrometerDevice
+  extends Device<HygrometerSensor>
+  implements HygrometerSensor
+{
   static readonly deviceType: string = Hygrometer;
   get deviceType(): string {
     return HygrometerDevice.deviceType;
@@ -58,7 +61,10 @@ export class HygrometerDevice extends Device implements HygrometerSensor {
 }
 
 @Injectable()
-export class HygrometerFactory extends DeviceFactory<HygrometerDevice> {
+export class HygrometerFactory extends DeviceFactory<
+  HygrometerDevice,
+  HygrometerSensor
+> {
   constructor() {
     super(HygrometerDevice, {
       'Home Improvement': {

@@ -50,7 +50,7 @@ export class IceMakerScheduledStart extends DeviceOpState<
 
   parseOpCommand(opCommand: number[]): void {
     if (opCommand[0] === 0x00) {
-      this.stateValue$.next({
+      this.stateValue.next({
         enabled: false,
         hourStart: undefined,
         minuteStart: undefined,
@@ -60,7 +60,7 @@ export class IceMakerScheduledStart extends DeviceOpState<
     }
     const timestamp = total(opCommand.slice(3, 7));
     const startDate = new Date(timestamp);
-    this.stateValue$.next({
+    this.stateValue.next({
       enabled: opCommand[0] === 0x01,
       hourStart: startDate.getHours(),
       minuteStart: startDate.getMinutes(),

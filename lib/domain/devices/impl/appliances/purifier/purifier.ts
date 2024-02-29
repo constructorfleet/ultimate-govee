@@ -59,7 +59,7 @@ const StateFactories: StateFactories = [
 export const PurifierType: 'purifier' = 'purifier' as const;
 export type PurifierType = typeof PurifierType;
 
-export class PurifierDevice extends Device implements Purifier {
+export class PurifierDevice extends Device<Purifier> implements Purifier {
   static readonly deviceType: PurifierType = PurifierType;
   get deviceType(): string {
     return PurifierDevice.deviceType;
@@ -119,7 +119,7 @@ export class PurifierDevice extends Device implements Purifier {
 }
 
 @Injectable()
-export class PurifierFactory extends DeviceFactory<PurifierDevice> {
+export class PurifierFactory extends DeviceFactory<PurifierDevice, Purifier> {
   constructor() {
     super(PurifierDevice, {
       'Home Appliances': {
@@ -128,6 +128,7 @@ export class PurifierFactory extends DeviceFactory<PurifierDevice> {
     });
   }
 }
+
 export type Purifier = {
   [PowerStateName]: Optional<PowerState>;
   [ConnectedStateName]: Optional<ConnectedState>;

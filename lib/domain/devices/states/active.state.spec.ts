@@ -18,10 +18,14 @@ describe('ActiveState', () => {
     version: new Version('1.0.0', '2.0.0'),
     state: {},
   });
-  const activeState = new ActiveState(deviceModel, OpType.REPORT, [0x01]);
+  let activeState: ActiveState;
 
   describe('parse', () => {
     let subscription: Subscription | undefined;
+
+    beforeEach(() => {
+      activeState = new ActiveState(deviceModel, OpType.REPORT, [0x01]);
+    });
 
     afterEach(() => {
       if (subscription !== undefined) {
@@ -91,10 +95,12 @@ describe('ActiveState', () => {
         });
         describe('with isOn=true', () => {
           it('sets the value to true', () => {
+            let expected = false;
             const subscriptionFn = jest.fn((active) =>
-              expect(active).toBeTruthy(),
+              expect(active).toEqual(expected),
             );
             subscription = activeState.subscribe(subscriptionFn);
+            expected = true;
             activeState.parse({ state: { isOn: true } });
             expect(subscriptionFn).toHaveBeenCalledTimes(1);
           });

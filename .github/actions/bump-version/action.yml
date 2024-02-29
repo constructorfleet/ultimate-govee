@@ -24,7 +24,7 @@ runs:
       run:
         npm version --allow-same-version=true --git-tag-version=false $NEW_TAG
       env:
-        NEW_TAG: ${{ steps.new_version.output.new_tag}}
+        NEW_TAG: ${{ steps.new_version.outputs.new_tag}}
     - name: Commit Package Version
       id: commit
       shell: bash

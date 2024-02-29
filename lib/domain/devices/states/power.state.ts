@@ -27,11 +27,11 @@ export class PowerState extends DeviceOpState<
 
   parseState(data: PowerType) {
     if (data?.isOn !== undefined) {
-      this.stateValue$.next(data.isOn);
+      this.stateValue.next(data.isOn);
     } else if (data?.state?.onOff !== undefined) {
-      this.stateValue$.next(data.state.onOff);
+      this.stateValue.next(data.state.onOff);
     } else if (data?.state?.isOn !== undefined) {
-      this.stateValue$.next(data.state.isOn);
+      this.stateValue.next(data.state.isOn);
     }
   }
 

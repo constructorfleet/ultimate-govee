@@ -14,6 +14,7 @@ import { ClassConstructor } from 'class-transformer';
 import { BLEDevice, DeviceModel, IoTDevice, WiFiDevice } from './devices.model';
 import { Version } from './version.info';
 import { DevicesFactory } from './devices.factory';
+import stringify from 'json-stringify-safe';
 
 @Injectable()
 @EventsHandler(DeviceStatusReceivedEvent)
@@ -43,7 +44,7 @@ export class DevicesService
       .subscribe((events) => this.eventBus.publishAll(events));
   }
   handle(event: DeviceStatusReceivedEvent) {
-    this.logger.debug('Received event', event);
+    this.logger.debug('Received event', stringify(event));
     const device = this.getDevice(event.deviceStatus.id);
     if (!device) {
       this.logger.error(`Unknown device id ${event.deviceStatus.id}`);

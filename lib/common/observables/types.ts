@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, Observer, Subscription } from 'rxjs';
 
 export interface IdObject<K = string> {
   id: K;
@@ -18,3 +18,8 @@ export interface MapDelta<K, V> {
   deleted: Map<K, V>;
   modified: Map<K, V>;
 }
+
+export type ParitalObservable<T> = {
+  partialNext(value: Partial<T>);
+  partialSubscribe(observer: Partial<Observer<Partial<T>>>): Subscription;
+};

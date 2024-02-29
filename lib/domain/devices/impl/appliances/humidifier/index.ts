@@ -1,5 +1,4 @@
-import { Type } from '@nestjs/common';
-import { HumidifierDevice, Humidifier } from './humidifier';
+import { Humidifier } from './humidifier';
 import { MistLevelStateName } from './humidifier.mist';
 import {
   AutoModeStateName,
@@ -8,9 +7,8 @@ import {
 } from './humidifier.modes';
 import { TargetHumidityStateName } from './humidifier.target-humidity';
 import { UVCStateName } from './humidifier.uvc';
-import { Device } from '../../../device';
 
-export const Devices: Type<Device>[] = [HumidifierDevice];
+// export const Devices: Type<Device>[] = [HumidifierDevice];
 export {
   Humidifier,
   AutoModeStateName,

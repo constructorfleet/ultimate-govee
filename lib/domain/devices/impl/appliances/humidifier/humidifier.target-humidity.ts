@@ -32,10 +32,10 @@ export class TargetHumidityState extends DeviceState<
       }
       if (event?.name === 'modeAuto') {
         this.subscription = event?.subscribe((event) => {
-          this.stateValue$.next((event as AutoModeState).value.targetHumidity);
+          this.stateValue.next((event as AutoModeState).value.targetHumidity);
         });
       } else {
-        this.stateValue$.next(undefined);
+        this.stateValue.next(undefined);
       }
     });
   }

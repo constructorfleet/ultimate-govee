@@ -23,6 +23,6 @@ export class IceMakerBasketFull extends DeviceOpState<
   }
 
   parseOpCommand(opCommand: number[]): void {
-    this.stateValue$.next(opCommand[0] === 0x01);
+    this.stateValue.next(opCommand[0] === 0x01);
   }
 }
