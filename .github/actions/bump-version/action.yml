@@ -43,7 +43,7 @@ runs:
       uses: anothrNick/github-tag-action@1.64.0
       env:
         GITHUB_TOKEN: ${{ inputs.GH_TOKEN }}
-        WITH_V: ${{ true }}
+        WITH_V: 'true'
         DEFAULT_BUMP: ${{ inputs.bump }}
     - name: Push to protected branch
       uses: CasperWA/push-protected@v2.15.0
