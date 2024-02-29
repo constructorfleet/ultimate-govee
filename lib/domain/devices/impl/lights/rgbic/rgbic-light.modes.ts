@@ -108,7 +108,7 @@ export class MicModeState extends DeviceOpState<MicModeStateName, MicMode> {
   parseOpCommand(opCommand: number[]): void {
     const [micScene, sensitivity, calm, autoColor, red, green, blue] =
       opCommand.slice(1);
-    this.stateValue$.next({
+    this.stateValue.next({
       micScene,
       sensitivity,
       calm: calm === 0x01,
@@ -200,7 +200,7 @@ export class AdvancedColorModeState extends DeviceOpState<
   }
 
   parseOpCommand(opCommand: number[]): void {
-    this.stateValue$.next({
+    this.stateValue.next({
       diyEffectCode: total(opCommand.slice(1, opCommand.indexOf(0x00)), true),
     });
   }
@@ -276,7 +276,7 @@ export class SegmentColorModeState extends DeviceOpState<
       .forEach((segment, index) => {
         this.segments[messageNumber * 3 + index] = segment;
       });
-    this.stateValue$.next(this.segments);
+    this.stateValue.next(this.segments);
   }
 
   protected stateToCommand(
@@ -398,14 +398,14 @@ export class ColorModeState extends DeviceOpState<
 
   parseState(data: ColorData): void {
     if (data?.state?.color !== undefined) {
-      this.stateValue$.next(data.state.color);
+      this.stateValue.next(data.state.color);
     } else {
-      this.stateValue$.next({});
+      this.stateValue.next({});
     }
   }
 
   parseOpCommand(opCommand: number[]): void {
-    this.stateValue$.next({
+    this.stateValue.next({
       red: opCommand[1],
       green: opCommand[2],
       blue: opCommand[3],
@@ -482,22 +482,22 @@ export class RGBICActiveState extends ModeState {
       }
       switch (identifier[0]) {
         case RGBICModes.MIC:
-          this.stateValue$.next(
+          this.stateValue.next(
             this.modes.find((mode) => mode.name === MicModeStateName),
           );
           break;
         case RGBICModes.SEGMENT_COLOR:
-          this.stateValue$.next(
+          this.stateValue.next(
             this.modes.find((mode) => mode.name === SegmentColorModeStateName),
           );
           break;
         case RGBICModes.ADVANCED_COLOR:
-          this.stateValue$.next(
+          this.stateValue.next(
             this.modes.find((mode) => mode.name === AdvancedColorModeStateName),
           );
           break;
         case RGBICModes.WHOLE_COLOR:
-          this.stateValue$.next(
+          this.stateValue.next(
             this.modes.find((mode) => mode.name === WholeColorModeStateName),
           );
           break;

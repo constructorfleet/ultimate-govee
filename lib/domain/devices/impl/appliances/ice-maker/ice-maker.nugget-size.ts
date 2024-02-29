@@ -25,7 +25,7 @@ export class IceMakerNuggetSizeState extends DeviceOpState<
   }
 
   parseOpCommand(opCommand: number[]): void {
-    this.stateValue$.next(
+    this.stateValue.next(
       NuggetSize[
         Object.entries(nuggetSizeMap).find(
           ([_, num]) => num === opCommand[0],

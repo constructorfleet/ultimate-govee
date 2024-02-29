@@ -2,15 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { Optional } from '~ultimate-govee-common';
 import { CommandBus, EventBus } from '@nestjs/cqrs';
 import { FactoryType } from '../../device.factory';
-import { HumidifierFactory } from './humidifier/humidifier';
-import { PurifierFactory } from './purifier/purifier';
-import { IceMakerFactory } from './ice-maker/ice-maker';
+import { Humidifier, HumidifierFactory } from './humidifier/humidifier';
+import { Purifier, PurifierFactory } from './purifier/purifier';
+import { IceMakerFactory, IceMakerStates } from './ice-maker/ice-maker';
 
 import { DeviceModel } from '../../devices.model';
 import { Device } from '../../device';
 
 @Injectable()
-export class AppliancesFactory implements FactoryType {
+export class AppliancesFactory
+  implements FactoryType<Humidifier | IceMakerStates | Purifier>
+{
   constructor(
     private readonly humidifierFactory: HumidifierFactory,
     private readonly purifierFactory: PurifierFactory,
@@ -19,10 +21,15 @@ export class AppliancesFactory implements FactoryType {
     private readonly commandBus: CommandBus,
   ) {}
 
-  create(deviceModel: DeviceModel): Optional<Device> {
+  create(
+    deviceModel: DeviceModel,
+  ): Optional<Device<Humidifier | IceMakerStates | Purifier>> {
     return [this.humidifierFactory, this.purifierFactory, this.iceMakerFactory]
-      .map((factory) =>
-        factory.create(deviceModel, this.eventBus, this.commandBus),
+      .map(
+        (factory) =>
+          factory.create(deviceModel, this.eventBus, this.commandBus) as Device<
+            Humidifier | IceMakerStates | Purifier
+          >,
       )
       .find((d) => d !== undefined);
   }

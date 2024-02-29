@@ -44,13 +44,13 @@ export const NumericState = <StateName extends string>(
 
     parseOpCommand(opCommand: number[]) {
       if (this.opCodeParser !== undefined) {
-        this.opCodeParser(opCommand, this.stateValue$);
+        this.opCodeParser(opCommand, this.stateValue);
       }
     }
 
     parseState(data: GoveeDeviceStatus): void {
       if (this.stateParser !== undefined) {
-        this.stateParser(data, this.stateValue$);
+        this.stateParser(data, this.stateValue);
       }
     }
   }

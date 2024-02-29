@@ -1,14 +1,6 @@
-import { Type } from '@nestjs/common';
-import {
-  Devices as ApplicanceDevices,
-  DeviceStates as ApplianceStates,
-} from './appliances';
-import {
-  Devices as HomeImprovementDevices,
-  DeviceStates as HomeImprovementStates,
-} from './home-improvement';
-import { Devices as LightDevices, DeviceStates as LightStates } from './lights';
-import { Device } from '../device';
+import { DeviceStates as ApplianceStates } from './appliances';
+import { DeviceStates as HomeImprovementStates } from './home-improvement';
+import { DeviceStates as LightStates } from './lights';
 import { Humidifier } from './appliances/humidifier/humidifier';
 import { Purifier } from './appliances/purifier/purifier';
 import { IceMaker } from './appliances/ice-maker/ice-maker';
@@ -45,12 +37,6 @@ export {
   HomeImprovementModule,
 } from './home-improvement';
 export { LightsFactory, LightsModule } from './lights';
-
-export const Devices: Type<Device>[] = [
-  ...ApplicanceDevices,
-  ...HomeImprovementDevices,
-  ...LightDevices,
-];
 export {
   Humidifier,
   Purifier,

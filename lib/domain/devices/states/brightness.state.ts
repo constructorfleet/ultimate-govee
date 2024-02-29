@@ -32,13 +32,13 @@ export class BrightnessState extends DeviceOpState<
 
   parseState(data: BrightnessData) {
     if (data?.state?.brightness) {
-      this.stateValue$.next(data.state.brightness);
+      this.stateValue.next(data.state.brightness);
     }
   }
 
   parseOpCommand(opCommand: number[]) {
     const [brightness] = opCommand.slice(0, 1);
-    this.stateValue$.next(brightness);
+    this.stateValue.next(brightness);
   }
 
   protected stateToCommand(

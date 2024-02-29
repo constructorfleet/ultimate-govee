@@ -27,7 +27,7 @@ export class NightLightState extends DeviceOpState<
 
   parseOpCommand(opCommand: number[]) {
     const [on, brightness] = opCommand.slice(0, 2);
-    this.stateValue$.next({
+    this.stateValue.next({
       on: on === 0x01,
       brightness,
     });

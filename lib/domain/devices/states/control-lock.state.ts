@@ -18,7 +18,7 @@ export class ControlLockState extends DeviceOpState<
   }
 
   parseOpCommand(opCommand: number[]) {
-    this.stateValue$.next(opCommand[0] === 0x01);
+    this.stateValue.next(opCommand[0] === 0x01);
   }
 
   protected stateToCommand(

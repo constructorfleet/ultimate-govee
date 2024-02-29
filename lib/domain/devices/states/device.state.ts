@@ -1,6 +1,5 @@
 import {
   BehaviorSubject,
-  Connectable,
   Observer,
   Subject,
   Subscription,
@@ -85,8 +84,7 @@ export class DeviceState<StateName extends string, StateValue> {
       }
     >[]
   > = new Map();
-  protected readonly stateValue$: BehaviorSubject<StateValue>;
-  protected readonly stateValue: Connectable<StateValue>;
+  protected readonly stateValue: BehaviorSubject<StateValue>;
   readonly commandBus: Subject<Omit<GoveeDeviceCommand, 'deviceId'>> =
     new Subject();
   protected readonly clearCommand$: Subject<CommandResult> = new Subject();
@@ -101,7 +99,7 @@ export class DeviceState<StateName extends string, StateValue> {
   }
 
   public get value(): StateValue {
-    return this.stateValue$.getValue();
+    return this.stateValue.getValue();
   }
 
   constructor(
@@ -109,9 +107,7 @@ export class DeviceState<StateName extends string, StateValue> {
     public readonly name: StateName,
     initialValue: StateValue,
   ) {
-    this.stateValue$ = new BehaviorSubject(initialValue);
-    this.stateValue = connectable(this.stateValue$);
-    this.stateValue.connect();
+    this.stateValue = new BehaviorSubject(initialValue);
     this.device.status?.subscribe((status) => this.parse(status));
     this.clearCommand.subscribe(({ commandId }) =>
       this.pendingCommands.delete(commandId),
