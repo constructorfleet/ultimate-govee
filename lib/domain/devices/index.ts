@@ -20,7 +20,10 @@ import {
 } from './impl';
 import { DeviceStates as CommonStates } from './states';
 import { Humidifier } from './impl/appliances/humidifier/humidifier';
-import { IceMaker } from './impl/appliances/ice-maker/ice-maker';
+import {
+  IceMaker,
+  IceMakerStates,
+} from './impl/appliances/ice-maker/ice-maker';
 import { Purifier } from './impl/appliances/purifier/purifier';
 import { AirQualitySensor } from './impl/home-improvement/air-quality/air-quality';
 import { HygrometerSensor } from './impl/home-improvement/hygrometer/hygrometer';
@@ -85,6 +88,7 @@ export * from './devices.types';
 export {
   Humidifier,
   IceMaker,
+  IceMakerStates,
   Purifier,
   AirQualitySensor,
   HygrometerSensor,
