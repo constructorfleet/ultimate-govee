@@ -15,6 +15,7 @@ import {
   SceneModeStateName,
   ScheduledStartStateName,
   SegmentColorModeStateName,
+  TargetHumidityStateName,
   UVCStateName,
   WholeColorModeStateName,
 } from './impl';
@@ -138,6 +139,7 @@ export {
   ManualModeStateName,
   CustomModeStateName,
   MistLevelStateName,
+  TargetHumidityStateName,
   UVCStateName,
   SceneModeStateName,
   WholeColorModeStateName,

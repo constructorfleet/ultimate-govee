@@ -15,6 +15,7 @@ export {
   CustomModeStateName,
   ManualModeStateName,
   MistLevelStateName,
+  TargetHumidityStateName,
   UVCStateName,
 };
 export const DeviceStates: string[] = [

@@ -1,6 +1,6 @@
 import { Device } from '../../device';
-import { DeviceStates } from '../../devices.types';
+import { DeviceStatesType } from '../../devices.types';
 
 export abstract class LightDevice<
-  States extends DeviceStates,
+  States extends DeviceStatesType,
 > extends Device<States> {}

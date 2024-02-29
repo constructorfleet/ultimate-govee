@@ -53,22 +53,23 @@ import { Optional } from '../../common/types';
 import { Version } from './version.info';
 import { DeviceState } from './states/device.state';
 
-export type DeviceType<States extends DeviceStates = StandardDeviceStates> = {
-  get name(): string;
-  get id(): string;
-  get model(): string;
-  get goodsType(): number;
-  get pactCode(): number;
-  get pactType(): number;
-  get iotTopic(): Optional<string>;
-  get bleAddress(): Optional<string>;
-  get version(): Version;
-  get states(): States;
-  currentStates(): DeviceStateValues<States>;
-  logState(): void;
-};
+export type DeviceType<States extends DeviceStatesType = StandardDeviceStates> =
+  {
+    get name(): string;
+    get id(): string;
+    get model(): string;
+    get goodsType(): number;
+    get pactCode(): number;
+    get pactType(): number;
+    get iotTopic(): Optional<string>;
+    get bleAddress(): Optional<string>;
+    get version(): Version;
+    get states(): States;
+    currentStates(): DeviceStateValues<States>;
+    logState(): void;
+  };
 
-export type DeviceStates = {
+export type DeviceStatesType = {
   [StateName: string]: Optional<DeviceState<typeof StateName, any>>;
 };
 
@@ -93,7 +94,7 @@ export type StandardDeviceStates = {
   [WaterShortageStateName]: Optional<WaterShortageState>;
 };
 
-export type DeviceStateValues<States extends DeviceStates> = {
+export type DeviceStateValues<States extends DeviceStatesType> = {
   [StateName in keyof States]: StateName extends ModeStateName
     ? Optional<string>
     : States[StateName] extends { value: infer U }
