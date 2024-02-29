@@ -19,7 +19,11 @@ import { ModeState, ModeStateName } from './states/mode.state';
 import { DeviceRefeshEvent } from './cqrs/events/device-refresh.event';
 import { DeviceStateCommandEvent } from './cqrs/events/device-state-command.event';
 import { DeviceStateChangedEvent } from './cqrs/events/device-state-changed.event';
-import { DeviceStateValues, DeviceStates, DeviceType } from './devices.types';
+import {
+  DeviceStateValues,
+  DeviceStatesType,
+  DeviceType,
+} from './devices.types';
 import { Version } from './version.info';
 import stringify from 'json-stringify-safe';
 
@@ -76,7 +80,7 @@ const buildStates = (
     )
     .flat();
 
-export class Device<States extends DeviceStates = DeviceStates>
+export class Device<States extends DeviceStatesType = DeviceStatesType>
   extends BehaviorSubject<Optional<Device<States>>>
   implements DeviceType<States>, OnModuleDestroy
 {
@@ -122,7 +126,7 @@ export class Device<States extends DeviceStates = DeviceStates>
       state.clearCommand.subscribe((command) => {
         this.eventBus.publish(
           new DeviceStateChangedEvent(
-            this as unknown as Device<DeviceStates>,
+            this as unknown as Device<DeviceStatesType>,
             command.state,
             command.value,
             command.commandId,

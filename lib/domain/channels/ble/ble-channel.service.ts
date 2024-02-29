@@ -9,7 +9,7 @@ import { Device } from '../../devices/device';
 import { BleChannelChangedEvent } from './events';
 import { BleChannelConfig } from './ble-channel.types';
 import { InjectDeviceIds, InjectEnabled } from './ble-channel.providers';
-import { DeviceStates } from '../../devices/devices.types';
+import { DeviceStatesType } from '../../devices/devices.types';
 
 @Injectable()
 export class BleChannelService
@@ -19,7 +19,7 @@ export class BleChannelService
   readonly togglable: true = true as const;
   readonly name: 'ble' = 'ble' as const;
 
-  private readonly devices: Record<string, Device<DeviceStates>> = {};
+  private readonly devices: Record<string, Device<DeviceStatesType>> = {};
   private readonly peripherals: Record<string, DecodedDevice> = {};
 
   constructor(

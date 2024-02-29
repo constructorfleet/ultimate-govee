@@ -26,7 +26,7 @@ import {
   TimerState,
   WaterShortageState,
 } from './states';
-import { DeviceStates } from './devices.types';
+import { DeviceStatesType } from './devices.types';
 
 const defaultStateFactories = [
   (device) => new ActiveState(device),
@@ -62,14 +62,15 @@ export class DevicesFactory {
     private readonly commandBus: CommandBus,
   ) {}
 
-  create(device: DeviceModel): Device<DeviceStates> {
+  create(device: DeviceModel): Device<DeviceStatesType> {
     const knownDevice = [
       this.applianceFactory,
       this.lightFactory,
       this.homeImprovementFactory,
     ]
       .map(
-        (factory) => factory.create(device) as unknown as Device<DeviceStates>,
+        (factory) =>
+          factory.create(device) as unknown as Device<DeviceStatesType>,
       )
       .find((d) => d !== undefined);
 
