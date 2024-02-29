@@ -69,7 +69,7 @@ jobs:
             git add package.json
             git add package-lock.json
             git commit -m "[ci skip] chore(package.json): update package json"
-            git tag -a "${{ env.NEW_TAG }}"" -m "${{ env.NEW_TAG }}"
+            git tag -a "${{ env.NEW_TAG }}" -m "${{ env.NEW_TAG }}"
             exit_code=0
           fi
           echo "exit_code=${exit_code}" >> "$GITHUB_OUTPUT"
