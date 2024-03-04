@@ -51,11 +51,10 @@ export class ColorRGBState extends DeviceOpState<ColorRGBStateName, ColorRGB> {
     }
   }
 
-  parseOpCode(opCommand: number[]) {
-    if (opCommand[0] !== 0x02) {
+  parseOpCommand(opCommand: number[]) {
+    if (opCommand[0] !== 0x02 || opCommand.length < 4) {
       return;
     }
-
     this.stateValue.next({
       red: opCommand[1],
       green: opCommand[2],

@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { BrightnessState } from './brightness.state';
 import { OpType } from '../../../common/op-code';
 
-describe('Brightness', () => {
+describe('BrightnessState', () => {
   const deviceModel: DeviceModel = new DeviceModel({
     id: '01:02:03:04:05:06:07:08',
     ic: 0,

@@ -3,7 +3,7 @@ import { Version } from '../version.info';
 import { Subscription } from 'rxjs';
 import { BatteryLevelState } from './battery-level.state';
 
-describe('BatteryLevel', () => {
+describe('BatteryLevelState', () => {
   const deviceModel: DeviceModel = new DeviceModel({
     id: '01:02:03:04:05:06:07:08',
     ic: 0,
