@@ -148,7 +148,60 @@ export type RGBICLight = {
   [ColorTempStateName]: Optional<ColorTempState>;
   [SegmentCountStateName]: Optional<SegmentCountState>;
   [WholeColorModeStateName]: Optional<ColorModeState>;
-  [LightEffectStateName]: Optional<LightEffectState>;
+  [import { Characteristic, Service } from 'hap-nodejs';
+
+// Define the available light effect states based on the make/model of the light
+type LightEffectStateName = 'effect1' | 'effect2' | 'effect3';
+
+// Create a custom LightEffect characteristic using the UUID and the format defined in the HomeKit guidelines
+const LightEffectUUID = 'your_light_effect_uuid_here'; // Replace with your UUID
+const LightEffectCharacteristic = new Characteristic(LightEffectUUID, LightEffectUUID)
+  .setProps({
+    format: Characteristic.Formats.STRING,
+    perms: [Characteristic.Perms.READ, Characteristic.Perms.WRITE],
+    // Add any additional properties or permissions as required by your custom characteristic
+  })
+  .on('set', (value, callback) => {
+    // Handle the set event when the user selects a light effect state
+    const selectedEffect = value as LightEffectStateName;
+
+    // Perform the necessary actions to set the light effect state
+    switch (selectedEffect) {
+      case 'effect1':
+        // Set the light effect state to effect1
+        // Perform any additional actions specific to effect1
+        break;
+      case 'effect2':
+        // Set the light effect state to effect2
+        // Perform any additional actions specific to effect2
+        break;
+      case 'effect3':
+        // Set the light effect state to effect3
+        // Perform any additional actions specific to effect3
+        break;
+      default:
+        // Handle any unrecognized or invalid light effect state
+        break;
+    }
+
+    // After setting the light effect state, callback with null for successful operation
+    callback(null);
+  })
+  .on('get', (callback) => {
+    // Handle the get event when the current light effect state is requested
+    const currentEffectState = 'effect1'; // Replace with the actual current state
+
+    // Return the current light effect state to the callback
+    callback(null, currentEffectState);
+  });
+
+// Add the LightEffect characteristic to the LightBulb service
+const lightBulbService = new Service.Lightbulb('Your Lightbulb', 'your_lightbulb_type_uuid_here') // Replace with your UUID
+
+// Add other required characteristics to the LightBulb service
+// ...
+
+// Add the]: Optional<LightEffectState>;
   [MicModeStateName]: Optional<MicModeState>;
   [AdvancedColorModeStateName]: Optional<AdvancedColorModeState>;
   [ModeStateName]: Optional<RGBICActiveState>;
