@@ -75,6 +75,8 @@ export {
   SegmentColorModeStateName,
   AdvancedColorModeStateName,
   MicModeStateName,
+  IceMakerStatus,
+  NuggetSize,
 } from './domain';
 export { Device } from './domain/devices/device';
 export {
