@@ -68,6 +68,7 @@ import {
   NightLightStateName,
 } from './states/night-light.state';
 import { PowerState, PowerStateName } from './states/power.state';
+import { IceMakerStatus, NuggetSize } from './impl/appliances/ice-maker/types';
 import {
   SegmentCountState,
   SegmentCountStateName,
@@ -146,6 +147,8 @@ export {
   SegmentColorModeStateName,
   AdvancedColorModeStateName,
   MicModeStateName,
+  IceMakerStatus,
+  NuggetSize,
 };
 
 export const CQRS = cqrs;
