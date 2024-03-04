@@ -34,7 +34,7 @@ describe('ActiveState', () => {
     });
 
     describe('when passed', () => {
-      describe('an invaid', () => {
+      describe('an invalid', () => {
         describe('state argument', () => {
           it('does not update the value', () => {
             const subscriptionFn = jest.fn((active) =>
