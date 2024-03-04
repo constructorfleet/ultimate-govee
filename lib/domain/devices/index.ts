@@ -69,6 +69,7 @@ import {
 } from './states/night-light.state';
 import { PowerState, PowerStateName } from './states/power.state';
 import { IceMakerStatus, NuggetSize } from './impl/appliances/ice-maker/types';
+import { LightEffect } from '../../../dist/domain/devices/states/light-effect.state';
 import {
   SegmentCountState,
   SegmentCountStateName,
@@ -120,6 +121,7 @@ export {
   HumidityStateName,
   LightEffectState,
   LightEffectStateName,
+  LightEffect,
   NightLightState,
   NightLightStateName,
   PowerState,
