@@ -49,6 +49,7 @@ export {
   HumidityStateName,
   LightEffectState,
   LightEffectStateName,
+  LightEffect,
   NightLightState,
   NightLightStateName,
   PowerState,
