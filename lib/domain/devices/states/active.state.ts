@@ -39,7 +39,7 @@ export class ActiveState extends DeviceOpState<
   protected stateToCommand(
     state: Optional<boolean>,
   ): Optional<StateCommandAndStatus> {
-    if (state === undefined) {
+    if (state === undefined || typeof state !== 'boolean') {
       this.logger.warn('state not provided, skipping command.');
       return;
     }

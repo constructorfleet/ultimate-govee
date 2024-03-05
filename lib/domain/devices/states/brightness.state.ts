@@ -32,12 +32,18 @@ export class BrightnessState extends DeviceOpState<
 
   parseState(data: BrightnessData) {
     if (data?.state?.brightness) {
+      if (data.state.brightness < 0 || data.state.brightness > 100) {
+        return;
+      }
       this.stateValue.next(data.state.brightness);
     }
   }
 
   parseOpCommand(opCommand: number[]) {
     const [brightness] = opCommand.slice(0, 1);
+    if (brightness < 0 || brightness > 100) {
+      return;
+    }
     this.stateValue.next(brightness);
   }
 
@@ -45,6 +51,13 @@ export class BrightnessState extends DeviceOpState<
     nextState: Optional<number>,
   ): Optional<StateCommandAndStatus> {
     if (nextState === undefined) {
+      this.logger.warn('Brigntess not supplied, ignoreing command.');
+      return;
+    }
+    if (nextState < 0 || nextState > 100) {
+      this.logger.warn(
+        'Brightness must be between 0 and 100, ignoring command.',
+      );
       return;
     }
 
