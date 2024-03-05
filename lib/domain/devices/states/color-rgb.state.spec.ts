@@ -120,9 +120,9 @@ describe('ColorRGBState', () => {
             (colorValue) => {
               const subscriptionFn = jest.fn((color) =>
                 expect(color).toEqual({
-                  red: colorValue[0],
-                  green: colorValue[1],
-                  blue: colorValue[2],
+                  red: JSON.parse(colorValue)[0],
+                  green: JSON.parse(colorValue)[1],
+                  blue: JSON.parse(colorValue)[2],
                 }),
               );
               subscription = state.subscribe(subscriptionFn);
