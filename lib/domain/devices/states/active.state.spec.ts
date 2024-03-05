@@ -1,7 +1,7 @@
 import { DeviceModel } from '../devices.model';
 import { Version } from '../version.info';
 import { ActiveState } from './active.state';
-import { OpType } from '../../../common/op-code';
+import { OpType, asOpCode } from '../../../common/op-code';
 import { Subscription } from 'rxjs';
 describe('ActiveState', () => {
   const deviceModel: DeviceModel = new DeviceModel({
@@ -18,13 +18,13 @@ describe('ActiveState', () => {
     version: new Version('1.0.0', '2.0.0'),
     state: {},
   });
-  let activeState: ActiveState;
+  let state: ActiveState;
 
   describe('parse', () => {
     let subscription: Subscription | undefined;
 
     beforeEach(() => {
-      activeState = new ActiveState(deviceModel, OpType.REPORT, [0x01]);
+      state = new ActiveState(deviceModel, OpType.REPORT, [0x01]);
     });
 
     afterEach(() => {
@@ -34,14 +34,14 @@ describe('ActiveState', () => {
     });
 
     describe('when passed', () => {
-      describe('an invaid', () => {
+      describe('an invalid', () => {
         describe('state argument', () => {
           it('does not update the value', () => {
             const subscriptionFn = jest.fn((active) =>
               expect(active).toBeUndefined(),
             );
-            subscription = activeState.subscribe(subscriptionFn);
-            activeState.parse({});
+            subscription = state.subscribe(subscriptionFn);
+            state.parse({});
             expect(subscriptionFn).not.toHaveBeenCalled();
           });
         });
@@ -50,8 +50,8 @@ describe('ActiveState', () => {
             const subscriptionFn = jest.fn((active) =>
               expect(active).toBeUndefined(),
             );
-            subscription = activeState.subscribe(subscriptionFn);
-            activeState.parse({ op: { command: [[0x02, 0x02, 0x01]] } });
+            subscription = state.subscribe(subscriptionFn);
+            state.parse({ op: { command: [[0x02, 0x02, 0x01]] } });
             expect(subscriptionFn).not.toHaveBeenCalled();
           });
         });
@@ -60,8 +60,8 @@ describe('ActiveState', () => {
             const subscriptionFn = jest.fn((active) =>
               expect(active).toBeUndefined(),
             );
-            subscription = activeState.subscribe(subscriptionFn);
-            activeState.parse({
+            subscription = state.subscribe(subscriptionFn);
+            state.parse({
               op: { command: [[OpType.REPORT, 0x02, 0x01]] },
             });
             expect(subscriptionFn).not.toHaveBeenCalled();
@@ -72,8 +72,8 @@ describe('ActiveState', () => {
             const subscriptionFn = jest.fn((active) =>
               expect(active).toBeUndefined(),
             );
-            subscription = activeState.subscribe(subscriptionFn);
-            activeState.parse({
+            subscription = state.subscribe(subscriptionFn);
+            state.parse({
               op: { command: [[OpType.REPORT, 0x01, 0x10]] },
             });
             expect(subscriptionFn).not.toHaveBeenCalled();
@@ -88,8 +88,8 @@ describe('ActiveState', () => {
             const subscriptionFn = jest.fn((active) =>
               expect(active).toBeFalsy(),
             );
-            subscription = activeState.subscribe(subscriptionFn);
-            activeState.parse({ state: { isOn: false } });
+            subscription = state.subscribe(subscriptionFn);
+            state.parse({ state: { isOn: false } });
             expect(subscriptionFn).toHaveBeenCalledTimes(1);
           });
         });
@@ -99,9 +99,9 @@ describe('ActiveState', () => {
             const subscriptionFn = jest.fn((active) =>
               expect(active).toEqual(expected),
             );
-            subscription = activeState.subscribe(subscriptionFn);
+            subscription = state.subscribe(subscriptionFn);
             expected = true;
-            activeState.parse({ state: { isOn: true } });
+            state.parse({ state: { isOn: true } });
             expect(subscriptionFn).toHaveBeenCalledTimes(1);
           });
         });
@@ -112,8 +112,8 @@ describe('ActiveState', () => {
             const subscriptionFn = jest.fn((active) =>
               expect(active).toBeFalsy(),
             );
-            subscription = activeState.subscribe(subscriptionFn);
-            activeState.parse({
+            subscription = state.subscribe(subscriptionFn);
+            state.parse({
               op: { command: [[OpType.REPORT, 0x01, 0x00]] },
             });
             expect(subscriptionFn).toHaveBeenCalledTimes(1);
@@ -124,12 +124,74 @@ describe('ActiveState', () => {
             const subscriptionFn = jest.fn((active) =>
               expect(active).toBeTruthy(),
             );
-            subscription = activeState.subscribe(subscriptionFn);
-            activeState.parse({
+            subscription = state.subscribe(subscriptionFn);
+            state.parse({
               op: { command: [[OpType.REPORT, 0x01, 0x01]] },
             });
             expect(subscriptionFn).toHaveBeenCalledTimes(1);
           });
+        });
+      });
+    });
+  });
+  describe('setState', () => {
+    let subscription: Subscription;
+    beforeEach(() => {
+      state = new ActiveState(deviceModel, OpType.REPORT, [0x01]);
+    });
+    afterEach(() => {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+    });
+
+    describe('when nextState is', () => {
+      describe('undefined', () => {
+        it('does not return a command', () => {
+          subscription = state.commandBus.subscribe((command) => {
+            expect(command).toBeUndefined();
+          });
+          expect(state.setState(undefined)).toEqual([]);
+        });
+      });
+      describe('not a boolean', () => {
+        it('does not return a command', () => {
+          subscription = state.commandBus.subscribe((command) => {
+            expect(command).toBeUndefined();
+          });
+          expect(state.setState(JSON.parse('"true"'))).toEqual([]);
+        });
+      });
+      describe('true', () => {
+        it('returns the activate command', () => {
+          subscription = state.commandBus.subscribe((command) => {
+            expect(command).toHaveProperty('commandId');
+            expect(command.commandId).toBeDefined();
+            expect(command).toHaveProperty('data');
+            expect(command.data).toHaveProperty('command');
+            expect(command.data.command).toBeDefined();
+            expect(command.data.command).toHaveLength(1);
+            expect(command.data?.command?.at(0)).toEqual(
+              expect.arrayContaining(asOpCode(OpType.COMMAND, 0x01, 0x01)),
+            );
+          });
+          expect(state.setState(true)).toBeDefined();
+        });
+      });
+      describe('false', () => {
+        it('returns the deactivate command', () => {
+          subscription = state.commandBus.subscribe((command) => {
+            expect(command).toHaveProperty('commandId');
+            expect(command.commandId).toBeDefined();
+            expect(command).toHaveProperty('data');
+            expect(command.data).toHaveProperty('command');
+            expect(command.data.command).toBeDefined();
+            expect(command.data.command).toHaveLength(1);
+            expect(command.data?.command?.at(0)).toEqual(
+              expect.arrayContaining(asOpCode(OpType.COMMAND, 0x01, 0x00)),
+            );
+          });
+          expect(state.setState(true)).toBeDefined();
         });
       });
     });
