@@ -19,6 +19,7 @@ export {
   UltimateGoveeModuleOptions,
   UltimateGoveeModuleAsyncOptions,
 };
+export { GoveeDeviceStatus } from './data';
 export * from './ultimate-govee.module';
 export * from './ultimate-govee.service';
 export * from './ultimate-govee.config';
@@ -84,6 +85,7 @@ export {
   MicModeStateName,
   IceMakerStatus,
   NuggetSize,
+  DeviceModel,
 } from './domain';
 export { Device } from './domain/devices/device';
 export {
