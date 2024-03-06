@@ -5,6 +5,10 @@ import {
   IoTChannelModuleOptions,
   AsyncIoTChannelModuleOptions,
 } from './domain';
+import {
+  OPTIONS_TYPE as UltimateGoveeModuleOptions,
+  ASYNC_OPTIONS_TYPE as UltimateGoveeModuleAsyncOptions,
+} from 'ultimate-govee.types';
 export {
   BleChannelModuleOptions,
   AsyncBleChannelModuleOptions,
@@ -12,7 +16,10 @@ export {
   AsyncIoTChannelModuleOptions,
   PersistModuleOptions,
   AsyncPersistModuleOptions,
+  UltimateGoveeModuleOptions,
+  UltimateGoveeModuleAsyncOptions,
 };
+export { GoveeDeviceStatus } from './data';
 export * from './ultimate-govee.module';
 export * from './ultimate-govee.service';
 export * from './ultimate-govee.config';
@@ -78,6 +85,7 @@ export {
   MicModeStateName,
   IceMakerStatus,
   NuggetSize,
+  DeviceModel,
 } from './domain';
 export { Device } from './domain/devices/device';
 export {

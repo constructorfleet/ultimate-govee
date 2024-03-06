@@ -1,5 +1,3 @@
 export type PersistModuleOptions = {
-  rootDirectory: string;
+  rootDirectory?: string;
 };
-
-export const PersistModuleOptionsKey = 'Persist.Module.Options';

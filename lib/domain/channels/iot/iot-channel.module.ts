@@ -9,7 +9,10 @@ import { IoTChannelService } from './iot-channel.service';
 import { IoTChannelController } from './iot-channel.controller';
 import { IoTChannelConfigReceivedEventHandler } from './handlers/iot-channel-config-received.handler';
 import { IoTChannelConfigEnabledProvider } from './iot-channel.providers';
-import { ConfigurableModuleClass } from './iot-channel.types';
+import {
+  ConfigurableModuleClass,
+  MODULE_OPTIONS_TOKEN,
+} from './iot-channel.types';
 
 @Module({
   imports: [CqrsModule, IoTModule],
@@ -26,6 +29,7 @@ import { ConfigurableModuleClass } from './iot-channel.types';
     IoTSubscribeCommandHandler,
     IoTChannelConfigReceivedEventHandler,
     IoTChannelService,
+    MODULE_OPTIONS_TOKEN,
   ],
 })
 export class IoTChannelModule extends ConfigurableModuleClass {}

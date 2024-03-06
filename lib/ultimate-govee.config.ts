@@ -1,32 +1,36 @@
 import { FactoryProvider, Inject } from '@nestjs/common';
+import { MODULE_OPTIONS_TOKEN, OPTIONS_TYPE } from './ultimate-govee.types';
 
 export const UltimateGoveeConfig = 'Configuration.Ultimate-Govee';
 
 export type UltimateGoveeConfig = {
-  username: string;
-  password: string;
-  apikey: string;
-  connections: {
-    iot: boolean;
-    ble: boolean;
-    openApi: boolean;
+  username?: string;
+  password?: string;
+  apikey?: string;
+  refreshMargin?: number;
+  connections?: {
+    iot?: boolean;
+    ble?: boolean;
+    openApi?: boolean;
   };
-  storageDirectory: string;
+  storageDirectory?: string;
 };
 
 export const InjectGoveeConfig = Inject(UltimateGoveeConfig);
 
 export const UltimateGoveeConfiguration: FactoryProvider = {
   provide: UltimateGoveeConfig,
-  useFactory: (): UltimateGoveeConfig => ({
+  inject: [MODULE_OPTIONS_TOKEN],
+  useFactory: (options: typeof OPTIONS_TYPE): UltimateGoveeConfig => ({
     username: process.env.USERNAME || '',
     password: process.env.PASSWORD || '',
     apikey: process.env.API_KEY || '',
+    refreshMargin: options?.auth?.refreshMargin,
     connections: {
-      iot: process.env.ENABLE_IOT === 'true',
-      ble: process.env.ENABLE_BLE === 'true',
-      openApi: process.env.ENABLE_OPENAPI === 'true',
+      iot: options?.channels?.iot?.enabled,
+      ble: options?.channels?.ble?.enabled,
+      openApi: false,
     },
-    storageDirectory: process.env.STORAGE_DIR || 'peristed',
+    storageDirectory: options?.persist?.rootDirectory,
   }),
 };

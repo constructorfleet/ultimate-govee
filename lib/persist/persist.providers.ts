@@ -1,14 +1,46 @@
-import { FactoryProvider, Inject } from '@nestjs/common';
+import {
+  FactoryProvider,
+  Inject,
+  ConfigurableModuleBuilder,
+} from '@nestjs/common';
 import { existsSync } from 'fs';
 import { readFile, writeFile } from 'fs/promises';
-import { PersistModuleOptions, PersistModuleOptionsKey } from './persist.types';
+import { PersistModuleOptions } from './persist.types';
 import { join } from 'path';
+
+export const {
+  ConfigurableModuleClass,
+  OPTIONS_TYPE,
+  ASYNC_OPTIONS_TYPE,
+  MODULE_OPTIONS_TOKEN,
+} = new ConfigurableModuleBuilder<PersistModuleOptions>({
+  moduleName: 'PersistModule',
+  optionsInjectionToken: 'Persist.Module.Options',
+})
+  .setExtras(
+    {
+      isGlobal: true,
+    },
+    (definition, extras) => {
+      const providers = createPersistedFileProviders();
+      const module = {
+        ...definition,
+        global: extras.isGlobal,
+        providers: [...(definition.providers ?? []), ...providers],
+        exports: [...(definition.exports ?? []), ...providers],
+      };
+      console.dir(module, { depth: 5 });
+      return module;
+    },
+  )
+  .setClassMethodName('forRoot')
+  .build();
 
 export const RootDirectoryKey = 'Persist.Root.Directory';
 export const InjectRootDirectory = Inject(RootDirectoryKey);
 export const RootDirectoryProvider: FactoryProvider = {
   provide: RootDirectoryKey,
-  inject: [PersistModuleOptionsKey],
+  inject: [MODULE_OPTIONS_TOKEN],
   useFactory: (options: PersistModuleOptions): string =>
     options.rootDirectory ?? './',
 };

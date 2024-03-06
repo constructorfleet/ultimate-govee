@@ -13,7 +13,10 @@ import {
   RestChannelConfigAuthProvider,
   RestChannelConfigEnabledProvider,
 } from './rest-channel.providers';
-import { ConfigurableModuleClass } from './rest-channel.types';
+import {
+  ConfigurableModuleClass,
+  MODULE_OPTIONS_TOKEN,
+} from './rest-channel.types';
 
 @Module({
   imports: [CqrsModule, GoveeAPIModule],
@@ -34,6 +37,7 @@ import { ConfigurableModuleClass } from './rest-channel.types';
     RetrieveDeviceListCommandHandler,
     RestChannelSagas,
     RestChannelService,
+    MODULE_OPTIONS_TOKEN,
   ],
 })
 export class RestChannelModule extends ConfigurableModuleClass {}
