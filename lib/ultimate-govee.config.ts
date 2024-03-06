@@ -1,5 +1,5 @@
 import { FactoryProvider, Inject } from '@nestjs/common';
-import { MODULE_OPTIONS_TOKEN, OPTIONS_TYPE } from 'ultimate-govee.types';
+import { MODULE_OPTIONS_TOKEN, OPTIONS_TYPE } from './ultimate-govee.types';
 
 export const UltimateGoveeConfig = 'Configuration.Ultimate-Govee';
 

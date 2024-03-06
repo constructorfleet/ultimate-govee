@@ -13,6 +13,7 @@ import { PurifierDevice } from './domain/devices/impl/appliances/purifier/purifi
 import { HumidifierDevice } from './domain/devices/impl/appliances/humidifier/humidifier';
 import { AirQualityDevice } from './domain/devices/impl/home-improvement/air-quality/air-quality';
 import { Version } from './domain/devices/version.info';
+import { MODULE_OPTIONS_TOKEN } from './ultimate-govee.types';
 
 describe('UltimateGoveeService', () => {
   describe('constructDevice', () => {
@@ -27,6 +28,10 @@ describe('UltimateGoveeService', () => {
           UltimateGoveeService,
           BleChannelService,
           IoTChannelService,
+          {
+            provide: MODULE_OPTIONS_TOKEN,
+            useValue: {},
+          },
         ],
         exports: [UltimateGoveeService],
       })
