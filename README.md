@@ -29,7 +29,25 @@ First, import the `UltimateGoveeModule`:
 
 ```typescript
 @Module({
-  import: [UltimateGoveeModule]
+  import: [UltimateGoveeModule.forRootAsync({
+    persist: {
+      rootDirectory: 'path/to/persistent/storage', // Path to persistent storage, as of now, it writs a lot for debugging
+    },
+    auth: {
+      refreshMargin: 5000 // Number of milliseconds before token expires to reauthenticate with Govee
+    },
+    channels: {
+      ble: {
+        enabled: true, // Whether to enable the BLE control channel (if you do not have BLE adapter, this MUST be false)
+        deviceIds: [ // List of IDs for devices to command and control - these are not the BLE address!
+          "00:11:22:33:44:55:66:77:88"
+        ]
+      },
+      iot: {
+        enabled: true, // Whether to enable the AWS IoT Core control channel
+      }
+    }
+  })]
   ...
 })
 export class AppModule {}
