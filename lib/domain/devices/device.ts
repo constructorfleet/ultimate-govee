@@ -8,8 +8,6 @@ import {
 import { Logger, OnModuleDestroy } from '@nestjs/common';
 import { DeltaMap, Optional, hexToBase64 } from '~ultimate-govee-common';
 import { GoveeDeviceStatus } from '~ultimate-govee-data';
-import DailyRotateFile from 'winston-daily-rotate-file';
-import Winston from 'winston';
 import { deepEquality } from '@santi100/equal-lib';
 import { CommandBus, EventBus } from '@nestjs/cqrs';
 import { PersistResult } from '~ultimate-govee-persist';
@@ -26,27 +24,6 @@ import {
 } from './devices.types';
 import { Version } from './version.info';
 import stringify from 'json-stringify-safe';
-
-const getLogger = (deviceId: string, deviceModel: string): Winston.Logger =>
-  Winston.createLogger({
-    level: 'info',
-    format: Winston.format.combine(
-      Winston.format.timestamp(),
-      Winston.format.json({
-        space: 2,
-      }),
-    ),
-    transports: [
-      new DailyRotateFile({
-        dirname: `persisted/devices/${deviceModel}`,
-        filename: `${deviceId.replace(/:/g, '')}-%DATE%.log`,
-        datePattern: 'YYYY-MM-DD',
-        zippedArchive: true,
-        maxSize: '20m',
-        maxFiles: '7d',
-      }),
-    ],
-  });
 
 export const DefaultFactory: 'default' = 'default' as const;
 
@@ -100,7 +77,6 @@ export class Device<States extends DeviceStatesType = DeviceStatesType>
   private readonly opIdentifiers: Set<number[]> = new Set();
   private readonly refresh$ = new Subject<void>();
   private readonly subscriptions: Subscription[] = [];
-  protected stateLogger: Winston.Logger | undefined;
   protected isDebug: boolean = false;
 
   protected addState<TDevice extends DeviceState<string, any>>(
@@ -306,10 +282,9 @@ export class Device<States extends DeviceStatesType = DeviceStatesType>
   }
 
   async logState() {
-    if (this.stateLogger === undefined) {
-      this.stateLogger = getLogger(this.id, this.model);
+    if (this.isDebug) {
+      this.logger.debug(await this.loggableState(this.id));
     }
-    this.logger.debug(await this.loggableState(this.id));
   }
 
   onModuleDestroy() {
