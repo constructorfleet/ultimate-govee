@@ -78,7 +78,7 @@ nest test
 ## Future Work
 
 - [x] - Configure control channels on initialization and during runtime.
-- [ ] - Configurable controllers.
+- ~~[ ] - Configurable controllers.~~
 - [ ] - Specify devices to listen for.
 - [ ] - Device overrides.
 - [ ] - LAN control channel.
