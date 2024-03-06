@@ -1,7 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { plainToInstance } from 'class-transformer';
-import { join } from 'path';
 import { InjectPersisted, PersistResult } from '~ultimate-govee-persist';
 import { GoveeProductConfig } from './govee-product.config';
 import { request } from '../../utils';
@@ -26,7 +25,7 @@ export class GoveeProductService {
   constructor(
     @Inject(GoveeProductConfig.KEY)
     private readonly config: ConfigType<typeof GoveeProductConfig>,
-    @InjectPersisted({ filename: join('persisted', 'products.json') })
+    @InjectPersisted({ filename: 'products.json' })
     private readonly persistedProducts: Record<string, Product>,
   ) {}
 
