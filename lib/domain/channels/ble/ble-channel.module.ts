@@ -14,7 +14,10 @@ import {
   BleChannelConfigDeviceIdsProvider,
   BleChannelConfigEnabledProvider,
 } from './ble-channel.providers';
-import { ConfigurableModuleClass } from './ble-channel.const';
+import {
+  ConfigurableModuleClass,
+  MODULE_OPTIONS_TOKEN,
+} from './ble-channel.const';
 
 @Module({
   imports: [CqrsModule, BleModule],
@@ -38,6 +41,7 @@ import { ConfigurableModuleClass } from './ble-channel.const';
     BleRecordDeviceCommandHandler,
     ConfigureBleChannelCommandHandler,
     BlePublishCommandHandler,
+    MODULE_OPTIONS_TOKEN,
   ],
 })
 export class BleChannelModule extends ConfigurableModuleClass {}
