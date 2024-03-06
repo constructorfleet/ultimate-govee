@@ -25,6 +25,9 @@ npm install --save @constructorfleet/ultimate-govee
 
 ## Running the library
 
+**NOTE** All options for this module are optional, but at least one control
+channel must be enabled to interact with devices
+
 First, import the `UltimateGoveeModule`:
 
 ```typescript
