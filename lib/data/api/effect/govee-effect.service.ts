@@ -64,7 +64,7 @@ export class GoveeEffectService {
           goodsType,
           device: deviceId,
         },
-      ).get(EffectListResponse, `persisted/${deviceId}.effects.raw.json`);
+      ).get(EffectListResponse);
       return (response.data as EffectListResponse).effectData.categories.reduce(
         (effects: Effect[], category: EffectCategory) => {
           category.scenes.forEach((scene: EffectScene) => {
@@ -114,7 +114,7 @@ export class GoveeEffectService {
           goodsType,
           device: deviceId,
         },
-      ).get(SceneListResponse, `persisted/${deviceId}.scenes.raw.json`);
+      ).get(SceneListResponse);
       return (response.data as SceneListResponse).sceneData.categories.reduce(
         (effects: Effect[], category) => {
           effects.push(

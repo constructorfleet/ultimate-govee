@@ -29,7 +29,7 @@ export class GoveeProductService {
     private readonly persistedProducts: Record<string, Product>,
   ) {}
 
-  @PersistResult({ path: 'persisted', filename: 'products.json' })
+  @PersistResult({ filename: 'products.json' })
   async getProductCategories(): Promise<Record<string, Product>> {
     try {
       this.logger.log('Retrieving product list from Govee REST API');
