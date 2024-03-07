@@ -52,29 +52,38 @@ onMotionClear() {
 
 ### States
 
-`isActive` - Whether the device is "active", i.e. the Purifier is running
-`batteryLevel` - The remaining battery level as a percentage (if device is
-battery powered) `brightness` - The brighness (as percentage) for the device (in
-the case of RGBICLights, this is the entire device) `colorRGB` - Color of a
-light, for bulb and strips this is for the device itself `colorTemp` - The color
-temperature for the light (2000K - 9000K) `connected` - This should indicate
-whether the device is online, however it's not consistent `controlLock` - Locks
-or unlocks the physical controls on the device `displaySchedule` - Sets when the
-display on the device is to be illuminated `filterExpired` - Flag indicating the
-device's filter is needing replaced `filterLife` - The remaining life of the
-device's filter (as a percentage), not all devices report this `humidity` - An
-object containing the valid relative humidity range, current reading,
-calibration settings and raw value `lightEffect` - Contains the list of valid
-light effects for the device, you can control the state via the effect name or
-the numeric code `mode` - The active mode of the device, this state is
-meaningless without a specific device implementation `nightLight` - Control the
-night light feature of the device, if the device has one `power` - Whether the
-device is on or off, this is similar to `isActive` but applies primarily to
-switch and light devices `segmentCount` - Provides the number of controllable
-segments for RGBICLight devices `temperature` - An object containing the valid
-temperature range, current reading, calibration settings and raw value `timer` -
-Allows interacting with the device's timer feature (setting the start and end
-for operation) `waterShortage` - Flag indicating the device is out of water.
+- `isActive` - Whether the device is "active", i.e. the Purifier is running
+- `batteryLevel` - The remaining battery level as a percentage (if device is
+  battery powered)
+- `brightness` - The brighness (as percentage) for the device (in the case of
+  RGBICLights, this is the entire device)
+- `colorRGB` - Color of a light, for bulb and strips this is for the device
+  itself
+- `colorTemp` - The color temperature for the light (2000K - 9000K)
+- `connected` - This should indicate whether the device is online, however it's
+  not consistent
+- `controlLock` - Locks or unlocks the physical controls on the device
+- `displaySchedule` - Sets when the display on the device is to be illuminated
+- `filterExpired` - Flag indicating the device's filter is needing replaced
+- `filterLife` - The remaining life of the device's filter (as a percentage),
+  not all devices report this
+- `humidity` - An object containing the valid relative humidity range, current
+  reading, calibration settings and raw value
+- `lightEffect` - Contains the list of valid light effects for the device, you
+  can control the state via the effect name or the numeric code
+- `mode` - The active mode of the device, this state is meaningless without a
+  specific device implementation
+- `nightLight` - Control the night light feature of the device, if the device
+  has one
+- `power` - Whether the device is on or off, this is similar to
+- `isActive` but applies primarily to switch and light devices
+- `segmentCount` - Provides the number of controllable segments for RGBICLight
+  devices
+- `temperature` - An object containing the valid temperature range, current
+  reading, calibration settings and raw value
+- `timer`- Allows interacting with the device's timer feature (setting the start
+  and end for operation)
+- `waterShortage` - Flag indicating the device is out of water.
 
 ### Humidifiers
 
