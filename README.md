@@ -93,9 +93,11 @@ onMotionClear() {
 - `uvc` - Some humidifiers offer a UVC sterilization feature, set this to true
   to enable sanitization
 - `manualMode` - Simple mode where you can control the mistLevel directly
-  `customMode`
-- - Set three mist levels and their durations, once the first is completed it
-    starts the second, the third can be indefinite or a finite duration
+
+* `customMode` - Set three mist levels and their durations, once the first is
+  completed it starts the second, the third can be indefinite or a finite
+  duration
+
 - `autoMode` - Humidifier will operate automatically until the target humidity
   is reached
 
