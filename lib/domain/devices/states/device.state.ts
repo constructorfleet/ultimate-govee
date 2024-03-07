@@ -4,6 +4,7 @@ import {
   Subscription,
   connectable,
   distinctUntilChanged,
+  tap,
 } from 'rxjs';
 import {
   Optional,
@@ -21,6 +22,7 @@ import {
 import { DeviceModel } from '../devices.model';
 import { v4 as uuidv4 } from 'uuid';
 import { deepEquality } from '@santi100/equal-lib';
+import FIFOArray from 'ts-fifo-array';
 
 type MessageData = Partial<GoveeDeviceStatus>;
 
@@ -93,6 +95,7 @@ export class DeviceState<StateName extends string, StateValue>
     new Subject();
   protected readonly clearCommand$: Subject<CommandResult> = new Subject();
   readonly clearCommand = connectable(this.clearCommand$);
+  protected readonly history = FIFOArray<StateValue>(5);
   protected readonly subsbscriptions: Subscription[] = [];
 
   subscribe(
@@ -121,13 +124,31 @@ export class DeviceState<StateName extends string, StateValue>
     public readonly name: StateName,
     initialValue: StateValue,
   ) {
+    this.history.push(initialValue);
     this.stateValue = new ForwardBehaviorSubject(initialValue);
+    this.subsbscriptions.push(
+      this.stateValue
+        .pipe(tap(() => this.history.push(this.stateValue.getValue())))
+        .subscribe(),
+    );
     this.subsbscriptions.push(
       this.device.status?.subscribe((status) => this.parse(status)),
       this.clearCommand.subscribe(({ commandId }) =>
         this.pendingCommands.delete(commandId),
       ),
     );
+  }
+
+  previousState(last: number = 1): string[] {
+    let state: StateValue | undefined = undefined;
+    while (last > 0) {
+      state = this.history.pop();
+      last--;
+    }
+    if (state === undefined) {
+      return [];
+    }
+    return this.setState(state);
   }
 
   // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
