@@ -17,6 +17,16 @@ states. Supported types so far:
 - Hygrometers
 - Ice Makers
 
+## Control Channels
+
+The primary control channel is AWS IoT Core - this is a Pub/Sub system that
+works with any WiFi-enabled device (and soon any device behind a disributed
+gateway). If you have a bluetooth adapter, you can enable the BLE control
+channel to control those directly; however, if you try to enable this and do not
+have a bluetooth adapter - it will cause the library to crash.
+
+This works on OSX and Linux system. Have not tested Windows.
+
 ## Devices
 
 Devices are composed of various states, some allow you to change them while
@@ -68,42 +78,49 @@ for operation) `waterShortage` - Flag indicating the device is out of water.
 
 ### Humidifiers
 
-`mistLevel` - The amount of mist the humidifier is emitting `targetHumidity` -
-If paired with Hygrometer or one is integrated, sets the relative humidity at
-which the device will pause activity `uvc` - Some humidifiers offer a UVC
-sterilization feature, set this to true to enable sanitization `manualMode` -
-Simple mode where you can control the mistLevel directly `customMode` - Set
-three mist levels and their durations, once the first is completed it starts the
-second, the third can be indefinite or a finite duration `autoMode` - Humidifier
-will operate automatically until the target humidity is reached
+- `mistLevel` - The amount of mist the humidifier is emitting
+- `targetHumidity` - If paired with Hygrometer or one is integrated, sets the
+  relative humidity at which the device will pause activity
+- `uvc` - Some humidifiers offer a UVC sterilization feature, set this to true
+  to enable sanitization
+- `manualMode` - Simple mode where you can control the mistLevel directly
+  `customMode`
+- - Set three mist levels and their durations, once the first is completed it
+    starts the second, the third can be indefinite or a finite duration
+- `autoMode` - Humidifier will operate automatically until the target humidity
+  is reached
 
 ### Ice Makers
 
-`nuggetSize` - Set the size of the ice cubes `makingIce` - Analogous to
-`isActive`, starts or stops the ice production `iceMakerStatus` - The status of
-the device: washing, idle, making ice, etc. `scheduledStart` - Allows you to set
-a time in the future to start ice production `basketFull` - Flag indicating the
-basket is full and needs to be emptied.
+- `nuggetSize` - Set the size of the ice cubes
+- `makingIce` - Analogous to `isActive`, starts or stops the ice production
+- `iceMakerStatus` - The status of the device: washing, idle, making ice, etc.
+- `scheduledStart` - Allows you to set a time in the future to start ice
+  production
+- `basketFull` - Flag indicating the basket is full and needs to be emptied.
 
 ### Purifier
 
-`fanSpeed` - Reported as a percentage, indicates how much the purifier is
-working. Some devices only allow 3 speeds, some 4. `manualMode` - Control the
-fan speed directly `customMode` - Set three speed settigns and their durations,
-once the first is complete it starts the second, the third can be indefinite or
-a finite duration `autoMode` - If paird with an air quality monitor or has one
-integrated, will purify the air until the air quality measurement is below the
-threshold
+- `fanSpeed` - Reported as a percentage, indicates how much the purifier is
+  working. Some devices only allow 3 speeds, some 4.
+- `manualMode` - Control the fan speed directly
+- `customMode` - Set three speed settigns and their durations, once the first is
+  complete it starts the second, the third can be indefinite or a finite
+  duration
+- `autoMode` - If paird with an air quality monitor or has one integrated, will
+  purify the air until the air quality measurement is below the threshold
 
 ### Air Quality Monitor
 
-`pm25` - the PPM measurements of particles in the air `humdidity` - the measured
-ambient relative humidity `temprature - the measured ambient temperature
+- `pm25` - the PPM measurements of particles in the air
+- `humdidity` - the measured ambient relative humidity
+- `temprature` - the measured ambient temperature
 
 ### Hygrometer
 
-`humidity` - the measured ambient relative humidity `temperature` - the measure
-ambient temperature `batteryLevel` - Remaining battery level of the device
+- `humidity` - the measured ambient relative humidity
+- `temperature` - the measure ambient temperature
+- `batteryLevel` - Remaining battery level of the device
 
 ### RGB Lights
 
@@ -114,13 +131,15 @@ temperature of the light
 
 ### RGBIC LIghts
 
-`micMode` - set the device to be audio reactive, you can change the colors,
-intensity, how the colors change (chase, pulse, etc) `wholeColorMode` - controls
-the color of the entire device `segmentedColorMode` - controls color and
-brightness of the individual light segments `lightEffect` - activates one of the
-numerous light effects defined by govee (the application automatically retrieves
-this list) `advancedColorMod` - This allows for you to create DIY light effects
-(this is not implemented yet)
+- `micMode` - set the device to be audio reactive, you can change the colors,
+  intensity, how the colors change (chase, pulse, etc)
+- `wholeColorMode` - controls the color of the entire device
+- `segmentedColorMode` - controls color and brightness of the individual light
+  segments
+- `lightEffect` - activates one of the numerous light effects defined by govee
+  (the application automatically retrieves this list)
+- `advancedColorMod` - This allows for you to create DIY light effects (this is
+  not implemented yet)
 
 ## Installing the library
 
