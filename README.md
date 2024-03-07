@@ -133,10 +133,11 @@ onMotionClear() {
 
 ### RGB Lights
 
-`micMode` - Makes the device sound reactive, various settings can be applied to
-this mode such as sensitivity, colors and intensity `colorMode` - The color of
-the light `brightness` - The brightness of the light `colorTemp` - The color
-temperature of the light
+- `micMode` - Makes the device sound reactive, various settings can be applied
+  to this mode such as sensitivity, colors and intensity
+- `colorMode` - The color of the light
+- `brightness` - The brightness of the light
+- `colorTemp` - The color temperature of the light
 
 ### RGBIC LIghts
 
