@@ -144,13 +144,10 @@ export class DeviceState<StateName extends string, StateValue>
 
   previousState(last: number = 1): string[] {
     let state: StateValue | undefined = undefined;
-    console.dir({ state, last, history: this.history });
     while (last > 0) {
       state = this.history.destack();
       last--;
-      console.dir({ state, last, history: this.history });
     }
-    console.dir({ state, last, history: this.history });
     if (state === undefined) {
       return [];
     }
