@@ -1,7 +1,6 @@
-import { Optional } from '~ultimate-govee-common';
+import { Optional, OpType } from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
-import { OpType } from '../../../common/op-code';
 
 export const SegmentCountStateName: 'segmentCount' = 'segmentCount' as const;
 export type SegmentCountStateName = typeof SegmentCountStateName;

@@ -1,3 +1,5 @@
+import { unitOfTime } from 'moment';
+
 export type Ignorable<TValue> = TValue | null;
 
 export type Optional<TValue> = TValue | undefined;
@@ -28,4 +30,15 @@ export type DeviceCommandAddresses = {
 
 export type Debuggable = {
   debug?: boolean;
+};
+
+export type LengthUnits = 'cm';
+export type Distance = {
+  value?: number;
+  unit?: LengthUnits;
+};
+
+export type Duration = {
+  value?: number;
+  unit?: unitOfTime.DurationConstructor;
 };

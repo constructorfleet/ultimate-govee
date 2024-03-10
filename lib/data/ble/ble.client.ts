@@ -61,7 +61,7 @@ export class BleClient {
     this.enabled
       .pipe(
         switchMap((enabled) =>
-          enabled ? from(this.onEnabled()) : from(this.onDisabled()),
+          enabled === true ? from(this.onEnabled()) : from(this.onDisabled()),
         ),
       )
       .subscribe();

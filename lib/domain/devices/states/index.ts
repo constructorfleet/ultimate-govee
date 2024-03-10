@@ -15,6 +15,7 @@ import { SegmentCountStateName } from './segment-count.state';
 import { TemperatureStateName } from './temperature.state';
 import { TimerStateName } from './timer.state';
 import { WaterShortageStateName } from './water-shortage.state';
+import { UnknownStateName } from './unknown.state';
 
 export * from './active.state';
 export * from './battery-level.state';
@@ -37,6 +38,8 @@ export * from './temperature.state';
 export * from './timer.state';
 export * from './water-shortage.state';
 export * from './numeric.state';
+export * from './unknown.state';
+export * from './presence.state';
 
 export const DeviceStates: string[] = [
   ActiveStateName,
@@ -56,4 +59,5 @@ export const DeviceStates: string[] = [
   TemperatureStateName,
   TimerStateName,
   WaterShortageStateName,
+  UnknownStateName,
 ];

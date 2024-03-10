@@ -4,6 +4,13 @@ export const sleep = async (ms: number) => {
   return await new Promise<void>((resolve) => setTimeout(() => resolve(), ms));
 };
 
+export const wipeTimeout = (timeout: NodeJS.Timeout | undefined) => {
+  if (timeout !== undefined) {
+    clearTimeout(timeout);
+    timeout = undefined;
+  }
+};
+
 export const deepPartialCompare = <T>(a: Partial<T>, b: T): boolean => {
   for (const key in a) {
     // eslint-disable-next-line no-prototype-builtins

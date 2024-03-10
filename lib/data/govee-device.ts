@@ -80,6 +80,7 @@ export type GoveeCommandData = {
 export type GoveeCommand =
   | 'pt'
   | 'ptReal'
+  | 'multiSync'
   | 'mode'
   | 'turn'
   | 'brightness'
