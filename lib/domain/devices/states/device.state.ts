@@ -54,7 +54,9 @@ export const filterCommands = (
         1 + (identifiers?.length ?? 0),
       );
       if (identifiers !== undefined) {
-        return cmdIdentifiers.every((i, index) => i === identifiers[index]);
+        return cmdIdentifiers.every(
+          (i, index) => identifiers[index] < 0 || i === identifiers[index],
+        );
       }
 
       return cmdType === type;
@@ -142,13 +144,10 @@ export class DeviceState<StateName extends string, StateValue>
 
   previousState(last: number = 1): string[] {
     let state: StateValue | undefined = undefined;
-    console.dir({ state, last, history: this.history });
     while (last > 0) {
       state = this.history.destack();
       last--;
-      console.dir({ state, last, history: this.history });
     }
-    console.dir({ state, last, history: this.history });
     if (state === undefined) {
       return [];
     }
@@ -180,7 +179,7 @@ export class DeviceState<StateName extends string, StateValue>
 
   setState(nextState: StateValue): string[] {
     const commandAndStatus = this.stateToCommand(nextState);
-    if (!commandAndStatus) {
+    if (commandAndStatus === undefined) {
       return [];
     }
 

@@ -26,12 +26,18 @@ import {
 } from './appliances/humidifier';
 import { SceneModeStateName } from './lights/rgb';
 import {
+  MMWavePresenceStateName,
+  BiologicalPresenceStateName,
+  DetectionSettingsStateName,
+  EnablePresenceStateName,
+} from './home-improvement/presence/presence.states';
+import { PresenceSensor } from './home-improvement/presence';
+import {
   AdvancedColorModeStateName,
   MicModeStateName,
   SegmentColorModeStateName,
   WholeColorModeStateName,
 } from './lights/rgbic';
-
 export { AppliancesFactory, AppliancesModule } from './appliances';
 export {
   HomeImprovementFactory,
@@ -46,6 +52,7 @@ export {
   HygrometerSensor,
   RGBLight,
   RGBICLight,
+  PresenceSensor,
 };
 export {
   PM25StateName,
@@ -65,6 +72,10 @@ export {
   SegmentColorModeStateName,
   AdvancedColorModeStateName,
   MicModeStateName,
+  MMWavePresenceStateName,
+  BiologicalPresenceStateName,
+  EnablePresenceStateName,
+  DetectionSettingsStateName,
 };
 export const DeviceStates: string[] = [
   ...ApplianceStates,

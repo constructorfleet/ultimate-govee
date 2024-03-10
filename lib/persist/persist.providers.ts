@@ -23,14 +23,12 @@ export const {
     },
     (definition, extras) => {
       const providers = createPersistedFileProviders();
-      const module = {
+      return {
         ...definition,
         global: extras.isGlobal,
         providers: [...(definition.providers ?? []), ...providers],
         exports: [...(definition.exports ?? []), ...providers],
       };
-      console.dir(module, { depth: 5 });
-      return module;
     },
   )
   .setClassMethodName('forRoot')

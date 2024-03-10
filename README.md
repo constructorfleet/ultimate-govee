@@ -133,6 +133,16 @@ onMotionClear() {
 - `temperature` - the measure ambient temperature
 - `batteryLevel` - Remaining battery level of the device
 
+### Presence Sensor
+
+- `presence-mmWave` - mmWave sensor detected, distance in centimeters and
+  duration
+- `presence-biological` - IR sensor detected, distance in centimters and
+  duration
+- `enablePresence` - Flags for enabling the sensors
+- `detectionSettings` - Configure the detection distance, report detection
+  duration and duration before absence
+
 ### RGB Lights
 
 - `micMode` - Makes the device sound reactive, various settings can be applied
