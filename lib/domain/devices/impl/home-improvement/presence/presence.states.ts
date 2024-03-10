@@ -183,8 +183,9 @@ export class DetectionSettingsState extends DeviceOpState<
       command: {
         data: {
           command: [
+            asOpCode(OpType.COMMAND, 0x05, 0x00, 0x01),
             asOpCode(
-              0x3a,
+              OpType.COMMAND,
               ...(this.identifier as number[]),
               ...distanceValue,
               ...absenceValue,
