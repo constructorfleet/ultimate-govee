@@ -1,4 +1,4 @@
-import MomentLib, { unitOfTime } from 'moment';
+import { unitOfTime } from 'moment';
 
 export type Ignorable<TValue> = TValue | null;
 
