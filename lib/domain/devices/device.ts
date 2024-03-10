@@ -258,9 +258,9 @@ export class Device<States extends DeviceStatesType = DeviceStatesType>
         this.next(this);
       }),
     );
-    this.subscribe(async (device) => {
+    this.subscribe((device) => {
       if (device !== undefined && 'logState' in device) {
-        await device?.logState();
+        device?.logState();
       }
     });
   }
@@ -268,7 +268,7 @@ export class Device<States extends DeviceStatesType = DeviceStatesType>
   @PersistResult({
     filename: '{0}.state.json',
   })
-  async loggableState(deviceId: string) {
+  loggableState(deviceId: string) {
     const state = {
       deviceId,
       name: this.name,
@@ -276,15 +276,15 @@ export class Device<States extends DeviceStatesType = DeviceStatesType>
       type: this.constructor.name,
       iotTopic: this.iotTopic,
       bleAddress: this.bleAddress,
-      states: JSON.parse(stringify((await this.currentStates()) ?? {})),
+      states: JSON.parse(stringify(this.currentStates() ?? {})),
     };
     return state;
   }
 
-  async logState() {
-    if (this.isDebug) {
-      this.logger.debug(await this.loggableState(this.id));
-    }
+  logState() {
+    // if (this.isDebug) {
+    this.loggableState(this.id);
+    // }
   }
 
   onModuleDestroy() {

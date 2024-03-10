@@ -1,3 +1,5 @@
+import MomentLib, { unitOfTime } from 'moment';
+
 export type Ignorable<TValue> = TValue | null;
 
 export type Optional<TValue> = TValue | undefined;
@@ -28,4 +30,14 @@ export type DeviceCommandAddresses = {
 
 export type Debuggable = {
   debug?: boolean;
+};
+
+export type ValueUnit = {
+  value?: number;
+  unit?: string;
+};
+
+export type Duration = {
+  value?: number;
+  unit?: unitOfTime.DurationConstructor;
 };

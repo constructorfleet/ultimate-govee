@@ -70,6 +70,23 @@ import {
 import { PowerState, PowerStateName } from './states/power.state';
 import { IceMakerStatus, NuggetSize } from './impl/appliances/ice-maker/types';
 import { LightEffect } from './states/light-effect.state';
+import { UnknownState } from './states/unknown.state';
+import {
+  PresenceState,
+  PresenceStateName,
+  PresenceStateTypeName,
+} from './states/presence.state';
+import {
+  MMWavePresenceState,
+  MMWavePresenceStateName,
+  BiologicalPresenceState,
+  BiologicalPresenceStateName,
+  EnablePresenceState,
+  EnablePresenceStateName,
+  DetectionSettingsStateName,
+  DetectionSettingsState,
+  PresenceSensor,
+} from './impl/home-improvement/presence';
 import {
   SegmentCountState,
   SegmentCountStateName,
@@ -151,6 +168,19 @@ export {
   MicModeStateName,
   IceMakerStatus,
   NuggetSize,
+  PresenceSensor,
+  UnknownState,
+  PresenceState,
+  PresenceStateTypeName,
+  PresenceStateName,
+  MMWavePresenceState,
+  MMWavePresenceStateName,
+  BiologicalPresenceStateName,
+  BiologicalPresenceState,
+  EnablePresenceState,
+  EnablePresenceStateName,
+  DetectionSettingsStateName,
+  DetectionSettingsState,
 };
 
 export const CQRS = cqrs;

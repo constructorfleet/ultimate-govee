@@ -54,7 +54,9 @@ export const filterCommands = (
         1 + (identifiers?.length ?? 0),
       );
       if (identifiers !== undefined) {
-        return cmdIdentifiers.every((i, index) => i === identifiers[index]);
+        return cmdIdentifiers.every(
+          (i, index) => identifiers[index] < 0 || i === identifiers[index],
+        );
       }
 
       return cmdType === type;
