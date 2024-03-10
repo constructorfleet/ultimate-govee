@@ -179,7 +179,7 @@ export class DeviceState<StateName extends string, StateValue>
 
   setState(nextState: StateValue): string[] {
     const commandAndStatus = this.stateToCommand(nextState);
-    if (!commandAndStatus) {
+    if (commandAndStatus === undefined) {
       return [];
     }
 

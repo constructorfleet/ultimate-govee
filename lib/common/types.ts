@@ -32,9 +32,10 @@ export type Debuggable = {
   debug?: boolean;
 };
 
-export type ValueUnit = {
+export type LengthUnits = 'cm';
+export type Distance = {
   value?: number;
-  unit?: string;
+  unit?: LengthUnits;
 };
 
 export type Duration = {

@@ -11,11 +11,12 @@ import {
   Duration,
   OpType,
   Optional,
-  ValueUnit,
+  Distance,
   asOpCode,
   total,
 } from '~ultimate-govee-common';
 import MomentLib from 'moment';
+import { GoveeCommand } from '~ultimate-govee-data';
 
 export const MMWavePresenceStateName: PresenceStateTypeName<'mmWave'> =
   'presence-mmWave' as const;
@@ -24,9 +25,9 @@ export const BiologicalPresenceStateName: PresenceStateTypeName<'biological'> =
   'presence-biological' as const;
 export type BiologicalPresenceStateName = typeof BiologicalPresenceStateName;
 
-export class MMWavePresenceState extends PresenceState<'basic'> {
+export class MMWavePresenceState extends PresenceState<'mmWave'> {
   constructor(device: DeviceModel) {
-    super(device, 'basic', OpType.REPORT, 1);
+    super(device, 'mmWave', OpType.REPORT, 1);
   }
 }
 
@@ -42,25 +43,25 @@ export type EnablePresenceStateName = typeof EnablePresenceStateName;
 
 export type EnablePresenceFlags = {
   mmWaveEnabled?: boolean;
-  biologialEnabled?: boolean;
+  biologicalEnabled?: boolean;
 };
 
 export class EnablePresenceState extends DeviceOpState<
   EnablePresenceStateName,
   EnablePresenceFlags
 > {
-  constructor(device: DeviceModel) {
+  constructor(device: DeviceModel, defaultState: EnablePresenceFlags = {}) {
     super(
       { opType: OpType.REPORT, identifier: [31] },
       device,
       EnablePresenceStateName,
-      {},
+      defaultState,
     );
   }
 
   parseOpCommand(opCommand: number[]): void {
     this.stateValue.next({
-      biologialEnabled: opCommand[0] === 0x01,
+      biologicalEnabled: opCommand[0] === 0x01,
       mmWaveEnabled: opCommand[1] === 0x01,
     });
   }
@@ -68,20 +69,28 @@ export class EnablePresenceState extends DeviceOpState<
   protected stateToCommand(
     state: EnablePresenceFlags,
   ): Optional<StateCommandAndStatus> {
+    if (
+      (state.biologicalEnabled ?? this.value.biologicalEnabled) === undefined
+    ) {
+      this.logger.warn('Missing biologicalEnabled, skipping command');
+      return undefined;
+    }
+    if ((state.mmWaveEnabled ?? this.value.mmWaveEnabled) === undefined) {
+      this.logger.warn('Missing mmWaveEnabled, skipping command');
+      return undefined;
+    }
     return {
       command: {
-        command: 'multiSync',
+        command: 'multiSync' as GoveeCommand,
         data: {
           command: [
             asOpCode(
               OpType.COMMAND,
               ...(this.identifier as number[])!,
-              (state.biologialEnabled ??
-                this.value.biologialEnabled ??
-                0x01) === 0x01
+              (state.biologicalEnabled ?? this.value.biologicalEnabled) === true
                 ? 0x01
                 : 0x00,
-              (state.mmWaveEnabled ?? this.value.mmWaveEnabled ?? 0x01) === 0x01
+              (state.mmWaveEnabled ?? this.value.mmWaveEnabled) === true
                 ? 0x01
                 : 0x00,
             ),
@@ -92,12 +101,10 @@ export class EnablePresenceState extends DeviceOpState<
         op: {
           command: [
             [
-              (state.biologialEnabled ??
-                this.value.biologialEnabled ??
-                0x01) === 0x01
+              (state.biologicalEnabled ?? this.value.biologicalEnabled) === true
                 ? 0x01
                 : 0x00,
-              (state.mmWaveEnabled ?? this.value.mmWaveEnabled ?? 0x01) === 0x01
+              (state.mmWaveEnabled ?? this.value.mmWaveEnabled) === true
                 ? 0x01
                 : 0x00,
             ],
@@ -115,7 +122,7 @@ export type DetectionSettingsStateName = typeof DetectionSettingsStateName;
 export type DetectionSettings = {
   reportDetection?: Duration;
   absenceDuration?: Duration;
-  detectionDistance?: ValueUnit;
+  detectionDistance?: Distance;
 };
 
 export class DetectionSettingsState extends DeviceOpState<

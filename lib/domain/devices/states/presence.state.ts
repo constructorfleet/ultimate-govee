@@ -1,4 +1,10 @@
-import { Optional, OpType, total } from '~ultimate-govee-common';
+import {
+  Duration,
+  Distance,
+  Optional,
+  OpType,
+  total,
+} from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
 
@@ -13,14 +19,8 @@ export const PresenceStateName = <PresenceType extends string>(
 export type PresenceData = {
   type: string;
   detected: boolean;
-  duration?: {
-    units: string;
-    value: number;
-  };
-  distance?: {
-    units: string;
-    value: number;
-  };
+  duration?: Duration;
+  distance?: Distance;
 };
 
 export class PresenceState<
@@ -56,14 +56,14 @@ export class PresenceState<
       type: this.presenceType,
       detected: detected === 0x01,
       distance: {
-        units: 'cm',
+        unit: 'cm',
         value: distance,
       },
       duration:
         duration === undefined
           ? undefined
           : {
-              units: 's',
+              unit: 's',
               value: duration,
             },
     });
