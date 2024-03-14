@@ -25,11 +25,11 @@ export class GoveeProductService {
   constructor(
     @Inject(GoveeProductConfig.KEY)
     private readonly config: ConfigType<typeof GoveeProductConfig>,
-    @InjectPersisted({ filename: 'products.json' })
+    @InjectPersisted({ filename: 'govee.products.json' })
     private readonly persistedProducts: Record<string, Product>,
   ) {}
 
-  @PersistResult({ filename: 'products.json' })
+  @PersistResult({ filename: 'govee.products.json' })
   async getProductCategories(): Promise<Record<string, Product>> {
     try {
       this.logger.log('Retrieving product list from Govee REST API');
