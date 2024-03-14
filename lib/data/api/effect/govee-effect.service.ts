@@ -43,7 +43,7 @@ export class GoveeEffectService {
   }
 
   @PersistResult({
-    filename: '{3}.effects.json',
+    filename: 'govee.{3}.effects.json',
     // transform: (data) => instanceToPlain(data),
   })
   async getDeviceEffects(
@@ -93,7 +93,7 @@ export class GoveeEffectService {
   }
 
   @PersistResult({
-    filename: '{3}.scenes.json',
+    filename: 'govee.{3}.scenes.json',
     // transform: (data) => instanceToPlain(data),
   })
   async getDeviceScenes(
