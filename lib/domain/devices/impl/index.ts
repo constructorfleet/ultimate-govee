@@ -30,6 +30,7 @@ import {
   BiologicalPresenceStateName,
   DetectionSettingsStateName,
   EnablePresenceStateName,
+  EnablePresenceFlags,
 } from './home-improvement/presence/presence.states';
 import { PresenceSensor } from './home-improvement/presence';
 import {
@@ -53,6 +54,7 @@ export {
   RGBLight,
   RGBICLight,
   PresenceSensor,
+  EnablePresenceFlags,
 };
 export {
   PM25StateName,
