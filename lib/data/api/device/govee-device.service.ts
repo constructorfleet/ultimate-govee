@@ -21,7 +21,7 @@ export class GoveeDeviceService {
     @Inject(GoveeDeviceConfig.KEY)
     private readonly config: ConfigType<typeof GoveeDeviceConfig>,
     @InjectPersisted({
-      filename: 'devices.json',
+      filename: 'govee.devices.json',
     })
     private readonly deviceListResponse: Optional<DeviceListResponse>,
     private readonly diyService: GoveeDiyService,
@@ -41,7 +41,7 @@ export class GoveeDeviceService {
   }
 
   @PersistResult({
-    filename: 'devices.json',
+    filename: 'govee.devices.json',
   })
   private async getApiResult(
     oauthData: OAuthData,

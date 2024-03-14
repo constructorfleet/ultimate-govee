@@ -266,7 +266,7 @@ export class Device<States extends DeviceStatesType = DeviceStatesType>
   }
 
   @PersistResult({
-    filename: '{0}.state.json',
+    filename: 'govee.{0}.state.json',
   })
   loggableState(deviceId: string) {
     const state = {
@@ -282,9 +282,9 @@ export class Device<States extends DeviceStatesType = DeviceStatesType>
   }
 
   logState() {
-    // if (this.isDebug) {
-    this.loggableState(this.id);
-    // }
+    if (this.isDebug) {
+      this.loggableState(this.id);
+    }
   }
 
   onModuleDestroy() {

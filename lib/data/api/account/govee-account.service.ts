@@ -24,7 +24,7 @@ export class GoveeAccountService {
     @Inject(GoveeAccountConfig.KEY)
     private readonly config: ConfigType<typeof GoveeAccountConfig>,
     @InjectPersisted({
-      filename: 'accountClient.json',
+      filename: 'govee.accountClient.json',
     })
     private readonly persisted: GoveeAccount | undefined,
   ) {}
@@ -67,7 +67,7 @@ export class GoveeAccountService {
   }
 
   @PersistResult({
-    filename: 'accountClient.json',
+    filename: 'govee.accountClient.json',
   })
   async authenticate(credentials: GoveeCredentials): Promise<GoveeAccount> {
     if (

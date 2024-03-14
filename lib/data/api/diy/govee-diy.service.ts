@@ -17,7 +17,7 @@ export class GoveeDiyService {
   ) {}
 
   @PersistResult({
-    filename: 'diys.json',
+    filename: 'govee.diys.json',
     transform: (data) => instanceToPlain(data),
   })
   async getDeviceDiys(
