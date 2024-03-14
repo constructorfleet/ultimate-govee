@@ -15,6 +15,7 @@ export {
   EnablePresenceState,
   DetectionSettingsStateName,
   DetectionSettingsState,
+  EnablePresenceFlags,
 } from './presence.states';
 export const DeviceStates: string[] = [
   MMWavePresenceStateName,

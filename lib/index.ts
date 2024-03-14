@@ -96,6 +96,8 @@ export {
   EnablePresenceState,
   DetectionSettingsState,
   DetectionSettingsStateName,
+  EnablePresenceFlags,
+  PresenceData,
 } from './domain';
 export { Device } from './domain/devices/device';
 export {

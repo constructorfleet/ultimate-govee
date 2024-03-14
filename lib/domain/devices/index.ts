@@ -86,6 +86,7 @@ import {
   DetectionSettingsStateName,
   DetectionSettingsState,
   PresenceSensor,
+  EnablePresenceFlags,
 } from './impl/home-improvement/presence';
 import {
   SegmentCountState,
@@ -181,6 +182,7 @@ export {
   EnablePresenceStateName,
   DetectionSettingsStateName,
   DetectionSettingsState,
+  EnablePresenceFlags,
 };
 
 export const CQRS = cqrs;
