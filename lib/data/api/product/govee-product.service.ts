@@ -1,7 +1,11 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { plainToInstance } from 'class-transformer';
-import { InjectPersisted, PersistResult } from '~ultimate-govee-persist';
+import {
+  InjectPersisted,
+  PersistModule,
+  PersistResult,
+} from '~ultimate-govee-persist';
 import { GoveeProductConfig } from './govee-product.config';
 import { request } from '../../utils';
 import {
@@ -13,6 +17,7 @@ import {
 } from './models/sku-list.response';
 import previousCategories from './assets/categories.json';
 import { Product } from './models/product';
+import { join } from 'path';
 
 @Injectable()
 export class GoveeProductService {
@@ -52,7 +57,10 @@ export class GoveeProductService {
   private async getApiReponse(): Promise<SkuListResponse> {
     const response = await request(this.config.skuListUrl, {
       accept: 'application/json',
-    }).get(SkuListResponse);
+    }).get(
+      SkuListResponse,
+      join(PersistModule.persistRootDirectory, 'govee.products.raw.json'),
+    );
     return response.data as SkuListResponse;
   }
 

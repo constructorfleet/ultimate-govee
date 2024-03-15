@@ -38,7 +38,7 @@ export class DecoderService implements OnApplicationBootstrap {
   async decodeDevice(
     peripheral: BlePeripheral,
   ): Promise<Optional<DecodedDevice>> {
-    const modelMatch = /(H[A-Z0-9]{4})_/.exec(
+    const modelMatch = /(?:(?:GVH)|(?:GV)|(?:H))([A-Z0-9]{4})_?/.exec(
       peripheral.advertisement.localName,
     );
     if (!modelMatch) {
@@ -50,8 +50,8 @@ export class DecoderService implements OnApplicationBootstrap {
       );
       return undefined;
     }
-    this.logger.log(`Matched model ${modelMatch[1]}`);
-    const spec = await this.getDeviceSpec(modelMatch[1] || '');
+    this.logger.log(`Matched model H${modelMatch[1]}`);
+    const spec = await this.getDeviceSpec(`H${modelMatch[1] || ''}`);
     if (spec === undefined) {
       return undefined;
     }

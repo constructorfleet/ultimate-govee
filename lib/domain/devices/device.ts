@@ -195,6 +195,17 @@ export class Device<States extends DeviceStatesType = DeviceStatesType>
     return result;
   }
 
+  previousStates(): DeviceStateValues<States> {
+    return Object.fromEntries(
+      Object.entries(this.states ?? {}).map(([k, v]) => [
+        k,
+        k === ModeStateName
+          ? (v as ModeState)?.activeMode?.history.peekAll()
+          : v?.history.peekAll(),
+      ]),
+    ) as DeviceStateValues<States>;
+  }
+
   state<TState extends DeviceState<string, any> = DeviceState<string, any>>(
     stateName: string,
   ): Optional<TState> {
@@ -258,10 +269,8 @@ export class Device<States extends DeviceStatesType = DeviceStatesType>
         this.next(this);
       }),
     );
-    this.subscribe((device) => {
-      if (device !== undefined && 'logState' in device) {
-        device?.logState();
-      }
+    this.subscribe(() => {
+      this.logState();
     });
   }
 
@@ -277,6 +286,7 @@ export class Device<States extends DeviceStatesType = DeviceStatesType>
       iotTopic: this.iotTopic,
       bleAddress: this.bleAddress,
       states: JSON.parse(stringify(this.currentStates() ?? {})),
+      history: JSON.parse(stringify(this.previousStates() ?? {})),
     };
     return state;
   }

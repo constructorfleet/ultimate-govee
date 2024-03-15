@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { EventBus, ICommand, Saga, ofType } from '@nestjs/cqrs';
 import { Observable, filter, map } from 'rxjs';
+import { arrayEquality } from '@santi100/equal-lib';
 import {
   BleChannelChangedEvent,
   BleChannelConfigReceivedEvent,
@@ -61,7 +62,15 @@ export class BleChannelSagas {
             uuidv4(),
             event.deviceId,
             event.addresses.bleAddress!,
-            event.opIdentifiers!.map((op) => asOpCode(0xaa, ...op)),
+            event
+              .opIdentifiers!.filter(
+                (identifiers, index, arr) =>
+                  index === 0 ||
+                  arr
+                    .slice(0, index - 1)
+                    .find((i) => arrayEquality(i, identifiers)) === undefined,
+              )
+              .map((op) => asOpCode(0xaa, ...op)),
           ),
       ),
     );

@@ -251,31 +251,35 @@ export class SegmentColorModeState extends DeviceOpState<
         return;
       }
       this.segments = this.segments.slice(0, event);
-      new Array(event - this.segments.length)
-        .fill({} as Segment)
-        .forEach((segment) => this.segments.push(segment));
+      if (event - this.segments.length < 0) {
+        while (event - this.segments.length < 0) {
+          this.segments.pop();
+        }
+      } else {
+        new Array(event - this.segments.length)
+          .fill({} as Segment)
+          .forEach((segment) => this.segments.push(segment));
+      }
     });
   }
 
   parseOpCommand(opCommand: number[]): void {
     const messageNumber = opCommand[0] - 1;
     const segmentCodes = chunk(opCommand.slice(1), 4).slice(0, 3);
-    segmentCodes
-      .map((segmentCode: number[], index): Segment => {
-        const [brightness, red, green, blue] = segmentCode;
-        return {
-          id: messageNumber * 3 + index,
-          brightness,
-          color: {
-            red,
-            green,
-            blue,
-          },
-        };
-      })
-      .forEach((segment, index) => {
-        this.segments[messageNumber * 3 + index] = segment;
-      });
+    segmentCodes.forEach((segmentCode: number[], index) => {
+      const id = messageNumber * 3 + index;
+      const [brightness, red, green, blue] = segmentCode;
+      this.segments[id] = {
+        id: messageNumber * 3 + index,
+        brightness,
+        color: {
+          red,
+          green,
+          blue,
+        },
+      };
+    });
+
     this.stateValue.next(this.segments);
   }
 
@@ -399,8 +403,6 @@ export class ColorModeState extends DeviceOpState<
   parseState(data: ColorData): void {
     if (data?.state?.color !== undefined) {
       this.stateValue.next(data.state.color);
-    } else {
-      this.stateValue.next({});
     }
   }
 
