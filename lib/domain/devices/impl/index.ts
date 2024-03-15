@@ -33,6 +33,7 @@ import {
   EnablePresenceFlags,
 } from './home-improvement/presence/presence.states';
 import { PresenceSensor } from './home-improvement/presence';
+import { MotionSensor } from './home-improvement/motion';
 import {
   AdvancedColorModeStateName,
   MicModeStateName,
@@ -53,6 +54,7 @@ export {
   HygrometerSensor,
   RGBLight,
   RGBICLight,
+  MotionSensor,
   PresenceSensor,
   EnablePresenceFlags,
 };

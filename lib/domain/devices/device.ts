@@ -258,10 +258,8 @@ export class Device<States extends DeviceStatesType = DeviceStatesType>
         this.next(this);
       }),
     );
-    this.subscribe((device) => {
-      if (device !== undefined && 'logState' in device) {
-        device?.logState();
-      }
+    this.subscribe(() => {
+      this.logState();
     });
   }
 

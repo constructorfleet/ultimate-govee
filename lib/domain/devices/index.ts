@@ -88,6 +88,7 @@ import {
   PresenceSensor,
   EnablePresenceFlags,
 } from './impl/home-improvement/presence';
+import { MotionSensor } from './impl/home-improvement/motion';
 import {
   SegmentCountState,
   SegmentCountStateName,
@@ -183,6 +184,7 @@ export {
   DetectionSettingsStateName,
   DetectionSettingsState,
   EnablePresenceFlags,
+  MotionSensor,
 };
 
 export const CQRS = cqrs;

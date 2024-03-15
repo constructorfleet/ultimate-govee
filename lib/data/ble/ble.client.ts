@@ -12,7 +12,7 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import { DeltaMap, DeviceId, Optional, sleep } from '~ultimate-govee-common';
+import { DeltaMap, Optional, sleep } from '~ultimate-govee-common';
 import { platform } from 'os';
 import { BleCommand, BlePeripheral, NobleBle } from './ble.types';
 import { DecoderService } from './decoder/decoder.service';
@@ -35,8 +35,9 @@ export class BleClient {
   private connectedPeripheral: Optional<BlePeripheral> = undefined;
   readonly enabled: BehaviorSubject<boolean> = new BehaviorSubject(false);
   private readonly peripheralDiscovered: Subject<BlePeripheral> = new Subject();
-  private readonly peripherals: DeltaMap<DeviceId, BlePeripheral> =
+  private readonly peripheralIds: DeltaMap<string, BlePeripheral> =
     new DeltaMap();
+  private readonly peripheralAddresses: Map<string, string> = new Map();
   readonly peripheralDecoded: Subject<DecodedDevice> = new Subject();
   readonly commandQueue: Subject<BleCommand> = new Subject();
   private peripheralFilter: (peripheral: BlePeripheral) => boolean = () => true;
@@ -61,7 +62,7 @@ export class BleClient {
     this.enabled
       .pipe(
         switchMap((enabled) =>
-          enabled === true ? from(this.onEnabled()) : from(this.onDisabled()),
+          enabled ? from(this.onEnabled()) : from(this.onDisabled()),
         ),
       )
       .subscribe();
@@ -117,7 +118,7 @@ export class BleClient {
     }
     if ((decodedDevice.address ?? '').length === 0) {
       decodedDevice.address =
-        this.peripherals.get(decodedDevice.id)?.address ?? '';
+        this.peripheralIds.get(decodedDevice.id)?.address ?? '';
     }
     return decodedDevice;
   }
@@ -127,12 +128,11 @@ export class BleClient {
   ): Promise<BlePeripheral> {
     if (
       (peripheral.advertisement?.localName ?? '').length === 0 ||
-      !/(H[A-Z0-9]{4})_/.exec(peripheral.advertisement.localName)
+      !/((GV)|(GVH)|(H)[A-Z0-9]{4})_?[A-Z0-9]{4}/.exec(
+        peripheral.advertisement.localName,
+      )
     ) {
       return peripheral;
-    }
-    if (peripheral.advertisement.localName.includes('H5121')) {
-      this.logger.debug(peripheral.advertisement);
     }
 
     if (this.seenNames.includes(peripheral.advertisement?.localName)) {
@@ -140,9 +140,10 @@ export class BleClient {
     }
     if (
       (peripheral.address ?? '').length > 0 &&
-      !this.peripherals.has(peripheral.id)
+      !this.peripheralIds.has(peripheral.id)
     ) {
-      this.peripherals.set(peripheral.id, peripheral);
+      this.peripheralIds.set(peripheral.id, peripheral);
+      this.peripheralAddresses.set(peripheral.address, peripheral.id);
       this.seenNames.push(peripheral.advertisement.localName);
       return peripheral;
     }
@@ -169,7 +170,8 @@ export class BleClient {
               this.logger.debug(
                 `Got address ${peripheral.address} for ${peripheral.advertisement.localName}`,
               );
-              this.peripherals.set(peripheral.id, peripheral);
+              this.peripheralIds.set(peripheral.id, peripheral);
+              this.peripheralAddresses.set(peripheral.address, peripheral.id);
               this.seenNames.push(peripheral.advertisement.localName);
             }
           }
@@ -205,7 +207,9 @@ export class BleClient {
 
   private async onEnabled() {
     if (this.noble === undefined) {
-      this.noble = await import('@abandonware/noble');
+      this.noble = await import('@abandonware/noble').then(
+        (module) => module.default,
+      );
     }
     await sleep(100);
     if (this.noble?.on === undefined) {
@@ -226,9 +230,9 @@ export class BleClient {
       this.scanning = false;
     });
     this.noble?.on('warning', (message: string) => this.logger.warn(message));
-    this.noble?.on('discover', (peripheral: BlePeripheral) =>
-      this.peripheralDiscovered.next(peripheral),
-    );
+    this.noble?.on('discover', (peripheral: BlePeripheral) => {
+      this.peripheralDiscovered.next(peripheral);
+    });
     await this.startScanning();
     return true;
   }
@@ -256,7 +260,8 @@ export class BleClient {
       this.logger.warn(`Ble is disabled, unable to send command to ${id}`);
       return results$.complete();
     }
-    const peripheral = this.peripherals.get(address);
+    const peripheralId = this.peripheralAddresses.get(address);
+    const peripheral = this.peripheralIds.get(peripheralId ?? '');
     if (!peripheral) {
       this.logger.warn(
         `Device ${id} with address ${address} not yet discovered`,
