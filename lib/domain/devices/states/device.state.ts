@@ -4,7 +4,6 @@ import {
   Subscription,
   connectable,
   distinctUntilChanged,
-  tap,
 } from 'rxjs';
 import {
   Optional,
@@ -99,7 +98,7 @@ export class DeviceState<StateName extends string, StateValue>
   readonly clearCommand = connectable(this.clearCommand$);
   readonly history: FixedLengthStack<StateValue> =
     new FixedLengthStack<StateValue>(5);
-  protected readonly subsbscriptions: Subscription[] = [];
+  protected readonly subscriptions: Subscription[] = [];
 
   subscribe(
     observerOrNext?:
@@ -114,7 +113,7 @@ export class DeviceState<StateName extends string, StateValue>
       )
       .subscribe(observerOrNext);
 
-    this.subsbscriptions.push(sub);
+    this.subscriptions.push(sub);
     return sub;
   }
 
@@ -129,12 +128,15 @@ export class DeviceState<StateName extends string, StateValue>
   ) {
     this.history.enstack(initialValue);
     this.stateValue = new ForwardBehaviorSubject(initialValue);
-    this.subsbscriptions.push(
-      this.stateValue
-        .pipe(tap(() => this.history.enstack(this.stateValue.getValue())))
-        .subscribe(),
+    this.subscriptions.push(
+      this.subscribe((state) => this.history.enstack(state)),
+      // this.stateValue
+      //   .pipe(
+      //     distinctUntilChanged((previous, current) => )
+      //     tap(() => this.history.enstack(this.stateValue.getValue())))
+      //   .subscribe(),
     );
-    this.subsbscriptions.push(
+    this.subscriptions.push(
       this.device.status?.subscribe((status) => this.parse(status)),
       this.clearCommand.subscribe(({ commandId }) =>
         this.pendingCommands.delete(commandId),
@@ -207,7 +209,7 @@ export class DeviceState<StateName extends string, StateValue>
   }
 
   onModuleDestroy() {
-    this.subsbscriptions
+    this.subscriptions
       .filter((sub) => sub !== undefined)
       .forEach((sub) => sub.unsubscribe());
   }

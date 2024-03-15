@@ -26,6 +26,14 @@ export class FixedLengthStack<T> {
   }
 
   /**
+   * Retrieves the elements in the stack without removing them.
+   * @returns The elements in the stack.
+   */
+  peekAll(): T[] | undefined {
+    return this.stack;
+  }
+
+  /**
    * Adds an item to the end of the stack. If the stack is full, the oldest item is removed.
    * @param item The item to add to the stack.
    */
