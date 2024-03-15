@@ -1,6 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { PersistResult } from '~ultimate-govee-persist';
 import { Optional } from '~ultimate-govee-common';
 import { request } from '../../utils';
 import {
@@ -42,10 +41,10 @@ export class GoveeEffectService {
     return effects;
   }
 
-  @PersistResult({
-    filename: 'govee.{3}.effects.json',
-    // transform: (data) => instanceToPlain(data),
-  })
+  // @PersistResult({
+  //   filename: 'govee.{3}.effects.json',
+  //   // transform: (data) => instanceToPlain(data),
+  // })
   async getDeviceEffects(
     oauth: OAuthData,
     model: string,
@@ -64,22 +63,32 @@ export class GoveeEffectService {
           goodsType,
           device: deviceId,
         },
-      ).get(EffectListResponse);
+      ).get(
+        EffectListResponse,
+        // join(
+        //   PersistModule.persistRootDirectory,
+        //   `govee.${deviceId}.effects.raw.json`,
+        // ),
+      );
       return (response.data as EffectListResponse).effectData.categories.reduce(
         (effects: Effect[], category: EffectCategory) => {
           category.scenes.forEach((scene: EffectScene) => {
             effects.push(
-              ...scene.lightEffects.map(
-                (lightEffect): Effect => ({
+              ...scene.lightEffects.map((lightEffect): Effect => {
+                const code = [0, undefined, null].includes(lightEffect.code)
+                  ? scene.code
+                  : lightEffect.code;
+                return {
                   name: `${scene.name} ${lightEffect.name}`.trim(),
-                  code: [0, undefined, null].includes(lightEffect.code)
-                    ? scene.code
-                    : lightEffect.code,
-                  opCode: lightEffect.opCode,
+                  code,
+                  opCode:
+                    lightEffect.specialEffect
+                      ?.find((s) => s.supportedModels?.includes(model) === true)
+                      ?.opCode(code) ?? lightEffect.opCode,
                   type: lightEffect.sceneType,
                   cmdVersion: lightEffect.cmdVersion,
-                }),
-              ),
+                };
+              }),
             );
           });
           return effects;
@@ -92,10 +101,10 @@ export class GoveeEffectService {
     }
   }
 
-  @PersistResult({
-    filename: 'govee.{3}.scenes.json',
-    // transform: (data) => instanceToPlain(data),
-  })
+  // @PersistResult({
+  //   filename: 'govee.{3}.scenes.json',
+  //   // transform: (data) => instanceToPlain(data),
+  // })
   async getDeviceScenes(
     oauth: OAuthData,
     model: string,
@@ -114,7 +123,13 @@ export class GoveeEffectService {
           goodsType,
           device: deviceId,
         },
-      ).get(SceneListResponse);
+      ).get(
+        SceneListResponse,
+        // join(
+        //   PersistModule.persistRootDirectory,
+        //   `govee.${deviceId}.scenes.raw.json`,
+        // ),
+      );
       return (response.data as SceneListResponse).sceneData.categories.reduce(
         (effects: Effect[], category) => {
           effects.push(

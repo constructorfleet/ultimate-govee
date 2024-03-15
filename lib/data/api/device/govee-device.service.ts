@@ -1,6 +1,10 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { InjectPersisted, PersistResult } from '~ultimate-govee-persist';
+import {
+  InjectPersisted,
+  PersistModule,
+  PersistResult,
+} from '~ultimate-govee-persist';
 import { Optional } from '~ultimate-govee-common';
 import { GoveeDeviceConfig } from './govee-device.config';
 import {
@@ -12,6 +16,7 @@ import { goveeAuthenticatedHeaders, request } from '../../utils';
 import { BluetoothData, GoveeDevice, WiFiData } from '../../govee-device';
 import { OAuthData } from '../account/models/account-client';
 import { GoveeDiyService } from '../diy/govee-diy.service';
+import { join } from 'path';
 
 @Injectable()
 export class GoveeDeviceService {
@@ -49,7 +54,10 @@ export class GoveeDeviceService {
     const response = await request(
       this.config.deviceListUrl,
       goveeAuthenticatedHeaders(oauthData),
-    ).post(DeviceListResponse);
+    ).post(
+      DeviceListResponse,
+      join(PersistModule.persistRootDirectory, 'govee.devices.raw.json'),
+    );
     return response.data as DeviceListResponse;
   }
 
@@ -58,6 +66,7 @@ export class GoveeDeviceService {
       try {
         const settings = device.deviceExt.deviceSettings;
         const data = device.deviceExt.deviceData;
+
         return {
           name: device.deviceName,
           model: device.sku,
@@ -72,8 +81,8 @@ export class GoveeDeviceService {
           goodsType: device.goodsType,
           groupId: device.groupId,
           ic: settings.ic,
-          wifi: this.getWiFiData(settings),
-          blueTooth: this.getBleData(settings),
+          wifi: GoveeDeviceService.getWiFiData(settings),
+          blueTooth: GoveeDeviceService.getBleData(settings),
           state: {
             online: data.isOnline,
             isOn: data.isOn,
