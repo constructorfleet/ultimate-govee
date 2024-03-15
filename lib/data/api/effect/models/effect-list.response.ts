@@ -1,4 +1,4 @@
-import { Expose, Transform, Type } from 'class-transformer';
+import { Exclude, Expose, Transform, Type } from 'class-transformer';
 import { base64ToHex, Optional } from '~ultimate-govee-common';
 import { GoveeAPIResponse } from '../../govee-api.models';
 import { rebuildOpCode } from './op-code';
@@ -20,6 +20,11 @@ export class LightEffectSpecialEffect {
 
   @Expose({ name: 'sceneParam' })
   opCodeBase64?: string;
+
+  @Exclude()
+  opCode(code: number): Optional<number[][] | undefined> {
+    return rebuildOpCode(code, this.opCodeBase64);
+  }
 
   @Expose({ name: 'cmdVersion' })
   cmdVersion!: number;

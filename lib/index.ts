@@ -98,6 +98,7 @@ export {
   DetectionSettingsStateName,
   EnablePresenceFlags,
   PresenceData,
+  MotionSensor,
 } from './domain';
 export { Device } from './domain/devices/device';
 export {
@@ -125,3 +126,4 @@ export { RGBICLightDevice } from './domain/devices/impl/lights/rgbic/rgbic-light
 export { HumidifierDevice } from './domain/devices/impl/appliances/humidifier/humidifier';
 export { PurifierDevice } from './domain/devices/impl/appliances/purifier/purifier';
 export { PresenceDevice } from './domain/devices/impl/home-improvement/presence';
+export { MotionDevice } from './domain/devices/impl/home-improvement/motion';
