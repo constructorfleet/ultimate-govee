@@ -20,8 +20,9 @@ export class FilterExpiredState extends DeviceState<
   }
 
   parseState(data: FilterExpiredType) {
-    if (data?.state?.filterExpired !== undefined) {
-      this.stateValue.next(data.state.filterExpired);
+    if (data?.state?.filterExpired === undefined) {
+      return undefined;
     }
+    this.stateValue.next(data.state.filterExpired);
   }
 }
