@@ -26,17 +26,7 @@ export class HumidityState extends DeviceOpState<
     identifier: Optional<number[]> = undefined,
     parseOption: ParseOption = 'state',
   ) {
-    super(
-      { opType, identifier },
-      device,
-      HumidityStateName,
-      {
-        range: undefined,
-        calibration: undefined,
-        current: undefined,
-      },
-      parseOption,
-    );
+    super({ opType, identifier }, device, HumidityStateName, {}, parseOption);
   }
 
   parseState(data: HumidityDataType) {

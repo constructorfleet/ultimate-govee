@@ -33,7 +33,7 @@ export class SceneModeState extends LightEffectState {
     super(device, opType, identifier);
   }
 
-  parseOpCommand(opCommand: number[]): void {
+  parseOpCommand(opCommand: number[]) {
     this.activeEffectCode.next(total(opCommand.slice(0, 2), true));
   }
 

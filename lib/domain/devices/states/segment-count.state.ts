@@ -17,9 +17,15 @@ export class SegmentCountState extends DeviceOpState<
   constructor(
     device: DeviceModel,
     opType: number = OpType.REPORT,
-    identifier: number[] = [0x11],
+    ...identifier: number[]
   ) {
-    super({ opType, identifier }, device, SegmentCountStateName, undefined);
+    super(
+      { opType, identifier },
+      device,
+      SegmentCountStateName,
+      undefined,
+      'opCode',
+    );
   }
 
   parseOpCommand(opCommand: number[]) {
