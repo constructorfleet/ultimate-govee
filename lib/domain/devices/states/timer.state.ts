@@ -25,13 +25,9 @@ export class TimerState extends DeviceOpState<TimerStateName, Timer> {
   }
 
   parseOpCommand(opCommand: number[]) {
-    let duration: Optional<number>;
-    if (opCommand.length <= 3) {
-      duration = total(opCommand.slice(1, 3));
-    }
     this.stateValue.next({
       enabled: opCommand[0] === 0x01,
-      duration,
+      duration: total(opCommand.slice(1, 3)),
     });
   }
 

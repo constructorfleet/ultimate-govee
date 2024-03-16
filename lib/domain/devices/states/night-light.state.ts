@@ -35,15 +35,22 @@ export class NightLightState extends DeviceOpState<
   }
 
   protected stateToCommand(state: NightLight): Optional<StateCommandAndStatus> {
-    if (state.on === undefined) {
+    if (
+      state?.on === undefined ||
+      state?.on === null ||
+      typeof state.on !== 'boolean'
+    ) {
       this.logger.warn('On not included in state, ignoring command');
       return undefined;
     }
-    if (state.brightness === undefined) {
+    if (
+      state?.brightness === undefined ||
+      state?.brightness === null ||
+      typeof state.brightness !== 'number'
+    ) {
       this.logger.warn('Brightness not included in state, ignoring command');
       return undefined;
     }
-
     return {
       status: {
         op: {

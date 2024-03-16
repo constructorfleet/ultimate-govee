@@ -26,20 +26,18 @@ describe('NightLightState', () => {
     state: {},
   });
   let state: NightLightState;
+  let subscription: Subscription | undefined;
 
+  beforeEach(() => {
+    state = new NightLightState(deviceModel, OpType.REPORT, 16);
+  });
+
+  afterEach(() => {
+    if (subscription !== undefined) {
+      subscription.unsubscribe();
+    }
+  });
   describe('parse', () => {
-    let subscription: Subscription | undefined;
-
-    beforeEach(() => {
-      state = new NightLightState(deviceModel, OpType.REPORT, 16);
-    });
-
-    afterEach(() => {
-      if (subscription !== undefined) {
-        subscription.unsubscribe();
-      }
-    });
-
     describe('when passed', () => {
       describe('any state argument', () => {
         it.each([
@@ -113,7 +111,6 @@ describe('NightLightState', () => {
       });
     });
   });
-
   describe('setState', () => {
     describe('when passed', () => {
       describe('an invalid state value', () => {
