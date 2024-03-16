@@ -1,7 +1,8 @@
 import { Ignorable, Optional } from '~ultimate-govee-common';
 import { Measurement } from '~ultimate-govee-data';
 import { DeviceModel } from '../devices.model';
-import { DeviceOpState, ParseOption } from './device.state';
+import { DeviceOpState } from './device.state';
+import { ParseOption } from './states.types';
 
 export const TemperatureStateName: 'temperature' = 'temperature' as const;
 export type TemperatureStateName = typeof TemperatureStateName;

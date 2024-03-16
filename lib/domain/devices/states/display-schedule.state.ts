@@ -1,6 +1,7 @@
 import { OpType, Optional, asOpCode } from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
-import { DeviceOpState, StateCommandAndStatus } from './device.state';
+import { DeviceOpState } from './device.state';
+import { StateCommandAndStatus } from './states.types';
 
 export const DisplayScheduleStateName: 'displaySchedule' =
   'displaySchedule' as const;
@@ -58,30 +59,49 @@ export class DisplayScheduleState extends DeviceOpState<
   protected stateToCommand(
     state: DisplaySchedule,
   ): Optional<StateCommandAndStatus> {
-    if (state.on === undefined) {
+    if (state === null || state === undefined || typeof state !== 'object') {
+      this.logger.warn('No state provided, ignoring command.');
+      return undefined;
+    }
+    if (
+      state.on === undefined ||
+      state.on === null ||
+      typeof state.on !== 'boolean'
+    ) {
       this.logger.warn('On not included in state, ignoring command.');
       return undefined;
     }
-    if (state.from.hour === undefined && state.from.minute === undefined) {
+    if (
+      state.from.hour === undefined &&
+      state.from.minute === undefined &&
+      typeof state.from.hour !== 'number' &&
+      typeof state.from.minute !== 'number'
+    ) {
       this.logger.warn('From not included in state, ignoring command.');
       return undefined;
     }
-    if (state.to.hour === undefined && state.to.minute === undefined) {
+    if (
+      state.to.hour === undefined &&
+      state.to.minute === undefined &&
+      typeof state.to.hour !== 'number' &&
+      typeof state.to.minute !== 'number'
+    ) {
       this.logger.warn('To not included in state, ignoring command.');
       return undefined;
     }
+    const isOn = state.on === true;
+    const values = isOn
+      ? [
+          state.from.hour ?? 0x00,
+          state.from.minute ?? 0x00,
+          state.to.hour ?? 0x00,
+          state.to.minute ?? 0x00,
+        ]
+      : [];
     return {
       status: {
         op: {
-          command: [
-            [
-              state.on ? 0x01 : 0x00,
-              state.from.hour ?? 0x00,
-              state.from.minute ?? 0x00,
-              state.to.hour ?? 0x00,
-              state.to.minute ?? 0x00,
-            ],
-          ],
+          command: [[state.on ? 0x01 : 0x00]],
         },
       },
       command: {
@@ -91,10 +111,7 @@ export class DisplayScheduleState extends DeviceOpState<
               OpType.COMMAND,
               ...this.identifier!,
               state.on ? 0x01 : 0x00,
-              state.from.hour ?? 0x00,
-              state.from.minute ?? 0x00,
-              state.to.hour ?? 0x00,
-              state.to.minute ?? 0x00,
+              ...values,
             ),
           ],
         },

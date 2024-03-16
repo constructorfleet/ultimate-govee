@@ -1,7 +1,8 @@
 import { total, Optional, asOpCode, ArrayRange } from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
-import { DeviceOpState, StateCommandAndStatus } from './device.state';
+import { DeviceOpState } from './device.state';
 import { OpType } from '../../../common/op-code';
+import { StateCommandAndStatus } from './states.types';
 
 export const TimerStateName: 'timer' = 'timer' as const;
 export type TimerStateName = typeof TimerStateName;

@@ -1,7 +1,7 @@
-import { Optional, asOpCode } from '~ultimate-govee-common';
+import { Optional, asOpCode, OpType } from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
-import { DeviceOpState, StateCommandAndStatus } from './device.state';
-import { OpType } from '../../../common/op-code';
+import { DeviceOpState } from './device.state';
+import { StateCommandAndStatus } from './states.types';
 
 export const ColorRGBStateName: 'colorRGB' = 'colorRGB' as const;
 export type ColorRGBStateName = typeof ColorRGBStateName;

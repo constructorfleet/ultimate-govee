@@ -1,8 +1,6 @@
 import { DeviceModel } from '../../../devices.model';
-import {
-  DeviceOpState,
-  StateCommandAndStatus,
-} from '../../../states/device.state';
+import { DeviceOpState } from '../../../states/device.state';
+import { StateCommandAndStatus } from '../../../states/states.types';
 import {
   PresenceState,
   PresenceStateTypeName,

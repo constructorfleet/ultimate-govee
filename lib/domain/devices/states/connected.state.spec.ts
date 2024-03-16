@@ -2,6 +2,10 @@ import { DeviceModel } from '../devices.model';
 import { Version } from '../version.info';
 import { Subscription } from 'rxjs';
 import { ConnectedState } from './connected.state';
+import {
+  testParseStateCalled,
+  testParseStateNotCalled,
+} from '../../../common/test-utils';
 
 describe('ConnectedState', () => {
   const deviceModel: DeviceModel = new DeviceModel({
@@ -41,75 +45,75 @@ describe('ConnectedState', () => {
             '{ "state": { "power": {} } }',
             '{ "state": { "off": null } }',
             '{ "online": true }',
-          ])('of %P, it does not update the value', (input) => {
-            const data = JSON.parse(input);
-            const subscriptionFn = jest.fn((connected) =>
-              expect(connected).toBeUndefined(),
-            );
-            subscription = state.subscribe(subscriptionFn);
-            state.parse(data);
-            expect(subscriptionFn).not.toHaveBeenCalled();
+          ])('of %P, it does not update the value', async (input) => {
+            expect(
+              await testParseStateNotCalled(state, JSON.parse(input)),
+            ).not.toHaveBeenCalled();
           });
         });
       });
     });
     describe('a valid', () => {
       describe('connection under state', () => {
-        describe('with key online', () => {
-          it.each([true, false])('sets the value to %p', (connectionValue) => {
-            const subscriptionFn = jest.fn((connection) =>
-              expect(connection).toEqual(connectionValue),
-            );
-            subscription = state.subscribe(subscriptionFn);
-            state.parse(
-              JSON.parse(
-                JSON.stringify({ state: { online: connectionValue } }),
-              ),
-            );
-            expect(subscriptionFn).toHaveBeenCalledTimes(1);
-          });
+        describe('with online key', () => {
+          it.each([true, false])(
+            'sets the value to %p',
+            async (connectionValue) => {
+              expect(
+                await testParseStateCalled(
+                  state,
+                  JSON.parse(
+                    JSON.stringify({ state: { online: connectionValue } }),
+                  ),
+                ),
+              ).toEqual(connectionValue);
+            },
+          );
         });
-        describe('with key connected', () => {
-          it.each([true, false])('sets the value to %p', (connectionValue) => {
-            const subscriptionFn = jest.fn((connection) =>
-              expect(connection).toEqual(connectionValue),
-            );
-            subscription = state.subscribe(subscriptionFn);
-            state.parse(
-              JSON.parse(
-                JSON.stringify({ state: { connected: connectionValue } }),
-              ),
-            );
-            expect(subscriptionFn).toHaveBeenCalledTimes(1);
-          });
+        describe('with connected key', () => {
+          it.each([true, false])(
+            'sets the value to %p',
+            async (connectionValue) => {
+              expect(
+                await testParseStateCalled(
+                  state,
+                  JSON.parse(
+                    JSON.stringify({ state: { connected: connectionValue } }),
+                  ),
+                ),
+              ).toEqual(connectionValue);
+            },
+          );
         });
-        describe('with key isOnline', () => {
-          it.each([true, false])('sets the value to %p', (connectionValue) => {
-            const subscriptionFn = jest.fn((connection) =>
-              expect(connection).toEqual(connectionValue),
-            );
-            subscription = state.subscribe(subscriptionFn);
-            state.parse(
-              JSON.parse(
-                JSON.stringify({ state: { isOnline: connectionValue } }),
-              ),
-            );
-            expect(subscriptionFn).toHaveBeenCalledTimes(1);
-          });
+        describe('with isOnline key', () => {
+          it.each([true, false])(
+            'sets the value to %p',
+            async (connectionValue) => {
+              expect(
+                await testParseStateCalled(
+                  state,
+                  JSON.parse(
+                    JSON.stringify({ state: { isOnline: connectionValue } }),
+                  ),
+                ),
+              ).toEqual(connectionValue);
+            },
+          );
         });
-        describe('with key isConnected', () => {
-          it.each([true, false])('sets the value to %p', (connectionValue) => {
-            const subscriptionFn = jest.fn((connection) =>
-              expect(connection).toEqual(connectionValue),
-            );
-            subscription = state.subscribe(subscriptionFn);
-            state.parse(
-              JSON.parse(
-                JSON.stringify({ state: { isConnected: connectionValue } }),
-              ),
-            );
-            expect(subscriptionFn).toHaveBeenCalledTimes(1);
-          });
+        describe('with isConnected key', () => {
+          it.each([true, false])(
+            'sets the value to %p',
+            async (connectionValue) => {
+              expect(
+                await testParseStateCalled(
+                  state,
+                  JSON.parse(
+                    JSON.stringify({ state: { isConnected: connectionValue } }),
+                  ),
+                ),
+              ).toEqual(connectionValue);
+            },
+          );
         });
       });
     });

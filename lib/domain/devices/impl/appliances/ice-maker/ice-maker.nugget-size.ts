@@ -1,7 +1,6 @@
 import { Optional, asOpCode, OpType } from '~ultimate-govee-common';
 import { DeviceModel } from '../../../devices.model';
-import { DeviceOpState } from '../../../states';
-import { StateCommandAndStatus } from '../../../states/device.state';
+import { DeviceOpState, StateCommandAndStatus } from '../../../states';
 import { NuggetSize, nuggetSizeMap } from './types';
 
 export const NuggetSizeStateName = 'nuggetSize' as const;

@@ -77,7 +77,9 @@ export class IoTService implements IoTHandler {
           current: currentHumditity,
         },
         brightness: message.state?.brightness,
-        colorTemperature: message.state?.colorTemperature,
+        colorTemperature: {
+          current: message.state?.colorTemperature,
+        },
         color:
           message.state?.color !== undefined
             ? {

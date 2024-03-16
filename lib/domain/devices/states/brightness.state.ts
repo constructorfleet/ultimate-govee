@@ -1,7 +1,8 @@
 import { asOpCode, Optional } from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
-import { DeviceOpState, StateCommandAndStatus } from './device.state';
+import { DeviceOpState } from './device.state';
 import { OpType } from '../../../common/op-code';
+import { StateCommandAndStatus } from './states.types';
 
 export const BrightnessStateName: 'brightness' = 'brightness' as const;
 export type BrightnessStateName = typeof BrightnessStateName;

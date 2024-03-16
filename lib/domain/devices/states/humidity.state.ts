@@ -1,7 +1,8 @@
 import { Measurement } from '~ultimate-govee-data';
 import { unpaddedHexToArray, Optional } from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
-import { DeviceOpState, ParseOption } from './device.state';
+import { DeviceOpState } from './device.state';
+import { ParseOption } from './states.types';
 
 export const HumidityStateName: 'humidity' = 'humidity' as const;
 export type HumidityStateName = typeof HumidityStateName;

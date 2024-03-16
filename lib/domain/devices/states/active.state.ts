@@ -1,6 +1,7 @@
 import { OpType, Optional, asOpCode } from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
-import { DeviceOpState, StateCommandAndStatus } from './device.state';
+import { DeviceOpState } from './device.state';
+import { StateCommandAndStatus } from './states.types';
 
 export const ActiveStateName: 'isActive' = 'isActive' as const;
 export type ActiveStateName = typeof ActiveStateName;

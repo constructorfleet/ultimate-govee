@@ -1,6 +1,7 @@
 import { OpType, asOpCode, Optional } from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
-import { DeviceOpState, StateCommandAndStatus } from './device.state';
+import { DeviceOpState } from './device.state';
+import { StateCommandAndStatus } from './states.types';
 
 export const ControlLockStateName: 'controlLock' = 'controlLock' as const;
 export type ControlLockStateName = typeof ControlLockStateName;
@@ -14,7 +15,13 @@ export class ControlLockState extends DeviceOpState<
     opType: number = OpType.REPORT,
     ...identifier: number[]
   ) {
-    super({ opType, identifier }, device, ControlLockStateName, undefined);
+    super(
+      { opType, identifier },
+      device,
+      ControlLockStateName,
+      undefined,
+      'opCode',
+    );
   }
 
   parseOpCommand(opCommand: number[]) {
@@ -24,8 +31,13 @@ export class ControlLockState extends DeviceOpState<
   protected stateToCommand(
     nextState: Optional<boolean>,
   ): Optional<StateCommandAndStatus> {
-    if (nextState === undefined) {
+    if (
+      nextState === undefined ||
+      nextState === null ||
+      typeof nextState !== 'boolean'
+    ) {
       this.logger.warn('state not provided, skipping command.');
+      return;
     }
     return {
       command: {
