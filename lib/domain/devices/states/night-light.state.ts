@@ -1,6 +1,13 @@
-import { OpType, Optional, asOpCode } from '~ultimate-govee-common';
+import {
+  OpType,
+  Optional,
+  asOpCode,
+  isBetween,
+  isTypeOf,
+} from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
-import { DeviceOpState, StateCommandAndStatus } from './device.state';
+import { DeviceOpState } from './device.state';
+import { ParseOption, StateCommandAndStatus } from './states.types';
 
 export const NightLightStateName: 'nightLight' = 'nightLight' as const;
 export type NightLightStateName = typeof NightLightStateName;
@@ -14,6 +21,8 @@ export class NightLightState extends DeviceOpState<
   NightLightStateName,
   NightLight
 > {
+  protected parseOption: ParseOption = 'opCode';
+
   constructor(
     device: DeviceModel,
     opType: number = OpType.REPORT,
@@ -34,15 +43,14 @@ export class NightLightState extends DeviceOpState<
   }
 
   protected stateToCommand(state: NightLight): Optional<StateCommandAndStatus> {
-    if (state.on === undefined) {
+    if (!isTypeOf(state?.on, 'boolean')) {
       this.logger.warn('On not included in state, ignoring command');
       return undefined;
     }
-    if (state.brightness === undefined) {
+    if (!isBetween(state?.brightness, 0, 100)) {
       this.logger.warn('Brightness not included in state, ignoring command');
       return undefined;
     }
-
     return {
       status: {
         op: {

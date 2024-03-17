@@ -1,7 +1,8 @@
 import { Measurement } from '~ultimate-govee-data';
 import { unpaddedHexToArray, Optional } from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
-import { DeviceOpState, ParseOption } from './device.state';
+import { DeviceOpState } from './device.state';
+import { MeasurementData, ParseOption } from './states.types';
 
 export const HumidityStateName: 'humidity' = 'humidity' as const;
 export type HumidityStateName = typeof HumidityStateName;
@@ -15,40 +16,18 @@ export type HumidityDataType = {
   };
 };
 
-export type HumidityData = {
-  range: {
-    min?: number;
-    max?: number;
-  };
-  calibration?: number;
-  raw?: number;
-  current?: number;
-};
-
 export class HumidityState extends DeviceOpState<
   HumidityStateName,
-  HumidityData
+  MeasurementData
 > {
+  protected parseOption: ParseOption = 'state';
+
   constructor(
     device: DeviceModel,
     opType: Optional<number> = undefined,
-    identifier: Optional<number[]> = undefined,
-    parseOption: ParseOption = 'state',
+    ...identifier: number[]
   ) {
-    super(
-      { opType, identifier },
-      device,
-      HumidityStateName,
-      {
-        range: {
-          min: undefined,
-          max: undefined,
-        },
-        calibration: undefined,
-        current: undefined,
-      },
-      parseOption,
-    );
+    super({ opType, identifier }, device, HumidityStateName, {});
   }
 
   parseState(data: HumidityDataType) {
@@ -70,13 +49,25 @@ export class HumidityState extends DeviceOpState<
       } else {
         raw = current;
       }
+      const min =
+        data?.state?.humidity?.min ??
+        this.stateValue.getValue().range?.min ??
+        0;
+      const max =
+        data?.state?.humidity?.max ??
+        this.stateValue.getValue().range?.max ??
+        0;
+      if (current === undefined) {
+        return;
+      }
+      if (current < min || current > max) {
+        return;
+      }
       this.stateValue.next({
         calibration,
         range: {
-          min:
-            data?.state?.humidity?.min ?? this.stateValue.getValue().range.min,
-          max:
-            data?.state?.humidity?.max ?? this.stateValue.getValue().range.max,
+          min,
+          max,
         },
         current,
         raw,

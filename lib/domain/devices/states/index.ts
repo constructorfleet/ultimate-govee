@@ -17,6 +17,8 @@ import { TimerStateName } from './timer.state';
 import { WaterShortageStateName } from './water-shortage.state';
 import { UnknownStateName } from './unknown.state';
 
+export * from './states.types';
+
 export * from './active.state';
 export * from './battery-level.state';
 export * from './brightness.state';

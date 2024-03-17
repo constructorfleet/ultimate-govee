@@ -1,4 +1,6 @@
-import { Transform } from 'class-transformer';
+import assert from 'assert';
+import { ClassConstructor, Transform } from 'class-transformer';
+import { NumericRange } from './types';
 
 export const sleep = async (ms: number) => {
   return await new Promise<void>((resolve) => setTimeout(() => resolve(), ms));
@@ -46,3 +48,42 @@ export const isAsyncModuleOptions = <TOptions extends object>(
     'useClass' in options ||
     'useExisting' in options ||
     'imports' in options);
+
+export const isDefined = (value: unknown): asserts value => {
+  assert(value !== undefined);
+  assert(value !== null);
+};
+
+export function isInstance<T>(
+  value: unknown,
+  type: ClassConstructor<T>,
+): value is T {
+  return value instanceof type;
+}
+
+export function isTypeOf(
+  value: unknown,
+  typeString: 'boolean',
+): value is boolean;
+export function isTypeOf(value: unknown, typeString: 'number'): value is number;
+export function isTypeOf(value: unknown, typeString: 'string'): value is string;
+export function isTypeOf(value: unknown, typeString: 'bigint'): value is bigint;
+export function isTypeOf(value: unknown, typeString: 'object'): value is object;
+export function isTypeOf(
+  value: unknown,
+  typeString: 'undefined',
+): value is undefined;
+export function isTypeOf(value: unknown, typeString: string): boolean {
+  return typeof value === typeString;
+}
+
+export function isBetween<Min extends number, Max extends number>(
+  value: unknown,
+  minimum: Min,
+  maximum: Max,
+): value is NumericRange<Min, Max> {
+  if (isTypeOf(value, 'number')) {
+    return value >= minimum && value <= maximum;
+  }
+  return false;
+}

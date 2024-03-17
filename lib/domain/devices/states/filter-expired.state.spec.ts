@@ -2,6 +2,10 @@ import { Subscription } from 'rxjs';
 import { DeviceModel } from '../devices.model';
 import { Version } from '../version.info';
 import { FilterExpiredState } from './filter-expired.state';
+import {
+  testParseStateCalled,
+  testParseStateNotCalled,
+} from '../../../common/test-utils';
 
 describe('FilterExpiredState', () => {
   const deviceModel: DeviceModel = new DeviceModel({
@@ -18,7 +22,7 @@ describe('FilterExpiredState', () => {
     version: new Version('1.0.0', '2.0.0'),
     state: {},
   });
-  const filterExpiredState = new FilterExpiredState(deviceModel);
+  const state = new FilterExpiredState(deviceModel);
   describe('parse', () => {
     let subscription: Subscription | undefined;
 
@@ -30,43 +34,37 @@ describe('FilterExpiredState', () => {
     describe('when passed', () => {
       describe('state', () => {
         describe('without filterExpired', () => {
-          it('value is not updated', () => {
-            const subscriptionFn = jest.fn((active) =>
-              expect(active).toBeUndefined(),
-            );
-            subscription = filterExpiredState.subscribe(subscriptionFn);
-            filterExpiredState.parse({});
-            expect(subscriptionFn).not.toHaveBeenCalled();
+          it('value is not updated', async () => {
+            expect(
+              await testParseStateNotCalled(state, {}),
+            ).not.toHaveBeenCalled();
           });
         });
         describe('with filterExpired undefined', () => {
-          it('value is not updated', () => {
-            const subscriptionFn = jest.fn((active) =>
-              expect(active).toBeUndefined(),
-            );
-            subscription = filterExpiredState.subscribe(subscriptionFn);
-            filterExpiredState.parse({ state: { filterExpired: undefined } });
-            expect(subscriptionFn).not.toHaveBeenCalled();
+          it('value is not updated', async () => {
+            expect(
+              await testParseStateNotCalled(state, {
+                state: { filterExpired: undefined },
+              }),
+            ).not.toHaveBeenCalled();
           });
         });
         describe('with filterExpired false', () => {
-          it('value is set to false', () => {
-            const subscriptionFn = jest.fn((expired) =>
-              expect(expired).toBeFalsy(),
-            );
-            subscription = filterExpiredState.subscribe(subscriptionFn);
-            filterExpiredState.parse({ state: { filterExpired: false } });
-            expect(subscriptionFn).toHaveBeenCalledTimes(1);
+          it('value is set to false', async () => {
+            expect(
+              await testParseStateCalled(state, {
+                state: { filterExpired: false },
+              }),
+            ).toBe(false);
           });
         });
         describe('with filterExpired true', () => {
-          it('value is set to true', () => {
-            const subscriptionFn = jest.fn((expired) =>
-              expect(expired).toBeTruthy(),
-            );
-            subscription = filterExpiredState.subscribe(subscriptionFn);
-            filterExpiredState.parse({ state: { filterExpired: true } });
-            expect(subscriptionFn).toHaveBeenCalledTimes(1);
+          it('value is set to true', async () => {
+            expect(
+              await testParseStateCalled(state, {
+                state: { filterExpired: true },
+              }),
+            ).toBe(true);
           });
         });
       });

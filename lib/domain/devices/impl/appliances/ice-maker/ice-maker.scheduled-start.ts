@@ -1,4 +1,8 @@
-import { DeviceOpState, StateCommandAndStatus } from '../../../states';
+import {
+  DeviceOpState,
+  ParseOption,
+  StateCommandAndStatus,
+} from '../../../states';
 import { NuggetSize, nuggetSizeMap } from './types';
 import {
   Optional,
@@ -38,13 +42,14 @@ export class IceMakerScheduledStart extends DeviceOpState<
   ScheduledStartStateName,
   IceMakerScheduledStartData
 > {
+  protected parseOption: ParseOption = 'opCode';
+
   constructor(device: DeviceModel) {
     super(
       { opType: OpType.REPORT, identifier: [0x23] },
       device,
       ScheduledStartStateName,
       {},
-      'opCode',
     );
   }
 
