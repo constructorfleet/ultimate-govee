@@ -2,6 +2,10 @@ import { DeviceModel } from '../devices.model';
 import { Version } from '../version.info';
 import { Subscription } from 'rxjs';
 import { BatteryLevelState } from './battery-level.state';
+import {
+  testParseStateCalled,
+  testParseStateNotCalled,
+} from '../../../common/test-utils';
 
 describe('BatteryLevelState', () => {
   const deviceModel: DeviceModel = new DeviceModel({
@@ -36,24 +40,23 @@ describe('BatteryLevelState', () => {
     describe('when passed', () => {
       describe('an invalid', () => {
         describe('state argument', () => {
-          it('does not update the value', () => {
-            const subscriptionFn = jest.fn((active) =>
-              expect(active).toBeUndefined(),
-            );
-            subscription = state.subscribe(subscriptionFn);
-            state.parse({});
-            expect(subscriptionFn).not.toHaveBeenCalled();
+          it('does not update the value', async () => {
+            expect(
+              await testParseStateNotCalled(state, {}),
+            ).not.toHaveBeenCalled();
           });
         });
         describe('battery level state', () => {
-          it.each([-1, 100.1, 1000])('of %p, the value is not udpated', () => {
-            const subscriptionFn = jest.fn((active) =>
-              expect(active).toBeUndefined(),
-            );
-            subscription = state.subscribe(subscriptionFn);
-            state.parse({});
-            expect(subscriptionFn).not.toHaveBeenCalled();
-          });
+          it.each([-1, 100.1, 1000])(
+            'of %p, the value is not udpated',
+            async (val) => {
+              expect(
+                await testParseStateNotCalled(state, {
+                  state: { battery: val },
+                }),
+              ).not.toHaveBeenCalled();
+            },
+          );
         });
       });
     });
@@ -62,28 +65,24 @@ describe('BatteryLevelState', () => {
         describe('outside state', () => {
           it.each([0.001, 0.5, 51, 90, 100])(
             'sets the value to %p',
-            (batteryLevel) => {
+            async (batteryLevel) => {
               const data: Record<string, any> = {};
               data['battery'] = batteryLevel;
-              const subscriptionFn = jest.fn((battery) =>
-                expect(battery).toBeCloseTo(batteryLevel),
+              expect(await testParseStateCalled(state, data)).toBeCloseTo(
+                batteryLevel,
               );
-              subscription = state.subscribe(subscriptionFn);
-              state.parse(data);
-              expect(subscriptionFn).toHaveBeenCalledTimes(1);
             },
           );
         });
         describe('under state', () => {
           it.each([0.001, 0.5, 51, 90, 100])(
             'sets the value to %p',
-            (batteryLevel) => {
-              const subscriptionFn = jest.fn((battery) =>
-                expect(battery).toBeCloseTo(batteryLevel),
-              );
-              subscription = state.subscribe(subscriptionFn);
-              state.parse({ state: { battery: batteryLevel } });
-              expect(subscriptionFn).toHaveBeenCalledTimes(1);
+            async (batteryLevel) => {
+              expect(
+                await testParseStateCalled(state, {
+                  state: { battery: batteryLevel },
+                }),
+              ).toBeCloseTo(batteryLevel);
             },
           );
         });

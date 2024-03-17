@@ -1,5 +1,5 @@
 import { DeviceModel } from '../../../devices.model';
-import { DeviceOpState } from '../../../states';
+import { DeviceOpState, ParseOption } from '../../../states';
 import { OpType } from '~ultimate-govee-common/op-code';
 
 export const BasketFullStateName = 'basketFull' as const;
@@ -9,6 +9,7 @@ export class IceMakerBasketFull extends DeviceOpState<
   BasketFullStateName,
   boolean | undefined
 > {
+  protected parseOption: ParseOption = 'both';
   constructor(device: DeviceModel) {
     super(
       {
@@ -18,7 +19,6 @@ export class IceMakerBasketFull extends DeviceOpState<
       device,
       BasketFullStateName,
       undefined,
-      'both',
     );
   }
 

@@ -1,6 +1,7 @@
-import { OpType, Optional, asOpCode } from '~ultimate-govee-common';
+import { OpType, Optional, asOpCode, isTypeOf } from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
-import { DeviceOpState, StateCommandAndStatus } from './device.state';
+import { DeviceOpState } from './device.state';
+import { ParseOption, StateCommandAndStatus } from './states.types';
 
 export const ActiveStateName: 'isActive' = 'isActive' as const;
 export type ActiveStateName = typeof ActiveStateName;
@@ -15,18 +16,21 @@ export class ActiveState extends DeviceOpState<
   ActiveStateName,
   Optional<boolean>
 > {
+  protected readonly parseOption: ParseOption = 'both';
   constructor(
     device: DeviceModel,
     opType: number = OpType.REPORT,
     identifier: number[] = [0x01],
   ) {
-    super({ opType, identifier }, device, ActiveStateName, undefined, 'both');
+    super({ opType, identifier }, device, ActiveStateName, undefined);
   }
 
   parseState(data: ActiveData): void {
-    if (data.state?.isOn !== undefined) {
-      this.stateValue.next(data.state.isOn);
+    if (!isTypeOf(data.state?.isOn, 'boolean')) {
+      return;
     }
+
+    this.stateValue.next(data.state.isOn);
   }
 
   parseOpCommand(opCommand: number[]) {
@@ -39,7 +43,7 @@ export class ActiveState extends DeviceOpState<
   protected stateToCommand(
     state: Optional<boolean>,
   ): Optional<StateCommandAndStatus> {
-    if (state === undefined || typeof state !== 'boolean') {
+    if (!isTypeOf(state, 'boolean')) {
       this.logger.warn('state not provided, skipping command.');
       return undefined;
     }
@@ -48,17 +52,13 @@ export class ActiveState extends DeviceOpState<
       command: {
         data: {
           command: [
-            asOpCode(
-              OpType.COMMAND,
-              this.identifier!,
-              state === true ? 0x01 : 0x00,
-            ),
+            asOpCode(OpType.COMMAND, this.identifier!, state ? 0x01 : 0x00),
           ],
         },
       },
       status: {
         op: {
-          command: [[state === true ? 0x01 : 0x00]],
+          command: [[state ? 0x01 : 0x00]],
         },
       },
     };

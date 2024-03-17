@@ -1,8 +1,9 @@
 import { Subscription } from 'rxjs';
 import { DeviceModel } from '../devices.model';
 import { Version } from '../version.info';
-import { DeviceState, StateCommandAndStatus } from './device.state';
+import { DeviceState } from './device.state';
 import { Optional } from '../../../common';
+import { StateCommandAndStatus } from './states.types';
 
 class TestState extends DeviceState<'TEST', string> {
   protected stateToCommand(state: string): Optional<StateCommandAndStatus> {

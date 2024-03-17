@@ -13,22 +13,17 @@ import {
   FixedLengthStack,
 } from '~ultimate-govee-common';
 import { Logger, OnModuleDestroy } from '@nestjs/common';
-import {
-  GoveeDeviceCommand,
-  GoveeDeviceStateCommand,
-  GoveeDeviceStatus,
-  GoveeStatusForStateCommand,
-} from '~ultimate-govee-data';
+import { GoveeDeviceCommand, GoveeDeviceStatus } from '~ultimate-govee-data';
 import { DeviceModel } from '../devices.model';
 import { v4 as uuidv4 } from 'uuid';
 import { deepEquality } from '@santi100/equal-lib';
-
-type MessageData = Partial<GoveeDeviceStatus>;
-
-export type StateCommandAndStatus = {
-  command: GoveeDeviceStateCommand;
-  status: GoveeStatusForStateCommand;
-};
+import {
+  CommandResult,
+  MessageData,
+  OpCommandIdentifier,
+  ParseOption,
+  StateCommandAndStatus,
+} from './states.types';
 
 const StatusCommand = 'status';
 
@@ -52,13 +47,15 @@ export const filterCommands = (
         0,
         1 + (identifiers?.length ?? 0),
       );
-      if (identifiers !== undefined) {
-        return cmdIdentifiers.every(
-          (i, index) => identifiers[index] < 0 || i === identifiers[index],
-        );
+      if (cmdType !== type) {
+        return false;
       }
-
-      return cmdType === type;
+      if (identifiers === undefined) {
+        return false;
+      }
+      return cmdIdentifiers.every(
+        (i, index) => identifiers[index] < 0 || i === identifiers[index],
+      );
     })
     .map((command) => {
       if (type === undefined && identifier === undefined) {
@@ -71,12 +68,6 @@ export const filterCommands = (
         1 + (typeof identifier === 'number' ? 1 : identifier.length),
       );
     });
-
-type CommandResult = {
-  state: string;
-  value: any;
-  commandId: string;
-};
 
 export class DeviceState<StateName extends string, StateValue>
   implements OnModuleDestroy
@@ -130,11 +121,6 @@ export class DeviceState<StateName extends string, StateValue>
     this.stateValue = new ForwardBehaviorSubject(initialValue);
     this.subscriptions.push(
       this.subscribe((state) => this.history.enstack(state)),
-      // this.stateValue
-      //   .pipe(
-      //     distinctUntilChanged((previous, current) => )
-      //     tap(() => this.history.enstack(this.stateValue.getValue())))
-      //   .subscribe(),
     );
     this.subscriptions.push(
       this.device.status?.subscribe((status) => this.parse(status)),
@@ -215,25 +201,19 @@ export class DeviceState<StateName extends string, StateValue>
   }
 }
 
-export type OpCommandIdentifier = {
-  opType?: Ignorable<Optional<number>>;
-  identifier?: Ignorable<Optional<number[]>>;
-};
-
-export type ParseOption = 'opCode' | 'state' | 'both';
-
 export class DeviceOpState<
   StateName extends string,
   StateValue,
 > extends DeviceState<StateName, StateValue> {
   protected readonly opType: Ignorable<Optional<number>>;
   readonly identifier: Ignorable<Optional<number[]>>;
+  protected readonly parseOption: ParseOption = 'opCode';
+
   constructor(
     { opType, identifier }: OpCommandIdentifier,
     device: DeviceModel,
     name: StateName,
     initialValue: StateValue,
-    private readonly parseOption: ParseOption = 'opCode',
   ) {
     super(device, name, initialValue);
     this.opType = opType;
@@ -277,7 +257,7 @@ export class DeviceOpState<
     return filterCommands(
       opCommands,
       this.opType,
-      this.identifier || undefined,
+      this.identifier ?? undefined,
     );
   }
 }

@@ -1,6 +1,7 @@
-import { Optional, OpType } from '~ultimate-govee-common';
+import { isTypeOf, Optional, OpType } from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
+import { ParseOption } from './states.types';
 
 export const SegmentCountStateName: 'segmentCount' = 'segmentCount' as const;
 export type SegmentCountStateName = typeof SegmentCountStateName;
@@ -14,15 +15,20 @@ export class SegmentCountState extends DeviceOpState<
   SegmentCountStateName,
   Optional<number>
 > {
+  protected parseOption: ParseOption = 'opCode';
+
   constructor(
     device: DeviceModel,
     opType: number = OpType.REPORT,
-    identifier: number[] = [0x11],
+    ...identifier: number[]
   ) {
     super({ opType, identifier }, device, SegmentCountStateName, undefined);
   }
 
   parseOpCommand(opCommand: number[]) {
-    this.stateValue.next(opCommand[2]);
+    const segments = opCommand[2];
+    if (isTypeOf(segments, 'number')) {
+      this.stateValue.next(segments);
+    }
   }
 }

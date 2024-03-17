@@ -1,6 +1,7 @@
-import { OpType, Optional, asOpCode } from '~ultimate-govee-common';
+import { OpType, Optional, asOpCode, isTypeOf } from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
-import { DeviceOpState, StateCommandAndStatus } from './device.state';
+import { DeviceOpState } from './device.state';
+import { ParseOption, StateCommandAndStatus } from './states.types';
 
 export const DisplayScheduleStateName: 'displaySchedule' =
   'displaySchedule' as const;
@@ -8,11 +9,11 @@ export type DisplayScheduleStateName = typeof DisplayScheduleStateName;
 
 export type DisplaySchedule = {
   on?: boolean;
-  from: {
+  from?: {
     hour?: number;
     minute?: number;
   };
-  to: {
+  to?: {
     hour?: number;
     minute?: number;
   };
@@ -22,22 +23,14 @@ export class DisplayScheduleState extends DeviceOpState<
   DisplayScheduleStateName,
   DisplaySchedule
 > {
+  protected parseOption: ParseOption = 'opCode';
+
   constructor(
     device: DeviceModel,
     opType: number = OpType.REPORT,
     ...identifier: number[]
   ) {
-    super({ opType, identifier }, device, DisplayScheduleStateName, {
-      on: undefined,
-      from: {
-        hour: undefined,
-        minute: undefined,
-      },
-      to: {
-        hour: undefined,
-        minute: undefined,
-      },
-    });
+    super({ opType, identifier }, device, DisplayScheduleStateName, {});
   }
 
   parseOpCommand(opCommand: number[]) {
@@ -58,30 +51,30 @@ export class DisplayScheduleState extends DeviceOpState<
   protected stateToCommand(
     state: DisplaySchedule,
   ): Optional<StateCommandAndStatus> {
-    if (state.on === undefined) {
-      this.logger.warn('On not included in state, ignoring command.');
-      return undefined;
+    if (
+      !isTypeOf(state?.on, 'boolean') ||
+      !isTypeOf(state?.from?.hour, 'number') ||
+      !isTypeOf(state?.from?.minute, 'number') ||
+      !isTypeOf(state?.to?.hour, 'number') ||
+      !isTypeOf(state?.to?.minute, 'number')
+    ) {
+      this.logger.warn('Missing or invalide state, ignoring command');
+      return;
     }
-    if (state.from.hour === undefined && state.from.minute === undefined) {
-      this.logger.warn('From not included in state, ignoring command.');
-      return undefined;
-    }
-    if (state.to.hour === undefined && state.to.minute === undefined) {
-      this.logger.warn('To not included in state, ignoring command.');
-      return undefined;
-    }
+
+    const isOn = state.on === true;
+    const values = isOn
+      ? [
+          state.from.hour ?? 0x00,
+          state.from.minute ?? 0x00,
+          state.to.hour ?? 0x00,
+          state.to.minute ?? 0x00,
+        ]
+      : [];
     return {
       status: {
         op: {
-          command: [
-            [
-              state.on ? 0x01 : 0x00,
-              state.from.hour ?? 0x00,
-              state.from.minute ?? 0x00,
-              state.to.hour ?? 0x00,
-              state.to.minute ?? 0x00,
-            ],
-          ],
+          command: [[state.on ? 0x01 : 0x00]],
         },
       },
       command: {
@@ -91,10 +84,7 @@ export class DisplayScheduleState extends DeviceOpState<
               OpType.COMMAND,
               ...this.identifier!,
               state.on ? 0x01 : 0x00,
-              state.from.hour ?? 0x00,
-              state.from.minute ?? 0x00,
-              state.to.hour ?? 0x00,
-              state.to.minute ?? 0x00,
+              ...values,
             ),
           ],
         },

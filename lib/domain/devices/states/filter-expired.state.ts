@@ -1,6 +1,6 @@
 import { DeviceModel } from '../devices.model';
 import { DeviceState } from './device.state';
-import { Optional } from '~ultimate-govee-common';
+import { Optional, isTypeOf } from '~ultimate-govee-common';
 
 export const FilterExpiredStateName: 'filterExpired' = 'filterExpired' as const;
 export type FilterExpiredStateName = typeof FilterExpiredStateName;
@@ -20,8 +20,10 @@ export class FilterExpiredState extends DeviceState<
   }
 
   parseState(data: FilterExpiredType) {
-    if (data?.state?.filterExpired !== undefined) {
-      this.stateValue.next(data.state.filterExpired);
+    if (!isTypeOf(data?.state?.filterExpired, 'boolean')) {
+      return undefined;
     }
+
+    this.stateValue.next(data.state.filterExpired);
   }
 }

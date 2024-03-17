@@ -1,4 +1,4 @@
-import { Optional } from '~ultimate-govee-common';
+import { Optional, isTypeOf } from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
 import { DeviceState } from './device.state';
 
@@ -23,14 +23,14 @@ export class ConnectedState extends DeviceState<
   }
 
   parseState(data: IsConnectedType) {
-    if (data?.state?.isConnected !== undefined) {
-      this.stateValue.next(data?.state?.isConnected);
-    } else if (data?.state?.isOnline !== undefined) {
-      this.stateValue.next(data?.state?.isOnline);
-    } else if (data?.state?.connected !== undefined) {
-      this.stateValue.next(data?.state?.connected);
-    } else if (data?.state?.online !== undefined) {
-      this.stateValue.next(data?.state?.online);
+    if (isTypeOf(data?.state?.isConnected, 'boolean')) {
+      this.stateValue.next(data.state.isConnected);
+    } else if (isTypeOf(data?.state?.isOnline, 'boolean')) {
+      this.stateValue.next(data?.state.isOnline);
+    } else if (isTypeOf(data?.state?.connected, 'boolean')) {
+      this.stateValue.next(data?.state.connected);
+    } else if (isTypeOf(data?.state?.online, 'boolean')) {
+      this.stateValue.next(data?.state.online);
     }
   }
 }

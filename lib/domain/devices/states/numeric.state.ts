@@ -4,6 +4,7 @@ import { Type } from '@nestjs/common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
 import { GoveeDeviceStatus } from '~ultimate-govee-data';
+import { ParseOption } from './states.types';
 
 type StateValue = Optional<number>;
 type OpCodeParserFn = (
@@ -23,23 +24,15 @@ export const NumericState = <StateName extends string>(
   class NumberState extends DeviceOpState<StateName, StateValue> {
     opCodeParser: Optional<OpCodeParserFn> = opCodeParser;
     stateParser: Optional<StateParserFn> = stateParser;
+    protected parseOption: ParseOption =
+      opCodeParser && stateParser ? 'both' : opCodeParser ? 'opCode' : 'state';
 
     constructor(
       device: DeviceModel,
       opType: Optional<number> = undefined,
       identifier: Optional<number[]> = undefined,
     ) {
-      super(
-        { opType, identifier },
-        device,
-        stateName,
-        undefined,
-        opCodeParser && stateParser
-          ? 'both'
-          : opCodeParser
-            ? 'opCode'
-            : 'state',
-      );
+      super({ opType, identifier }, device, stateName, undefined);
     }
 
     parseOpCommand(opCommand: number[]) {

@@ -19,7 +19,7 @@ describe('FilterLifeState', () => {
     version: new Version('1.0.0', '2.0.0'),
     state: {},
   });
-  const filterLifeState = new FilterLifeState(deviceModel, OpType.REPORT, 0x19);
+  const state = new FilterLifeState(deviceModel, OpType.REPORT, 0x19);
   describe('parse', () => {
     let subscription: Subscription | undefined;
 
@@ -34,8 +34,8 @@ describe('FilterLifeState', () => {
           const subscriptionFn = jest.fn((active) =>
             expect(active).toBeUndefined(),
           );
-          subscription = filterLifeState.subscribe(subscriptionFn);
-          filterLifeState.parse({ state: {} });
+          subscription = state.subscribe(subscriptionFn);
+          state.parse({ state: {} });
           expect(subscriptionFn).not.toHaveBeenCalled();
         });
       });
@@ -45,8 +45,8 @@ describe('FilterLifeState', () => {
             const subscriptionFn = jest.fn((active) =>
               expect(active).toBeUndefined(),
             );
-            subscription = filterLifeState.subscribe(subscriptionFn);
-            filterLifeState.parse({ op: {} });
+            subscription = state.subscribe(subscriptionFn);
+            state.parse({ op: {} });
             expect(subscriptionFn).not.toHaveBeenCalled();
           });
         });
@@ -55,8 +55,8 @@ describe('FilterLifeState', () => {
             const subscriptionFn = jest.fn((active) =>
               expect(active).toBeUndefined(),
             );
-            subscription = filterLifeState.subscribe(subscriptionFn);
-            filterLifeState.parse({ op: { command: [[100, 10, 10, 10, 10]] } });
+            subscription = state.subscribe(subscriptionFn);
+            state.parse({ op: { command: [[100, 10, 10, 10, 10]] } });
             expect(subscriptionFn).not.toHaveBeenCalled();
           });
         });
@@ -65,8 +65,8 @@ describe('FilterLifeState', () => {
             const subscriptionFn = jest.fn((active) =>
               expect(active).toBeUndefined(),
             );
-            subscription = filterLifeState.subscribe(subscriptionFn);
-            filterLifeState.parse({
+            subscription = state.subscribe(subscriptionFn);
+            state.parse({
               op: { command: [[OpType.REPORT, 10, 10, 10, 10]] },
             });
             expect(subscriptionFn).not.toHaveBeenCalled();
@@ -77,8 +77,8 @@ describe('FilterLifeState', () => {
             const subscriptionFn = jest.fn((filterLife) =>
               expect(filterLife).toBeUndefined(),
             );
-            subscription = filterLifeState.subscribe(subscriptionFn);
-            filterLifeState.parse({
+            subscription = state.subscribe(subscriptionFn);
+            state.parse({
               op: {
                 command: [[OpType.REPORT, 25, 0, 10, 10, 10, 10, -10, 10]],
               },
@@ -91,8 +91,8 @@ describe('FilterLifeState', () => {
             const subscriptionFn = jest.fn((filterLife) =>
               expect(filterLife).toBeUndefined(),
             );
-            subscription = filterLifeState.subscribe(subscriptionFn);
-            filterLifeState.parse({
+            subscription = state.subscribe(subscriptionFn);
+            state.parse({
               op: {
                 command: [[OpType.REPORT, 25, 0, 10, 10, 10, 10, 255, 10]],
               },
@@ -105,8 +105,8 @@ describe('FilterLifeState', () => {
             const subscriptionFn = jest.fn((expired) =>
               expect(expired).toEqual(life),
             );
-            subscription = filterLifeState.subscribe(subscriptionFn);
-            filterLifeState.parse({
+            subscription = state.subscribe(subscriptionFn);
+            state.parse({
               op: {
                 command: [[OpType.REPORT, 25, 0, 10, 10, 10, 10, life, 10]],
               },

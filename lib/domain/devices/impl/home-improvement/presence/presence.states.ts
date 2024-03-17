@@ -1,8 +1,9 @@
 import { DeviceModel } from '../../../devices.model';
+import { DeviceOpState } from '../../../states/device.state';
 import {
-  DeviceOpState,
+  ParseOption,
   StateCommandAndStatus,
-} from '../../../states/device.state';
+} from '../../../states/states.types';
 import {
   PresenceState,
   PresenceStateTypeName,
@@ -129,6 +130,7 @@ export class DetectionSettingsState extends DeviceOpState<
   DetectionSettingsStateName,
   DetectionSettings
 > {
+  protected parseOption: ParseOption = 'opCode';
   constructor(device: DeviceModel) {
     super(
       {
@@ -138,7 +140,6 @@ export class DetectionSettingsState extends DeviceOpState<
       device,
       DetectionSettingsStateName,
       {},
-      'opCode',
     );
   }
 

@@ -3,6 +3,10 @@ import { Version } from '../version.info';
 import { Subscription } from 'rxjs';
 import { OpType } from '../../../common/op-code';
 import { ColorRGBState } from './color-rgb.state';
+import {
+  testParseStateCalled,
+  testParseStateNotCalled,
+} from '../../../common/test-utils';
 
 describe('ColorRGBState', () => {
   const deviceModel: DeviceModel = new DeviceModel({
@@ -25,7 +29,7 @@ describe('ColorRGBState', () => {
     let subscription: Subscription | undefined;
 
     beforeEach(() => {
-      state = new ColorRGBState(deviceModel);
+      state = new ColorRGBState(deviceModel, OpType.REPORT, [0x05, 0x02]);
     });
 
     afterEach(() => {
@@ -42,101 +46,87 @@ describe('ColorRGBState', () => {
             '{ "state": { "clr": {} } }',
             '{ "state": { "color": null } }',
             '{ "color": 10 }',
-          ])('of %P, it does not update the value', (input) => {
-            const data = JSON.parse(input);
-            const subscriptionFn = jest.fn((active) =>
-              expect(active).toBeUndefined(),
-            );
-            subscription = state.subscribe(subscriptionFn);
-            state.parse(data);
-            expect(subscriptionFn).not.toHaveBeenCalled();
+          ])('of %P, it does not update the value', async (input) => {
+            expect(
+              await testParseStateNotCalled(state, JSON.parse(input)),
+            ).not.toHaveBeenCalled();
           });
         });
         describe('op type', () => {
           it.each([0x00, 0x20, OpType.COMMAND])(
             'of %p, the value is not udpated',
-            (opType) => {
-              const subscriptionFn = jest.fn((color) =>
-                expect(color).toBeUndefined(),
-              );
-              subscription = state.subscribe(subscriptionFn);
+            async (opType) => {
               const data = [opType, 0x05, 0x02];
-              state.parse({ op: { command: [data] } });
-              expect(subscriptionFn).not.toHaveBeenCalled();
+              expect(
+                await testParseStateNotCalled(state, {
+                  op: { command: [data] },
+                }),
+              ).not.toHaveBeenCalled();
             },
           );
         });
         describe('op identifier', () => {
           it.each([0x01, 0x20, 0x00])(
             'of %p, the value is not udpated',
-            (identifier) => {
-              const subscriptionFn = jest.fn((color) =>
-                expect(color).toBeUndefined(),
-              );
-              subscription = state.subscribe(subscriptionFn);
-              state.parse({
-                op: { command: [[OpType.REPORT, identifier, 0x02]] },
-              });
-              expect(subscriptionFn).not.toHaveBeenCalled();
+            async (identifier) => {
+              expect(
+                await testParseStateNotCalled(state, {
+                  op: { command: [[OpType.REPORT, identifier, 0x02]] },
+                }),
+              ).not.toHaveBeenCalled();
             },
           );
         });
         describe('op sub-identifier', () => {
           it.each([0x01, 0x00, 0x00])(
             'of %p, the value is not udpated',
-            (identifier) => {
-              const subscriptionFn = jest.fn((color) =>
-                expect(color).toBeUndefined(),
-              );
-              subscription = state.subscribe(subscriptionFn);
-              state.parse({
-                op: { command: [[OpType.REPORT, 0x05, identifier]] },
-              });
-              expect(subscriptionFn).not.toHaveBeenCalled();
+            async (identifier) => {
+              expect(
+                await testParseStateNotCalled(state, {
+                  op: { command: [[OpType.REPORT, 0x05, identifier]] },
+                }),
+              ).not.toHaveBeenCalled();
             },
           );
         });
       });
-    });
-    describe('a valid', () => {
-      describe('color', () => {
-        describe('under state', () => {
-          it.each([
-            { red: 255, green: 0, blue: 125 },
-            { red: 0, green: 0, blue: 0 },
-            { red: 100, green: 150, blue: 250 },
-          ])('sets the value to %p', (colorValue) => {
-            const subscriptionFn = jest.fn((color) =>
-              expect(color).toEqual(colorValue),
-            );
-            subscription = state.subscribe(subscriptionFn);
-            state.parse({ state: { color: colorValue } });
-            expect(subscriptionFn).toHaveBeenCalledTimes(1);
-          });
-        });
-        describe('as an op code', () => {
-          it.each(['[255, 0, 125]', '[0, 0, 0]', '[100, 150, 250]'])(
-            'sets the value to %p',
-            (colorValue) => {
-              const subscriptionFn = jest.fn((color) =>
-                expect(color).toEqual({
-                  red: JSON.parse(colorValue)[0],
-                  green: JSON.parse(colorValue)[1],
-                  blue: JSON.parse(colorValue)[2],
+      describe('a valid', () => {
+        describe('color', () => {
+          describe('under state', () => {
+            it.each([
+              { red: 255, green: 0, blue: 125 },
+              { red: 0, green: 0, blue: 0 },
+              { red: 100, green: 150, blue: 250 },
+            ])('sets the value to %p', async (colorValue) => {
+              expect(
+                await testParseStateCalled(state, {
+                  state: { color: colorValue },
                 }),
-              );
-              subscription = state.subscribe(subscriptionFn);
-              const arg = {
-                op: {
-                  command: [
-                    [OpType.REPORT, 0x05, 0x02, ...JSON.parse(colorValue)],
-                  ],
-                },
-              };
-              state.parse(arg);
-              expect(subscriptionFn).toHaveBeenCalledTimes(1);
-            },
-          );
+              ).toStrictEqual(colorValue);
+            });
+          });
+          describe('as an op code', () => {
+            it.each(['[255, 0, 125]', '[0, 0, 0]', '[100, 150, 250]'])(
+              'sets the value to %p',
+              async (colorValue) => {
+                const rgbArray = JSON.parse(colorValue);
+                const expectedColor = {
+                  red: rgbArray[0],
+                  green: rgbArray[1],
+                  blue: rgbArray[2],
+                };
+                expect(
+                  await testParseStateCalled(state, {
+                    op: {
+                      command: [
+                        [OpType.REPORT, 0x05, 0x02, ...JSON.parse(colorValue)],
+                      ],
+                    },
+                  }),
+                ).toStrictEqual(expectedColor);
+              },
+            );
+          });
         });
       });
     });

@@ -1,7 +1,14 @@
-import { total, Optional, asOpCode, ArrayRange } from '~ultimate-govee-common';
+import {
+  total,
+  Optional,
+  asOpCode,
+  ArrayRange,
+  isTypeOf,
+} from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
-import { DeviceOpState, StateCommandAndStatus } from './device.state';
+import { DeviceOpState } from './device.state';
 import { OpType } from '../../../common/op-code';
+import { ParseOption, StateCommandAndStatus } from './states.types';
 
 export const TimerStateName: 'timer' = 'timer' as const;
 export type TimerStateName = typeof TimerStateName;
@@ -12,6 +19,8 @@ export type Timer = {
 };
 
 export class TimerState extends DeviceOpState<TimerStateName, Timer> {
+  protected parseOption: ParseOption = 'opCode';
+
   constructor(
     device: DeviceModel,
     opType: number = OpType.REPORT,
@@ -24,22 +33,20 @@ export class TimerState extends DeviceOpState<TimerStateName, Timer> {
   }
 
   parseOpCommand(opCommand: number[]) {
-    let duration: Optional<number>;
-    if (opCommand.length <= 3) {
-      duration = total(opCommand.slice(1, 3));
-    }
     this.stateValue.next({
       enabled: opCommand[0] === 0x01,
-      duration,
+      duration: total(opCommand.slice(1, 3)),
     });
   }
 
   protected stateToCommand(state: Timer): Optional<StateCommandAndStatus> {
-    if (state.enabled === undefined) {
+    const enabled = state.enabled;
+    const duration = state.duration;
+    if (!isTypeOf(enabled, 'boolean')) {
       this.logger.warn('Enabled not included in state, ignoring command.');
       return undefined;
     }
-    if (state.duration === undefined) {
+    if (!isTypeOf(duration, 'number')) {
       this.logger.warn('Duration not included in state, ignoring command.');
       return undefined;
     }
@@ -51,9 +58,9 @@ export class TimerState extends DeviceOpState<TimerStateName, Timer> {
             asOpCode(
               OpType.COMMAND,
               ...this.identifier!,
-              state.enabled ? 0x01 : 0x00,
-              state.duration >> 8,
-              state.duration % 256,
+              enabled ? 0x01 : 0x00,
+              duration >> 8,
+              duration % 256,
             ),
           ],
         },

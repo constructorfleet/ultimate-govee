@@ -1,6 +1,7 @@
-import { OpType, Optional } from '~ultimate-govee-common';
+import { OpType, Optional, isTypeOf } from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
-import { DeviceOpState, StateCommandAndStatus } from './device.state';
+import { DeviceOpState } from './device.state';
+import { ParseOption, StateCommandAndStatus } from './states.types';
 
 export const PowerStateName: 'power' = 'power' as const;
 export type PowerStateName = typeof PowerStateName;
@@ -17,21 +18,27 @@ export class PowerState extends DeviceOpState<
   PowerStateName,
   Optional<boolean>
 > {
+  protected parseOption: ParseOption = 'both';
+
   constructor(
     device: DeviceModel,
     opType: number = OpType.REPORT,
     identifier: number[] = [0x01],
   ) {
-    super({ opType, identifier }, device, PowerStateName, undefined, 'both');
+    super({ opType, identifier }, device, PowerStateName, undefined);
   }
 
   parseState(data: PowerType) {
-    if (data?.isOn !== undefined) {
-      this.stateValue.next(data.isOn);
-    } else if (data?.state?.onOff !== undefined) {
-      this.stateValue.next(data.state.onOff);
-    } else if (data?.state?.isOn !== undefined) {
-      this.stateValue.next(data.state.isOn);
+    const { isOn, state } = data;
+    if (isTypeOf(isOn, 'boolean')) {
+      this.stateValue.next(isOn);
+    } else {
+      const { onOff, isOn } = state ?? {};
+      if (isTypeOf(onOff, 'boolean')) {
+        this.stateValue.next(onOff);
+      } else if (isTypeOf(isOn, 'boolean')) {
+        this.stateValue.next(isOn);
+      }
     }
   }
 

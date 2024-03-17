@@ -1,11 +1,16 @@
 import { DeviceModel } from '../../../devices.model';
-import { DeviceOpState, WaterShortageStateName } from '../../../states';
+import {
+  DeviceOpState,
+  ParseOption,
+  WaterShortageStateName,
+} from '../../../states';
 import { OpType } from '~ultimate-govee-common/op-code';
 
 export class IceMakerWaterEmpty extends DeviceOpState<
   WaterShortageStateName,
   boolean | undefined
 > {
+  protected parseOption: ParseOption = 'opCode';
   constructor(device: DeviceModel) {
     super(
       {
@@ -15,7 +20,6 @@ export class IceMakerWaterEmpty extends DeviceOpState<
       device,
       WaterShortageStateName,
       undefined,
-      'both',
     );
   }
 

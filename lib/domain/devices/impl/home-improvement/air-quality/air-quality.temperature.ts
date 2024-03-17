@@ -1,9 +1,11 @@
 import { TemperatureState as BaseState } from '../../../states/temperature.state';
 import { DeviceModel } from '../../../devices.model';
+import { ParseOption } from '~ultimate-govee-domain/devices/states';
 
 export class TemperatureState extends BaseState {
+  protected parseOption: ParseOption = 'both';
   constructor(device: DeviceModel) {
-    super(device, null, null, 'both');
+    super(device);
   }
 
   parseOpCommand(opCommand: number[]): void {

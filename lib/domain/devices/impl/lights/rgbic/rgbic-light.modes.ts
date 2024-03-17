@@ -14,6 +14,7 @@ import {
   LightEffectState,
   LightEffect,
   StateCommandAndStatus,
+  ParseOption,
 } from '../../../states';
 import { DeviceModel } from '../../../devices.model';
 
@@ -33,7 +34,7 @@ export class SceneModeState extends LightEffectState {
     super(device, opType, identifier);
   }
 
-  parseOpCommand(opCommand: number[]): void {
+  parseOpCommand(opCommand: number[]) {
     this.activeEffectCode.next(total(opCommand.slice(0, 2), true));
   }
 
@@ -185,18 +186,13 @@ export class AdvancedColorModeState extends DeviceOpState<
   AdvancedColorModeStateName,
   AdvancedColorData
 > {
+  protected parseOption: ParseOption = 'opCode';
   constructor(
     deviceModel: DeviceModel,
     opType: number = OpType.REPORT,
     identifier: number[] = [0x05, RGBICModes.ADVANCED_COLOR],
   ) {
-    super(
-      { opType, identifier },
-      deviceModel,
-      AdvancedColorModeStateName,
-      {},
-      'opCode',
-    );
+    super({ opType, identifier }, deviceModel, AdvancedColorModeStateName, {});
   }
 
   parseOpCommand(opCommand: number[]): void {
@@ -392,12 +388,13 @@ export class ColorModeState extends DeviceOpState<
   WholeColorModeStateName,
   WholeColor
 > {
+  protected parseOption: ParseOption = 'both';
   constructor(
     device: DeviceModel,
     opType: number = OpType.REPORT,
     identifier = [0x05, RGBICModes.WHOLE_COLOR],
   ) {
-    super({ opType, identifier }, device, WholeColorModeStateName, {}, 'both');
+    super({ opType, identifier }, device, WholeColorModeStateName, {});
   }
 
   parseState(data: ColorData): void {
