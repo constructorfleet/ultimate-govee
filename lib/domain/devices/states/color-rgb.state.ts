@@ -52,9 +52,6 @@ export class ColorRGBState extends DeviceOpState<ColorRGBStateName, ColorRGB> {
   }
 
   parseOpCommand(opCommand: number[]) {
-    if (opCommand[0] !== 0x02 || opCommand.length < 4) {
-      return;
-    }
     const [red, green, blue] = opCommand.slice(0, 3);
     if (
       isBetween(red, 0, 255) &&

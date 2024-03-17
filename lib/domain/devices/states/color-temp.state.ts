@@ -61,12 +61,14 @@ export class ColorTempState extends DeviceOpState<
         this.logger.warn(
           'Invalid or missing color temperature, ignoring command',
         );
+        return undefined;
       }
     } else {
       if (!isTypeOf(nextState.current, 'number')) {
         this.logger.warn(
           'Invalid or missing color temperature, ignoring command',
         );
+        return undefined;
       }
     }
 

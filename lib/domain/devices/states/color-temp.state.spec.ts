@@ -5,6 +5,7 @@ import { ColorTempState } from './color-temp.state';
 import {
   testParseStateCalled,
   testParseStateNotCalled,
+  testSetStateCalled,
   testSetStateNotCalled,
 } from '../../../common/test-utils';
 
@@ -24,10 +25,8 @@ describe('ColorTempState', () => {
     state: {},
   });
   let state: ColorTempState;
-
+  let subscription: Subscription | undefined;
   describe('parse', () => {
-    let subscription: Subscription | undefined;
-
     beforeEach(() => {
       state = new ColorTempState(deviceModel);
     });
@@ -100,6 +99,14 @@ describe('ColorTempState', () => {
     });
   });
   describe('setState', () => {
+    beforeEach(() => {
+      state = new ColorTempState(deviceModel);
+    });
+    afterEach(() => {
+      if (subscription !== undefined) {
+        subscription.unsubscribe();
+      }
+    });
     describe('when nextState is', () => {
       describe('an invalid state value', () => {
         it.each([undefined, null])(
@@ -112,6 +119,131 @@ describe('ColorTempState', () => {
             ).not.toHaveBeenCalled();
           },
         );
+      });
+      describe('a valid state value', () => {
+        describe('min and max are', () => {
+          const min: number = 2000;
+          const max: number = 9000;
+          describe('specified', () => {
+            describe('and current is', () => {
+              describe('within the range', () => {
+                it.each([2000, 9000, 3000, 4500, 7000])(
+                  'issues command to set color temperature to %p',
+                  async (colorTemperature) => {
+                    const command = await testSetStateCalled(state, {
+                      range: {
+                        min,
+                        max,
+                      },
+                      current: colorTemperature,
+                    });
+                    expect(command).toHaveProperty('commandId');
+                    expect(command.commandId).toBeDefined();
+                    expect(command).toHaveProperty('data');
+                    expect(command.data).toHaveProperty('colorTemInKelvin');
+                    expect(command.data.colorTemInKelvin).toBeDefined();
+                    expect(command.data.colorTemInKelvin).toBeCloseTo(
+                      colorTemperature,
+                    );
+                  },
+                );
+              });
+              describe('outside the range', () => {
+                it.each([1999, 10000, 500, -1])(
+                  '%p, command is ignored',
+                  async (colorTemperature) => {
+                    expect(
+                      await testSetStateNotCalled(state, {
+                        range: {
+                          min,
+                          max,
+                        },
+                        current: colorTemperature,
+                      }),
+                    ).not.toHaveBeenCalled();
+                  },
+                );
+              });
+            });
+          });
+          // describe('not specified', () => {
+          //   describe('there is an existing range', () => {
+          //     beforeAll(async () => {
+          //       let subscription: Subscription | undefined = undefined;
+          //       await new Promise<void>((resolve) => {
+          //         subscription = state.subscribe(() => {
+          //           subscription?.unsubscribe();
+          //           resolve();
+          //         });
+          //         state.parseState({
+          //           state: {
+          //             colorTemperature: {
+          //               min,
+          //               max,
+          //             },
+          //           },
+          //         });
+          //       });
+          //     });
+          //     describe('and current is', () => {
+          //       describe('within the existing range', () => {
+          //         it.each([2000, 9000, 3000, 4500, 7000])(
+          //           'issues command to set color temperature to %p',
+          //           async (colorTemperature) => {
+          //             const command = await testSetStateCalled(state, {
+          //               range: {
+          //                 min,
+          //                 max,
+          //               },
+          //               current: colorTemperature,
+          //             });
+          //             expect(command).toHaveProperty('commandId');
+          //             expect(command.commandId).toBeDefined();
+          //             expect(command).toHaveProperty('data');
+          //             expect(command.data).toHaveProperty('colorTemInKelvin');
+          //             expect(command.data.colorTemInKelvin).toBeDefined();
+          //             expect(command.data.colorTemInKelvin).toBeCloseTo(
+          //               colorTemperature,
+          //             );
+          //           },
+          //         );
+          //       });
+          //       describe('outside the range', () => {
+          //         it.each([1999, 10000, 500, -1])(
+          //           '%p, command is ignored',
+          //           async (colorTemperature) => {
+          //             expect(
+          //               await testSetStateNotCalled(state, {
+          //                 range: {
+          //                   min,
+          //                   max,
+          //                 },
+          //                 current: colorTemperature,
+          //               }),
+          //             ).not.toHaveBeenCalled();
+          //           },
+          //         );
+          //       });
+          //     });
+          //   });
+          //   describe('no existing range', () => {
+          //     it.each([-1, 100, 2000, 9000, 3000, 4500, 7000, 10000])(
+          //       '%p, command is ignored',
+          //       async (colorTemperature) => {
+          //         expect(
+          //           await testSetStateNotCalled(state, {
+          //             range: {
+          //               min,
+          //               max,
+          //             },
+          //             current: colorTemperature,
+          //           }),
+          //         ).not.toHaveBeenCalled();
+          //       },
+          //     );
+          //   });
+          // });
+        });
       });
     });
   });

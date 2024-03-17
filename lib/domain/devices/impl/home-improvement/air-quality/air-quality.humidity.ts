@@ -1,9 +1,11 @@
 import { HumidityState as BaseState } from '../../../states/humidity.state';
 import { DeviceModel } from '../../../devices.model';
+import { ParseOption } from '~ultimate-govee-domain/devices/states';
 
 export class HumidityState extends BaseState {
+  protected parseOption: ParseOption = 'both';
   constructor(device: DeviceModel) {
-    super(device, undefined, undefined, 'both');
+    super(device);
   }
 
   parseOpCommand(opCommand: number[]): void {
