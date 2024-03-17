@@ -1,4 +1,4 @@
-import { Optional } from '~ultimate-govee-common';
+import { Optional, isBetween, isTypeOf } from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
 import {
@@ -22,13 +22,13 @@ export class ColorTempState extends DeviceOpState<
   ColorTempStateName,
   MeasurementData
 > {
+  protected parseOption: ParseOption = 'state';
   constructor(
     device: DeviceModel,
-    parseOption: ParseOption = 'both',
     opType: Optional<number> = undefined,
     ...identifier: number[]
   ) {
-    super({ opType, identifier }, device, ColorTempStateName, {}, parseOption);
+    super({ opType, identifier }, device, ColorTempStateName, {});
   }
 
   parseState(data: ColorTempData) {
@@ -54,33 +54,22 @@ export class ColorTempState extends DeviceOpState<
   protected stateToCommand(
     nextState: MeasurementData,
   ): Optional<StateCommandAndStatus> {
-    if (
-      nextState?.current === undefined ||
-      nextState?.current === null ||
-      typeof nextState.current !== 'number'
-    ) {
-      this.logger.warn('Color temperature not provided, ignoring command.');
-      return undefined;
+    const { min, max } =
+      nextState?.range ?? this.stateValue.getValue()?.range ?? {};
+    if (isTypeOf(min, 'number') && isTypeOf(max, 'number')) {
+      if (!isBetween(nextState.current, min, max)) {
+        this.logger.warn(
+          'Invalid or missing color temperature, ignoring command',
+        );
+      }
+    } else {
+      if (!isTypeOf(nextState.current, 'number')) {
+        this.logger.warn(
+          'Invalid or missing color temperature, ignoring command',
+        );
+      }
     }
-    const currentRange = this.value.range;
-    if (
-      currentRange?.min !== undefined &&
-      nextState.current < currentRange.min
-    ) {
-      this.logger.warn(
-        `Color temperature ${nextState.current} is under the minimum ${currentRange.min}, ignoring command`,
-      );
-      return;
-    }
-    if (
-      currentRange?.max !== undefined &&
-      nextState.current > currentRange.max
-    ) {
-      this.logger.warn(
-        `Color temperature ${nextState.current} is above the maximum ${currentRange.max}, ignoring command`,
-      );
-      return;
-    }
+
     return {
       status: {
         state: {

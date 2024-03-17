@@ -1,7 +1,7 @@
-import { Optional, asOpCode, OpType } from '~ultimate-govee-common';
+import { Optional, asOpCode, OpType, isBetween } from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
-import { StateCommandAndStatus } from './states.types';
+import { ParseOption, StateCommandAndStatus } from './states.types';
 
 export const ColorRGBStateName: 'colorRGB' = 'colorRGB' as const;
 export type ColorRGBStateName = typeof ColorRGBStateName;
@@ -23,30 +23,30 @@ export type ColorRGB = {
 };
 
 export class ColorRGBState extends DeviceOpState<ColorRGBStateName, ColorRGB> {
+  protected parseOption: ParseOption = 'both';
   constructor(
     device: DeviceModel,
     opType: number = OpType.REPORT,
     identifier = [0x05],
   ) {
-    super(
-      { opType, identifier },
-      device,
-      ColorRGBStateName,
-      {
-        red: undefined,
-        green: undefined,
-        blue: undefined,
-      },
-      'both',
-    );
+    super({ opType, identifier }, device, ColorRGBStateName, {
+      red: undefined,
+      green: undefined,
+      blue: undefined,
+    });
   }
 
   parseState(data: ColorRGBData) {
-    if (data?.state?.color) {
+    const { red, green, blue } = data?.state?.color ?? {};
+    if (
+      isBetween(red, 0, 255) &&
+      isBetween(green, 0, 255) &&
+      isBetween(blue, 0, 255)
+    ) {
       this.stateValue.next({
-        red: data.state.color.red,
-        green: data.state.color.green,
-        blue: data.state.color.blue,
+        red,
+        green,
+        blue,
       });
     }
   }
@@ -55,37 +55,46 @@ export class ColorRGBState extends DeviceOpState<ColorRGBStateName, ColorRGB> {
     if (opCommand[0] !== 0x02 || opCommand.length < 4) {
       return;
     }
-    this.stateValue.next({
-      red: opCommand[1],
-      green: opCommand[2],
-      blue: opCommand[3],
-    });
+    const [red, green, blue] = opCommand.slice(0, 3);
+    if (
+      isBetween(red, 0, 255) &&
+      isBetween(green, 0, 255) &&
+      isBetween(blue, 0, 255)
+    ) {
+      this.stateValue.next({
+        red,
+        green,
+        blue,
+      });
+    }
   }
 
   protected stateToCommand(
     nextState: ColorRGB,
   ): Optional<StateCommandAndStatus> {
+    const { red, green, blue } = nextState ?? {};
+    if (
+      !isBetween(red, 0, 255) ||
+      !isBetween(green, 0, 255) ||
+      !isBetween(blue, 0, 255)
+    ) {
+      this.logger.warn('Missing or invalid color, ignoring command');
+      return;
+    }
     return {
       status: [
         {
           state: {
             color: {
-              red: nextState.red ?? 0,
-              green: nextState.green ?? 0,
-              blue: nextState.blue ?? 0,
+              red,
+              green,
+              blue,
             },
           },
         },
         {
           op: {
-            command: [
-              [
-                0x02,
-                nextState.red ?? 0,
-                nextState.green ?? 0,
-                nextState.blue ?? 0,
-              ],
-            ],
+            command: [[0x02, red, green, blue]],
           },
         },
       ],
@@ -94,24 +103,15 @@ export class ColorRGBState extends DeviceOpState<ColorRGBStateName, ColorRGB> {
           command: 'color',
           data: {
             color: {
-              r: nextState.red ?? 0,
-              g: nextState.green ?? 0,
-              b: nextState.blue ?? 0,
+              red,
+              green,
+              blue,
             },
           },
         },
         {
           data: {
-            command: [
-              asOpCode(
-                0x33,
-                this.identifier!,
-                0x03,
-                nextState.red ?? 0,
-                nextState.green ?? 0,
-                nextState.blue ?? 0,
-              ),
-            ],
+            command: [asOpCode(0x33, this.identifier!, 0x03, red, green, blue)],
           },
         },
       ],

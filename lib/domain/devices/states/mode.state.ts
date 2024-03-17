@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState, DeviceState } from './device.state';
 import { OpType } from '../../../common/op-code';
+import { ParseOption } from './states.types';
 
 export const ModeStateName: 'mode' = 'mode' as const;
 export type ModeStateName = typeof ModeStateName;
@@ -52,6 +53,7 @@ export class ModeState extends DeviceOpState<
   get activeMode(): Optional<DeviceState<string, any>> {
     return this.identifierMap(this);
   }
+  protected parseOption: ParseOption = 'both';
 
   constructor(
     device: DeviceModel,
@@ -61,7 +63,7 @@ export class ModeState extends DeviceOpState<
     inline: boolean = false,
     private readonly identifierMap: ModeIdMap = defaultModeIdMap,
   ) {
-    super({ opType, identifier }, device, ModeStateName, undefined, 'both');
+    super({ opType, identifier }, device, ModeStateName, undefined);
     this.modes = definedStates(modes);
     this.inline = inline;
   }

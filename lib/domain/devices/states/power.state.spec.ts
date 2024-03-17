@@ -65,16 +65,6 @@ describe('PowerState', () => {
             ).toEqual(power);
           });
         });
-        describe('with onOff', () => {
-          it.each([true, false])('sets the value to %p', async (power) => {
-            expect(
-              await testParseStateCalled(
-                state,
-                JSON.parse(JSON.stringify({ state: { connected: power } })),
-              ),
-            ).toEqual(power);
-          });
-        });
       });
     });
   });

@@ -1,8 +1,14 @@
-import { total, Optional, asOpCode, ArrayRange } from '~ultimate-govee-common';
+import {
+  total,
+  Optional,
+  asOpCode,
+  ArrayRange,
+  isTypeOf,
+} from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
 import { OpType } from '../../../common/op-code';
-import { StateCommandAndStatus } from './states.types';
+import { ParseOption, StateCommandAndStatus } from './states.types';
 
 export const TimerStateName: 'timer' = 'timer' as const;
 export type TimerStateName = typeof TimerStateName;
@@ -13,6 +19,8 @@ export type Timer = {
 };
 
 export class TimerState extends DeviceOpState<TimerStateName, Timer> {
+  protected parseOption: ParseOption = 'opCode';
+
   constructor(
     device: DeviceModel,
     opType: number = OpType.REPORT,
@@ -32,11 +40,13 @@ export class TimerState extends DeviceOpState<TimerStateName, Timer> {
   }
 
   protected stateToCommand(state: Timer): Optional<StateCommandAndStatus> {
-    if (state.enabled === undefined) {
+    const enabled = state.enabled;
+    const duration = state.duration;
+    if (!isTypeOf(enabled, 'boolean')) {
       this.logger.warn('Enabled not included in state, ignoring command.');
       return undefined;
     }
-    if (state.duration === undefined) {
+    if (!isTypeOf(duration, 'number')) {
       this.logger.warn('Duration not included in state, ignoring command.');
       return undefined;
     }
@@ -48,9 +58,9 @@ export class TimerState extends DeviceOpState<TimerStateName, Timer> {
             asOpCode(
               OpType.COMMAND,
               ...this.identifier!,
-              state.enabled ? 0x01 : 0x00,
-              state.duration >> 8,
-              state.duration % 256,
+              enabled ? 0x01 : 0x00,
+              duration >> 8,
+              duration % 256,
             ),
           ],
         },

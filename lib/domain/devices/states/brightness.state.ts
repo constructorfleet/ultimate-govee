@@ -1,8 +1,8 @@
-import { asOpCode, Optional } from '~ultimate-govee-common';
+import { asOpCode, isBetween, Optional } from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
 import { OpType } from '../../../common/op-code';
-import { StateCommandAndStatus } from './states.types';
+import { ParseOption, StateCommandAndStatus } from './states.types';
 
 export const BrightnessStateName: 'brightness' = 'brightness' as const;
 export type BrightnessStateName = typeof BrightnessStateName;
@@ -17,48 +17,37 @@ export class BrightnessState extends DeviceOpState<
   BrightnessStateName,
   Optional<number>
 > {
+  protected readonly parseOption: ParseOption = 'both';
   constructor(
     device: DeviceModel,
     opType: number = OpType.REPORT,
     identifier: number[] = [0x04],
   ) {
-    super(
-      { opType, identifier },
-      device,
-      BrightnessStateName,
-      undefined,
-      'both',
-    );
+    super({ opType, identifier }, device, BrightnessStateName, undefined);
   }
 
   parseState(data: BrightnessData) {
-    if (data?.state?.brightness) {
-      if (data.state.brightness < 0 || data.state.brightness > 100) {
-        return;
-      }
-      this.stateValue.next(data.state.brightness);
+    const brightness = data?.state?.brightness;
+    if (!isBetween(brightness, 0, 100)) {
+      return undefined;
     }
+    this.stateValue.next(brightness);
   }
 
   parseOpCommand(opCommand: number[]) {
     const [brightness] = opCommand.slice(0, 1);
-    if (brightness < 0 || brightness > 100) {
+    if (!isBetween(brightness, 0, 100)) {
       return;
     }
+
     this.stateValue.next(brightness);
   }
 
   protected stateToCommand(
     nextState: Optional<number>,
   ): Optional<StateCommandAndStatus> {
-    if (nextState === undefined) {
-      this.logger.warn('Brigntess not supplied, ignoreing command.');
-      return;
-    }
-    if (nextState < 0 || nextState > 100) {
-      this.logger.warn(
-        'Brightness must be between 0 and 100, ignoring command.',
-      );
+    if (!isBetween(nextState, 0, 100)) {
+      this.logger.warn('Invalid or missing state, ignoring command.');
       return;
     }
 

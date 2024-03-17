@@ -20,13 +20,14 @@ export class HumidityState extends DeviceOpState<
   HumidityStateName,
   MeasurementData
 > {
+  protected parseOption: ParseOption = 'state';
+
   constructor(
     device: DeviceModel,
     opType: Optional<number> = undefined,
-    identifier: Optional<number[]> = undefined,
-    parseOption: ParseOption = 'state',
+    ...identifier: number[]
   ) {
-    super({ opType, identifier }, device, HumidityStateName, {}, parseOption);
+    super({ opType, identifier }, device, HumidityStateName, {});
   }
 
   parseState(data: HumidityDataType) {

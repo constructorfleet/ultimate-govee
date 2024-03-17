@@ -17,19 +17,13 @@ export class TemperatureState extends DeviceOpState<
   TemperatureStateName,
   MeasurementData
 > {
+  protected parseOption: ParseOption = 'state';
   constructor(
     device: DeviceModel,
     opType: Ignorable<Optional<number>> = undefined,
-    identifier: Ignorable<Optional<number[]>> = undefined,
-    parseOption: ParseOption = 'state',
+    ...identifier: number[]
   ) {
-    super(
-      { opType, identifier },
-      device,
-      TemperatureStateName,
-      {},
-      parseOption,
-    );
+    super({ opType, identifier }, device, TemperatureStateName, {});
   }
 
   parseState(data: TemperatureDataType) {

@@ -207,12 +207,13 @@ export class DeviceOpState<
 > extends DeviceState<StateName, StateValue> {
   protected readonly opType: Ignorable<Optional<number>>;
   readonly identifier: Ignorable<Optional<number[]>>;
+  protected readonly parseOption: ParseOption = 'opCode';
+
   constructor(
     { opType, identifier }: OpCommandIdentifier,
     device: DeviceModel,
     name: StateName,
     initialValue: StateValue,
-    private readonly parseOption: ParseOption = 'opCode',
   ) {
     super(device, name, initialValue);
     this.opType = opType;
