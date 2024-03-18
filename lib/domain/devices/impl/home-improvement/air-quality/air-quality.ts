@@ -76,7 +76,7 @@ export class AirQualityFactory extends DeviceFactory<
   constructor() {
     super(AirQualityDevice, {
       'Home Improvement': {
-        Temp: /Air Quality/i,
+        Temp: /air quality/i,
       },
     });
   }

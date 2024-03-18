@@ -95,7 +95,7 @@ export class IceMakerFactory extends DeviceFactory<
   constructor() {
     super(IceMakerDevice, {
       'Home Appliances': {
-        Kitchen: /Ice Maker/,
+        Kitchen: /ice maker/i,
       },
     });
   }

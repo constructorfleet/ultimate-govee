@@ -123,7 +123,7 @@ export class PurifierFactory extends DeviceFactory<PurifierDevice, Purifier> {
   constructor() {
     super(PurifierDevice, {
       'Home Appliances': {
-        'Air Treatment': /Purifier/,
+        'Air Treatment': /purifier/i,
       },
     });
   }
