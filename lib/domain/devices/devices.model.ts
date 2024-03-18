@@ -46,7 +46,6 @@ export class DeviceModel {
   public readonly category: string;
   public readonly categoryGroup: string;
   public readonly status: BehaviorSubject<GoveeDeviceStatus>;
-  public readonly refreshers: ((device: this) => void)[] = [];
 
   constructor(args: DeviceConstructorArgs) {
     this.status = new BehaviorSubject(args as GoveeDeviceStatus);
@@ -70,11 +69,6 @@ export class DeviceModel {
   }
   set productData(product: Optional<ProductModel>) {
     this.product = product;
-  }
-
-  refresh() {
-    new Logger(this.id).debug(`Refreshing ${this.refreshers.length}`);
-    this.refreshers.forEach((refresher) => refresher(this));
   }
 }
 
@@ -150,10 +144,6 @@ export const IoTDevice = <TDevice extends ClassConstructor<DeviceModel>>(
       super(args[0]);
       this.iotTopic = args[0].iotTopic;
     }
-
-    refresh() {
-      super.refresh();
-    }
   }
 
   return IoTDeviceMixin;
@@ -164,7 +154,6 @@ export const createDeviceModel = (
   productCategories: Record<string, Product>,
 ): DeviceModel => {
   let constructor: ClassConstructor<DeviceModel> = DeviceModel;
-  const refreshers: ((device: DeviceModel) => void)[] = [];
   if (device.blueTooth) {
     constructor = BLEDevice(constructor);
   }
@@ -188,6 +177,5 @@ export const createDeviceModel = (
     bleAddress: device.blueTooth?.mac,
     bleName: device.blueTooth?.name,
   });
-  newDevice.refreshers.push(...refreshers);
   return newDevice;
 };
