@@ -263,7 +263,9 @@ export class Device<States extends DeviceStatesType = DeviceStatesType>
         ...device.status.value,
       });
     });
-    this.subscriptions.push(interval(10000).subscribe(() => this.refresh()));
+    this.subscriptions.push(
+      interval(10000).subscribe(() => this.refresh$.next()),
+    );
     this.subscriptions.push(
       this.deviceStates.delta$.subscribe(() => {
         this.next(this);
