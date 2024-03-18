@@ -140,7 +140,7 @@ export class HumidifierFactory extends DeviceFactory<
   constructor() {
     super(HumidifierDevice, {
       'Home Appliances': {
-        'Air Treatment': /Humidifier/,
+        'Air Treatment': /humidifier/i,
       },
     });
   }

@@ -68,7 +68,7 @@ export class HygrometerFactory extends DeviceFactory<
   constructor() {
     super(HygrometerDevice, {
       'Home Improvement': {
-        Temp: /Hygrometer/i,
+        Temp: /hygrometer/i,
       },
     });
   }
