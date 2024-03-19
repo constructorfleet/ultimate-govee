@@ -19,7 +19,7 @@ export class IceMakerNuggetSizeState extends DeviceOpState<
     super(
       {
         opType: OpType.REPORT,
-        identifier: [0x05],
+        identifier: [5],
       },
       device,
       NuggetSizeStateName,
