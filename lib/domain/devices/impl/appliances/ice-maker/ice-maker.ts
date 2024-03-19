@@ -55,7 +55,6 @@ export type IceMakerType = typeof IceMakerType;
 
 export class IceMakerDevice extends Device<IceMakerStates> implements IceMaker {
   static readonly deviceType: IceMakerType = IceMakerType;
-  protected isDebug: boolean = true;
   get deviceType(): string {
     return IceMakerDevice.deviceType;
   }
