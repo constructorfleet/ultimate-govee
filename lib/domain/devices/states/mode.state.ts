@@ -53,7 +53,6 @@ export class ModeState extends DeviceOpState<
   get activeMode(): Optional<DeviceState<string, any>> {
     return this.identifierMap(this);
   }
-  protected parseOption: ParseOption = 'both';
 
   constructor(
     device: DeviceModel,
@@ -63,7 +62,7 @@ export class ModeState extends DeviceOpState<
     inline: boolean = false,
     private readonly identifierMap: ModeIdMap = defaultModeIdMap,
   ) {
-    super({ opType, identifier }, device, ModeStateName, undefined);
+    super({ opType, identifier }, device, ModeStateName, undefined, ParseOption.opCode.or(ParseOption.state));
     this.modes = definedStates(modes);
     this.inline = inline;
   }

@@ -18,14 +18,18 @@ export class PowerState extends DeviceOpState<
   PowerStateName,
   Optional<boolean>
 > {
-  protected parseOption: ParseOption = 'both';
-
   constructor(
     device: DeviceModel,
     opType: number = OpType.REPORT,
     identifier: number[] = [0x01],
   ) {
-    super({ opType, identifier }, device, PowerStateName, undefined);
+    super(
+      { opType, identifier },
+      device,
+      PowerStateName,
+      undefined,
+      ParseOption.opCode.or(ParseOption.state),
+    );
   }
 
   parseState(data: PowerType) {

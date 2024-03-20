@@ -22,13 +22,18 @@ export class ColorTempState extends DeviceOpState<
   ColorTempStateName,
   MeasurementData
 > {
-  protected parseOption: ParseOption = 'state';
   constructor(
     device: DeviceModel,
     opType: Optional<number> = undefined,
     ...identifier: number[]
   ) {
-    super({ opType, identifier }, device, ColorTempStateName, {});
+    super(
+      { opType, identifier },
+      device,
+      ColorTempStateName,
+      {},
+      ParseOption.state,
+    );
   }
 
   parseState(data: ColorTempData) {

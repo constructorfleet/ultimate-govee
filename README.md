@@ -77,8 +77,6 @@ onMotionClear() {
   has one
 - `power` - Whether the device is on or off, this is similar to
 - `isActive` but applies primarily to switch and light devices
-- `segmentCount` - Provides the number of controllable segments for RGBICLight
-  devices
 - `temperature` - An object containing the valid temperature range, current
   reading, calibration settings and raw value
 - `timer`- Allows interacting with the device's timer feature (setting the start

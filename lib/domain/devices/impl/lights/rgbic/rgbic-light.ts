@@ -6,8 +6,6 @@ import {
   ConnectedState,
   LightEffectStateName,
   PowerState,
-  SegmentCountState,
-  SegmentCountStateName,
   ColorTempState,
   ActiveState,
   ActiveStateName,
@@ -41,7 +39,6 @@ const StateFactory: StateFactories = [
   (device: DeviceModel) => new ActiveState(device),
   (device: DeviceModel) => new BrightnessState(device),
   (device: DeviceModel) => new ColorTempState(device),
-  (device: DeviceModel) => new SegmentCountState(device),
   (device: DeviceModel) => new ColorModeState(device),
   (device: DeviceModel) => new SceneModeState(device),
   (device: DeviceModel) => new MicModeState(device),
@@ -62,12 +59,6 @@ export class RGBICLightDevice
 
   constructor(device: DeviceModel, eventBus: EventBus, commandBus: CommandBus) {
     super(device, eventBus, commandBus, StateFactory);
-    this.addState(
-      new SegmentColorModeState(
-        device,
-        this.state<SegmentCountState>(SegmentCountStateName)!,
-      ),
-    );
     this.addState(
       new RGBICActiveState(device, [
         this.state(WholeColorModeStateName),
@@ -92,9 +83,6 @@ export class RGBICLightDevice
   }
   get [ColorTempStateName](): Optional<ColorTempState> {
     return this.state(ColorTempStateName);
-  }
-  get [SegmentCountStateName](): Optional<SegmentCountState> {
-    return this.state(SegmentCountStateName);
   }
   get [WholeColorModeStateName](): Optional<ColorModeState> {
     return this.state(WholeColorModeStateName);
@@ -146,7 +134,6 @@ export type RGBICLight = {
   [ActiveStateName]: Optional<ActiveState>;
   [BrightnessStateName]: Optional<BrightnessState>;
   [ColorTempStateName]: Optional<ColorTempState>;
-  [SegmentCountStateName]: Optional<SegmentCountState>;
   [WholeColorModeStateName]: Optional<ColorModeState>;
   [LightEffectStateName]: Optional<LightEffectState>;
   [MicModeStateName]: Optional<MicModeState>;

@@ -1,10 +1,8 @@
-import { DeltaMap, Optional, total } from '~ultimate-govee-common';
+import { DeltaMap, Optional, total, OpType } from '~ultimate-govee-common';
 import { BehaviorSubject } from 'rxjs';
 import { Effect } from '~ultimate-govee-data';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
-import { OpType } from '../../../common/op-code';
-import { ParseOption } from './states.types';
 
 export const LightEffectStateName: 'lightEffect' = 'lightEffect' as const;
 export type LightEffectStateName = typeof LightEffectStateName;
@@ -14,8 +12,6 @@ export class LightEffectState extends DeviceOpState<
   LightEffectStateName,
   LightEffect
 > {
-  protected parseOption: ParseOption = 'opCode';
-
   readonly effects: DeltaMap<number, LightEffect> = new DeltaMap();
   readonly activeEffectCode: BehaviorSubject<number | undefined> =
     new BehaviorSubject<number | undefined>(undefined);

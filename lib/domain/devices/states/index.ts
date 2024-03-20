@@ -11,7 +11,6 @@ import { FilterLifeStateName } from './filter-life.state';
 import { HumidityStateName } from './humidity.state';
 import { NightLightStateName } from './night-light.state';
 import { PowerStateName } from './power.state';
-import { SegmentCountStateName } from './segment-count.state';
 import { TemperatureStateName } from './temperature.state';
 import { TimerStateName } from './timer.state';
 import { WaterShortageStateName } from './water-shortage.state';
@@ -35,11 +34,9 @@ export * from './light-effect.state';
 export * from './mode.state';
 export * from './night-light.state';
 export * from './power.state';
-export * from './segment-count.state';
 export * from './temperature.state';
 export * from './timer.state';
 export * from './water-shortage.state';
-export * from './numeric.state';
 export * from './unknown.state';
 export * from './presence.state';
 
@@ -57,7 +54,6 @@ export const DeviceStates: string[] = [
   HumidityStateName,
   NightLightStateName,
   PowerStateName,
-  SegmentCountStateName,
   TemperatureStateName,
   TimerStateName,
   WaterShortageStateName,

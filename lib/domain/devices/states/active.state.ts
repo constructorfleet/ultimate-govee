@@ -16,7 +16,9 @@ export class ActiveState extends DeviceOpState<
   ActiveStateName,
   Optional<boolean>
 > {
-  protected readonly parseOption: ParseOption = 'both';
+  protected readonly parseOption: ParseOption = ParseOption.opCode.or(
+    ParseOption.state,
+  );
   constructor(
     device: DeviceModel,
     opType: number = OpType.REPORT,

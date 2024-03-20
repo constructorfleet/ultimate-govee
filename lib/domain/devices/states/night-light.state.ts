@@ -7,7 +7,7 @@ import {
 } from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
-import { ParseOption, StateCommandAndStatus } from './states.types';
+import { StateCommandAndStatus } from './states.types';
 
 export const NightLightStateName: 'nightLight' = 'nightLight' as const;
 export type NightLightStateName = typeof NightLightStateName;
@@ -21,8 +21,6 @@ export class NightLightState extends DeviceOpState<
   NightLightStateName,
   NightLight
 > {
-  protected parseOption: ParseOption = 'opCode';
-
   constructor(
     device: DeviceModel,
     opType: number = OpType.REPORT,
