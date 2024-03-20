@@ -391,7 +391,7 @@ export class ColorModeState extends DeviceOpState<
       device,
       WholeColorModeStateName,
       {},
-      ParseOption.opCode.union(ParseOption.state),
+      ParseOption.opCode.or(ParseOption.state),
     );
   }
 

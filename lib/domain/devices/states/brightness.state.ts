@@ -17,21 +17,27 @@ export class BrightnessState extends DeviceOpState<
   BrightnessStateName,
   Optional<number>
 > {
-  protected readonly parseOption: ParseOption = ParseOption.opCode.union(
-    ParseOption.multiOp,
-  );
+  protected readonly;
+
   constructor(
     device: DeviceModel,
     opType: number = OpType.REPORT,
     identifier: number[] = [0x04],
+    parseOption: ParseOption = ParseOption.opCode.or(ParseOption.state),
   ) {
-    super({ opType, identifier }, device, BrightnessStateName, undefined);
+    super(
+      { opType, identifier },
+      device,
+      BrightnessStateName,
+      undefined,
+      parseOption,
+    );
   }
 
   parseState(data: BrightnessData) {
     const brightness = data?.state?.brightness;
     if (!isBetween(brightness, 0, 100)) {
-      return undefined;
+      return;
     }
     this.stateValue.next(brightness);
   }

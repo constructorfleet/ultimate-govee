@@ -31,7 +31,7 @@ export class HumidityState extends BaseHumidityState {
 }
 
 export class TemperatureState extends BaseTemperatureState {
-  protected parseOption: ParseOption = ParseOption.multiOp.union(
+  protected parseOption: ParseOption = ParseOption.multiOp.or(
     ParseOption.state,
   );
   constructor(device: DeviceModel) {
@@ -66,7 +66,7 @@ export class PM25State extends DeviceOpState<PM25StateName, MeasurementData> {
       device,
       PM25StateName,
       {},
-      ParseOption.multiOp.union(ParseOption.state),
+      ParseOption.multiOp.or(ParseOption.state),
     );
   }
 

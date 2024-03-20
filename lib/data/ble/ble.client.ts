@@ -349,7 +349,6 @@ export class BleClient {
         );
         await sleep(300);
         await dataChar.notifyAsync(false);
-        // console.dir({ uuid: writeChar.uuid, props: writeChar.properties });
         return results$.complete();
       } catch (err) {
         throw new Error(`Error sending command to ${id}: ${err}`);

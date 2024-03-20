@@ -1,7 +1,11 @@
 import { Optional, isBetween, isTypeOf } from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
-import { MeasurementData, StateCommandAndStatus } from './states.types';
+import {
+  MeasurementData,
+  ParseOption,
+  StateCommandAndStatus,
+} from './states.types';
 import { Measurement } from '~ultimate-govee-data';
 
 export const ColorTempStateName: 'colorTemperature' =
@@ -23,7 +27,13 @@ export class ColorTempState extends DeviceOpState<
     opType: Optional<number> = undefined,
     ...identifier: number[]
   ) {
-    super({ opType, identifier }, device, ColorTempStateName, {});
+    super(
+      { opType, identifier },
+      device,
+      ColorTempStateName,
+      {},
+      ParseOption.state,
+    );
   }
 
   parseState(data: ColorTempData) {

@@ -28,7 +28,7 @@ export class PowerState extends DeviceOpState<
       device,
       PowerStateName,
       undefined,
-      ParseOption.opCode.union(ParseOption.state),
+      ParseOption.opCode.or(ParseOption.state),
     );
   }
 
