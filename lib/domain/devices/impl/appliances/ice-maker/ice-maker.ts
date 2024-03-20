@@ -27,6 +27,8 @@ import {
   ConnectedStateName,
   PowerState,
   PowerStateName,
+  TemperatureState,
+  TemperatureStateName,
 } from '../../../states';
 import {
   IceMakerMakingIceState,
@@ -34,6 +36,7 @@ import {
 } from './ice-maker.make-ice';
 import { Optional } from '../../../../../common/types';
 import { NuggetSize } from './types';
+import { IceMakerTemperatureState } from './ice-maker.temperature';
 
 const stateFactories: StateFactories = [
   (device) => new PowerState(device),
@@ -44,6 +47,7 @@ const stateFactories: StateFactories = [
   (device) => new IceMakerWaterEmpty(device),
   (device) => new IceMakerStatusState(device),
   (device) => new IceMakerScheduledStart(device),
+  (device) => new IceMakerTemperatureState(device),
 ];
 
 export const IceMakerType: 'ice-maker' = 'ice-maker' as const;
@@ -85,6 +89,9 @@ export class IceMakerDevice extends Device<IceMakerStates> implements IceMaker {
   get [ActiveStateName](): Optional<ActiveState> {
     return this.state(ActiveStateName);
   }
+  get [TemperatureStateName](): Optional<TemperatureState> {
+    return this.state(TemperatureStateName);
+  }
 }
 
 @Injectable()
@@ -110,6 +117,7 @@ export type IceMakerStates = {
   [PowerStateName]: Optional<PowerState>;
   [ConnectedStateName]: Optional<ConnectedState>;
   [ActiveStateName]: Optional<ActiveState>;
+  [TemperatureStateName]: Optional<TemperatureState>;
 };
 
 export type IceMaker = {

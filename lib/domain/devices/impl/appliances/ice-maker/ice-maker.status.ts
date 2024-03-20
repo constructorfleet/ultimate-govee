@@ -14,7 +14,7 @@ export class IceMakerStatusState extends DeviceOpState<
   protected parseOption: ParseOption = 'opCode';
   constructor(device: DeviceModel) {
     super(
-      { opType: OpType.REPORT, identifier: [0x19] },
+      { opType: OpType.REPORT, identifier: [25] },
       device,
       IceMakerStatusStateName,
       undefined,

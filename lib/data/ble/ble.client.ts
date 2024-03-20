@@ -14,7 +14,12 @@ import {
 } from 'rxjs';
 import { DeltaMap, Optional, sleep } from '~ultimate-govee-common';
 import { platform } from 'os';
-import { BleCommand, BlePeripheral, NobleBle } from './ble.types';
+import {
+  BleCommand,
+  BlePeripheral,
+  BleServicesAndCharacteristics,
+  NobleBle,
+} from './ble.types';
 import { DecoderService } from './decoder/decoder.service';
 import { DecodedDevice } from './decoder';
 import { execSync } from 'child_process';
@@ -102,10 +107,14 @@ export class BleClient {
     this.commandQueue
       .pipe(
         filter(() => this.enabled.getValue()),
+        filter((command) => this.peripheralAddresses.has(command.address)),
         distinctUntilKeyChanged('address'),
-        concatMap((command) => from(this.sendCommand(command))),
+
+        // concatMap((command) => from(this.sendCommand(command))),
       )
-      .subscribe();
+      .subscribe(async (command) => {
+        await this.sendCommand(command);
+      });
   }
 
   private async decodePeripheral(
@@ -278,26 +287,49 @@ export class BleClient {
       }
       debug && this.logger.debug(`Connected to ${id}`);
       try {
-        const serviceChars =
-          await peripheral.discoverSomeServicesAndCharacteristicsAsync(
-            [this.config.serviceUUID],
-            [this.config.dataCharUUID, this.config.controlCharUUID],
-          );
+        let serviceChars: BleServicesAndCharacteristics | undefined;
+        let uuidSet:
+          | {
+              serviceUUID: string;
+              dataCharUUID: string;
+              controlCharUUID: string;
+            }
+          | undefined;
+        const uuids = [this.config.primary, this.config.secondary];
+        for (const uuidset of uuids) {
+          if (uuidSet !== undefined) {
+            break;
+          }
+          try {
+            serviceChars =
+              await peripheral.discoverSomeServicesAndCharacteristicsAsync(
+                [uuidset.serviceUUID],
+                [uuidset.controlCharUUID, uuidset.dataCharUUID],
+              );
+            uuidSet = uuidset;
+          } catch {
+            // no-op
+          }
+        }
+        if (uuidSet === undefined || serviceChars === undefined) {
+          this.logger.warn('Unable to locate service with data characteristic');
+          return results$.complete();
+        }
         const dataChar = serviceChars.characteristics.find(
-          (c) => c.uuid === this.config.dataCharUUID,
+          (c) => c.uuid === uuidSet.dataCharUUID,
         );
         const writeChar = serviceChars.characteristics.find(
-          (c) => c.uuid === this.config.controlCharUUID,
+          (c) => c.uuid === uuidSet.controlCharUUID,
         );
         if (dataChar === undefined) {
           this.logger.warn(
-            `Unable to locate service ${this.config.serviceUUID} with data characteristic ${this.config.dataCharUUID}`,
+            `Unable to locate service ${uuidSet.serviceUUID} with data characteristic ${uuidSet.dataCharUUID}`,
           );
           return results$.complete();
         }
         if (writeChar === undefined) {
           this.logger.warn(
-            `Unable to locate service ${this.config.serviceUUID} with write characteristic ${this.config.controlCharUUID}`,
+            `Unable to locate service ${uuidSet.serviceUUID} with write characteristic ${uuidSet.controlCharUUID}`,
           );
           return results$.complete();
         }
@@ -317,6 +349,7 @@ export class BleClient {
         );
         await sleep(300);
         await dataChar.notifyAsync(false);
+        // console.dir({ uuid: writeChar.uuid, props: writeChar.properties });
         return results$.complete();
       } catch (err) {
         throw new Error(`Error sending command to ${id}: ${err}`);

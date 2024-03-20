@@ -15,7 +15,7 @@ export class IceMakerWaterEmpty extends DeviceOpState<
     super(
       {
         opType: OpType.REPORT,
-        identifier: [31, 6],
+        identifier: [23],
       },
       device,
       WaterShortageStateName,
@@ -24,6 +24,6 @@ export class IceMakerWaterEmpty extends DeviceOpState<
   }
 
   parseOpCommand(opCommand: number[]): void {
-    this.stateValue.next(opCommand[0] === 0x01);
+    this.stateValue.next(opCommand[1] === 0x01);
   }
 }

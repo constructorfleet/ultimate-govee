@@ -232,7 +232,7 @@ export class Device<States extends DeviceStatesType = DeviceStatesType>
           bleAddress: this.bleAddress,
         },
         Array.from(this.opIdentifiers),
-        true, //this.isDebug,
+        this.isDebug,
       ),
     );
   }

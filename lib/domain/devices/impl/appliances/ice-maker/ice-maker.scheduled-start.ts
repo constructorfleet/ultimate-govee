@@ -46,7 +46,7 @@ export class IceMakerScheduledStart extends DeviceOpState<
 
   constructor(device: DeviceModel) {
     super(
-      { opType: OpType.REPORT, identifier: [0x23] },
+      { opType: OpType.REPORT, identifier: [35] },
       device,
       ScheduledStartStateName,
       {},
