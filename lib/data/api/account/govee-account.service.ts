@@ -79,8 +79,6 @@ export class GoveeAccountService {
     }
     let { clientId } = credentials;
     let topic: string;
-    // const ttr = await request("https://community-api.govee.com/os/v1/login", {}, { email: credentials.username, password: credentials.password }).post();
-    // console.dir(ttr.data, {depth: 5});
     const account: GoveeAccount = {
       accountId: '',
       oauth: {

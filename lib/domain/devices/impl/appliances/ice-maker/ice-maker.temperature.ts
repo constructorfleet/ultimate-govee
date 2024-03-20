@@ -3,9 +3,8 @@ import { ParseOption } from '../../../states/states.types';
 import { TemperatureState } from '../../../states/temperature.state';
 import { OpType, total } from '~ultimate-govee-common/op-code';
 export class IceMakerTemperatureState extends TemperatureState {
-  protected parseOption: ParseOption = 'opCode';
   constructor(deviceModel: DeviceModel) {
-    super(deviceModel, OpType.REPORT, 16);
+    super(deviceModel, OpType.REPORT, ParseOption.opCode, 16);
   }
 
   parseOpCommand(opCommand: number[]): void {
@@ -18,6 +17,7 @@ export class IceMakerTemperatureState extends TemperatureState {
         min: -20,
         max: 60,
       },
+      unit: 'C',
     });
   }
 }

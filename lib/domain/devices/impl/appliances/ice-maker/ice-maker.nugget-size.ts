@@ -1,10 +1,6 @@
 import { Optional, asOpCode, OpType } from '~ultimate-govee-common';
 import { DeviceModel } from '../../../devices.model';
-import {
-  DeviceOpState,
-  ParseOption,
-  StateCommandAndStatus,
-} from '../../../states';
+import { DeviceOpState, StateCommandAndStatus } from '../../../states';
 import { NuggetSize, nuggetSizeMap } from './types';
 
 export const NuggetSizeStateName = 'nuggetSize' as const;
@@ -14,7 +10,6 @@ export class IceMakerNuggetSizeState extends DeviceOpState<
   NuggetSizeStateName,
   NuggetSize | undefined
 > {
-  protected parseOption: ParseOption = 'opCode';
   constructor(device: DeviceModel) {
     super(
       {

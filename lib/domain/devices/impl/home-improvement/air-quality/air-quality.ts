@@ -3,9 +3,12 @@ import { CommandBus, EventBus } from '@nestjs/cqrs';
 import { DeviceModel } from '../../../devices.model';
 import { DefaultFactory, Device, StateFactories } from '../../../device';
 import { DeviceFactory } from '../../../device.factory';
-import { PM25State, PM25StateName } from './air-quality.pm25';
-import { TemperatureState } from './air-quality.temperature';
-import { HumidityState } from './air-quality.humidity';
+import {
+  PM25State,
+  PM25StateName,
+  TemperatureState,
+  HumidityState,
+} from './air-quality.states';
 import {
   ConnectedState,
   ConnectedStateName,

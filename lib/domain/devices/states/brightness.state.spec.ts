@@ -2,7 +2,11 @@ import { DeviceModel } from '../devices.model';
 import { Version } from '../version.info';
 import { Subscription } from 'rxjs';
 import { BrightnessState } from './brightness.state';
-import { OpType } from '../../../common/op-code';
+import { OpType, asOpCode } from '../../../common/op-code';
+import {
+  testParseStateCalled,
+  testParseStateNotCalled,
+} from '../../../common/test-utils';
 
 describe('BrightnessState', () => {
   const deviceModel: DeviceModel = new DeviceModel({
@@ -52,46 +56,44 @@ describe('BrightnessState', () => {
           });
         });
         describe('op code', () => {
-          it.each([-1, 100.1, 1000])('of %p, the value is not udpated', () => {
-            const subscriptionFn = jest.fn((active) =>
-              expect(active).toBeUndefined(),
-            );
-            subscription = state.subscribe(subscriptionFn);
-            state.parse({});
-            expect(subscriptionFn).not.toHaveBeenCalled();
-          });
+          it.each([-1, 100.1, 1000])(
+            'of %p, the value is not udpated',
+            async (value) => {
+              expect(
+                await testParseStateNotCalled(state, {
+                  op: { command: [asOpCode(value)] },
+                }),
+              ).not.toHaveBeenCalled();
+            },
+          );
         });
       });
     });
     describe('a valid', () => {
       describe('brightness', () => {
         describe('under state', () => {
-          it.each([0.001, 0.5, 51, 90, 100])(
+          it.each([1, 5, 51, 90, 100])(
             'sets the value to %p',
-            (brightnessLevel) => {
-              const subscriptionFn = jest.fn((brightness) =>
-                expect(brightness).toBeCloseTo(brightnessLevel),
-              );
-              subscription = state.subscribe(subscriptionFn);
-              state.parse({ state: { brightness: brightnessLevel } });
-              expect(subscriptionFn).toHaveBeenCalledTimes(1);
+            async (brightnessLevel) => {
+              expect(
+                await testParseStateCalled(state, {
+                  state: { brightness: brightnessLevel },
+                }),
+              ).toBeCloseTo(brightnessLevel);
             },
           );
         });
         describe('as an op code', () => {
-          it.each([0.001, 0.5, 51, 90, 100])(
+          it.each([0, 5, 51, 90, 100])(
             'sets the value to %p',
-            (brightnessLevel) => {
-              const subscriptionFn = jest.fn((brightness) =>
-                expect(brightness).toBeCloseTo(brightnessLevel),
-              );
-              subscription = state.subscribe(subscriptionFn);
-              state.parse({
-                op: {
-                  command: [[OpType.REPORT, 0x04, brightnessLevel]],
-                },
-              });
-              expect(subscriptionFn).toHaveBeenCalledTimes(1);
+            async (brightnessLevel) => {
+              expect(
+                await testParseStateCalled(state, {
+                  op: {
+                    command: [asOpCode(OpType.REPORT, 4, brightnessLevel)],
+                  },
+                }),
+              ).toBeCloseTo(brightnessLevel);
             },
           );
         });

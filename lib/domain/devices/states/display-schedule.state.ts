@@ -1,7 +1,7 @@
 import { OpType, Optional, asOpCode, isTypeOf } from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
-import { ParseOption, StateCommandAndStatus } from './states.types';
+import { StateCommandAndStatus } from './states.types';
 
 export const DisplayScheduleStateName: 'displaySchedule' =
   'displaySchedule' as const;
@@ -23,8 +23,6 @@ export class DisplayScheduleState extends DeviceOpState<
   DisplayScheduleStateName,
   DisplaySchedule
 > {
-  protected parseOption: ParseOption = 'opCode';
-
   constructor(
     device: DeviceModel,
     opType: number = OpType.REPORT,

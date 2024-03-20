@@ -33,10 +33,6 @@ import {
 } from './states/night-light.state';
 import { PowerState, PowerStateName } from './states/power.state';
 import {
-  SegmentCountState,
-  SegmentCountStateName,
-} from './states/segment-count.state';
-import {
   TemperatureState,
   TemperatureStateName,
 } from './states/temperature.state';
@@ -88,7 +84,6 @@ export type StandardDeviceStates = {
   [ModeStateName]: Optional<ModeState>;
   [NightLightStateName]: Optional<NightLightState>;
   [PowerStateName]: Optional<PowerState>;
-  [SegmentCountStateName]: Optional<SegmentCountState>;
   [TemperatureStateName]: Optional<TemperatureState>;
   [TimerStateName]: Optional<TimerState>;
   [WaterShortageStateName]: Optional<WaterShortageState>;

@@ -89,10 +89,6 @@ import {
   EnablePresenceFlags,
 } from './impl/home-improvement/presence';
 import {
-  SegmentCountState,
-  SegmentCountStateName,
-} from './states/segment-count.state';
-import {
   TemperatureState,
   TemperatureStateName,
 } from './states/temperature.state';
@@ -144,8 +140,6 @@ export {
   NightLightStateName,
   PowerState,
   PowerStateName,
-  SegmentCountState,
-  SegmentCountStateName,
   TemperatureState,
   TemperatureStateName,
   WaterShortageState,

@@ -90,6 +90,7 @@ export class DeviceState<StateName extends string, StateValue>
   readonly history: FixedLengthStack<StateValue> =
     new FixedLengthStack<StateValue>(5);
   protected readonly subscriptions: Subscription[] = [];
+  protected readonly parseOption: ParseOption;
 
   subscribe(
     observerOrNext?:
@@ -116,7 +117,9 @@ export class DeviceState<StateName extends string, StateValue>
     protected readonly device: DeviceModel,
     public readonly name: StateName,
     initialValue: StateValue,
+    parseOption: ParseOption = ParseOption.state,
   ) {
+    this.parseOption = parseOption;
     this.history.enstack(initialValue);
     this.stateValue = new ForwardBehaviorSubject(initialValue);
     this.subscriptions.push(
@@ -207,45 +210,75 @@ export class DeviceOpState<
 > extends DeviceState<StateName, StateValue> {
   protected readonly opType: Ignorable<Optional<number>>;
   readonly identifier: Ignorable<Optional<number[]>>;
-  protected readonly parseOption: ParseOption = 'opCode';
 
   constructor(
     { opType, identifier }: OpCommandIdentifier,
     device: DeviceModel,
     name: StateName,
     initialValue: StateValue,
+    parseOption: ParseOption = ParseOption.opCode,
   ) {
-    super(device, name, initialValue);
+    super(device, name, initialValue, parseOption);
     this.opType = opType;
     this.identifier = identifier;
   }
 
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars, no-unused-vars
   parseOpCommand(opCommand: number[]) {}
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars, no-unused-vars
+  parseMultiOpCommand(opCommands: number[][]) {}
 
   parse(data: MessageData) {
-    const commands = data.op?.command ?? [];
-    if (['both', 'opCode'].includes(this.parseOption)) {
-      this.filterOpCommands(commands).forEach((command) => {
-        const commandId = Array.from(this.pendingCommands.entries()).find(
-          ([_, statuses]) =>
-            statuses.some((s) =>
-              s.op?.command
-                ?.at(0)
-                ?.every((c, i) => c === undefined || command[i] === c),
-            ),
-        )?.[0];
-        this.parseOpCommand(command);
-        if (commandId !== undefined) {
-          this.clearCommand$.next({
-            commandId,
-            state: this.name,
-            value: this.value,
-          });
-        }
-      });
+    if (this.parseOption.hasFlag(ParseOption.none)) {
+      return;
     }
-    if (['both', 'state'].includes(this.parseOption)) {
+    const commands = data.op?.command ?? [];
+    const foundCommands = this.filterOpCommands(commands);
+    if (commands.length > 0) {
+      if (this.parseOption.hasFlag(ParseOption.opCode)) {
+        foundCommands.forEach((command) => {
+          const commandId = Array.from(this.pendingCommands.entries()).find(
+            ([_, statuses]) =>
+              statuses.some((s) =>
+                s.op?.command
+                  ?.at(0)
+                  ?.every((c, i) => c === undefined || command[i] === c),
+              ),
+          )?.[0];
+          this.parseOpCommand(command);
+          if (commandId !== undefined) {
+            this.clearCommand$.next({
+              commandId,
+              state: this.name,
+              value: this.value,
+            });
+          }
+        });
+      } else if (this.parseOption.hasFlag(ParseOption.multiOp)) {
+        const commandIds = Array.from(this.pendingCommands.entries())
+          .filter(([_, statuses]) =>
+            foundCommands.filter((command) =>
+              statuses.some((s) =>
+                s.op?.command
+                  ?.at(0)
+                  ?.every((c, i) => c === undefined || command[i] === c),
+              ),
+            ),
+          )
+          ?.map((entry) => entry[0]);
+        this.parseMultiOpCommand(foundCommands);
+        commandIds.forEach((commandId) => {
+          if (commandId !== undefined) {
+            this.clearCommand$.next({
+              commandId,
+              state: this.name,
+              value: this.value,
+            });
+          }
+        });
+      }
+    }
+    if (this.parseOption.hasFlag(ParseOption.state)) {
       this.parseState(data);
     }
   }
