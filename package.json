@@ -109,6 +109,7 @@
   "_moduleAliases": {
     "~ultimate-govee-common": "dist/common",
     "~ultimate-govee-data": "dist/data",
-    "~ultimate-govee-domain": "dist/domain"
+    "~ultimate-govee-domain": "dist/domain",
+    "~ultimate-govee-persist": "dist/persist"
   }
 }

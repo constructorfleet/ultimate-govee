@@ -1,8 +1,7 @@
-import { Optional } from '~ultimate-govee-common';
+import { Optional, OpType } from '~ultimate-govee-common';
 import { BehaviorSubject } from 'rxjs';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState, DeviceState } from './device.state';
-import { OpType } from '../../../common/op-code';
 import { ParseOption } from './states.types';
 
 export const ModeStateName: 'mode' = 'mode' as const;
@@ -62,7 +61,13 @@ export class ModeState extends DeviceOpState<
     inline: boolean = false,
     private readonly identifierMap: ModeIdMap = defaultModeIdMap,
   ) {
-    super({ opType, identifier }, device, ModeStateName, undefined, ParseOption.opCode.or(ParseOption.state));
+    super(
+      { opType, identifier },
+      device,
+      ModeStateName,
+      undefined,
+      ParseOption.opCode.or(ParseOption.state),
+    );
     this.modes = definedStates(modes);
     this.inline = inline;
   }
