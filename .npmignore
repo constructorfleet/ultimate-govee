@@ -136,6 +136,6 @@ web_modules/
 .pnp.*
 .trunk/
 
-lib/main.ts
+lib/*
 persisted/
 assets/
