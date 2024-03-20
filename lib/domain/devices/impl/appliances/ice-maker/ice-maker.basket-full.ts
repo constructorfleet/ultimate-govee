@@ -14,7 +14,7 @@ export class IceMakerBasketFull extends DeviceOpState<
     super(
       {
         opType: OpType.REPORT,
-        identifier: [31, 7],
+        identifier: [23],
       },
       device,
       BasketFullStateName,
