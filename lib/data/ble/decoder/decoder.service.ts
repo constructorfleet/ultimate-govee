@@ -18,6 +18,8 @@ import { InjectDecoder } from './decoder.providers';
 import { Decoder } from './lib/decoder';
 import { DecodeDevice } from './lib/types';
 import { Optional } from '~ultimate-govee-common';
+import { existsSync } from 'fs';
+import { join } from 'path';
 
 @Injectable()
 export class DecoderService implements OnApplicationBootstrap {
@@ -102,7 +104,14 @@ export class DecoderService implements OnApplicationBootstrap {
     if (deviceSpec === undefined) {
       const url = this.config.deviceJsonUrl(model);
       try {
-        const file = await this.getHeaderFile(url);
+        let file: string | undefined;
+        if (existsSync(join(__dirname, 'assets', `${model}_json.ts`))) {
+          file = await import(`./assets/${model}_json`).then(
+            (module) => module.spec,
+          );
+        } else {
+          file = await this.getHeaderFile(url);
+        }
         if (!file) {
           return undefined;
         }
