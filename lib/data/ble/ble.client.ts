@@ -137,7 +137,7 @@ export class BleClient {
   ): Promise<BlePeripheral> {
     if (
       (peripheral.advertisement?.localName ?? '').length === 0 ||
-      !/((GV)|(GVH)|(H)[A-Z0-9]{4})_?[A-Z0-9]{4}/.exec(
+      !/.*?((GV)|(GVH)|(H)[A-Z0-9]{4})_?[A-Z0-9]{4}.*/.exec(
         peripheral.advertisement.localName,
       )
     ) {
@@ -186,6 +186,7 @@ export class BleClient {
           }
         }
       }
+
       this.logger.log(
         `Disconnecting from ${peripheral.advertisement.localName}`,
       );
