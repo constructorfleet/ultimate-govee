@@ -11,7 +11,7 @@ jobs:
       github.event.pull_request.user.login != 'dependabot[bot]' &&
       !contains(github.event.pull_request.labels.*.name, 'major') &&
       !contains(github.event.pull_request.labels.*.name, 'minor') &&
-      !contains(github.event.pull_request.labels.*.path, 'patch')
+      !contains(github.event.pull_request.labels.*.name, 'patch')
     name: Comment requesting versioning label
     runs-on: ubuntu-latest
     steps:
