@@ -7,7 +7,6 @@ import {
 } from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
-import { ParseOption } from './states.types';
 
 export type PresenceStateTypeName<PresenceType extends string> =
   `presence-${PresenceType}`;
@@ -30,7 +29,6 @@ export class PresenceState<
   PresenceStateTypeName<PresenceType>,
   Optional<PresenceData>
 > {
-  protected parseOption: ParseOption = 'opCode';
   constructor(
     device: DeviceModel,
     private readonly presenceType: PresenceType,

@@ -1,9 +1,6 @@
 import { DeviceModel } from '../devices.model';
+import { isBetween, OpType, Optional } from '~ultimate-govee-common';
 import { DeviceOpState } from './device.state';
-import { OpType } from '../../../common/op-code';
-import { Optional } from '../../../common/types';
-import { ParseOption } from './states.types';
-import { isBetween } from '~ultimate-govee-common';
 
 export const FilterLifeStateName: 'filterLife' = 'filterLife' as const;
 export type FilterLifeStateName = typeof FilterLifeStateName;
@@ -12,8 +9,6 @@ export class FilterLifeState extends DeviceOpState<
   FilterLifeStateName,
   Optional<number>
 > {
-  protected parseOption: ParseOption = 'opCode';
-
   constructor(
     device: DeviceModel,
     opType: number = OpType.REPORT,

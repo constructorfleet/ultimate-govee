@@ -1,4 +1,9 @@
-import { Ignorable, Optional } from '~ultimate-govee-common';
+import {
+  Ignorable,
+  Optional,
+  createBitFlagsEnum,
+  BitFlagValue,
+} from '~ultimate-govee-common';
 import {
   GoveeDeviceStateCommand,
   GoveeDeviceStatus,
@@ -13,6 +18,7 @@ export type MeasurementData = {
   calibration?: number;
   raw?: number;
   current?: number;
+  unit?: string;
 };
 
 export type OpCommandIdentifier = {
@@ -20,7 +26,11 @@ export type OpCommandIdentifier = {
   identifier?: Ignorable<Optional<number[]>>;
 };
 
-export type ParseOption = 'opCode' | 'state' | 'both';
+const ParseOptionValues = ['opCode', 'multiOp', 'state', 'none'] as const;
+export const ParseOption = createBitFlagsEnum(ParseOptionValues);
+export type ParseOption = BitFlagValue<
+  readonly ['opCode', 'multiOp', 'state', 'none']
+>;
 
 export type CommandResult = {
   state: string;

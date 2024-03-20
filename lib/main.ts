@@ -21,7 +21,7 @@ async function bootstrap() {
         auth: {},
         channels: {
           ble: {
-            enabled: config?.connections?.ble,
+            enabled: false, //config?.connections?.ble,
           },
           iot: {
             enabled: config?.connections?.iot,
@@ -43,7 +43,7 @@ async function bootstrap() {
   if (config?.username && config.password) {
     await service.connect(config.username, config.password);
   }
-  service.channel('ble').setEnabled(true);
+  // service.channel('ble').setEnabled(true);
   // service.channel('ble').setConfig({ devices: undefined });
   service.channel('iot').setEnabled(true);
 }

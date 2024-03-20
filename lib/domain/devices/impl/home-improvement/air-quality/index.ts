@@ -1,5 +1,5 @@
 import { AirQualitySensor } from './air-quality';
-import { PM25StateName } from './air-quality.pm25';
+import { PM25StateName } from './air-quality.states';
 
 // export const Devices: Type<Device>[] = [AirQualityDevice];
 export { AirQualitySensor, PM25StateName };

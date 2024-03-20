@@ -1,7 +1,7 @@
 import { OpType, asOpCode, Optional, isTypeOf } from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
-import { ParseOption, StateCommandAndStatus } from './states.types';
+import { StateCommandAndStatus } from './states.types';
 
 export const ControlLockStateName: 'controlLock' = 'controlLock' as const;
 export type ControlLockStateName = typeof ControlLockStateName;
@@ -10,8 +10,6 @@ export class ControlLockState extends DeviceOpState<
   ControlLockStateName,
   Optional<boolean>
 > {
-  protected parseOption: ParseOption = 'opCode';
-
   constructor(
     device: DeviceModel,
     opType: number = OpType.REPORT,

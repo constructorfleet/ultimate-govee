@@ -4,11 +4,11 @@ import {
   asOpCode,
   ArrayRange,
   isTypeOf,
+  OpType,
 } from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
-import { OpType } from '../../../common/op-code';
-import { ParseOption, StateCommandAndStatus } from './states.types';
+import { StateCommandAndStatus } from './states.types';
 
 export const TimerStateName: 'timer' = 'timer' as const;
 export type TimerStateName = typeof TimerStateName;
@@ -19,8 +19,6 @@ export type Timer = {
 };
 
 export class TimerState extends DeviceOpState<TimerStateName, Timer> {
-  protected parseOption: ParseOption = 'opCode';
-
   constructor(
     device: DeviceModel,
     opType: number = OpType.REPORT,

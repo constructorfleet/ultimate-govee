@@ -23,7 +23,9 @@ export type ColorRGB = {
 };
 
 export class ColorRGBState extends DeviceOpState<ColorRGBStateName, ColorRGB> {
-  protected parseOption: ParseOption = 'both';
+  protected parseOption: ParseOption = ParseOption.opCode.union(
+    ParseOption.state,
+  );
   constructor(
     device: DeviceModel,
     opType: number = OpType.REPORT,

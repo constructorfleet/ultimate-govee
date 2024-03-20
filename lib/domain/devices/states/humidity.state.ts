@@ -1,5 +1,9 @@
 import { Measurement } from '~ultimate-govee-data';
-import { unpaddedHexToArray, Optional } from '~ultimate-govee-common';
+import {
+  unpaddedHexToArray,
+  Optional,
+  Ignorable,
+} from '~ultimate-govee-common';
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
 import { MeasurementData, ParseOption } from './states.types';
@@ -20,14 +24,13 @@ export class HumidityState extends DeviceOpState<
   HumidityStateName,
   MeasurementData
 > {
-  protected parseOption: ParseOption = 'state';
-
   constructor(
     device: DeviceModel,
-    opType: Optional<number> = undefined,
+    opType: Ignorable<Optional<number>> = undefined,
+    parseOption: ParseOption = ParseOption.state,
     ...identifier: number[]
   ) {
-    super({ opType, identifier }, device, HumidityStateName, {});
+    super({ opType, identifier }, device, HumidityStateName, {}, parseOption);
   }
 
   parseState(data: HumidityDataType) {

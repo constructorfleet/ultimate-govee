@@ -17,7 +17,9 @@ export class BrightnessState extends DeviceOpState<
   BrightnessStateName,
   Optional<number>
 > {
-  protected readonly parseOption: ParseOption = 'both';
+  protected readonly parseOption: ParseOption = ParseOption.opCode.union(
+    ParseOption.multiOp,
+  );
   constructor(
     device: DeviceModel,
     opType: number = OpType.REPORT,

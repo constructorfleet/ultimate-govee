@@ -8,7 +8,6 @@ import {
 import { Effect } from '~ultimate-govee-data';
 import {
   DeviceOpState,
-  SegmentCountState,
   DeviceState,
   ModeState,
   LightEffectState,
@@ -186,7 +185,6 @@ export class AdvancedColorModeState extends DeviceOpState<
   AdvancedColorModeStateName,
   AdvancedColorData
 > {
-  protected parseOption: ParseOption = 'opCode';
   constructor(
     deviceModel: DeviceModel,
     opType: number = OpType.REPORT,
@@ -237,44 +235,39 @@ export class SegmentColorModeState extends DeviceOpState<
   private segments: Segment[] = [];
   constructor(
     device: DeviceModel,
-    segmentCount: SegmentCountState,
     opType: number = OpType.REPORT,
     identifier: number[] = [0xa5],
   ) {
     super({ opType, identifier }, device, SegmentColorModeStateName, []);
-    segmentCount?.subscribe((event) => {
-      if (event === undefined) {
-        return;
-      }
-      this.segments = this.segments.slice(0, event);
-      if (event - this.segments.length < 0) {
-        while (event - this.segments.length < 0) {
-          this.segments.pop();
-        }
-      } else {
-        new Array(event - this.segments.length)
-          .fill({} as Segment)
-          .forEach((segment) => this.segments.push(segment));
-      }
-    });
   }
 
-  parseOpCommand(opCommand: number[]): void {
-    const messageNumber = opCommand[0] - 1;
-    const segmentCodes = chunk(opCommand.slice(1), 4).slice(0, 3);
-    segmentCodes.forEach((segmentCode: number[], index) => {
-      const id = messageNumber * 3 + index;
-      const [brightness, red, green, blue] = segmentCode;
-      this.segments[id] = {
-        id: messageNumber * 3 + index,
-        brightness,
-        color: {
-          red,
-          green,
-          blue,
-        },
-      };
-    });
+  parseMultiOpCommand(opCommands: number[][]): void {
+    if (this.segments.length < opCommands.length * 3) {
+      new Array(opCommands.length * 3 - this.segments.length)
+        .fill({} as Segment)
+        .forEach((segment) => this.segments.push(segment));
+    } else {
+      this.segments = this.segments.slice(0, opCommands.length * 3);
+    }
+    const parseOpCommand = (opCommand: number[]) => {
+      const messageNumber = opCommand[0] - 1;
+      const segmentCodes = chunk(opCommand.slice(1), 4).slice(0, 3);
+      segmentCodes.forEach((segmentCode: number[], index) => {
+        const id = messageNumber * 3 + index;
+        const [brightness, red, green, blue] = segmentCode;
+        this.segments[id] = {
+          id: messageNumber * 3 + index,
+          brightness,
+          color: {
+            red,
+            green,
+            blue,
+          },
+        };
+      });
+    };
+
+    opCommands.forEach((opCommand) => parseOpCommand(opCommand));
 
     this.stateValue.next(this.segments);
   }
@@ -388,13 +381,18 @@ export class ColorModeState extends DeviceOpState<
   WholeColorModeStateName,
   WholeColor
 > {
-  protected parseOption: ParseOption = 'both';
   constructor(
     device: DeviceModel,
     opType: number = OpType.REPORT,
     identifier = [0x05, RGBICModes.WHOLE_COLOR],
   ) {
-    super({ opType, identifier }, device, WholeColorModeStateName, {});
+    super(
+      { opType, identifier },
+      device,
+      WholeColorModeStateName,
+      {},
+      ParseOption.opCode.union(ParseOption.state),
+    );
   }
 
   parseState(data: ColorData): void {

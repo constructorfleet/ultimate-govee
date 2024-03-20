@@ -1,5 +1,5 @@
 import { DeviceModel } from '../../../devices.model';
-import { DeviceOpState, ParseOption } from '../../../states';
+import { DeviceOpState } from '../../../states';
 import { IceMakerStatus, statusMap } from './types';
 import { OpType } from '~ultimate-govee-common/op-code';
 
@@ -11,7 +11,6 @@ export class IceMakerStatusState extends DeviceOpState<
   IceMakerStatusStateName,
   IceMakerStatus | undefined
 > {
-  protected parseOption: ParseOption = 'opCode';
   constructor(device: DeviceModel) {
     super(
       { opType: OpType.REPORT, identifier: [25] },

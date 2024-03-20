@@ -61,8 +61,6 @@ export {
   NightLightStateName,
   PowerState,
   PowerStateName,
-  SegmentCountState,
-  SegmentCountStateName,
   TemperatureState,
   TemperatureStateName,
   WaterShortageState,

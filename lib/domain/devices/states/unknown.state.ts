@@ -1,7 +1,6 @@
 import { DeviceModel } from '../devices.model';
 import { DeviceOpState } from './device.state';
-import { OpType } from '../../../common/op-code';
-import { ParseOption } from './states.types';
+import { OpType } from '~ultimate-govee-common';
 
 export const UnknownStateName: 'unknown' = 'unknown' as const;
 export type UnknownStateName<Identifier extends string> =
@@ -15,8 +14,6 @@ export class UnknownState extends DeviceOpState<
   UnknownStateName<string>,
   UnknownData
 > {
-  protected parseOption: ParseOption = 'opCode';
-
   constructor(
     device: DeviceModel,
     opType: number = OpType.REPORT,

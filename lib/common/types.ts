@@ -56,3 +56,28 @@ export type NumericRange<
       [...arr, 1],
       arr[start] extends undefined ? acc : acc | arr['length']
     >;
+
+export type SingleEnumValue<TValues extends readonly string[]> =
+  TValues[keyof TValues extends number ? keyof TValues : never];
+
+export type BitFlagValue<TValues extends readonly string[]> = {
+  readonly value: number;
+  or: (other: BitFlagValue<TValues>) => BitFlagValue<TValues>;
+  union: (...others: BitFlagValue<TValues>[]) => BitFlagValue<TValues>;
+  hasFlag: (other: BitFlagValue<TValues>) => boolean;
+  intersect: (...others: BitFlagValue<TValues>[]) => BitFlagValue<TValues>;
+};
+
+export type BitFlagEnumValue<TValues extends readonly string[]> =
+  BitFlagValue<TValues> & {
+    stringValue: SingleEnumValue<TValues>;
+  };
+
+export type BitFlagEnum<TValues extends readonly string[]> = {
+  readonly [key in SingleEnumValue<TValues>]: BitFlagEnumValue<TValues>;
+} & {
+  readonly keys: readonly SingleEnumValue<TValues>[];
+};
+
+export type EnumValues<TValues extends readonly string[]> =
+  string[] extends TValues ? never : TValues;
