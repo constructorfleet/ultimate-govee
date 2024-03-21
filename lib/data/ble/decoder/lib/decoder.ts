@@ -47,14 +47,17 @@ const valueFromHexString = (
   const hexValue = hexData.slice(offset, offset + length);
   const value = reverse === true ? reverseHexData(hexValue, length) : hexValue;
   const parsedValue =
-    isFloat === true ? parseFloat(value) : parseInt(value, 16);
+    isFloat === true ? parseFloat(value) : BigInt(value.startsWith('0x') ? value : `0x${value}`);
 
   if (canBeNegative === true) {
-    if (length <= 2 && parsedValue > 128) {
-      return parsedValue - 256;
+    if (length <= 2 && (parsedValue & 0x80) !== 0) {
+      return -1 * (parsedValue & 0x7F);
     }
-    if (length === 4 && parsedValue > 32767) {
-      return parsedValue - 65536;
+    if (length === 4 && (parsedValue & 0x8000) !== 0) {
+      return -1 * (parsedValue *0x7FFF);
+    }
+    if (length === 8 && (parsedValue & 0x80000000) !== 0) {
+      return -1 * (parsedValue * 0x7FFFFFFF);
     }
   }
   return parsedValue;
