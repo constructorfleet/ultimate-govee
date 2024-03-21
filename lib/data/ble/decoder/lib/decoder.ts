@@ -43,21 +43,23 @@ const valueFromHexString = (
   reverse?: boolean,
   canBeNegative?: boolean,
   isFloat?: boolean,
-): number => {
+): bigint | float => {
   const hexValue = hexData.slice(offset, offset + length);
   const value = reverse === true ? reverseHexData(hexValue, length) : hexValue;
   const parsedValue =
-    isFloat === true ? parseFloat(value) : BigInt(value.startsWith('0x') ? value : `0x${value}`);
+    isFloat === true
+      ? parseFloat(value)
+      : BigInt(value.startsWith('0x') ? value : `0x${value}`);
 
-  if (canBeNegative === true) {
-    if (length <= 2 && (parsedValue & 0x80) !== 0) {
-      return -1 * (parsedValue & 0x7F);
+  if (canBeNegative === true && typeof parsedValue === 'bigint') {
+    if (length <= 2 && parsedValue > 127) {
+      return 255n - parsedValue;
     }
-    if (length === 4 && (parsedValue & 0x8000) !== 0) {
-      return -1 * (parsedValue *0x7FFF);
+    if (length === 4 && parsedValue > 32768) {
+      return 65535n - parsedValue;
     }
-    if (length === 8 && (parsedValue & 0x80000000) !== 0) {
-      return -1 * (parsedValue * 0x7FFFFFFF);
+    if (length === 8 && parsedValue > 2147483648n) {
+      return 4294967295n - parsedValue;
     }
   }
   return parsedValue;
