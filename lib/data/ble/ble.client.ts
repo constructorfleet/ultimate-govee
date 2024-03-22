@@ -279,7 +279,7 @@ export class BleClient {
       return results$.complete();
     }
     try {
-      await this.stopScanning();
+      // await this.stopScanning();
       try {
         await peripheral.connectAsync();
         this.connectedPeripheral = peripheral;
@@ -361,7 +361,7 @@ export class BleClient {
       this.logger.error(`Error while sending commands to ${id}`, err);
       return results$.complete();
     } finally {
-      await this.startScanning();
+      // await this.startScanning();
     }
   }
 }

@@ -48,6 +48,7 @@ export class BleChannelService
         model: device.model,
         pactCode: device.pactCode,
         pactType: device.pactType,
+        cmd: 'status',
         state: peripheral.state,
       });
       this.logger.debug('Peripheral decoded');
