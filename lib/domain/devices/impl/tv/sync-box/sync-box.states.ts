@@ -13,7 +13,7 @@ import {
   LightEffectStateName,
   ModeState,
   StateCommandAndStatus,
-  TimerStateName,
+  // TimerStateName,
 } from '../../../states';
 import { Effect } from '~ultimate-govee-data';
 // 35 -> ParserTimers
@@ -54,20 +54,174 @@ import { Effect } from '~ultimate-govee-data';
 // AI Ident: on
 // Game model #
 
-export class TimerState extends DeviceOpState<TimerStateName, unknown> {
+export const AmbiantStateName: 'ambiant' = 'ambiant' as const;
+export type AmbiantStateName = typeof AmbiantStateName;
+
+export enum BrightnessMode {
+  CONSISTENT = 'CONSISTENT',
+  SEGMENT = 'SEGMENT',
+}
+
+export type AmbiantData = {
+  on?: boolean;
+  brightnessMode?: BrightnessMode;
+  brigness?: number;
+  // Sync section #
+  // Pars Other Info // OtherDeviceController 8, [2,5,3, 1]
+};
+
+export class AmbiantState extends DeviceOpState<AmbiantStateName, AmbiantData> {
   constructor(device: DeviceModel) {
     super(
-      { opType: OpType.REPORT, identifier: [35] },
+      { opType: OpType.REPORT, identifier: [7, 8] },
       device,
-      TimerStateName,
+      AmbiantStateName,
       {},
     );
   }
 
   parseOpCommand(opCommand: number[]): void {
-    const [enabledType, hour, minute, repeat] = opCommand;
+    this.stateValue.next({
+      on: opCommand[2] === 0x01,
+      brightnessMode:
+        opCommand[2] === 0x00
+          ? BrightnessMode.CONSISTENT
+          : BrightnessMode.SEGMENT,
+      brigness: opCommand[3],
+    });
   }
 }
+
+// export class TimerState extends DeviceOpState<TimerStateName, unknown> {
+//   constructor(device: DeviceModel) {
+//     super(
+//       { opType: OpType.REPORT, identifier: [35] },
+//       device,
+//       TimerStateName,
+//       {},
+//     );
+//   }
+
+//   parseOpCommand(opCommand: number[]): void {
+//     const [enabledType, hour, minute, repeat] = opCommand;
+//   }
+// }
+
+// export const WakeUpStateName: 'wakeUp' = 'wakeUp' as const;
+// export type WakeUpStatename = typeof WakeUpStateName;
+
+// export type WakeUpData = {
+//   enabled?: boolean;
+//   endBrightness?: number;
+//   wakeHour?: number;
+//   wakeMinute?: number;
+//   repeat?: boolean;
+//   wakeTime?: number;
+//   defaultLight?: boolean;
+//   color?: {
+//     red: number;
+//     green: number;
+//     blue: number;
+//   };
+// };
+
+// export class WakeupState extends DeviceOpState<WakeUpStatename, WakeUpData> {
+//   constructor(deviceModel: DeviceModel) {
+//     super(
+//       { opType: OpType.Report, identifier: [18] },
+//       deviceModel,
+//       WakeUpStateName,
+//       {},
+//     );
+//   }
+
+//   protected parseOpCommand(opCommand: number[]) {
+//     const [
+//       enabled,
+//       endBrtghtness,
+//       wakeHour,
+//       wakeMinute,
+//       repeat,
+//       wakeTime,
+//       defaultLight,
+//       colorRed,
+//       colorBlue,
+//       colorGreen,
+//     ] = opCommand;
+//     this.stateValue.next({
+//       enabled,
+//       endBrtghtness,
+//       wakeHour,
+//       wakeMinute,
+//       repeat,
+//       wakeTime,
+//       defaultLight,
+//       color: {
+//         red: colorRed,
+//         green: colorGreen,
+//         blue: colorBlue,
+//       },
+//     });
+//   }
+// }
+
+// export const SleepStateName: 'wakeUp' = 'wakeUp' as const;
+// export type SleepStatename = typeof SleepStateName;
+
+// export type SleepData = {
+//   enabled?: boolean;
+//   endBrightness?: number;
+//   wakeHour?: number;
+//   wakeMinute?: number;
+//   repeat?: boolean;
+//   wakeTime?: number;
+//   defaultLight?: boolean;
+//   color?: {
+//     red: number;
+//     green: number;
+//     blue: number;
+//   };
+// };
+
+// export class WakeupState extends DeviceOpState<WakeUpStatename, WakeUpData> {
+//   constructor(devicModel: DeviceModel) {
+//     super(
+//       { opType: OpType.Report, identifier: [18] },
+//       WakeUpStateName,
+//       device,
+//       {},
+//     );
+//   }
+
+//   protected parseOpCommand(opCommand: number) {
+//     const [
+//       enabled,
+//       endBrtghtness,
+//       wakeHour,
+//       wakeMinute,
+//       repeat,
+//       wakeTime,
+//       defaultLight,
+//       colorRed,
+//       colorBlue,
+//       colorGreen,
+//     ] = opCommand;
+//     this.stateValue.next({
+//       enabled,
+//       endBrtghtness,
+//       wakeHour,
+//       wakeMinute,
+//       repeat,
+//       wakeTime,
+//       defaultLight,
+//       color: {
+//         red: colorRed,
+//         green: colorGreen,
+//         blue: colorBlue,
+//       },
+//     });
+//   }
+// }
 
 export enum SyncBoxModes {
   VIDEO = 0,

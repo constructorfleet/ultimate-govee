@@ -1,6 +1,6 @@
 import * as cqrs from './cqrs';
 import {
-  AdvancedColorModeStateName,
+  DiyModeStateName,
   AutoModeStateName,
   BasketFullStateName,
   CustomModeStateName,
@@ -159,7 +159,7 @@ export {
   SceneModeStateName,
   WholeColorModeStateName,
   SegmentColorModeStateName,
-  AdvancedColorModeStateName,
+  DiyModeStateName,
   MicModeStateName,
   IceMakerStatus,
   NuggetSize,

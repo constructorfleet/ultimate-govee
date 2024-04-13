@@ -4,7 +4,7 @@ import {
   ICommandHandler,
   QueryBus,
 } from '@nestjs/cqrs';
-import { GoveeEffectService } from '~ultimate-govee-data';
+import { GoveeDiyService, GoveeEffectService } from '~ultimate-govee-data';
 import { AuthDataQuery } from '../../../auth';
 import { LightEffectsReceivedEvent } from '../../../devices/cqrs';
 import { RetrieveLightEffectsCommand } from '../commands/retrieve-light-effects.command';
@@ -17,6 +17,7 @@ export class RetrieveLightEffectsCommandHandler
     private readonly eventBus: EventBus,
     private readonly queryBus: QueryBus,
     private readonly api: GoveeEffectService,
+    private readonly diyApi: GoveeDiyService,
   ) {}
 
   async execute(command: RetrieveLightEffectsCommand): Promise<void> {
@@ -30,8 +31,18 @@ export class RetrieveLightEffectsCommandHandler
       command.device.goodsType,
       command.device.id,
     );
+    const diys = await this.diyApi.getDeviceDiys(
+      authData,
+      command.device.model,
+      command.device.goodsType,
+      command.device.id,
+    );
     this.eventBus.publish(
-      new LightEffectsReceivedEvent(command.device.id, effects ?? []),
+      new LightEffectsReceivedEvent(
+        command.device.id,
+        effects ?? [],
+        diys ?? [],
+      ),
     );
   }
 }

@@ -79,7 +79,7 @@ export {
   SceneModeStateName,
   WholeColorModeStateName,
   SegmentColorModeStateName,
-  AdvancedColorModeStateName,
+  DiyModeStateName,
   MicModeStateName,
   IceMakerStatus,
   NuggetSize,

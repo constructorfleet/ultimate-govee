@@ -34,7 +34,7 @@ import {
 } from './home-improvement/presence/presence.states';
 import { PresenceSensor } from './home-improvement/presence';
 import {
-  AdvancedColorModeStateName,
+  DiyModeStateName,
   MicModeStateName,
   SegmentColorModeStateName,
   WholeColorModeStateName,
@@ -72,7 +72,7 @@ export {
   SceneModeStateName,
   WholeColorModeStateName,
   SegmentColorModeStateName,
-  AdvancedColorModeStateName,
+  DiyModeStateName,
   MicModeStateName,
   MMWavePresenceStateName,
   BiologicalPresenceStateName,

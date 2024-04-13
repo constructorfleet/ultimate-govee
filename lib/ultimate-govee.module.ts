@@ -22,12 +22,16 @@ import {
   RestChannelModule,
   RestChannelModuleOptions,
 } from '~ultimate-govee-domain';
+import { DevtoolsModule } from '@nestjs/devtools-integration';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     CqrsModule.forRoot(),
     DevicesModule,
+    DevtoolsModule.register({
+      http: process.env.NODE_ENV === 'test',
+    }),
     PersistModule.forRootAsync({
       inject: [MODULE_OPTIONS_TOKEN],
       useFactory: (options: typeof OPTIONS_TYPE): typeof PersistModuleOptions =>
