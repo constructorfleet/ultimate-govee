@@ -72,6 +72,12 @@ import { IceMakerStatus, NuggetSize } from './impl/appliances/ice-maker/types';
 import { LightEffect } from './states/light-effect.state';
 import { UnknownState } from './states/unknown.state';
 import { MeatThermometer } from './impl/home-improvement/meat-thermometer/meat-thermometer';
+import { DreamView, DreamViewDevice } from './impl/tv/dreamview/dreamview';
+import { SyncBox, SyncBoxDevice } from './impl/tv/sync-box/sync-box';
+import {
+  AmbiantState,
+  AmbiantStateName,
+} from './impl/tv/dreamview/dreamview.states';
 import {
   BuzzerState,
   BuzzerStateName,
@@ -191,6 +197,12 @@ export {
   MeatThermometerSensor,
   MeatThermometerDevice,
   MeatThermometer,
+  AmbiantState,
+  AmbiantStateName,
+  DreamView,
+  DreamViewDevice,
+  SyncBox,
+  SyncBoxDevice,
 };
 
 export const CQRS = cqrs;

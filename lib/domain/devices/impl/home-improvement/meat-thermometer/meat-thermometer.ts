@@ -107,7 +107,7 @@ export class MeatThermometerFactory extends DeviceFactory<
   constructor() {
     super(MeatThermometerDevice, {
       'Home Improvement': {
-        Kitchen: /WiFi meat thermometer/i,
+        Kitchen: /.*wifi meat thermometer.*/i,
       },
     });
   }

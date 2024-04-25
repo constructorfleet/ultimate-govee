@@ -101,6 +101,12 @@ export {
   MeatThermometerDevice,
   MeatThermometerSensor,
   MeatThermometer,
+  DreamView,
+  DreamViewDevice,
+  SyncBox,
+  SyncBoxDevice,
+  AmbiantState,
+  AmbiantStateName,
 } from './domain';
 export { Device } from './domain/devices/device';
 export {

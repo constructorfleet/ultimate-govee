@@ -74,7 +74,7 @@ export class PresenceFactory extends DeviceFactory<
   constructor() {
     super(PresenceDevice, {
       'Home Improvement': {
-        Sensors: /presence/i,
+        Sensors: /.*presence.*/i,
       },
     });
   }

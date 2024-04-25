@@ -15,7 +15,7 @@ import {
   SyncBoxActiveState,
   VideoModeState,
   VideoModeStateName,
-} from './sync-box.states';
+} from './dreamview.states';
 import { OpType, Optional } from '~ultimate-govee-common';
 import { Device, StateFactories } from '../../../device';
 import { DeviceFactory } from '../../../device.factory';
@@ -23,8 +23,8 @@ import { Injectable } from '@nestjs/common';
 import { DeviceModel } from '../../../devices.model';
 import { CommandBus, EventBus } from '@nestjs/cqrs';
 
-export const SyncBoxDeviceType: 'sync-box' = 'sync-box' as const;
-export type SyncBoxDeviceType = typeof SyncBoxDeviceType;
+export const DreamViewDeviceType: 'dreamview' = 'dreamview' as const;
+export type DreamViewDeviceType = typeof DreamViewDeviceType;
 
 const stateFactories: StateFactories = [
   (device) => new ActiveState(device),
@@ -43,8 +43,8 @@ const stateFactories: StateFactories = [
   (device) => new UnknownState(device, 238),
 ];
 
-export class SyncBoxDevice extends Device<SyncBox> implements SyncBox {
-  static readonly deviceType = SyncBoxDeviceType;
+export class DreamViewDevice extends Device<DreamView> implements DreamView {
+  static readonly deviceType = DreamViewDeviceType;
   protected isDebug: boolean = true;
 
   constructor(device: DeviceModel, eventBus: EventBus, commandBus: CommandBus) {
@@ -52,7 +52,7 @@ export class SyncBoxDevice extends Device<SyncBox> implements SyncBox {
   }
 
   get deviceType(): string {
-    return SyncBoxDevice.deviceType;
+    return DreamViewDevice.deviceType;
   }
   get [VideoModeStateName](): Optional<VideoModeState> {
     return this.state(VideoModeStateName);
@@ -98,7 +98,7 @@ export class SyncBoxDevice extends Device<SyncBox> implements SyncBox {
   }
 }
 
-export type SyncBox = {
+export type DreamView = {
   get [VideoModeStateName](): Optional<VideoModeState>;
   get [MicModeStateName](): Optional<MicModeState>;
   get [LightEffectStateName](): Optional<SceneModeState>;
@@ -116,11 +116,17 @@ export type SyncBox = {
 };
 
 @Injectable()
-export class SyncBoxFactory extends DeviceFactory<SyncBoxDevice, SyncBox> {
+export class DreamViewFactory extends DeviceFactory<
+  DreamViewDevice,
+  DreamView
+> {
   constructor() {
-    super(SyncBoxDevice, {
+    super(DreamViewDevice, {
       'LED Strip Light': {
-        'TV BackLights': /.*gaming sync box.*/i,
+        'TV BackLights': /.*dreamview.*/i,
+      },
+      'Indoor Lighting': {
+        'Table Lamps': /.*dreamview.*/i,
       },
     });
   }

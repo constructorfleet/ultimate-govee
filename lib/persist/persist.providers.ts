@@ -1,12 +1,15 @@
 import {
+  ConfigurableModuleBuilder,
   FactoryProvider,
   Inject,
-  ConfigurableModuleBuilder,
 } from '@nestjs/common';
 import { existsSync } from 'fs';
 import { readFile, writeFile } from 'fs/promises';
-import { PersistModuleOptions } from './persist.types';
 import { join } from 'path';
+import { PersistedFile, PersistModuleOptions } from './persist.types';
+
+export const GetPersistedFileKey = 'PersistedFile';
+export const InjectGetPersistedFile = Inject(GetPersistedFileKey);
 
 export const {
   ConfigurableModuleClass,
@@ -55,11 +58,6 @@ export type FileWriter = typeof writeFile;
 export const FileWriter: FactoryProvider = {
   provide: 'Persist.File.Writer',
   useFactory: () => writeFile,
-};
-
-export type PersistedFile = {
-  filename: string;
-  transform?: (data: any) => any;
 };
 
 const persistedFiles: Record<string, PersistedFile> = {};

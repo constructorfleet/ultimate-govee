@@ -18,39 +18,63 @@ import {
 import previousCategories from './assets/categories.json';
 import { Product } from './models/product';
 import { join } from 'path';
+import AsyncLock from 'semaphore-async-await';
+import MomentLib from 'moment';
 
 @Injectable()
 export class GoveeProductService {
   private readonly logger: Logger = new Logger(GoveeProductService.name);
-  private static readonly previousProductMap =
-    GoveeProductService.parseResponse(
-      plainToInstance(SkuListResponse, previousCategories),
-    );
+  private readonly lock: AsyncLock = new AsyncLock(1);
+  private lastUpdate: MomentLib.Moment | undefined = undefined;
+  private static previousProductMap = GoveeProductService.parseResponse(
+    plainToInstance(SkuListResponse, previousCategories),
+  );
 
   constructor(
     @Inject(GoveeProductConfig.KEY)
     private readonly config: ConfigType<typeof GoveeProductConfig>,
     @InjectPersisted({ filename: 'govee.products.json' })
     private readonly persistedProducts: Record<string, Product>,
-  ) {}
+  ) {
+    Object.entries(GoveeProductService.previousProductMap).forEach(
+      ([key, value]) => {
+        persistedProducts[key] = persistedProducts[key] ?? value;
+      },
+    );
+    GoveeProductService.previousProductMap = persistedProducts;
+  }
 
   @PersistResult({ filename: 'govee.products.json' })
   async getProductCategories(): Promise<Record<string, Product>> {
+    await this.lock.acquire();
+    this.logger.log(
+      `Last Update: ${this.lastUpdate} isAfter? ${this.lastUpdate !== undefined ? this.lastUpdate.add(1, 'hour').isAfter(MomentLib()) : 'false'}`,
+    );
     try {
+      if (
+        this.lastUpdate !== undefined &&
+        this.lastUpdate.add(1, 'hour').isAfter(MomentLib())
+      ) {
+        this.logger.log('Updated within last hour, using previous result.');
+        return GoveeProductService.previousProductMap;
+      }
       this.logger.log('Retrieving product list from Govee REST API');
       const productMap = GoveeProductService.parseResponse(
         await this.getApiReponse(),
       );
-
       Object.entries(GoveeProductService.previousProductMap).forEach(
         ([key, value]) => {
           productMap[key] = productMap[key] ?? value;
         },
       );
+      GoveeProductService.previousProductMap = productMap;
+      this.lastUpdate = MomentLib();
       return productMap;
     } catch (error) {
       this.logger.error('Error retrieving product list', error);
-      return this.persistedProducts;
+      return GoveeProductService.previousProductMap;
+    } finally {
+      this.lock.release();
     }
   }
 

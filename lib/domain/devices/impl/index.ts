@@ -44,6 +44,12 @@ import {
   WholeColorModeStateName,
 } from './lights/rgbic';
 import { RGBICLight } from './lights/rgbic/rgbic-light';
+import { DreamView, DreamViewDevice } from './tv/dreamview/dreamview';
+import { SyncBox, SyncBoxDevice } from './tv/sync-box/sync-box';
+import {
+  AmbiantState,
+  AmbiantStateName,
+} from './tv/dreamview/dreamview.states';
 export { AppliancesFactory, AppliancesModule } from './appliances';
 export {
   HomeImprovementFactory,
@@ -84,6 +90,12 @@ export {
   TargetHumidityStateName,
   UVCStateName,
   WholeColorModeStateName,
+  AmbiantState,
+  AmbiantStateName,
+  DreamView,
+  DreamViewDevice,
+  SyncBox,
+  SyncBoxDevice,
 };
 export const DeviceStates: string[] = [
   ...ApplianceStates,
