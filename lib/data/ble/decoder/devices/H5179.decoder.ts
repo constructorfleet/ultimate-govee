@@ -1,5 +1,5 @@
-import { DevicePropertiesDecoder } from './device.decoder';
 import { BleAdvertisement } from '../../ble.types';
+import { DeviceDecodedProperties, ModelDecoder } from './device.decoder';
 import { unpackLittle_hHB } from './packed-structures';
 
 type UnpackedStruct = {
@@ -8,7 +8,12 @@ type UnpackedStruct = {
   batt: number;
 };
 
-const properties = ['tempC', 'hum', 'batt'] as const;
+export const H5179 = {
+  brand: 'Govee',
+  model: 'H5179',
+  modelName: 'Thermo-Hygrometer',
+  type: ['Temperature', 'Humidity', 'Battery'],
+};
 
 const unpackPacket = (manufacturerData: Buffer): UnpackedStruct => {
   const packet = Buffer.from(manufacturerData).toString('hex').slice(12, 23);
@@ -20,14 +25,18 @@ const unpackPacket = (manufacturerData: Buffer): UnpackedStruct => {
   };
 };
 
-export const decodeH5179: DevicePropertiesDecoder<typeof properties> = {
-  tempC: (advertisement: BleAdvertisement): number | undefined => {
-    return unpackPacket(advertisement.manufacturerData).temp;
-  },
-  hum: (advertisement: BleAdvertisement): number | undefined => {
-    return unpackPacket(advertisement.manufacturerData).hum;
-  },
-  batt: (advertisement: BleAdvertisement): number | undefined => {
-    return unpackPacket(advertisement.manufacturerData).batt;
-  },
+export const decodeH5179: ModelDecoder = (
+  advertisement: BleAdvertisement,
+): DeviceDecodedProperties => {
+  const { temp, hum, batt } = unpackPacket(advertisement.manufacturerData);
+  return {
+    temperature: {
+      current: temp,
+    },
+    humidity: {
+      current: hum,
+    },
+    battery: batt,
+    ...H5179,
+  };
 };

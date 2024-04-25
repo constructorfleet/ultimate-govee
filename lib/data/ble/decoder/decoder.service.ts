@@ -20,6 +20,7 @@ import { DecodeDevice } from './lib/types';
 import { Optional } from '~ultimate-govee-common';
 import { existsSync } from 'fs';
 import { join } from 'path';
+import { decodeDevice } from './devices';
 
 @Injectable()
 export class DecoderService implements OnApplicationBootstrap {
@@ -53,10 +54,6 @@ export class DecoderService implements OnApplicationBootstrap {
       return undefined;
     }
     this.logger.log(`Matched model H${modelMatch[1]}`);
-    const spec = await this.getDeviceSpec(`H${modelMatch[1] || ''}`);
-    if (spec === undefined) {
-      return undefined;
-    }
     const device: DecodeDevice = {
       id: peripheral.id,
       name: peripheral.advertisement.localName,
@@ -66,9 +63,24 @@ export class DecoderService implements OnApplicationBootstrap {
         peripheral.advertisement.manufacturerData?.toString('hex'),
       serviceData: [],
     };
+    const deviceDecoder = decodeDevice[modelMatch[1]];
+    if (deviceDecoder) {
+      this.logger.verbose('Using known model decoder...');
+      const deviceProps = deviceDecoder(peripheral.advertisement);
+      return {
+        ...device,
+        ...deviceProps,
+      };
+    }
+    const spec = await this.getDeviceSpec(`H${modelMatch[1] || ''}`);
+    if (spec === undefined) {
+      return undefined;
+    }
+
     if (spec.conditions && !this.decoder.matches(device, spec.conditions)) {
       return undefined;
     }
+    this.logger.verbose('Using IoTManager model decoder...');
     const state = this.decoder.decodeProperties(device, spec.properties ?? {});
     const deccodedDevice: DecodedDevice = {
       ...device,
