@@ -71,6 +71,15 @@ import { PowerState, PowerStateName } from './states/power.state';
 import { IceMakerStatus, NuggetSize } from './impl/appliances/ice-maker/types';
 import { LightEffect } from './states/light-effect.state';
 import { UnknownState } from './states/unknown.state';
+import { MeatThermometer } from './impl/home-improvement/meat-thermometer/meat-thermometer';
+import {
+  BuzzerState,
+  BuzzerStateName,
+} from './impl/home-improvement/meat-thermometer/meat-thermometer.states';
+import {
+  MeatThermometerSensor,
+  MeatThermometerDevice,
+} from './impl/home-improvement/meat-thermometer/meat-thermometer';
 import {
   PresenceState,
   PresenceStateName,
@@ -177,6 +186,11 @@ export {
   DetectionSettingsStateName,
   DetectionSettingsState,
   EnablePresenceFlags,
+  BuzzerState,
+  BuzzerStateName,
+  MeatThermometerSensor,
+  MeatThermometerDevice,
+  MeatThermometer,
 };
 
 export const CQRS = cqrs;

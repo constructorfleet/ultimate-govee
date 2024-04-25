@@ -96,6 +96,11 @@ export {
   DetectionSettingsStateName,
   EnablePresenceFlags,
   PresenceData,
+  BuzzerStateName,
+  BuzzerState,
+  MeatThermometerDevice,
+  MeatThermometerSensor,
+  MeatThermometer,
 } from './domain';
 export { Device } from './domain/devices/device';
 export {
