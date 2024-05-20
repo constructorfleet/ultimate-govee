@@ -15,6 +15,7 @@ import { parseP12Certificate, request } from '../../utils';
 import { RefreshTokenResponse } from './models/refresh-token.response';
 import { decodeJWT } from './models/jwt';
 import stringify from 'json-stringify-safe';
+import MomentLib from 'moment';
 
 @Injectable()
 export class GoveeAccountService {
@@ -72,6 +73,7 @@ export class GoveeAccountService {
   async authenticate(credentials: GoveeCredentials): Promise<GoveeAccount> {
     if (
       this.persisted?.oauth &&
+      MomentLib(this.persisted.oauth.expiresAt).isAfter(MomentLib().utc()) &&
       this.isTokenValid(this.persisted.oauth.accessToken)
     ) {
       this.logger.log('Using persisted credentials');

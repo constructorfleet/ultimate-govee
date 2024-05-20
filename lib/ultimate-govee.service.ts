@@ -8,7 +8,12 @@ import {
   UltimateGoveeConfig,
 } from './ultimate-govee.config';
 import { DeviceDiscoveredEvent } from './domain/devices/cqrs';
-import { IoTChannelService, BleChannelService, DeviceModel } from './domain';
+import {
+  IoTChannelService,
+  BleChannelService,
+  DeviceModel,
+  OpenApiChannelService,
+} from './domain';
 import { ModuleRef } from '@nestjs/core';
 import { ChannelToggle } from '~ultimate-govee-domain/channels/channel.types';
 import { DevicesService } from './domain/devices/devices.service';
@@ -28,6 +33,7 @@ export class UltimateGoveeService implements OnModuleDestroy {
     this.channels = {
       ble: moduleRef.get(BleChannelService, { strict: false }),
       iot: moduleRef.get(IoTChannelService, { strict: false }),
+      openapi: moduleRef.get(OpenApiChannelService, { strict: false }),
     };
     interval(10000).subscribe(() => Logger.flush());
   }

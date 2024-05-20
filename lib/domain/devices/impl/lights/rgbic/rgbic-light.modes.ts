@@ -4,8 +4,10 @@ import {
   Optional,
   asOpCode,
   OpType,
+  DeltaMap,
 } from '~ultimate-govee-common';
-import { Effect } from '~ultimate-govee-data';
+import { encode } from 'base64-arraybuffer';
+import { Effect, DiyEffect } from '~ultimate-govee-data';
 import {
   DeviceOpState,
   DeviceState,
@@ -14,13 +16,17 @@ import {
   LightEffect,
   StateCommandAndStatus,
   ParseOption,
+  ColorTempState,
+  MeasurementData,
+  ColorTempStateName,
 } from '../../../states';
 import { DeviceModel } from '../../../devices.model';
+import { BehaviorSubject } from 'rxjs';
 
 export enum RGBICModes {
   SCENE = 4,
   MIC = 19,
-  ADVANCED_COLOR = 10,
+  DIY = 10,
   SEGMENT_COLOR = 21,
   WHOLE_COLOR = 2,
 }
@@ -58,7 +64,7 @@ export class SceneModeState extends LightEffectState {
         })
         .find((e) => e?.name === nextState.name);
     }
-    if (effect === undefined) {
+    if (effect?.opCode === undefined) {
       this.logger.warn(
         `Unable to locate effect with code ${nextState.code} or ${nextState.name}`,
       );
@@ -70,7 +76,6 @@ export class SceneModeState extends LightEffectState {
         data: {
           command: effect.opCode,
         },
-        cmdVersion: effect.cmdVersion,
       },
       status: {
         op: {
@@ -173,30 +178,157 @@ export class MicModeState extends DeviceOpState<MicModeStateName, MicMode> {
   }
 }
 
-export const AdvancedColorModeStateName: 'advancedColorMode' =
-  'advancedColorMode' as const;
-export type AdvancedColorModeStateName = typeof AdvancedColorModeStateName;
+export const DiyModeStateName: 'diyEffect' = 'diyEffect' as const;
+export type DiyModeStateName = typeof DiyModeStateName;
 
-export type AdvancedColorData = {
-  diyEffectCode?: number;
-};
-
-export class AdvancedColorModeState extends DeviceOpState<
-  AdvancedColorModeStateName,
-  AdvancedColorData
+export class DiyModeState extends DeviceOpState<
+  DiyModeStateName,
+  Partial<DiyEffect>
 > {
-  constructor(
-    deviceModel: DeviceModel,
-    opType: number = OpType.REPORT,
-    identifier: number[] = [0x05, RGBICModes.ADVANCED_COLOR],
-  ) {
-    super({ opType, identifier }, deviceModel, AdvancedColorModeStateName, {});
+  readonly effects: DeltaMap<number, DiyEffect> = new DeltaMap();
+  readonly activeEffectCode: BehaviorSubject<number | undefined> =
+    new BehaviorSubject<number | undefined>(undefined);
+
+  constructor(device: DeviceModel) {
+    super(
+      { opType: OpType.REPORT, identifier: [5, 10] },
+      device,
+      DiyModeStateName,
+      {},
+    );
+    this.activeEffectCode.subscribe((effectCode) => {
+      if (effectCode !== undefined) {
+        this.stateValue.next(this.effects.get(effectCode) ?? {});
+      }
+    });
+    this.effects.delta$.subscribe(() => {
+      this.stateValue.next(this.stateValue.getValue());
+    });
+  }
+
+  parseOpCommand(opCommand: number[]) {
+    const effectCode: number = total(opCommand.slice(0, 2), true);
+
+    this.activeEffectCode.next(effectCode);
+  }
+
+  protected stateToCommand(
+    state: Partial<DiyEffect>,
+  ): Optional<StateCommandAndStatus> {
+    let newEffect: DiyEffect | undefined;
+    if (state?.name === undefined) {
+      if (state?.code === undefined) {
+        this.logger.warn('Missing name and code, ignoring command');
+        return;
+      }
+      newEffect = Array.from(this.effects.entries()).find(
+        ([_, effect]) => effect.code,
+      )?.[1];
+    }
+    if (state?.code === undefined) {
+      const effect = Array.from(this.effects.values()).find(
+        (effect) => effect.name === state.name,
+      );
+      if (newEffect === undefined && effect === undefined) {
+        this.logger.warn(
+          'Unable to determing DIY effect from provide name or code, skipping command',
+        );
+        return;
+      } else if (newEffect === undefined && effect !== undefined) {
+        newEffect = effect;
+      }
+    }
+    if (newEffect === undefined) {
+      this.logger.warn(
+        'Unable to determine effect from name or code, ignoring command',
+      );
+      return;
+    }
+    const commands = newEffect.opCode(this.identifier);
+    console.dir({
+      device: this.device.id,
+      name: this.device.name,
+      commands,
+    });
+    return {
+      command: {
+        type: 1,
+        cmdVersion: 0,
+        data: {
+          command: commands?.map((line) =>
+            encode(Buffer.from(new Uint8Array(line))),
+          ),
+        },
+      },
+      status: {
+        op: {
+          command: [[newEffect.code % 255, newEffect.code >> 8]],
+        },
+      },
+    };
+  }
+}
+
+export class ColorTemperatureModeState extends ColorTempState {
+  constructor(device: DeviceModel) {
+    super(device, OpType.REPORT, 5, 21, 1);
   }
 
   parseOpCommand(opCommand: number[]): void {
     this.stateValue.next({
-      diyEffectCode: total(opCommand.slice(1, opCommand.indexOf(0x00)), true),
+      range: {
+        min: 2000,
+        max: 9000,
+      },
+      current: total(opCommand.slice(0, 2)),
     });
+  }
+
+  protected stateToCommand(
+    nextState: MeasurementData,
+  ): Optional<StateCommandAndStatus> {
+    if (nextState.current === undefined) {
+      this.logger.warn('color temperature not supplied, skipping command');
+      return;
+    }
+    return {
+      command: [
+        // {
+        //   data: {
+        //     command: [
+        //       asOpCode(
+        //         OpType.COMMAND,
+        //         ...this.identifier!,
+        //         nextState.current >> 8,
+        //         nextState.current % 256,
+        //       ),
+        //     ],
+        //   },
+        // },
+        {
+          command: 'colorTem',
+          data: {
+            colorTemInKelvin: nextState.current,
+          },
+        },
+      ],
+      status: [
+        // {
+        //   op: {
+        //     command: [[nextState.current >> 8, nextState.current % 256]],
+        //   },
+        // },
+        {
+          state: {
+            colorTemperature: {
+              min: 2000,
+              max: 9000,
+              current: nextState.current,
+            },
+          },
+        },
+      ],
+    };
   }
 }
 
@@ -484,13 +616,19 @@ export class RGBICActiveState extends ModeState {
           );
           break;
         case RGBICModes.SEGMENT_COLOR:
-          this.stateValue.next(
-            this.modes.find((mode) => mode.name === SegmentColorModeStateName),
-          );
+          if (identifier.length > 10) {
+            this.modes.find((mode) => mode.name === ColorTempStateName);
+          } else {
+            this.stateValue.next(
+              this.modes.find(
+                (mode) => mode.name === SegmentColorModeStateName,
+              ),
+            );
+          }
           break;
-        case RGBICModes.ADVANCED_COLOR:
+        case RGBICModes.DIY:
           this.stateValue.next(
-            this.modes.find((mode) => mode.name === AdvancedColorModeStateName),
+            this.modes.find((mode) => mode.name === DiyModeStateName),
           );
           break;
         case RGBICModes.WHOLE_COLOR:

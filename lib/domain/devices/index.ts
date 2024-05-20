@@ -1,6 +1,6 @@
 import * as cqrs from './cqrs';
 import {
-  AdvancedColorModeStateName,
+  DiyModeStateName,
   AutoModeStateName,
   BasketFullStateName,
   CustomModeStateName,
@@ -71,6 +71,21 @@ import { PowerState, PowerStateName } from './states/power.state';
 import { IceMakerStatus, NuggetSize } from './impl/appliances/ice-maker/types';
 import { LightEffect } from './states/light-effect.state';
 import { UnknownState } from './states/unknown.state';
+import { MeatThermometer } from './impl/home-improvement/meat-thermometer/meat-thermometer';
+import { DreamView, DreamViewDevice } from './impl/tv/dreamview/dreamview';
+import { SyncBox, SyncBoxDevice } from './impl/tv/sync-box/sync-box';
+import {
+  AmbiantState,
+  AmbiantStateName,
+} from './impl/tv/dreamview/dreamview.states';
+import {
+  BuzzerState,
+  BuzzerStateName,
+} from './impl/home-improvement/meat-thermometer/meat-thermometer.states';
+import {
+  MeatThermometerSensor,
+  MeatThermometerDevice,
+} from './impl/home-improvement/meat-thermometer/meat-thermometer';
 import {
   PresenceState,
   PresenceStateName,
@@ -159,7 +174,7 @@ export {
   SceneModeStateName,
   WholeColorModeStateName,
   SegmentColorModeStateName,
-  AdvancedColorModeStateName,
+  DiyModeStateName,
   MicModeStateName,
   IceMakerStatus,
   NuggetSize,
@@ -177,6 +192,17 @@ export {
   DetectionSettingsStateName,
   DetectionSettingsState,
   EnablePresenceFlags,
+  BuzzerState,
+  BuzzerStateName,
+  MeatThermometerSensor,
+  MeatThermometerDevice,
+  MeatThermometer,
+  AmbiantState,
+  AmbiantStateName,
+  DreamView,
+  DreamViewDevice,
+  SyncBox,
+  SyncBoxDevice,
 };
 
 export const CQRS = cqrs;

@@ -7,21 +7,21 @@ export const typeMappings = {
   2: ['Termperature, Humidity, Battery, Extra'],
   3: ['BBQ'], // Multip probe temperatures only
   4: ['CTMO'], // Contact and/or Motion sensor
-  5: 'SCALE', // weight scale
-  6: 'iBeacon protocol',
-  7: 'acceleration',
-  8: 'battery',
-  9: 'plant sensors',
-  10: 'tire pressure monitoring system',
-  11: 'health monitoring devices',
-  12: 'energy monitoring devices',
-  13: 'window covering',
-  14: 'ON/OFF actuators',
-  15: 'air environmental monitoring devices',
-  16: 'Bluetooth tracker',
-  17: 'Button',
-  254: 'random MAC address devices',
-  255: 'Unique', // unique devices
+  5: ['SCALE'], // weight scale
+  6: ['iBeacon protocol'],
+  7: ['Acceleration'],
+  8: ['Battery'],
+  9: ['Plant Sensors'],
+  10: ['Tire Pressure Monitoring System'],
+  11: ['Health Monitoring Devices'],
+  12: ['Energy Monitoring Devices'],
+  13: ['Window Covering'],
+  14: ['ON/OFF Actuators'],
+  15: ['Air Environmental Monitoring Devices'],
+  16: ['Bluetooth Tracker'],
+  17: ['Button'],
+  254: ['Random MAC Address Devices'],
+  255: ['Unique'], // unique devices
 };
 
 export class DecoderPropertyMetadata {

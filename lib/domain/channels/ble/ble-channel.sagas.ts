@@ -51,7 +51,7 @@ export class BleChannelSagas {
   refreshDeviceFlow = (events$: Observable<any>): Observable<ICommand> =>
     events$.pipe(
       ofType(DeviceRefeshEvent),
-      filter((event) => event.addresses.bleAddress !== undefined && event.addresses.iotTopic === undefined),
+      filter((event) => event.addresses.bleAddress !== undefined), // && event.addresses.iotTopic === undefined),
       filter(
         (event) =>
           event.opIdentifiers !== undefined && event.opIdentifiers.length > 0,

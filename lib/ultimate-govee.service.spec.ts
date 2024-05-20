@@ -3,6 +3,7 @@ import {
   DeviceModel,
   DevicesModule,
   IoTChannelService,
+  OpenApiChannelService,
 } from './domain';
 import { Test, TestingModule } from '@nestjs/testing';
 import { UltimateGoveeService } from './ultimate-govee.service';
@@ -28,6 +29,7 @@ describe('UltimateGoveeService', () => {
           UltimateGoveeService,
           BleChannelService,
           IoTChannelService,
+          OpenApiChannelService,
           {
             provide: MODULE_OPTIONS_TOKEN,
             useValue: {},
@@ -39,6 +41,8 @@ describe('UltimateGoveeService', () => {
         .useValue(jest.mocked(BleChannelService))
         .overrideProvider(IoTChannelService)
         .useValue(jest.mocked(IoTChannelService))
+        .overrideProvider(OpenApiChannelService)
+        .useValue(jest.mocked(OpenApiChannelService))
         .compile();
       service = module.get(UltimateGoveeService);
     });

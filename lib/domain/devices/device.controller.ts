@@ -47,12 +47,13 @@ export class DeviceController {
     this.deviceService.getDevice(deviceId)?.refresh();
   }
 
-  @Post(':id/:state')
+  @Post(':id/:stateName')
   setState(
     @Param('id') deviceId: string,
-    @Param('state') stateName: string,
+    @Param('stateName') stateName: string,
     @Body('state') stateData: any,
   ) {
+    console.dir(stateData);
     const device = this.deviceService.getDevice(deviceId)?.debug(true);
     const state = device?.state(stateName);
     const commandId = state?.setState(stateData);

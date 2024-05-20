@@ -1,21 +1,4 @@
 import { DeviceStates as ApplianceStates } from './appliances';
-import { DeviceStates as HomeImprovementStates } from './home-improvement';
-import { DeviceStates as LightStates } from './lights';
-import { Humidifier } from './appliances/humidifier/humidifier';
-import { Purifier } from './appliances/purifier/purifier';
-import { IceMaker } from './appliances/ice-maker/ice-maker';
-import { AirQualitySensor } from './home-improvement/air-quality/air-quality';
-import { HygrometerSensor } from './home-improvement/hygrometer/hygrometer';
-import { RGBLight } from './lights/rgb/rgb-light';
-import { RGBICLight } from './lights/rgbic/rgbic-light';
-import { PM25StateName } from './home-improvement/air-quality';
-import {
-  BasketFullStateName,
-  IceMakerStatusStateName,
-  MakingIceStateName,
-  NuggetSizeStateName,
-  ScheduledStartStateName,
-} from './appliances/ice-maker';
 import {
   AutoModeStateName,
   CustomModeStateName,
@@ -24,21 +7,49 @@ import {
   TargetHumidityStateName,
   UVCStateName,
 } from './appliances/humidifier';
-import { SceneModeStateName } from './lights/rgb';
+import { Humidifier } from './appliances/humidifier/humidifier';
 import {
-  MMWavePresenceStateName,
-  BiologicalPresenceStateName,
-  DetectionSettingsStateName,
-  EnablePresenceStateName,
-  EnablePresenceFlags,
-} from './home-improvement/presence/presence.states';
+  BasketFullStateName,
+  IceMakerStatusStateName,
+  MakingIceStateName,
+  NuggetSizeStateName,
+  ScheduledStartStateName,
+} from './appliances/ice-maker';
+import { IceMaker } from './appliances/ice-maker/ice-maker';
+import { Purifier } from './appliances/purifier/purifier';
+import { DeviceStates as HomeImprovementStates } from './home-improvement';
+import { PM25StateName } from './home-improvement/air-quality';
+import { AirQualitySensor } from './home-improvement/air-quality/air-quality';
+import { HygrometerSensor } from './home-improvement/hygrometer/hygrometer';
+import { MeatThermometer } from './home-improvement/meat-thermometer';
+import {
+  MeatThermometerDevice,
+  MeatThermometerSensor,
+} from './home-improvement/meat-thermometer/meat-thermometer';
 import { PresenceSensor } from './home-improvement/presence';
 import {
-  AdvancedColorModeStateName,
+  BiologicalPresenceStateName,
+  DetectionSettingsStateName,
+  EnablePresenceFlags,
+  EnablePresenceStateName,
+  MMWavePresenceStateName,
+} from './home-improvement/presence/presence.states';
+import { DeviceStates as LightStates } from './lights';
+import { SceneModeStateName } from './lights/rgb';
+import { RGBLight } from './lights/rgb/rgb-light';
+import {
+  DiyModeStateName,
   MicModeStateName,
   SegmentColorModeStateName,
   WholeColorModeStateName,
 } from './lights/rgbic';
+import { RGBICLight } from './lights/rgbic/rgbic-light';
+import { DreamView, DreamViewDevice } from './tv/dreamview/dreamview';
+import { SyncBox, SyncBoxDevice } from './tv/sync-box/sync-box';
+import {
+  AmbiantState,
+  AmbiantStateName,
+} from './tv/dreamview/dreamview.states';
 export { AppliancesFactory, AppliancesModule } from './appliances';
 export {
   HomeImprovementFactory,
@@ -46,38 +57,45 @@ export {
 } from './home-improvement';
 export { LightsFactory, LightsModule } from './lights';
 export {
-  Humidifier,
-  Purifier,
-  IceMaker,
   AirQualitySensor,
-  HygrometerSensor,
-  RGBLight,
-  RGBICLight,
-  PresenceSensor,
-  EnablePresenceFlags,
-};
-export {
-  PM25StateName,
-  BasketFullStateName,
-  NuggetSizeStateName,
-  MakingIceStateName,
-  IceMakerStatusStateName,
-  ScheduledStartStateName,
   AutoModeStateName,
-  ManualModeStateName,
+  BasketFullStateName,
+  BiologicalPresenceStateName,
   CustomModeStateName,
+  DetectionSettingsStateName,
+  DiyModeStateName,
+  EnablePresenceFlags,
+  EnablePresenceStateName,
+  Humidifier,
+  HygrometerSensor,
+  IceMaker,
+  IceMakerStatusStateName,
+  MakingIceStateName,
+  ManualModeStateName,
+  MeatThermometer,
+  MeatThermometerDevice,
+  MeatThermometerSensor,
+  MicModeStateName,
   MistLevelStateName,
+  MMWavePresenceStateName,
+  NuggetSizeStateName,
+  PM25StateName,
+  PresenceSensor,
+  Purifier,
+  RGBICLight,
+  RGBLight,
+  SceneModeStateName,
+  ScheduledStartStateName,
+  SegmentColorModeStateName,
   TargetHumidityStateName,
   UVCStateName,
-  SceneModeStateName,
   WholeColorModeStateName,
-  SegmentColorModeStateName,
-  AdvancedColorModeStateName,
-  MicModeStateName,
-  MMWavePresenceStateName,
-  BiologicalPresenceStateName,
-  EnablePresenceStateName,
-  DetectionSettingsStateName,
+  AmbiantState,
+  AmbiantStateName,
+  DreamView,
+  DreamViewDevice,
+  SyncBox,
+  SyncBoxDevice,
 };
 export const DeviceStates: string[] = [
   ...ApplianceStates,

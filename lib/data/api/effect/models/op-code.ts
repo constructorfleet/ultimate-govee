@@ -11,6 +11,7 @@ export const rebuildOpCode = (
   const lines = chunk([1, -1, 2, ...codes], 17);
   lines[0][1] = lines.length;
   return [
+    asOpCode(51, 5, 0),
     ...lines.map((line: number[], index: number) =>
       asOpCode(163, index === lines.length - 1 ? 255 : index, ...line),
     ),

@@ -26,6 +26,7 @@ import {
   WaterShortageState,
 } from './states';
 import { DeviceStatesType } from './devices.types';
+import { TVFactory } from './impl/tv/tv.factory';
 
 const defaultStateFactories = [
   (device) => new ActiveState(device),
@@ -56,6 +57,7 @@ export class DevicesFactory {
     private readonly applianceFactory: AppliancesFactory,
     private readonly lightFactory: LightsFactory,
     private readonly homeImprovementFactory: HomeImprovementFactory,
+    private readonly tvFactory: TVFactory,
     private readonly eventBus: EventBus,
     private readonly commandBus: CommandBus,
   ) {}
@@ -65,6 +67,7 @@ export class DevicesFactory {
       this.applianceFactory,
       this.lightFactory,
       this.homeImprovementFactory,
+      this.tvFactory,
     ]
       .map(
         (factory) =>

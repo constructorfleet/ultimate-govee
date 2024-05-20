@@ -3,6 +3,10 @@ import { LightEffectsReceivedEvent } from '../events/light-effects-received.even
 import { DevicesService } from '../../devices.service';
 import { Logger } from '@nestjs/common';
 import { LightEffectState, LightEffectStateName } from '../../states';
+import {
+  DiyModeState,
+  DiyModeStateName,
+} from '~ultimate-govee-domain/devices/impl/lights/rgbic/rgbic-light.modes';
 
 @EventsHandler(LightEffectsReceivedEvent)
 export class LightEffectsReceivedEventHandler
@@ -31,6 +35,21 @@ export class LightEffectsReceivedEventHandler
       .filter((effect) => !!effect.code)
       .forEach((effect) => {
         state.effects.set(effect.code!, effect);
+      });
+    const diyState = device.state<DiyModeState>(DiyModeStateName);
+    if (state === undefined) {
+      this.logger.log(
+        `No state with name ${DiyModeStateName} for ${device.name}`,
+      );
+      return;
+    }
+    event.diys
+      .filter((effect) => !!effect.code)
+      .forEach((effect) => {
+        if (effect.code === undefined) {
+          return;
+        }
+        diyState?.effects.set(effect.code, effect);
       });
   }
 }

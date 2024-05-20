@@ -1,7 +1,7 @@
 import { Expose, Type } from 'class-transformer';
 import { ArrayParameter } from './fields/array.field';
 import { EnumParameter } from './fields/enum.field';
-import { Parameter, FieldDataType } from './fields/field';
+import { FieldDataType, Parameter } from './fields/field';
 import { IntegerParameter } from './fields/integer.field';
 import { StructParameter } from './fields/struct.field';
 
@@ -57,4 +57,18 @@ export class DeviceCapability<
     keepDiscriminatorProperty: true,
   })
   parameters!: Parameter<FieldDataType>;
+}
+
+export class DeviceCapabilityState<
+  Cap extends Capabilities,
+  CapabilityKey = Capability<Cap>,
+> {
+  @Expose({ name: 'type' })
+  type!: CapabilityKey;
+
+  @Expose({ name: 'instance' })
+  instance!: string;
+
+  @Expose({ name: 'value' })
+  rawValue!: number | string | boolean | object;
 }

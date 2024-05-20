@@ -39,3 +39,4 @@ libs/ultimate-govee/.env
 persisted/
 libs/ultimate-govee/persisted
 android/
+ble/

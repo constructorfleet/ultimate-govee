@@ -1,13 +1,12 @@
 /* eslint-disable func-names */
 import { NestFactory } from '@nestjs/core';
-import { UltimateGoveeModule } from './ultimate-govee.module';
-import { UltimateGoveeService } from './ultimate-govee.service';
+import { UltimateGoveeModuleOptions } from 'index';
 import {
   UltimateGoveeConfig,
   UltimateGoveeConfiguration,
 } from './ultimate-govee.config';
-import { CQRSLogger } from '~ultimate-govee-common';
-import { UltimateGoveeModuleOptions } from 'index';
+import { UltimateGoveeModule } from './ultimate-govee.module';
+import { UltimateGoveeService } from './ultimate-govee.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(
@@ -21,17 +20,21 @@ async function bootstrap() {
         auth: {},
         channels: {
           ble: {
-            enabled: false, //config?.connections?.ble,
+            enabled: config?.connections?.ble,
           },
           iot: {
             enabled: config?.connections?.iot,
           },
           rest: {},
+          openapi: {
+            enabled: config?.connections?.openApi,
+          },
         },
       }),
     }),
     {
-      logger: new CQRSLogger(),
+      logger: ['warn', 'error', 'log', 'verbose', 'debug'],
+      snapshot: true,
     },
   );
   app.enableShutdownHooks();
@@ -40,12 +43,15 @@ async function bootstrap() {
   const config = app.get<UltimateGoveeConfig>(
     UltimateGoveeConfiguration.provide,
   );
-  if (config?.username && config.password) {
+  if (config?.username && config?.password) {
     await service.connect(config.username, config.password);
   }
-  // service.channel('ble').setEnabled(true);
-  // service.channel('ble').setConfig({ devices: undefined });
-  service.channel('iot').setEnabled(true);
+  service.channel('ble').setEnabled(config.connections?.ble === true);
+  service.channel('iot').setEnabled(config.connections?.iot === true);
+  service.channel('openapi').setEnabled(config.connections?.openApi === true);
+  if (config?.apikey) {
+    service.channel('openapi').setConfig({ apiKey: config.apikey });
+  }
 }
 
 bootstrap();

@@ -4,6 +4,8 @@ import {
   AsyncBleChannelModuleOptions,
   IoTChannelModuleOptions,
   AsyncIoTChannelModuleOptions,
+  OpenAPIChannelModuleOptions,
+  AsyncOpenAPIChannelModuleOptions,
 } from './domain';
 import {
   OPTIONS_TYPE as UltimateGoveeModuleOptions,
@@ -14,6 +16,8 @@ export {
   AsyncBleChannelModuleOptions,
   IoTChannelModuleOptions,
   AsyncIoTChannelModuleOptions,
+  OpenAPIChannelModuleOptions,
+  AsyncOpenAPIChannelModuleOptions,
   PersistModuleOptions,
   AsyncPersistModuleOptions,
   UltimateGoveeModuleOptions,
@@ -79,7 +83,7 @@ export {
   SceneModeStateName,
   WholeColorModeStateName,
   SegmentColorModeStateName,
-  AdvancedColorModeStateName,
+  DiyModeStateName,
   MicModeStateName,
   IceMakerStatus,
   NuggetSize,
@@ -96,6 +100,17 @@ export {
   DetectionSettingsStateName,
   EnablePresenceFlags,
   PresenceData,
+  BuzzerStateName,
+  BuzzerState,
+  MeatThermometerDevice,
+  MeatThermometerSensor,
+  MeatThermometer,
+  DreamView,
+  DreamViewDevice,
+  SyncBox,
+  SyncBoxDevice,
+  AmbiantState,
+  AmbiantStateName,
 } from './domain';
 export { Device } from './domain/devices/device';
 export {

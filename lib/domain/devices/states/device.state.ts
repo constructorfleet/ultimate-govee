@@ -154,10 +154,12 @@ export class DeviceState<StateName extends string, StateValue>
     if (data.cmd && data.cmd !== StatusCommand) {
       return;
     }
-    const commandId = Array.from(this.pendingCommands.entries()).find(
-      ([_, statuses]) =>
+    const commandId = Array.from(this.pendingCommands.entries())
+      .filter(([_, statuses]) =>
         statuses.some((s) => deepPartialCompare(s.state, data.state)),
-    )?.[0];
+      )
+      .map(([commandId, _]) => commandId)
+      .at(0);
     this.parseState(data);
     if (commandId !== undefined) {
       this.clearCommand$.next({

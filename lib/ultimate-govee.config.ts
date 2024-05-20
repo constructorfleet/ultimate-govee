@@ -29,7 +29,7 @@ export const UltimateGoveeConfiguration: FactoryProvider = {
     connections: {
       iot: options?.channels?.iot?.enabled,
       ble: options?.channels?.ble?.enabled,
-      openApi: false,
+      openApi: options?.channels?.openapi?.enabled,
     },
     storageDirectory: options?.persist?.rootDirectory,
   }),

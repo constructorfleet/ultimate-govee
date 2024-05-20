@@ -21,8 +21,8 @@ import {
   DetectionSettingsState,
 } from './presence.states';
 
-export const Presence: 'Precence' = 'Precence' as const;
-export type Precence = typeof Presence;
+export const Presence: 'Presence' = 'Presence' as const;
+export type Presence = typeof Presence;
 
 const stateFactories: StateFactories = [
   (device) => new PowerState(device),
@@ -74,7 +74,7 @@ export class PresenceFactory extends DeviceFactory<
   constructor() {
     super(PresenceDevice, {
       'Home Improvement': {
-        Sensors: /presence/i,
+        Sensors: /.*presence.*/i,
       },
     });
   }
