@@ -16,7 +16,8 @@ jobs:
       'dependabot-preview[bot]' }}
     permissions:
       statuses: write
+      pull-requests: read
     steps:
-      - uses: aslafy-z/conventional-pr-title-action@v3
+      - uses: amannn/action-semantic-pull-request@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
