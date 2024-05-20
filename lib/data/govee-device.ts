@@ -44,6 +44,7 @@ export type GoveeDeviceStatus = {
     brightness?: number;
     tempProbes?: Record<number, number>;
     colorTemperature?: Measurement;
+    presence?: boolean;
     probes?: {
       probe1?: {
         current?: number;

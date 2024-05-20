@@ -21,6 +21,8 @@ import {
   IoTChannelModuleOptions,
   RestChannelModule,
   RestChannelModuleOptions,
+  OpenAPIChannelModule,
+  OpenAPIChannelModuleOptions,
 } from '~ultimate-govee-domain';
 import { DevtoolsModule } from '@nestjs/devtools-integration';
 
@@ -59,6 +61,12 @@ import { DevtoolsModule } from '@nestjs/devtools-integration';
       useFactory: (
         options: typeof OPTIONS_TYPE,
       ): typeof IoTChannelModuleOptions => options?.channels?.iot ?? {},
+    }),
+    OpenAPIChannelModule.forRootAsync({
+      inject: [MODULE_OPTIONS_TOKEN],
+      useFactory: (
+        options: typeof OPTIONS_TYPE,
+      ): typeof OpenAPIChannelModuleOptions => options?.channels?.openapi ?? {},
     }),
   ],
   providers: [UltimateGoveeConfiguration, UltimateGoveeService],

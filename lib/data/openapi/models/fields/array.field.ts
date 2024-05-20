@@ -1,4 +1,5 @@
 import {
+  ClassConstructor,
   Expose,
   Transform,
   Type,
@@ -13,6 +14,8 @@ import {
 } from './enum.field';
 import { FieldDataType, Field, Parameter } from './field';
 import { RangeOptions, IntegerField } from './integer.field';
+import { applyDecorators } from '@nestjs/common';
+import { StructField } from './struct.field';
 
 export class ArraySize {
   @Expose({ name: 'min' })
@@ -74,8 +77,8 @@ export class ArrayField extends Field<FieldDataType.ARRAY> {
           return plainToInstance(EnumField, field); // TODO
         case FieldDataType.ARRAY:
           return plainToInstance(ArrayField, field); // TODO
-        // case FieldDataType.STRUCT:
-        //   return plainToInstance(StructField, field); // TODO
+        case FieldDataType.STRUCT:
+          return plainToInstance(StructField(), field); // TODO
         default:
           return field;
       }
@@ -114,26 +117,35 @@ export class ArrayField extends Field<FieldDataType.ARRAY> {
   elementRange?: RangeOptions;
 }
 
-// export class StructElement extends Element<FieldDataType.STRUCT> {
-//   @Expose({ name: 'elementFields' })
-//   @Transform(({ value }) =>
-//     value.map((field: { dataType: FieldDataType }) => {
-//       switch (field.dataType) {
-//         case FieldDataType.INTEGER:
-//           return plainToInstance(IntegerField, field);
-//         case FieldDataType.ENUM:
-//           return plainToInstance(EnumField, field); // TODO
-//         case FieldDataType.ARRAY:
-//           return plainToInstance(ArrayField, field); // TODO
-//         case FieldDataType.STRUCT:
-//           return plainToInstance(StructField, field); // TODO
-//         default:
-//           return field;
-//       }
-//     }),
-//   )
-//   elementFields!: Field<FieldDataType>[];
-// }
+export const StructElement = (): ClassConstructor<
+  Element<FieldDataType.STRUCT>
+> => {
+  class StructElement extends Element<FieldDataType.STRUCT> {
+    elementFields!: Field<FieldDataType>[];
+  }
+
+  applyDecorators(
+    Expose({ name: 'elementFields' }),
+    Transform(({ value }) =>
+      value.map((field: { dataType: FieldDataType }) => {
+        switch (field.dataType) {
+          case FieldDataType.INTEGER:
+            return plainToInstance(IntegerField, field);
+          case FieldDataType.ENUM:
+            return plainToInstance(EnumField, field); // TODO
+          case FieldDataType.ARRAY:
+            return plainToInstance(ArrayField, field); // TODO
+          case FieldDataType.STRUCT:
+            return plainToInstance(StructField(), field); // TODO
+          default:
+            return field;
+        }
+      }),
+    ),
+  )(StructElement);
+
+  return StructElement;
+};
 
 export class ArrayParameter extends Parameter<FieldDataType.ARRAY> {
   @Expose({ name: 'size' })
@@ -150,8 +162,8 @@ export class ArrayParameter extends Parameter<FieldDataType.ARRAY> {
           return plainToInstance(EnumField, field); // TODO
         case FieldDataType.ARRAY:
           return plainToInstance(ArrayField, field); // TODO
-        // case FieldDataType.STRUCT:
-        //   return plainToInstance(StructField, field); // TODO
+        case FieldDataType.STRUCT:
+          return plainToInstance(StructField(), field); // TODO
         default:
           return field;
       }

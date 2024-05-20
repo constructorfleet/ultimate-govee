@@ -25,6 +25,9 @@ import { DecodedDevice } from './decoder';
 import { execSync } from 'child_process';
 import { BleConfig } from './ble.options';
 import { ConfigType } from '@nestjs/config';
+import { mkdir, writeFile } from 'fs/promises';
+import stringify from 'json-stringify-safe';
+import { existsSync } from 'fs';
 
 const STATE_UNKNOWN = 'unknown';
 const STATE_POWERED_ON = 'poweredOn';
@@ -135,6 +138,25 @@ export class BleClient {
   private async recordPeripheral(
     peripheral: BlePeripheral,
   ): Promise<BlePeripheral> {
+    const manufacturerData =
+      peripheral.advertisement.manufacturerData?.toString('hex');
+    const data: string[] = [
+      `Name: ${peripheral.advertisement.localName}`,
+      `Id: ${peripheral.id}`,
+      `Address: ${peripheral.address}`,
+      `Manufacturer Data: ${manufacturerData}`,
+      `Service UUIDs: ${peripheral.advertisement.serviceUuids?.join(', ')}`,
+    ];
+    this.logger.warn(stringify(data, null, 2));
+    const path = `ble/${manufacturerData?.substring(0, 4) ?? 'unknown'}`;
+    if (!existsSync(path)) {
+      await mkdir(path, { recursive: true });
+    }
+    await writeFile(
+      `${path}/${peripheral.advertisement.localName ?? peripheral.address ?? peripheral.id}.txt`,
+      data.join('\n'),
+      { encoding: 'utf-8' },
+    );
     if (
       (peripheral.advertisement?.localName ?? '').length === 0 ||
       !/.*?((GV)|(GVH)|(H)[A-Z0-9]{4})_?[A-Z0-9]{4}.*/.exec(

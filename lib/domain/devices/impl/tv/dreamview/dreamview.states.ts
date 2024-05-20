@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { DeviceModel } from '../../../devices.model';
 import { DeviceOpState, DeviceState } from '../../../states/device.state';
 import {
@@ -11,7 +13,9 @@ import {
   LightEffect,
   LightEffectState,
   LightEffectStateName,
+  MessageData,
   ModeState,
+  ParseOption,
   StateCommandAndStatus,
   // TimerStateName,
 } from '../../../states';
@@ -427,8 +431,27 @@ export class SceneModeState extends LightEffectState {
 export const VideoModeStateName: 'videoMode' = 'videoMode' as const;
 export type VideoModeStateName = typeof VideoModeStateName;
 
+export enum ColorMode { // [0]
+  SAME = 1,
+  DIFFERENT = 0,
+  SEGMENT = 2,
+}
+
+export enum VideoType { // [1]
+  GAME = 1,
+  VIDEO = 0,
+}
+
+export type SoundEffect = {
+  enabled?: boolean; // [3],
+  softness?: number; // [4]
+};
+
 export type VideoData = {
   brightness?: number;
+  barColorMode?: ColorMode;
+  videoType?: VideoType;
+  sound?: SoundEffect;
 };
 
 export class VideoModeState extends DeviceOpState<
@@ -440,12 +463,33 @@ export class VideoModeState extends DeviceOpState<
     opType: number = OpType.REPORT,
     identifier: number[] = [0x05, DreamviewModes.VIDEO],
   ) {
-    super({ opType, identifier }, device, VideoModeStateName, {});
+    super(
+      { opType, identifier },
+      device,
+      VideoModeStateName,
+      {},
+      ParseOption.opCode.or(ParseOption.state),
+    );
+  }
+
+  parseState(data: MessageData['state']): void {
+    this.stateValue.next({
+      ...this.stateValue.getValue(),
+      brightness: data?.brightness,
+    });
   }
 
   parseOpCommand(opCommand: number[]) {
-    this.logger.log(opCommand);
-    // this.activeEffectCode.next(total(opCommand.slice(0, 2), true));
+    const [colorMode, videoType, _, soundEnabled, soundSoftness] = opCommand;
+    this.stateValue.next({
+      ...this.stateValue.getValue(),
+      sound: {
+        enabled: soundEnabled === 1,
+        softness: soundSoftness,
+      },
+      barColorMode: colorMode,
+      videoType,
+    });
   }
 
   protected stateToCommand(

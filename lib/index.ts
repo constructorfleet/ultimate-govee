@@ -4,6 +4,8 @@ import {
   AsyncBleChannelModuleOptions,
   IoTChannelModuleOptions,
   AsyncIoTChannelModuleOptions,
+  OpenAPIChannelModuleOptions,
+  AsyncOpenAPIChannelModuleOptions,
 } from './domain';
 import {
   OPTIONS_TYPE as UltimateGoveeModuleOptions,
@@ -14,6 +16,8 @@ export {
   AsyncBleChannelModuleOptions,
   IoTChannelModuleOptions,
   AsyncIoTChannelModuleOptions,
+  OpenAPIChannelModuleOptions,
+  AsyncOpenAPIChannelModuleOptions,
   PersistModuleOptions,
   AsyncPersistModuleOptions,
   UltimateGoveeModuleOptions,
