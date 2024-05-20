@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ISubscriptionGrant } from 'mqtt';
 import { Subscription } from 'rxjs';
-import { Optional } from '~ultimate-govee-common';
+import { Optional } from '../types';
 import { MessageHandler, MqttClient } from './mqtt.client';
 import {
   InjectMqttBroker,
