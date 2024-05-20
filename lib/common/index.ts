@@ -5,3 +5,4 @@ export * from './observables';
 export * from './utils';
 export * from './fixed-length-stack';
 export * from './bitflags';
+export * from './mqtt';

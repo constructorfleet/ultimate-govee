@@ -1,51 +1,103 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
+import MomentLib from 'moment';
+import AsyncLock from 'semaphore-async-await';
 import { Optional } from '~ultimate-govee-common';
+import { PersistModule, PersistResult } from '~ultimate-govee-persist';
 import { request } from '../../utils';
+import { OAuthData } from '../account/models/account-client';
+import { GoveeEffectConfig } from './govee-effect.config';
 import {
   EffectCategory,
   EffectListResponse,
   EffectScene,
 } from './models/effect-list.response';
-import { GoveeEffectConfig } from './govee-effect.config';
-import { OAuthData } from '../account/models/account-client';
 import { Effect } from './models/effect.model';
 import { SceneListResponse } from './models/scene-list.response';
+
+type DeviceEffectsData = {
+  lastUpdate: MomentLib.Moment;
+  effects: Optional<Effect[]>;
+};
 
 @Injectable()
 export class GoveeEffectService {
   private readonly logger: Logger = new Logger(GoveeEffectService.name);
+  private readonly lock: AsyncLock = new AsyncLock(1);
+  private readonly deviceEffectData: Record<string, DeviceEffectsData> = {};
 
   constructor(
     @Inject(GoveeEffectConfig.KEY)
     private readonly config: ConfigType<typeof GoveeEffectConfig>,
   ) {}
 
+  @PersistResult({
+    filename: 'govee.{1}.effects.json',
+  })
   async getEffects(
     oauth: OAuthData,
     model: string,
     goodsType: number,
     deviceId: string,
   ): Promise<Optional<Effect[]>> {
-    const [deviceScenes, deviceEffects] = await Promise.all([
-      this.getDeviceScenes(oauth, model, goodsType, deviceId),
-      this.getDeviceEffects(oauth, model, goodsType, deviceId),
-    ]);
-    const effects = deviceEffects ?? [];
-    // Add any scene not already defined
-    effects.push(
-      ...(deviceScenes ?? []).filter(
-        (effect) => effects.find((e) => e.name === effect.name) === undefined,
-      ),
-    );
-    return effects;
+    await this.lock.acquire();
+    const deviceEffectData = this.deviceEffectData[model];
+    try {
+      if (
+        deviceEffectData !== undefined &&
+        deviceEffectData.lastUpdate.add(1, 'hour').isAfter(MomentLib())
+      ) {
+        this.logger.log('Last update within last hour, using previous result.');
+        return deviceEffectData.effects;
+      }
+
+      const persisted = await PersistModule.getPersistedFile<
+        Optional<Effect[]>
+      >({
+        filename: `govee.${model}.effects.json`,
+      });
+
+      if (persisted.data !== undefined && persisted.lastUpdate !== undefined) {
+        if (persisted.lastUpdate.add(1, 'hour').isAfter(MomentLib())) {
+          this.deviceEffectData[model] = {
+            lastUpdate: persisted.lastUpdate,
+            effects: persisted.data,
+          };
+          this.logger.log(
+            'Last update within last hour, using previous result.',
+          );
+          return this.deviceEffectData[model].effects;
+        }
+      }
+
+      const [deviceScenes, deviceEffects] = await Promise.all([
+        this.getDeviceScenes(oauth, model, goodsType, deviceId),
+        this.getDeviceEffects(oauth, model, goodsType, deviceId),
+      ]);
+      const effects = deviceEffects ?? [];
+      // Add any scene not already defined
+      effects.push(
+        ...(deviceScenes ?? []).filter(
+          (effect) => effects.find((e) => e.name === effect.name) === undefined,
+        ),
+      );
+      this.deviceEffectData[model] = {
+        lastUpdate: MomentLib(),
+        effects,
+      };
+      return effects;
+    } catch (error) {
+      this.logger.error(
+        'Unable to retrieve device light effects/scenes',
+        error,
+      );
+      return deviceEffectData?.effects;
+    } finally {
+      this.lock.release();
+    }
   }
 
-  // @PersistResult({
-  //   filename: 'govee.{3}.effects.json',
-  //   // transform: (data) => instanceToPlain(data),
-  // })
-  async getDeviceEffects(
+  private async getDeviceEffects(
     oauth: OAuthData,
     model: string,
     goodsType: number,
@@ -53,7 +105,7 @@ export class GoveeEffectService {
   ): Promise<Optional<Effect[]>> {
     try {
       this.logger.log(
-        `Retrieving light effects for device ${deviceId} from Govee REST API`,
+        `Retrieving light effects for device ${model} ${deviceId} from Govee REST API`,
       );
       const response = await request(
         this.config.deviceEffectUrl,
@@ -63,13 +115,7 @@ export class GoveeEffectService {
           goodsType,
           device: deviceId,
         },
-      ).get(
-        EffectListResponse,
-        // join(
-        //   PersistModule.persistRootDirectory,
-        //   `govee.${deviceId}.effects.raw.json`,
-        // ),
-      );
+      ).get(EffectListResponse);
       return (response.data as EffectListResponse).effectData.categories.reduce(
         (effects: Effect[], category: EffectCategory) => {
           category.scenes.forEach((scene: EffectScene) => {
@@ -101,11 +147,7 @@ export class GoveeEffectService {
     }
   }
 
-  // @PersistResult({
-  //   filename: 'govee.{3}.scenes.json',
-  //   // transform: (data) => instanceToPlain(data),
-  // })
-  async getDeviceScenes(
+  private async getDeviceScenes(
     oauth: OAuthData,
     model: string,
     goodsType: number,
@@ -113,7 +155,7 @@ export class GoveeEffectService {
   ): Promise<Optional<Effect[]>> {
     try {
       this.logger.log(
-        `Retrieving light scenes for device ${deviceId} from Govee REST API`,
+        `Retrieving light scenes for device ${model} ${deviceId} from Govee REST API`,
       );
       const response = await request(
         this.config.sceneUrl,
@@ -123,13 +165,7 @@ export class GoveeEffectService {
           goodsType,
           device: deviceId,
         },
-      ).get(
-        SceneListResponse,
-        // join(
-        //   PersistModule.persistRootDirectory,
-        //   `govee.${deviceId}.scenes.raw.json`,
-        // ),
-      );
+      ).get(SceneListResponse);
       return (response.data as SceneListResponse).sceneData.categories.reduce(
         (effects: Effect[], category) => {
           effects.push(

@@ -13,7 +13,7 @@ const payloadDecoder = new TextDecoder();
 const parseMessage = (payload: ArrayBuffer): IoTMessage => {
   const decoded = payloadDecoder.decode(payload);
   const plain = JSON.parse(decoded);
-  // IoTService.recordRawMessage(plain.device, plain);
+  IoTService.recordRawMessage(plain.device, plain);
   return plainToInstance(IoTMessage, plain);
 };
 
@@ -92,7 +92,7 @@ export class IoTService implements IoTHandler {
       },
       op: message.op,
     };
-    // this.recordMessage(result.id, result);
+    this.recordMessage(result.id, result);
     return result;
   }
 
@@ -112,7 +112,7 @@ export class IoTService implements IoTHandler {
 
   @PersistResult({
     filename: 'govee.{0}.iot-raw.log',
-    // append: true,
+    append: true,
   })
   static recordRawMessage(deviceId: string, message): any {
     return message;

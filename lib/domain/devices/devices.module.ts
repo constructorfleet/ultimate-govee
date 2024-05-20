@@ -9,9 +9,10 @@ import { DeviceController } from './device.controller';
 import { DeviceConfigReceivedEventHandler } from './cqrs/handlers/device-config-received.handler';
 import { LightEffectsReceivedEventHandler } from './cqrs/handlers/light-effects-received.handler';
 import { GetDeviceQueryHandler } from './cqrs/handlers/get-device.handler';
+import { TVModule } from './impl/tv/tv.module';
 
 @Module({
-  imports: [AppliancesModule, HomeImprovementModule, LightsModule],
+  imports: [AppliancesModule, HomeImprovementModule, LightsModule, TVModule],
   controllers: [DeviceController],
   providers: [
     DevicesService,

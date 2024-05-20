@@ -58,7 +58,7 @@ export const chunk = <T>(codes: T[], chunkSize: number) =>
     codes.slice(i * chunkSize, i * chunkSize + chunkSize),
   );
 
-export const asOpCode = (opCode, ...values: (number | number[])[]) => {
+export const asOpCode = (opCode, ...values) => {
   const cmdFrame = Buffer.from([
     opCode,
     ...values.map((v) => (typeof v === 'number' ? [v] : v)).flat(),

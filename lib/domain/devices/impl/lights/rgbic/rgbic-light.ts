@@ -23,15 +23,15 @@ import {
   MicModeState,
   RGBICActiveState,
   WholeColorModeStateName,
-  MicModeStateName,
   SegmentColorModeStateName,
-  AdvancedColorModeStateName,
   SceneModeState,
-  AdvancedColorModeState,
+  DiyModeState,
+  DiyModeStateName,
 } from './rgbic-light.modes';
 import { DeviceFactory } from '../../../device.factory';
 import { LightDevice } from '../light.device';
 import { Optional } from '../../../../../common/types';
+import { MicModeStateName } from './rgbic-light.modes';
 
 const StateFactory: StateFactories = [
   (device: DeviceModel) => new PowerState(device),
@@ -42,7 +42,7 @@ const StateFactory: StateFactories = [
   (device: DeviceModel) => new ColorModeState(device),
   (device: DeviceModel) => new SceneModeState(device),
   (device: DeviceModel) => new MicModeState(device),
-  (device: DeviceModel) => new AdvancedColorModeState(device),
+  (device: DeviceModel) => new DiyModeState(device),
 ];
 
 export const RGBICLightType: 'rgbic' = 'rgbic' as const;
@@ -64,7 +64,7 @@ export class RGBICLightDevice
         this.state(WholeColorModeStateName),
         this.state(MicModeStateName),
         this.state(SegmentColorModeStateName),
-        this.state(AdvancedColorModeStateName),
+        this.state(DiyModeStateName),
         this.state(LightEffectStateName),
       ]),
     );
@@ -93,8 +93,8 @@ export class RGBICLightDevice
   get [MicModeStateName](): Optional<MicModeState> {
     return this.state(MicModeStateName);
   }
-  get [AdvancedColorModeStateName](): Optional<AdvancedColorModeState> {
-    return this.state(AdvancedColorModeStateName);
+  get [DiyModeStateName](): Optional<DiyModeState> {
+    return this.state(DiyModeStateName);
   }
   get [ModeStateName](): Optional<RGBICActiveState> {
     return this.state(ModeStateName);
@@ -112,18 +112,18 @@ export class RGBICLightFactory extends DeviceFactory<
   constructor() {
     super(RGBICLightDevice, {
       'LED Strip Light': {
-        'RGBIC Strip Lights': [/2\*10m RGBIC Strip Light.*/, /.*RGBIC.*/],
+        'RGBIC Strip Lights': [/.*rgbic strip light.*/i, /.*rgbic.*/i],
       },
       'Indoor Lighting': {
-        'Floor Lamps': [/2\*10m RGBIC Strip Light.*/, /.*RGBIC.*/],
-        'Wall Lamps': [/Glide/],
+        'Floor Lamps': [/.*rgbic strip light.*/i, /.*rgbic.*/i],
+        'Wall Lamps': [/.*glide.*/i],
       },
       'Outdoor Lighting': {
-        'Strip Lights': [/Phantasy/, /RGBIC/],
-        'String Lights': [/RGBIC/],
+        'Strip Lights': [/.*phantasy.*/i, /.*rgbic.*/i],
+        'String Lights': [/.*rgbic.*/i],
       },
       'Other Lights': {
-        'Car Lights': [/RGBIC/],
+        'Car Lights': [/.*rgbic.*/i],
       },
     });
   }
@@ -137,7 +137,7 @@ export type RGBICLight = {
   [WholeColorModeStateName]: Optional<ColorModeState>;
   [LightEffectStateName]: Optional<LightEffectState>;
   [MicModeStateName]: Optional<MicModeState>;
-  [AdvancedColorModeStateName]: Optional<AdvancedColorModeState>;
+  [DiyModeStateName]: Optional<DiyModeState>;
   [ModeStateName]: Optional<RGBICActiveState>;
   [SegmentColorModeStateName]: Optional<SegmentColorModeState>;
 };

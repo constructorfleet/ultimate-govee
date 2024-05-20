@@ -4,6 +4,7 @@ import {
   IoTChannelModuleOptions,
   BleChannelModuleOptions,
   RestChannelModuleOptions,
+  OpenAPIChannelModuleOptions,
 } from './domain/channels/index';
 import { OPTIONS_TYPE as PersistModuleOptions } from './persist/persist.providers';
 
@@ -14,6 +15,7 @@ export type UltimateGoveeModuleOptions = {
     iot?: typeof IoTChannelModuleOptions;
     ble?: typeof BleChannelModuleOptions;
     rest?: typeof RestChannelModuleOptions;
+    openapi?: typeof OpenAPIChannelModuleOptions;
   };
 };
 

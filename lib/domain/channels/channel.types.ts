@@ -15,8 +15,17 @@ import {
   ASYNC_OPTIONS_TYPE as AsyncRestModuleOptions,
 } from './rest/rest-channel.types';
 
+import {
+  OPTIONS_TYPE as OpenApiModuleOptions,
+  ASYNC_OPTIONS_TYPE as AsyncOpenApiModuleOptions,
+} from './openapi/openapi-channel.types';
+import { OpenApiChannelService } from './openapi/openapi-channel.service';
+
 export type TogglableChannels = Extract<
-  BleChannelService | IoTChannelService | RestChannelService,
+  | BleChannelService
+  | IoTChannelService
+  | RestChannelService
+  | OpenApiChannelService,
   { togglable: true }
 >;
 
@@ -37,4 +46,5 @@ export type ChannelModuleOptions = {
   ble?: typeof BleModuleOptions | typeof AsyncBleModuleOptions;
   iot?: typeof IoTModuleOptions | typeof AsyncIoTModuleOptions;
   rest?: typeof RestModuleOptions | typeof AsyncRestModuleOptions;
+  openAPI?: typeof OpenApiModuleOptions | typeof AsyncOpenApiModuleOptions;
 };

@@ -16,11 +16,11 @@ export class MqttDeviceCapability {
   type!: string;
 
   @Expose({ name: 'instance' })
-  iinstance!: string;
+  instance!: string;
 
   @Expose({ name: 'state' })
   @Type(() => MqttDeviceState)
-  state!: MqttDeviceState;
+  state!: MqttDeviceState[];
 }
 
 export class OpenAPIMessage {

@@ -1,0 +1,11 @@
+import { Debuggable, Labelled } from '~ultimate-govee-common';
+
+export class OpenAPIPublishCommand implements Labelled, Debuggable {
+  label = () => `Publishing to ${this.topic}`;
+  constructor(
+    readonly commandId: string,
+    readonly topic: string,
+    readonly payload: object,
+    readonly debug?: boolean,
+  ) {}
+}
