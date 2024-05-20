@@ -2,7 +2,6 @@ import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import stringify from 'json-stringify-safe';
 import { combineLatest, concatMap, from } from 'rxjs';
-import { v4 as uuidv4 } from 'uuid';
 import { GoveeDeviceStatus, OpenAPIService } from '~ultimate-govee-data';
 import { DeviceRefeshEvent } from '../../devices/cqrs/events/device-refresh.event';
 import { DeviceStateCommandEvent } from '../../devices/cqrs/events/device-state-command.event';
@@ -50,6 +49,7 @@ export class OpenApiChannelService
   }
 
   async connect(config: OpenApiChannelConfiguration) {
+    this.logger.log('Connecting to OpenAPI channel');
     this.openapi.setApiKey(config.apiKey);
     this.openapi.setMqttCallback(async (message: GoveeDeviceStatus) => {
       await this.eventBus.publish(new DeviceStatusReceivedEvent(message));
@@ -65,45 +65,15 @@ export class OpenApiChannelService
     if (!this.isEnabled) {
       return;
     }
-    if (event instanceof DeviceRefeshEvent) {
-      if (event.addresses.iotTopic === undefined) {
-        return;
-      }
-      return await this.publishMessage(
-        uuidv4(),
-        event.addresses.iotTopic!,
-        {
-          topic: event.addresses.iotTopic,
-          msg: {
-            accountTopic: this.accountTopic,
-            cmd: 'status',
-            cmdVersion: 0,
-            transaction: `u_${Date.now()}`,
-            type: 0,
-          },
-        },
-        event.debug,
-      );
+    switch (true) {
+      case event instanceof DeviceRefeshEvent:
+        // TODO : Implement once platform is more 'ready'
+        return await Promise.resolve();
+      case event instanceof DeviceStateCommandEvent:
+        // TODO : Implement once platform is more 'ready'
+        return await Promise.resolve();
     }
-    if (event.addresses.iotTopic === undefined) {
-      return;
-    }
-    return await this.publishMessage(
-      event.command.commandId,
-      event.addresses.iotTopic!,
-      {
-        topic: event.addresses.iotTopic,
-        msg: {
-          accountTopic: this.accountTopic,
-          cmd: event.command.command ?? 'ptReal',
-          cmdVersion: event.command.cmdVersion ?? 0,
-          data: event.command.data,
-          transaction: `u_${Date.now()}`,
-          type: event.command.type ?? 1,
-        },
-      },
-      event.debug,
-    );
+    return await Promise.reject('Unknown event');
   }
 
   async publishMessage(

@@ -8,7 +8,10 @@ import {
   OpenAPIDevice,
 } from './models/device-list.response';
 import { OpenAPIDeviceScenesResponse } from './models/device-scenes.response';
-import { DeviceStateResponse } from './models/device-state.response';
+import {
+  DeviceStateResponse,
+  OpenAPIDeviceState,
+} from './models/device-state.response';
 import { MqttDeviceCapability } from './models/mqtt-message';
 import { OpenAPIMqttPacket } from './openapi.models';
 import { OpenAPIConfigProvider } from './openapi.providers';
@@ -122,7 +125,6 @@ export class OpenAPIService implements OpenAPIMqttMessageHandler {
     if (!this.apiKey) {
       return;
     }
-    await this.getDevices();
 
     await this.mqtt.connect(
       {
@@ -158,13 +160,14 @@ export class OpenAPIService implements OpenAPIMqttMessageHandler {
   async getDevice(
     deviceId: string,
     model: string,
-  ): Promise<OpenAPIDevice | undefined> {
+    commandId: string = uuidv4(),
+  ): Promise<OpenAPIDeviceState | undefined> {
     try {
       const response = await this.request(
         this.config.deviceStateUrl,
         {},
         {
-          requestId: uuidv4(),
+          requestId: commandId,
           payload: {
             sku: model,
             device: deviceId,
