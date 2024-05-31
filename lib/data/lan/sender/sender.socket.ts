@@ -13,11 +13,11 @@ export class SenderSocket {
     port: number,
     address?: string,
   ) {
-    return await new Promise<void>((resolve) => {
+    return await new Promise<void>((resolve, reject) => {
       setTimeout(() => {
         this.socket.send(msg, port, address, (error) => {
           if (error) {
-            console.log('send', error);
+            reject(error);
           } else {
             resolve();
           }

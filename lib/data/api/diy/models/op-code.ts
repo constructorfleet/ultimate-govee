@@ -20,7 +20,6 @@ export const rebuildDiyOpCode = (
     }
     const codes = base64ToHex(opCodeBase64);
     const lines = chunk([0x01, 0x02, 0x04, ...codes.splice(1)], 17);
-    console.dir({ codes, lines });
     return [
       ...lines.map((line: number[], index: number) =>
         asOpCode(163, index === lines.length - 1 ? 255 : index, ...line),

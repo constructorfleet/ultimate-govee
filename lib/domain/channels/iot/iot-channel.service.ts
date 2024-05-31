@@ -7,11 +7,8 @@ import {
   combineLatest,
   concatMap,
   from,
-  groupBy,
-  mergeMap,
   skipWhile,
   Subject,
-  throttleTime,
   filter,
 } from 'rxjs';
 import { DeviceStatusReceivedEvent } from '../../devices/cqrs/events/device-status-received.event';

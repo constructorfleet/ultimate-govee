@@ -5,10 +5,7 @@ import {
   asOpCode,
   OpType,
   DeltaMap,
-  hexStringToArray,
-  hexToBase64,
 } from '~ultimate-govee-common';
-import { encode } from 'base64-arraybuffer';
 import { Effect, DiyEffect } from '~ultimate-govee-data';
 import {
   DeviceOpState,
@@ -250,12 +247,6 @@ export class DiyModeState extends DeviceOpState<
       newEffect.code,
       newEffect.diyOpCodeBase64,
     )(this.identifier);
-    console.dir({
-      device: this.device.id,
-      name: this.device.name,
-      commands,
-      base64: commands?.map(hexToBase64),
-    });
     return {
       command: {
         type: 1,

@@ -7,27 +7,36 @@ import {
 } from './ultimate-govee.config';
 import { UltimateGoveeModule } from './ultimate-govee.module';
 import { UltimateGoveeService } from './ultimate-govee.service';
+import { ConfigModule, ConfigType, registerAs } from '@nestjs/config';
+
+const goveeConfig = registerAs('Dev.Govee.Config', () => ({
+  enableBle: true,
+  enableIoT: true,
+  enableOpenAPI: false,
+  persistDirectory: 'persisted',
+}));
 
 async function bootstrap() {
   const app = await NestFactory.create(
     UltimateGoveeModule.forRootAsync({
+      imports: [ConfigModule.forFeature(goveeConfig)],
       useFactory: (
-        config: UltimateGoveeConfig,
+        config: ConfigType<typeof goveeConfig>,
       ): typeof UltimateGoveeModuleOptions => ({
         persist: {
-          rootDirectory: 'persisted',
+          rootDirectory: config.persistDirectory,
         },
         auth: {},
         channels: {
           ble: {
-            enabled: false, //config?.connections?.ble,
+            enabled: config.enableBle,
           },
           iot: {
-            enabled: true, //config?.connections?.iot,
+            enabled: config.enableIoT,
           },
           rest: {},
           openapi: {
-            enabled: false, //config?.connections?.openApi,
+            enabled: config.enableOpenAPI,
           },
         },
       }),
@@ -43,7 +52,6 @@ async function bootstrap() {
   const config = app.get<UltimateGoveeConfig>(
     UltimateGoveeConfiguration.provide,
   );
-  console.dir(config);
   if (config?.username && config?.password) {
     await service.connect(config.username, config.password);
   }
