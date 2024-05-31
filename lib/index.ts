@@ -1,4 +1,5 @@
 import 'module-alias/register';
+import { DiyModeState } from './domain/devices/impl/lights/rgbic/rgbic-light.modes';
 import {
   BleChannelModuleOptions,
   AsyncBleChannelModuleOptions,
@@ -84,6 +85,7 @@ export {
   WholeColorModeStateName,
   SegmentColorModeStateName,
   DiyModeStateName,
+  DiyModeState,
   MicModeStateName,
   IceMakerStatus,
   NuggetSize,
