@@ -1,5 +1,5 @@
 import 'module-alias/register';
-import { DiyModeState } from './domain/devices/impl/lights/rgbic/rgbic-light.modes';
+import { DiyEffect } from '../dist/data/api/diy/models/diy-effect.model';
 import {
   BleChannelModuleOptions,
   AsyncBleChannelModuleOptions,
@@ -24,7 +24,7 @@ export {
   UltimateGoveeModuleOptions,
   UltimateGoveeModuleAsyncOptions,
 };
-export { GoveeDeviceStatus } from './data';
+export { GoveeDeviceStatus, DiyEffect } from './data';
 export * from './ultimate-govee.module';
 export * from './ultimate-govee.service';
 export * from './ultimate-govee.config';
