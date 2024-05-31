@@ -248,7 +248,7 @@ export class BleClient {
       return;
     }
     this.logger.log('BLE enabled');
-    this.state.next(this.noble?.state);
+    this.state.next(this.noble?._state);
     this.noble?.on('stateChange', (state) => {
       this.state.next(state);
       this.logger.warn(`State changed to ${state}`);
