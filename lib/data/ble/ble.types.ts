@@ -321,7 +321,7 @@ export type NobleBle = {
 
   removeAllListeners(event?: string): EventEmitter;
 
-  state: string;
+  _state: string;
 };
 
 export type BleCommand = {
