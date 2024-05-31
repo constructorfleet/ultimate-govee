@@ -1,6 +1,7 @@
 import { RGBICLight } from './rgbic-light';
 import {
   DiyModeStateName,
+  DiyModeState,
   MicModeStateName,
   SegmentColorModeStateName,
   WholeColorModeStateName,
@@ -12,6 +13,7 @@ export {
   WholeColorModeStateName,
   SegmentColorModeStateName,
   DiyModeStateName,
+  DiyModeState,
   MicModeStateName,
 };
 export const DeviceStates: string[] = [
