@@ -6,7 +6,6 @@ import {
   OpType,
   DeltaMap,
 } from '~ultimate-govee-common';
-import { encode } from 'base64-arraybuffer';
 import { Effect, DiyEffect } from '~ultimate-govee-data';
 import {
   DeviceOpState,
@@ -22,6 +21,7 @@ import {
 } from '../../../states';
 import { DeviceModel } from '../../../devices.model';
 import { BehaviorSubject } from 'rxjs';
+import { rebuildDiyOpCode } from '~ultimate-govee-data/api/diy/models/op-code';
 
 export enum RGBICModes {
   SCENE = 4,
@@ -222,10 +222,9 @@ export class DiyModeState extends DeviceOpState<
         return;
       }
       newEffect = Array.from(this.effects.entries()).find(
-        ([_, effect]) => effect.code,
+        ([_, effect]) => effect.code === state.code,
       )?.[1];
-    }
-    if (state?.code === undefined) {
+    } else {
       const effect = Array.from(this.effects.values()).find(
         (effect) => effect.name === state.name,
       );
@@ -244,20 +243,16 @@ export class DiyModeState extends DeviceOpState<
       );
       return;
     }
-    const commands = newEffect.opCode(this.identifier);
-    console.dir({
-      device: this.device.id,
-      name: this.device.name,
-      commands,
-    });
+    const commands = rebuildDiyOpCode(
+      newEffect.code,
+      newEffect.diyOpCodeBase64,
+    )(this.identifier);
     return {
       command: {
         type: 1,
         cmdVersion: 0,
         data: {
-          command: commands?.map((line) =>
-            encode(Buffer.from(new Uint8Array(line))),
-          ),
+          command: commands,
         },
       },
       status: {

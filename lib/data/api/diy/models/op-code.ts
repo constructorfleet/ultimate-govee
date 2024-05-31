@@ -19,14 +19,13 @@ export const rebuildDiyOpCode = (
       return undefined;
     }
     const codes = base64ToHex(opCodeBase64);
-    const lines = chunk([0x01, 0x04, ...codes], 17);
-
+    const lines = chunk([0x01, 0x02, 0x04, ...codes.splice(1)], 17);
     return [
       ...lines.map((line: number[], index: number) =>
         asOpCode(163, index === lines.length - 1 ? 255 : index, ...line),
       ),
       asOpCode(OpType.COMMAND, ...(identifier ?? []), code % 256, code >> 8),
-      asOpCode(OpType.REPORT, ...(identifier ?? [])),
+      asOpCode(OpType.REPORT, ...([identifier?.at(0)] ?? []), 1),
     ];
   };
 };

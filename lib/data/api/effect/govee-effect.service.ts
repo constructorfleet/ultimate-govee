@@ -14,6 +14,7 @@ import {
 } from './models/effect-list.response';
 import { Effect } from './models/effect.model';
 import { SceneListResponse } from './models/scene-list.response';
+import { AuthState } from '~ultimate-govee-domain';
 
 type DeviceEffectsData = {
   lastUpdate: MomentLib.Moment;
@@ -35,11 +36,15 @@ export class GoveeEffectService {
     filename: 'govee.{1}.effects.json',
   })
   async getEffects(
-    oauth: OAuthData,
+    authState: AuthState,
     model: string,
     goodsType: number,
     deviceId: string,
   ): Promise<Optional<Effect[]>> {
+    const oauth = authState?.accountAuth?.oauth;
+    if (!oauth) {
+      return [];
+    }
     await this.lock.acquire();
     const deviceEffectData = this.deviceEffectData[model];
     try {
