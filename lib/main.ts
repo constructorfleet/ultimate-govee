@@ -20,14 +20,14 @@ async function bootstrap() {
         auth: {},
         channels: {
           ble: {
-            enabled: config?.connections?.ble,
+            enabled: false, //config?.connections?.ble,
           },
           iot: {
-            enabled: config?.connections?.iot,
+            enabled: true, //config?.connections?.iot,
           },
           rest: {},
           openapi: {
-            enabled: config?.connections?.openApi,
+            enabled: false, //config?.connections?.openApi,
           },
         },
       }),
@@ -43,15 +43,16 @@ async function bootstrap() {
   const config = app.get<UltimateGoveeConfig>(
     UltimateGoveeConfiguration.provide,
   );
+  console.dir(config);
   if (config?.username && config?.password) {
     await service.connect(config.username, config.password);
   }
-  service.channel('ble').setEnabled(config.connections?.ble === true);
-  service.channel('iot').setEnabled(config.connections?.iot === true);
-  service.channel('openapi').setEnabled(config.connections?.openApi === true);
-  if (config?.apikey) {
-    service.channel('openapi').setConfig({ apiKey: config.apikey });
-  }
+  // service.channel('ble').setEnabled(config.connections?.ble === true);
+  // service.channel('iot').setEnabled(config.connections?.iot === true);
+  // service.channel('openapi').setEnabled(config.connections?.openApi === true);
+  // if (config?.apikey) {
+  //   service.channel('openapi').setConfig({ apiKey: config.apikey });
+  // }
 }
 
 bootstrap();

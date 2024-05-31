@@ -3,7 +3,17 @@ import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import stringify from 'json-stringify-safe';
 import { ChannelService } from '../channel.service';
-import { combineLatest, concatMap, from } from 'rxjs';
+import {
+  combineLatest,
+  concatMap,
+  from,
+  groupBy,
+  mergeMap,
+  skipWhile,
+  Subject,
+  throttleTime,
+  filter,
+} from 'rxjs';
 import { DeviceStatusReceivedEvent } from '../../devices/cqrs/events/device-status-received.event';
 import { DeviceRefeshEvent } from '../../devices/cqrs/events/device-refresh.event';
 import { v4 as uuidv4 } from 'uuid';
@@ -21,6 +31,7 @@ export class IoTChannelService
 {
   readonly togglable: true = true as const;
   readonly name: 'iot' = 'iot' as const;
+  readonly refreshDevice$: Subject<DeviceRefeshEvent> = new Subject();
 
   constructor(
     @InjectEnabled enabled: boolean,
@@ -38,17 +49,56 @@ export class IoTChannelService
         }),
       )
       .subscribe();
+    this.refreshDevice$
+      .pipe(
+        skipWhile(() => !this.isEnabled),
+        filter(
+          (event) =>
+            event.addresses.iotTopic !== undefined &&
+            typeof event.addresses.iotTopic !== 'string',
+        ),
+        // groupBy((event) => event.deviceId),
+        // mergeMap((eventGroup$) =>
+        //   eventGroup$.pipe(
+        //     throttleTime(5000, undefined, {
+        //       leading: true,
+        //       trailing: false,
+        //     }),
+        //   ),
+        // ),
+      )
+      .subscribe((event) =>
+        this.publishMessage(
+          uuidv4(),
+          event.addresses.iotTopic!,
+          {
+            topic: event.addresses.iotTopic,
+            msg: {
+              accountTopic: this.getConfig()?.topic,
+              cmd: 'status',
+              cmdVersion: 0,
+              transaction: `u_${Date.now()}`,
+              type: 0,
+            },
+          },
+          event.debug,
+        ),
+      );
   }
 
   async handle(event: DeviceRefeshEvent | DeviceStateCommandEvent) {
     if (!this.isEnabled) {
       return;
     }
+    if (
+      event.addresses.iotTopic === undefined ||
+      typeof event.addresses.iotTopic !== 'string'
+    ) {
+      return;
+    }
     if (event instanceof DeviceRefeshEvent) {
-      if (event.addresses.iotTopic === undefined) {
-        return;
-      }
-      return await this.publishMessage(
+      this.refreshDevice$.next(event);
+      this.publishMessage(
         uuidv4(),
         event.addresses.iotTopic!,
         {
@@ -63,8 +113,6 @@ export class IoTChannelService
         },
         event.debug,
       );
-    }
-    if (event.addresses.iotTopic === undefined) {
       return;
     }
     return await this.publishMessage(
@@ -104,6 +152,11 @@ export class IoTChannelService
     payload: object,
     debug?: boolean,
   ) {
+    if ('msg' in payload && !!payload.msg && typeof payload.msg === 'object') {
+      if ('accountTopic' in payload.msg && !payload.msg.accountTopic) {
+        payload.msg.accountTopic = this.getConfig()?.topic;
+      }
+    }
     if (debug === true) {
       this.logger.debug(topic, payload);
     }

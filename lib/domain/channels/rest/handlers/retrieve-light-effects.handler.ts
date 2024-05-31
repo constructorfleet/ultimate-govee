@@ -5,7 +5,7 @@ import {
   QueryBus,
 } from '@nestjs/cqrs';
 import { GoveeDiyService, GoveeEffectService } from '~ultimate-govee-data';
-import { AuthDataQuery } from '../../../auth';
+import { AuthDataQuery, AuthState } from '../../../auth';
 import { LightEffectsReceivedEvent } from '../../../devices/cqrs';
 import { RetrieveLightEffectsCommand } from '../commands/retrieve-light-effects.command';
 
@@ -21,22 +21,27 @@ export class RetrieveLightEffectsCommandHandler
   ) {}
 
   async execute(command: RetrieveLightEffectsCommand): Promise<void> {
-    const authData = await this.queryBus.execute(new AuthDataQuery());
-    if (authData === undefined) {
+    const authData = await this.queryBus.execute<AuthDataQuery, AuthState>(
+      new AuthDataQuery(),
+    );
+    if (!authData) {
       return;
     }
-    const effects = await this.api.getEffects(
-      authData,
-      command.device.model,
-      command.device.goodsType,
-      command.device.id,
-    );
-    const diys = await this.diyApi.getDeviceDiys(
-      authData,
-      command.device.model,
-      command.device.goodsType,
-      command.device.id,
-    );
+
+    const [effects, diys] = await Promise.all([
+      this.api.getEffects(
+        authData,
+        command.device.model,
+        command.device.goodsType,
+        command.device.id,
+      ),
+      this.diyApi.getDiyEffects(
+        authData,
+        command.device.model,
+        command.device.goodsType,
+        command.device.id,
+      ),
+    ]);
     this.eventBus.publish(
       new LightEffectsReceivedEvent(
         command.device.id,

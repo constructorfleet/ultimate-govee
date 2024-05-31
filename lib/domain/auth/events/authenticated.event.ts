@@ -1,5 +1,6 @@
 import { OAuthData } from '~ultimate-govee-data';
 import { AccountId, ClientId, Labelled } from '~ultimate-govee-common';
+import { BffAuthData } from '../auth.state';
 
 export class AuthenticatedEvent implements Labelled {
   label = () => `Authenticated ${this.accountId}`;
@@ -8,5 +9,6 @@ export class AuthenticatedEvent implements Labelled {
     readonly accountId: AccountId,
     readonly clientId: ClientId,
     readonly oauthData: OAuthData,
+    readonly communityData: BffAuthData,
   ) {}
 }

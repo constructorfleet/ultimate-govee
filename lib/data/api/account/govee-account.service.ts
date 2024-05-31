@@ -1,25 +1,27 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
+import MomentLib from 'moment';
+import {
+  GoveeApiAuthenticationError,
+  GoveeCommunityApiAuthenticationError,
+  GoveeError,
+} from '~ultimate-govee-common';
 import { InjectPersisted, PersistResult } from '~ultimate-govee-persist';
+import { parseP12Certificate, request } from '../../utils';
 import {
   GoveeAccountConfig,
   GoveeCredentials,
 } from './govee-account.configuration';
-import { LoginResponse } from './models/login.response';
 import { GoveeAccount, OAuthData } from './models/account-client';
-import {
-  IoTCertificateData,
-  IoTCertificateResponse,
-} from './models/iot-certificate.response';
-import { parseP12Certificate, request } from '../../utils';
-import { RefreshTokenResponse } from './models/refresh-token.response';
+import { IoTCertificateResponse } from './models/iot-certificate.response';
 import { decodeJWT } from './models/jwt';
-import stringify from 'json-stringify-safe';
-import MomentLib from 'moment';
+import { CommunityLoginResponse, LoginResponse } from './models/login.response';
+import { RefreshTokenResponse } from './models/refresh-token.response';
 
 @Injectable()
 export class GoveeAccountService {
   private logger: Logger = new Logger(GoveeAccountService.name);
+  private readonly persistedAccount: GoveeAccount;
 
   constructor(
     @Inject(GoveeAccountConfig.KEY)
@@ -27,8 +29,17 @@ export class GoveeAccountService {
     @InjectPersisted({
       filename: 'govee.accountClient.json',
     })
-    private readonly persisted: GoveeAccount | undefined,
-  ) {}
+    persistedAccount: GoveeAccount | undefined,
+  ) {
+    this.persistedAccount = persistedAccount ?? {
+      accountId: '',
+      clientId: '',
+      topic: '',
+      iot: undefined,
+      oauth: undefined,
+      bffOAuth: undefined,
+    };
+  }
 
   public isTokenValid(token?: string): boolean {
     const jwt = decodeJWT(token);
@@ -71,29 +82,30 @@ export class GoveeAccountService {
     filename: 'govee.accountClient.json',
   })
   async authenticate(credentials: GoveeCredentials): Promise<GoveeAccount> {
-    if (
-      this.persisted?.oauth &&
-      MomentLib(this.persisted.oauth.expiresAt).isAfter(MomentLib().utc()) &&
-      this.isTokenValid(this.persisted.oauth.accessToken)
-    ) {
-      this.logger.log('Using persisted credentials');
-      return this.persisted;
+    if (await this.authenticateWithGovee(credentials)) {
+      await this.authenticateWithAWSIoT();
     }
-    let { clientId } = credentials;
-    let topic: string;
-    const account: GoveeAccount = {
-      accountId: '',
-      oauth: {
-        accessToken: '',
-        refreshToken: '',
-        clientId: credentials.clientId,
-        expiresAt: 0,
-      },
-      clientId: credentials.clientId,
-    };
+    await this.authenticateWithCommunity(credentials);
+
+    return this.persistedAccount;
+  }
+
+  private async authenticateWithGovee(
+    credentials: GoveeCredentials,
+  ): Promise<boolean> {
+    if (
+      this.persistedAccount?.oauth &&
+      MomentLib(this.persistedAccount.oauth.expiresAt).isAfter(
+        MomentLib().utc().subtract(1, 'day'),
+      ) &&
+      this.isTokenValid(this.persistedAccount.oauth.accessToken)
+    ) {
+      this.logger.log('Using persisted Govee API credentials');
+      return false;
+    }
     try {
       this.logger.log('Authenticating with Govee REST API');
-      const loginResponse = await request(
+      const response = await request(
         this.config.authUrl,
         {},
         {
@@ -102,52 +114,93 @@ export class GoveeAccountService {
           client: credentials.clientId,
         },
       ).post(LoginResponse);
-      clientId = loginResponse.data.client.clientId;
-      account.accountId = loginResponse.data.client.accountId;
-      account.oauth = {
-        accessToken: loginResponse.data.client.accessToken,
-        refreshToken: loginResponse.data.client.refreshToken,
+      const loginResponse = response.data;
+      this.persistedAccount.accountId = loginResponse.client.accountId;
+      this.persistedAccount.clientId = loginResponse.client.clientId;
+      this.persistedAccount.topic = loginResponse.client.topic;
+      this.persistedAccount.oauth = {
+        accessToken: loginResponse.client.accessToken,
+        refreshToken: loginResponse.client.refreshToken,
         expiresAt:
-          new Date().getTime() +
-          loginResponse.data.client.tokenExpireCycle * 1000,
-        clientId,
+          new Date().getTime() + loginResponse.client.tokenExpireCycle * 1000,
+        clientId: loginResponse.client.clientId,
       };
-      topic = loginResponse.data.client.topic;
-    } catch (err) {
-      this.logger.error(
-        `Unable to authenticate with Govee. ${stringify(credentials)} ${err}`,
-        err,
-      );
-      throw new Error('Unable to authenticate with Govee.');
-    }
 
-    try {
-      const iotCertResponse = await this.getIoTCertificate(account.oauth);
-      const iotCertificate = await parseP12Certificate(
-        iotCertResponse.p12Certificate,
-        iotCertResponse.certificatePassword,
+      return true;
+    } catch (error) {
+      this.logger.error(
+        'Unable to authenticate with Govee servers',
+        (error as Error).message,
       );
-      account.iot = {
-        ...iotCertificate,
-        accountId: account.accountId,
-        endpoint: iotCertResponse.brokerUrl,
-        topic,
-        clientId,
-      };
-    } catch (err) {
-      this.logger.error('Unable to authenticate with Govee servers', err);
+      throw new GoveeApiAuthenticationError();
     }
-    return account;
   }
 
-  async getIoTCertificate(oauthData: OAuthData): Promise<IoTCertificateData> {
+  private async authenticateWithCommunity(
+    credentials: GoveeCredentials,
+  ): Promise<boolean> {
+    if (
+      this.persistedAccount.bffOAuth &&
+      MomentLib(this.persistedAccount.bffOAuth.expiresAt).isAfter(
+        MomentLib().utc().subtract(1, 'day'),
+      ) &&
+      this.isTokenValid(this.persistedAccount.bffOAuth.accessToken)
+    ) {
+      this.logger.log('Using persisted Govee Community credentials');
+      return false;
+    }
+
     try {
+      this.logger.log('Authenticating with Govee Community API');
+      const response = await request(
+        this.config.communityAuthUrl,
+        {},
+        {
+          email: credentials.username,
+          password: credentials.password,
+        },
+      ).post(CommunityLoginResponse);
+      const loginResponse = response.data;
+      this.persistedAccount.bffOAuth = {
+        accessToken: loginResponse.community.token,
+        refreshToken: '',
+        expiresAt: loginResponse.community.expiresAt,
+        clientId: this.persistedAccount.clientId,
+      };
+      return true;
+    } catch (error) {
+      this.logger.error(
+        'Unable to authenticate with Govee community servers',
+        (error as Error).message,
+      );
+      throw new GoveeCommunityApiAuthenticationError();
+    }
+  }
+
+  private async authenticateWithAWSIoT() {
+    try {
+      if (!this.persistedAccount.oauth) {
+        this.logger.error('Cannot retreive IoT certificate: not logged in');
+        throw new GoveeError('Unable to authenticate with AWS IoT broker');
+      }
       this.logger.log('Getting IoT authentication information');
       const response = await request(
         this.config.iotCertUrl,
-        this.config.authenticatedHeaders(oauthData),
+        this.config.authenticatedHeaders(this.persistedAccount.oauth),
       ).get(IoTCertificateResponse);
-      return (response.data as IoTCertificateResponse).data;
+      const iotCertResponse: IoTCertificateResponse =
+        response.data as IoTCertificateResponse;
+      const iotCertificate = await parseP12Certificate(
+        iotCertResponse.iotData.p12Certificate,
+        iotCertResponse.iotData.certificatePassword,
+      );
+      this.persistedAccount.iot = {
+        ...iotCertificate,
+        endpoint: iotCertResponse.iotData.brokerUrl,
+        accountId: this.persistedAccount.accountId,
+        clientId: this.persistedAccount.clientId,
+        topic: this.persistedAccount.topic,
+      };
     } catch (err) {
       this.logger.error('Unable to retrieve IoT certificate', err);
       throw new Error('Unable to retrieve IoT certificate');

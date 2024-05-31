@@ -6,7 +6,7 @@ import {
 } from '@nestjs/cqrs';
 import { GoveeDeviceService } from '~ultimate-govee-data';
 import { Logger } from '@nestjs/common';
-import { AuthDataQuery } from '../../../auth';
+import { AuthDataQuery, AuthState } from '../../../auth';
 import { RetrieveDeviceListCommand } from '../commands';
 import { DeviceConfigReceivedEvent } from '../../../devices/cqrs/events/device-config-received.event';
 
@@ -26,10 +26,14 @@ export class RetrieveDeviceListCommandHandler
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async execute(_: RetrieveDeviceListCommand): Promise<any> {
-    const authData = await this.queryBus.execute(new AuthDataQuery());
-    if (authData?.oauth !== undefined) {
+    const authData = await this.queryBus.execute<AuthDataQuery, AuthState>(
+      new AuthDataQuery(),
+    );
+    if (authData?.accountAuth?.oauth !== undefined) {
       this.logger.log('Getting device list');
-      const deviceList = await this.api.getDeviceList(authData.oauth);
+      const deviceList = await this.api.getDeviceList(
+        authData?.accountAuth.oauth,
+      );
       this.logger.log(`Got ${deviceList.length} devices`);
       deviceList
         .map((device) => new DeviceConfigReceivedEvent(device))
