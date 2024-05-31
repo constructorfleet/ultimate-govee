@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { EventBus, ICommand, Saga, ofType } from '@nestjs/cqrs';
-import { Observable, filter, map } from 'rxjs';
+import { Observable, filter, groupBy, map, mergeMap, throttleTime } from 'rxjs';
 import { arrayEquality } from '@santi100/equal-lib';
 import {
   BleChannelChangedEvent,
@@ -56,6 +56,13 @@ export class BleChannelSagas {
         (event) =>
           event.opIdentifiers !== undefined && event.opIdentifiers.length > 0,
       ),
+      groupBy((event) => event.deviceId),
+      mergeMap((eventGroup$) => eventGroup$.pipe(
+        throttleTime(5000, undefined, {
+          leading: true,
+          trailing: false
+        })
+      )),
       map(
         (event) =>
           new BlePublishCommand(

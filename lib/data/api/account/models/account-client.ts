@@ -17,6 +17,8 @@ export type IoTData = {
 export type GoveeAccount = {
   accountId: string;
   clientId: string;
+  topic: string;
   iot?: IoTData;
-  oauth: OAuthData;
+  oauth?: OAuthData;
+  bffOAuth?: OAuthData;
 };

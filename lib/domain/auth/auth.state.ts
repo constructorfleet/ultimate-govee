@@ -7,7 +7,14 @@ export type AccountAuthData = {
   oauth: OAuthData;
 };
 
+export type BffAuthData = {
+  clientId: ClientId;
+  accountId: AccountId;
+  oauth: OAuthData;
+};
+
 export type AuthState = {
   credentials?: Credentials;
   accountAuth?: AccountAuthData;
+  bffAuth?: BffAuthData;
 };

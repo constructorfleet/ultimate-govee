@@ -7,27 +7,36 @@ import {
 } from './ultimate-govee.config';
 import { UltimateGoveeModule } from './ultimate-govee.module';
 import { UltimateGoveeService } from './ultimate-govee.service';
+import { ConfigModule, ConfigType, registerAs } from '@nestjs/config';
+
+const goveeConfig = registerAs('Dev.Govee.Config', () => ({
+  enableBle: true,
+  enableIoT: true,
+  enableOpenAPI: false,
+  persistDirectory: 'persisted',
+}));
 
 async function bootstrap() {
   const app = await NestFactory.create(
     UltimateGoveeModule.forRootAsync({
+      imports: [ConfigModule.forFeature(goveeConfig)],
       useFactory: (
-        config: UltimateGoveeConfig,
+        config: ConfigType<typeof goveeConfig>,
       ): typeof UltimateGoveeModuleOptions => ({
         persist: {
-          rootDirectory: 'persisted',
+          rootDirectory: config.persistDirectory,
         },
         auth: {},
         channels: {
           ble: {
-            enabled: config?.connections?.ble,
+            enabled: config.enableBle,
           },
           iot: {
-            enabled: config?.connections?.iot,
+            enabled: config.enableIoT,
           },
           rest: {},
           openapi: {
-            enabled: config?.connections?.openApi,
+            enabled: config.enableOpenAPI,
           },
         },
       }),
@@ -46,12 +55,12 @@ async function bootstrap() {
   if (config?.username && config?.password) {
     await service.connect(config.username, config.password);
   }
-  service.channel('ble').setEnabled(config.connections?.ble === true);
-  service.channel('iot').setEnabled(config.connections?.iot === true);
-  service.channel('openapi').setEnabled(config.connections?.openApi === true);
-  if (config?.apikey) {
-    service.channel('openapi').setConfig({ apiKey: config.apikey });
-  }
+  // service.channel('ble').setEnabled(config.connections?.ble === true);
+  // service.channel('iot').setEnabled(config.connections?.iot === true);
+  // service.channel('openapi').setEnabled(config.connections?.openApi === true);
+  // if (config?.apikey) {
+  //   service.channel('openapi').setConfig({ apiKey: config.apikey });
+  // }
 }
 
 bootstrap();

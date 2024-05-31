@@ -1,6 +1,6 @@
-import { Expose, Type } from 'class-transformer';
+import { Exclude, Expose, Type } from 'class-transformer';
 import { GoveeAPIResponse } from '../../govee-api.models';
-import { Optional, base64ToHex } from '~ultimate-govee-common';
+import { DiyOpCodeBuilder, rebuildDiyOpCode } from './op-code';
 
 export class DIY {
   @Expose({ name: 'effectId' })
@@ -12,13 +12,9 @@ export class DIY {
   @Expose({ name: 'effectStr' })
   diyOpCodeBase64!: string;
 
-  @Expose({ name: 'diyEffect', toPlainOnly: true })
-  get diyEffect(): Optional<number[]> {
-    if (this.diyOpCodeBase64 === undefined) {
-      return undefined;
-    }
-    // Probably wrong
-    return base64ToHex(this.diyOpCodeBase64);
+  @Exclude()
+  get opCode(): DiyOpCodeBuilder {
+    return rebuildDiyOpCode(this.code, this.diyOpCodeBase64);
   }
 
   @Expose({ name: 'diyName' })
@@ -35,7 +31,7 @@ export class DIYGroup {
   @Expose({ name: 'groupId' })
   id!: number;
 
-  @Expose({ name: 'name' })
+  @Expose({ name: 'groupName' })
   name!: string;
 
   @Expose({ name: 'diys' })

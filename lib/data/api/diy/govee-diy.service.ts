@@ -1,15 +1,15 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
+import { GoveeCommunityApiError, GoveeError } from '~ultimate-govee-common';
+import { AuthState } from '~ultimate-govee-domain';
 import { PersistResult } from '~ultimate-govee-persist';
 import { goveeAuthenticatedHeaders, request } from '../../utils';
 import { GoveeDiyConfig } from './govee-diy.config';
-import { OAuthData } from '../account/models/account-client';
-import axios from 'axios';
+import { OneClickComponent } from './models/bff/one-click-component.response';
+import { OneClickResponse } from './models/bff/one-click.response';
+import { TapToRunResponse } from './models/bff/tap-to-run.response';
 import { DiyEffect } from './models/diy-effect.model';
-import { DIYGroupResponse } from './models/giy-group.response';
-import { rebuildDiyOpCode } from './models/op-code';
-import { writeFile } from 'fs/promises';
-import stringify from 'json-stringify-safe';
+import { DIYGroupResponse } from './models/diy-group.response';
 
 @Injectable()
 export class GoveeDiyService {
@@ -21,45 +21,52 @@ export class GoveeDiyService {
   ) {}
 
   @PersistResult({
+    filename: 'govee.one-clicks.json',
+  })
+  async getOneClicks(authState: AuthState): Promise<OneClickResponse[]> {
+    if (authState.bffAuth === undefined) {
+      this.logger.error(
+        'Unable to retrieve One-Click actions: not authenticated',
+      );
+      throw new GoveeError('Not Authenticated');
+    }
+    try {
+      const response = await request(
+        this.config.oneClicksUrl,
+        this.config.headers(authState.bffAuth.oauth),
+      ).get(TapToRunResponse);
+      const ttrResponse: TapToRunResponse = response.data as TapToRunResponse;
+
+      return ttrResponse.componentData.components
+        .filter((comp) => comp instanceof OneClickComponent)
+        .map((comp) => (comp as OneClickComponent).oneClicks)
+        .flat();
+    } catch (error) {
+      this.logger.error('Error retrieving OneClicks from Govee', error);
+      throw new GoveeCommunityApiError('Error retrieving OneClicks');
+    }
+  }
+
+  @PersistResult({
     filename: 'govee.{3}.diys.json',
     // transform: (data) => instanceToPlain(data),
   })
-  async getDeviceDiys(
-    oauth: OAuthData,
+  async getDiyEffects(
+    authState: AuthState,
     model: string,
     goodsType: number,
     deviceId: string,
   ): Promise<DiyEffect[]> {
-    const authResponse = await axios({
-      url: 'https://community-api.govee.com/os/v1/login',
-      method: 'post',
-      data: {
-        email: 'teagan.m.glenn@gmail.com',
-        password: '_4gUc_gui6r',
-      },
-      timeout: 30000,
-    });
-    const auth: OAuthData = {
-      ...oauth,
-      accessToken: authResponse.data.data.token,
-    };
+    if (authState.bffAuth === undefined) {
+      this.logger.error(
+        `Unable to retrieve DIY Effects for ${deviceId}: not authenticated`,
+      );
+      throw new GoveeError('Not Authenticated');
+    }
     try {
-      const ttr = await fetch(
-        'https://app2.govee.com/bff-app/v1/exec-plat/home',
-        {
-          headers: goveeAuthenticatedHeaders(auth),
-        },
-      );
-      await writeFile(
-        `persisted/govee.${deviceId}.ttr.json`,
-        stringify(await ttr?.json()),
-      );
-      this.logger.log(
-        `Retrieving DIY effects for device ${deviceId} from Govee REST API`,
-      );
       const response = await request(
         this.config.deviceDiyUrl,
-        goveeAuthenticatedHeaders(auth),
+        goveeAuthenticatedHeaders(authState.bffAuth.oauth),
         {
           sku: model,
           goodsType,
@@ -76,7 +83,7 @@ export class GoveeDiyService {
                   code: diy.code,
                   type: diy.effectType,
                   cmdVersion: 0,
-                  opCode: rebuildDiyOpCode(diy.code, diy.diyOpCodeBase64),
+                  diyOpCodeBase64: diy.diyOpCodeBase64,
                 }) as DiyEffect,
             )
             .forEach((effect) => effects.push(effect));

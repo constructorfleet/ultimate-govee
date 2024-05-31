@@ -15,5 +15,5 @@ export class IoTCertificateData {
 export class IoTCertificateResponse extends GoveeAPIResponse {
   @Expose({ name: 'data' })
   @Type(() => IoTCertificateData)
-  data!: IoTCertificateData;
+  iotData!: IoTCertificateData;
 }

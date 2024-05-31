@@ -53,7 +53,6 @@ export class DeviceController {
     @Param('stateName') stateName: string,
     @Body('state') stateData: any,
   ) {
-    console.dir(stateData);
     const device = this.deviceService.getDevice(deviceId)?.debug(true);
     const state = device?.state(stateName);
     const commandId = state?.setState(stateData);

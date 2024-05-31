@@ -1,10 +1,18 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { EventBus } from '@nestjs/cqrs';
-import { Subject, map, switchMap, timer, tap, filter } from 'rxjs';
+import {
+  Subject,
+  map,
+  switchMap,
+  timer,
+  tap,
+  filter,
+  combineLatest,
+} from 'rxjs';
 import { ClientId, Credentials } from '~ultimate-govee-common';
 import { Md5 } from 'ts-md5';
 import { v4 as uuidv4 } from 'uuid';
-import { AccountAuthData, AuthState } from './auth.state';
+import { AccountAuthData, AuthState, BffAuthData } from './auth.state';
 import { InjectRefreshMargin } from './auth.providers';
 import {
   AuthExpiringEvent,
@@ -20,6 +28,7 @@ export class AuthService {
   private readonly credentials: Subject<Credentials | undefined> =
     new Subject();
   private readonly authData: Subject<AccountAuthData> = new Subject();
+  private readonly communityData: Subject<BffAuthData> = new Subject();
 
   constructor(
     private eventBus: EventBus,
@@ -41,23 +50,25 @@ export class AuthService {
       .subscribe((event) => {
         this.eventBus.publish(event);
       });
-    this.authData
+    combineLatest([this.authData, this.communityData])
       .pipe(
         filter((value) => value !== undefined),
         map((value) => value!),
-        tap((authData) => {
+        tap(([authData, communityData]) => {
           this.authState.accountAuth = authData;
+          this.authState.bffAuth = communityData;
         }),
-        tap((authData) =>
+        tap(([authData, communityData]) =>
           this.eventBus.publish(
             new AuthenticatedEvent(
               authData.accountId,
               authData.clientId,
               authData.oauth,
+              communityData,
             ),
           ),
         ),
-        switchMap((authData) =>
+        switchMap(([authData]) =>
           timer(
             Math.max(
               0,
@@ -103,8 +114,8 @@ export class AuthService {
     return this.authState;
   }
 
-  get accountAuth(): AccountAuthData | undefined {
-    return this.state.accountAuth;
+  get accountAuth(): AuthState | undefined {
+    return this.state;
   }
 
   setCredentials(credentials: Credentials) {
@@ -113,5 +124,9 @@ export class AuthService {
 
   setAuthData(authData: AccountAuthData) {
     this.authData.next(authData);
+  }
+
+  setCommunityData(authData: BffAuthData) {
+    this.communityData.next(authData);
   }
 }

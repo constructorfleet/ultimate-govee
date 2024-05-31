@@ -1,20 +1,20 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { EventBus, EventsHandler, IEventHandler, QueryBus } from '@nestjs/cqrs';
-import { DeltaMap, DeviceId, Optional } from '~ultimate-govee-common';
+import { ClassConstructor } from 'class-transformer';
+import stringify from 'json-stringify-safe';
 import { map } from 'rxjs';
-import { Device } from './device';
+import { DeltaMap, DeviceId, Optional } from '~ultimate-govee-common';
+import { GoveeDevice, Product } from '~ultimate-govee-data';
+import { ModelProductQuery } from '../channels/rest/queries/model-product.query';
 import {
   DeviceDiscoveredEvent,
   DeviceStatusReceivedEvent,
   DeviceUpdatedEvent,
 } from './cqrs/events';
-import { ModelProductQuery } from '../channels/rest/queries/model-product.query';
-import { GoveeDevice, Product } from '~ultimate-govee-data';
-import { ClassConstructor } from 'class-transformer';
+import { Device } from './device';
+import { DevicesFactory } from './devices.factory';
 import { BLEDevice, DeviceModel, IoTDevice, WiFiDevice } from './devices.model';
 import { Version } from './version.info';
-import { DevicesFactory } from './devices.factory';
-import stringify from 'json-stringify-safe';
 
 @Injectable()
 @EventsHandler(DeviceStatusReceivedEvent)
@@ -43,6 +43,7 @@ export class DevicesService
       )
       .subscribe((events) => this.eventBus.publishAll(events));
   }
+
   handle(event: DeviceStatusReceivedEvent) {
     this.logger.debug('Received event', stringify(event));
     const device = this.getDevice(event.deviceStatus.id);

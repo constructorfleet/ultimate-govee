@@ -60,6 +60,7 @@ export const PurifierType: 'purifier' = 'purifier' as const;
 export type PurifierType = typeof PurifierType;
 
 export class PurifierDevice extends Device<Purifier> implements Purifier {
+  protected isDebug: boolean = true;
   static readonly deviceType: PurifierType = PurifierType;
   get deviceType(): string {
     return PurifierDevice.deviceType;

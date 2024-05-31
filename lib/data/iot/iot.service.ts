@@ -13,6 +13,9 @@ const payloadDecoder = new TextDecoder();
 const parseMessage = (payload: ArrayBuffer): IoTMessage => {
   const decoded = payloadDecoder.decode(payload);
   const plain = JSON.parse(decoded);
+  if (decoded.includes('08:47:D6:37:37:32:61:61') || decoded.includes('open')) {
+    new Logger('IoT ParseMessage').error(plain);
+  }
   IoTService.recordRawMessage(plain.device, plain);
   return plainToInstance(IoTMessage, plain);
 };

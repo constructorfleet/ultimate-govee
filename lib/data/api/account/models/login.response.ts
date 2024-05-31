@@ -49,3 +49,29 @@ export class LoginResponse extends GoveeAPIResponse {
   @Type(() => ClientData)
   client!: ClientData;
 }
+
+export class CommunityAuth {
+  @Expose({ name: 'token' })
+  token!: string;
+
+  @Expose({ name: 'headerUrl' })
+  headerUrl?: string;
+
+  @Expose({ name: 'nickname' })
+  nickName?: string;
+
+  @Expose({ name: 'id' })
+  accountId!: string;
+
+  @Expose({ name: 'expiredAt' })
+  expiresAt!: number;
+
+  @Expose({ name: 'email' })
+  emailAddress!: string;
+}
+
+export class CommunityLoginResponse extends GoveeAPIResponse {
+  @Expose({ name: 'data' })
+  @Type(() => CommunityAuth)
+  community!: CommunityAuth;
+}
