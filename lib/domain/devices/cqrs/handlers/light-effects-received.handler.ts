@@ -25,31 +25,31 @@ export class LightEffectsReceivedEventHandler
       return;
     }
     const state = device.state<LightEffectState>(LightEffectStateName);
-    if (state === undefined) {
+    if (state !== undefined) {
+      event.effects
+        .filter((effect) => !!effect.code)
+        .forEach((effect) => {
+          state.effects.set(effect.code!, effect);
+        });
+    } else {
       this.logger.log(
         `No state with name ${LightEffectStateName} for ${device.name}`,
       );
-      return;
     }
-    event.effects
-      .filter((effect) => !!effect.code)
-      .forEach((effect) => {
-        state.effects.set(effect.code!, effect);
-      });
     const diyState = device.state<DiyModeState>(DiyModeStateName);
-    if (state === undefined) {
+    if (diyState !== undefined) {
+      event.diys
+        .filter((effect) => !!effect.code)
+        .forEach((effect) => {
+          if (effect.code === undefined) {
+            return;
+          }
+          diyState.effects.set(effect.code, effect);
+        });
+    } else {
       this.logger.log(
         `No state with name ${DiyModeStateName} for ${device.name}`,
       );
-      return;
     }
-    event.diys
-      .filter((effect) => !!effect.code)
-      .forEach((effect) => {
-        if (effect.code === undefined) {
-          return;
-        }
-        diyState?.effects.set(effect.code, effect);
-      });
   }
 }

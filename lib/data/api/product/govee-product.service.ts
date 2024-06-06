@@ -27,7 +27,7 @@ export class GoveeProductService {
   private readonly lock: AsyncLock = new AsyncLock(1);
   private lastUpdate: MomentLib.Moment | undefined = undefined;
   private static previousProductMap = GoveeProductService.parseResponse(
-    plainToInstance(SkuListResponse, previousCategories),
+    plainToInstance(SkuListResponse, previousCategories ?? {}),
   );
 
   constructor(
@@ -36,6 +36,9 @@ export class GoveeProductService {
     @InjectPersisted({ filename: 'govee.products.json' })
     private readonly persistedProducts: Record<string, Product>,
   ) {
+    if (persistedProducts === undefined) {
+      persistedProducts = {};
+    }
     Object.entries(GoveeProductService.previousProductMap).forEach(
       ([key, value]) => {
         persistedProducts[key] = persistedProducts[key] ?? value;
