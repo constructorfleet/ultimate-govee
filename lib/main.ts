@@ -19,7 +19,8 @@ const goveeConfig = registerAs('Dev.Govee.Config', () => ({
 async function bootstrap() {
   const app = await NestFactory.create(
     UltimateGoveeModule.forRootAsync({
-      imports: [ConfigModule.forFeature(goveeConfig)],
+      imports: [ConfigModule.forRoot({ load: [goveeConfig] })],
+      inject: [goveeConfig.KEY],
       useFactory: (
         config: ConfigType<typeof goveeConfig>,
       ): typeof UltimateGoveeModuleOptions => ({
