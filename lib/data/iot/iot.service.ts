@@ -37,11 +37,15 @@ export class IoTService implements IoTHandler {
   }
 
   async connect(iotData: IoTData, callback: OnIoTMessageCallback) {
-    if (this.client !== undefined) {
-      await this.client.disconnect();
+    try {
+      if (this.client !== undefined) {
+        await this.client.disconnect();
+      }
+      this.messageCallback = callback;
+      await this.client.create(iotData, this);
+    } catch (error) {
+      this.logger.error(error);
     }
-    this.messageCallback = callback;
-    await this.client.create(iotData, this);
   }
 
   async disconnect() {

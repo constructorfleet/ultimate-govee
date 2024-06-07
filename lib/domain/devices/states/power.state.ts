@@ -59,13 +59,7 @@ export class PowerState extends DeviceOpState<
         {
           command: 'turn',
           data: {
-            value: nextState ? '1' : '0',
-          },
-        },
-        {
-          command: 'turn',
-          data: {
-            val: nextState === true ? '1' : '0',
+            value: nextState === true ? 1 : 0,
           },
         },
       ],

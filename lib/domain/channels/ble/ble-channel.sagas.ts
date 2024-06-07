@@ -10,7 +10,7 @@ import { ConfigureBleChannelCommand } from './commands/configure-ble-channel.com
 import { DeviceDiscoveredEvent } from '../../devices/cqrs';
 import { BleChannelService } from './ble-channel.service';
 import { BlePublishCommand, BleRecordDeviceCommand } from './commands';
-import { asOpCode, base64ToHex } from '~ultimate-govee-common';
+import { asOpCode, base64ToHex, OpType } from '~ultimate-govee-common';
 import { v4 as uuidv4 } from 'uuid';
 import { DeviceRefeshEvent } from '../../devices/cqrs/events/device-refresh.event';
 import { DeviceStateCommandEvent } from '../../devices/cqrs/events/device-state-command.event';
@@ -52,9 +52,13 @@ export class BleChannelSagas {
     events$.pipe(
       ofType(DeviceRefeshEvent),
       filter((event) => event.addresses.bleAddress !== undefined), // && event.addresses.iotTopic === undefined),
-      filter(
-        (event) =>
-          event.opIdentifiers !== undefined && event.opIdentifiers.length > 0,
+      map(
+        (event) => {
+            if (event.opIdentifiers === undefined) {
+              return new DeviceRefeshEvent(event.deviceId, event.model, event.goodsType, event.addresses, [[0x01]]);
+            }
+            return event;
+        }
       ),
       groupBy((event) => event.deviceId),
       mergeMap((eventGroup$) => eventGroup$.pipe(
@@ -86,21 +90,22 @@ export class BleChannelSagas {
   publishBleCommand = (events$: Observable<any>): Observable<ICommand> =>
     events$.pipe(
       ofType(DeviceStateCommandEvent),
-      filter((event) => event.addresses.bleAddress !== undefined),
       filter(
         (event) =>
-          event.command.command === undefined ||
-          event.command.command === 'ptReal',
+          event.addresses.bleAddress !== undefined &&
+          event.command.command !== undefined &&
+          (event.command.command === 'turn' || event.command.data.command !== undefined)
       ),
-      filter((event) => event.command.data.command !== undefined),
       map(
         (event) =>
           new BlePublishCommand(
             event.command.commandId,
             event.id,
             event.addresses.bleAddress!,
-            event.command.data.command!.map((value: number[] | string) =>
-              typeof value === 'string' ? base64ToHex(value) : value,
+            event.command.command === 'turn' 
+              ? [asOpCode(OpType.COMMAND, 0x01, event.command.data.value?.toString() === '1' ? 0x01 : 0x00)]
+              : event.command.data.command!.map((value: number[] | string) => 
+              typeof value === 'string' ? base64ToHex(value) : value
             ),
           ),
       ),

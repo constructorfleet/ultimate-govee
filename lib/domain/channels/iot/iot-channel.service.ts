@@ -1,33 +1,29 @@
-import { IoTData, IoTService } from '~ultimate-govee-data';
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import stringify from 'json-stringify-safe';
-import { ChannelService } from '../channel.service';
-import {
-  combineLatest,
-  concatMap,
-  from,
-  skipWhile,
-  Subject,
-  filter,
-} from 'rxjs';
-import { DeviceStatusReceivedEvent } from '../../devices/cqrs/events/device-status-received.event';
-import { DeviceRefeshEvent } from '../../devices/cqrs/events/device-refresh.event';
+import { combineLatest, filter, skipWhile, Subject } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
+import { IoTData, IoTService } from '~ultimate-govee-data';
+import { DeviceRefeshEvent } from '../../devices/cqrs/events/device-refresh.event';
 import { DeviceStateCommandEvent } from '../../devices/cqrs/events/device-state-command.event';
+import { DeviceStatusReceivedEvent } from '../../devices/cqrs/events/device-status-received.event';
+import { ChannelService } from '../channel.service';
 import { InjectEnabled } from './iot-channel.providers';
+import { CommandExpiredEvent } from '../../devices/cqrs/events/command-expired.event';
 
-@EventsHandler(DeviceRefeshEvent, DeviceStateCommandEvent)
+@EventsHandler(DeviceRefeshEvent, DeviceStateCommandEvent, CommandExpiredEvent)
 @Injectable()
 export class IoTChannelService
   extends ChannelService<IoTData, true>
   implements
     OnModuleDestroy,
     IEventHandler<DeviceRefeshEvent>,
-    IEventHandler<DeviceStateCommandEvent>
+    IEventHandler<DeviceStateCommandEvent>,
+    IEventHandler<CommandExpiredEvent>
 {
   readonly togglable: true = true as const;
   readonly name: 'iot' = 'iot' as const;
+  readonly expiredCommands: string[] = [];
   readonly refreshDevice$: Subject<DeviceRefeshEvent> = new Subject();
 
   constructor(
@@ -36,16 +32,10 @@ export class IoTChannelService
     eventBus: EventBus,
   ) {
     super(eventBus, enabled);
-    combineLatest([this.onConfigChanged$, this.onEnabledChanged$])
-      .pipe(
-        concatMap(([iotData, enabled]) => {
-          if (enabled) {
-            return from(this.connect(iotData));
-          }
-          return from(this.disconnect());
-        }),
-      )
-      .subscribe();
+    combineLatest([this.onConfigChanged$, this.onEnabledChanged$]).subscribe(
+      async ([iotData, enabled]) =>
+        enabled ? await this.connect(iotData) : await this.disconnect(),
+    );
     this.refreshDevice$
       .pipe(
         skipWhile(() => !this.isEnabled),
@@ -54,15 +44,6 @@ export class IoTChannelService
             event.addresses.iotTopic !== undefined &&
             typeof event.addresses.iotTopic !== 'string',
         ),
-        // groupBy((event) => event.deviceId),
-        // mergeMap((eventGroup$) =>
-        //   eventGroup$.pipe(
-        //     throttleTime(5000, undefined, {
-        //       leading: true,
-        //       trailing: false,
-        //     }),
-        //   ),
-        // ),
       )
       .subscribe((event) =>
         this.publishMessage(
@@ -83,8 +64,18 @@ export class IoTChannelService
       );
   }
 
-  async handle(event: DeviceRefeshEvent | DeviceStateCommandEvent) {
+  async handle(
+    event: DeviceRefeshEvent | DeviceStateCommandEvent | CommandExpiredEvent,
+  ) {
     if (!this.isEnabled) {
+      return;
+    }
+    if (event instanceof CommandExpiredEvent) {
+      this.expiredCommands.push(event.commandId);
+      if (this.expiredCommands.length > 100) {
+        const overCount = this.expiredCommands.length - 100;
+        this.expiredCommands.splice(0, overCount);
+      }
       return;
     }
     if (
@@ -149,6 +140,9 @@ export class IoTChannelService
     payload: object,
     debug?: boolean,
   ) {
+    if (commandId in this.expiredCommands || !this.isEnabled) {
+      return;
+    }
     if ('msg' in payload && !!payload.msg && typeof payload.msg === 'object') {
       if ('accountTopic' in payload.msg && !payload.msg.accountTopic) {
         payload.msg.accountTopic = this.getConfig()?.topic;
@@ -157,6 +151,7 @@ export class IoTChannelService
     if (debug === true) {
       this.logger.debug(topic, payload);
     }
+    this.eventBus.publish(new CommandExpiredEvent(commandId));
     return await this.iot.send(topic, stringify(payload));
   }
 

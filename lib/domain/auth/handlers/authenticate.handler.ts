@@ -26,8 +26,6 @@ export class AuthenticateCommandHandler
   async execute(command: AuthenticateCommand): Promise<any> {
     const events: IEvent[] = [];
     const authResult = await this.goveeApi.authenticate(command);
-    this.logger.error('Authentication Result');
-    this.logger.error(authResult);
     if (authResult.oauth !== undefined) {
       const accountAuthData: AccountAuthData = {
         accountId: authResult.accountId,
