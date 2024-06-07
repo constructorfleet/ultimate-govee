@@ -4,12 +4,12 @@ import stringify from 'json-stringify-safe';
 import { combineLatest, filter, skipWhile, Subject } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 import { IoTData, IoTService } from '~ultimate-govee-data';
-import { CommandExpiredEvent } from '~ultimate-govee-domain/devices/cqrs';
 import { DeviceRefeshEvent } from '../../devices/cqrs/events/device-refresh.event';
 import { DeviceStateCommandEvent } from '../../devices/cqrs/events/device-state-command.event';
 import { DeviceStatusReceivedEvent } from '../../devices/cqrs/events/device-status-received.event';
 import { ChannelService } from '../channel.service';
 import { InjectEnabled } from './iot-channel.providers';
+import { CommandExpiredEvent } from '../../devices/cqrs/events/command-expired.event';
 
 @EventsHandler(DeviceRefeshEvent, DeviceStateCommandEvent, CommandExpiredEvent)
 @Injectable()
