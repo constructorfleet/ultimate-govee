@@ -18,6 +18,7 @@ import {
   ColorTempState,
   MeasurementData,
   ColorTempStateName,
+  LightEffectStateName,
 } from '../../../states';
 import { DeviceModel } from '../../../devices.model';
 import { BehaviorSubject } from 'rxjs';
@@ -596,7 +597,7 @@ export class RGBICActiveState extends ModeState {
         string,
         any
       >[],
-      0xaa,
+      OpType.REPORT,
       [0x05],
       true,
     );
@@ -629,6 +630,11 @@ export class RGBICActiveState extends ModeState {
         case RGBICModes.WHOLE_COLOR:
           this.stateValue.next(
             this.modes.find((mode) => mode.name === WholeColorModeStateName),
+          );
+          break;
+        case RGBICModes.SCENE:
+          this.stateValue.next(
+            this.modes.find((mode) => mode.name === LightEffectStateName),
           );
           break;
         default:

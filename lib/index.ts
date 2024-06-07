@@ -62,6 +62,7 @@ export {
   DisplayScheduleStateName,
   DiyModeState,
   DiyModeStateName,
+  ModeStateName,
   DreamView,
   DreamViewDevice,
   EnablePresenceFlags,
