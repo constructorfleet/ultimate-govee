@@ -74,7 +74,11 @@ import { UnknownState } from './states/unknown.state';
 import { MeatThermometer } from './impl/home-improvement/meat-thermometer/meat-thermometer';
 import { DreamView, DreamViewDevice } from './impl/tv/dreamview/dreamview';
 import { SyncBox, SyncBoxDevice } from './impl/tv/sync-box/sync-box';
-import { DiyModeState } from './impl/lights/rgbic/rgbic-light.modes';
+import { ModeStateName } from './states/mode.state';
+import {
+  DiyModeState,
+  RGBICActiveState,
+} from './impl/lights/rgbic/rgbic-light.modes';
 import {
   AmbiantState,
   AmbiantStateName,
@@ -205,6 +209,8 @@ export {
   DreamViewDevice,
   SyncBox,
   SyncBoxDevice,
+  RGBICActiveState,
+  ModeStateName,
 };
 
 export const CQRS = cqrs;

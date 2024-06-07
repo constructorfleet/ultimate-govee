@@ -31,6 +31,7 @@ export class IoTService implements IoTHandler {
 
   onMessage(topic: string, payload: ArrayBuffer, dup: boolean) {
     const message = parseMessage(payload);
+
     if (!dup && this.messageCallback) {
       this.messageCallback(IoTService.parseIoTMessage(message));
     }
