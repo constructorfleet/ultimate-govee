@@ -45,7 +45,7 @@ export class DevicesService
   }
 
   handle(event: DeviceStatusReceivedEvent) {
-    this.logger.debug('Received event', stringify(event));
+    this.logger.debug('Received event', event);
     const device = this.getDevice(event.deviceStatus.id);
     if (!device) {
       this.logger.error(`Unknown device id ${event.deviceStatus.id}`);

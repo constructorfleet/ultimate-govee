@@ -5,6 +5,8 @@ import {
   MicModeStateName,
   SegmentColorModeStateName,
   WholeColorModeStateName,
+  RGBICActiveState,
+  SceneModeState,
 } from './rgbic-light.modes';
 
 // export const Devices: Type<Device>[] = [RGBICLightDevice];
@@ -15,6 +17,8 @@ export {
   DiyModeStateName,
   DiyModeState,
   MicModeStateName,
+  RGBICActiveState,
+  SceneModeState,
 };
 export const DeviceStates: string[] = [
   WholeColorModeStateName,
