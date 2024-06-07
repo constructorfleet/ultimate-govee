@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import { Labelled } from '~ultimate-govee-common';
 
 export class BlePublishCommand implements Labelled {
@@ -9,5 +10,6 @@ export class BlePublishCommand implements Labelled {
     readonly bleAddress: string,
     readonly commands: number[][],
     readonly debug?: boolean,
-  ) {}
+  ) {
+  }
 }

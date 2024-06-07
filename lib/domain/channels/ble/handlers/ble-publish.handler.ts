@@ -11,7 +11,7 @@ import {
   CommandExpiredEvent,
   DeviceStatusReceivedEvent,
 } from '../../../devices/cqrs';
-import { Subject, map, reduce, timer } from 'rxjs';
+import { Subject, Subscription, map, reduce, timer } from 'rxjs';
 import { EventBus } from '@nestjs/cqrs';
 
 @CommandHandler(BlePublishCommand)
@@ -40,6 +40,16 @@ export class BlePublishCommandHandler
 
   async execute(command: BlePublishCommand): Promise<any> {
     const results$ = new Subject<number[]>();
+    const subscriptions: Subscription[] = [];
+    const unsubscripe = () => {
+      subscriptions.forEach((sub) => {
+        sub.unsubscribe();
+      });
+    };
+    subscriptions.push(
+      timer(10000).subscribe(() => {
+        unsubscripe();
+    }),
     results$
       .pipe(
         reduce((acc, opCode) => {
@@ -62,11 +72,14 @@ export class BlePublishCommandHandler
         }),
       )
       .subscribe((event) => {
+        unsubscripe();
         this.logger.debug(`Publishing ${event.constructor.name}`);
         this.eventBus.publish(event);
-      });
+      })
+    );
     command.debug && this.logger.debug(command.commands);
     await this.service.sendCommand(
+      command.commandId,
       command.id,
       command.bleAddress,
       command.commands,

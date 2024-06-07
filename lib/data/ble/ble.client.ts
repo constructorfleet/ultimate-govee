@@ -1,4 +1,10 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { ConfigType } from '@nestjs/config';
+import { execSync } from 'child_process';
+import { existsSync } from 'fs';
+import { mkdir, writeFile } from 'fs/promises';
+import stringify from 'json-stringify-safe';
+import { platform } from 'os';
 import {
   BehaviorSubject,
   Subject,
@@ -9,25 +15,18 @@ import {
   from,
   interval,
   map,
-  switchMap,
   tap,
 } from 'rxjs';
 import { DeltaMap, Optional, sleep } from '~ultimate-govee-common';
-import { platform } from 'os';
+import { BleConfig } from './ble.options';
 import {
   BleCommand,
   BlePeripheral,
   BleServicesAndCharacteristics,
   NobleBle,
 } from './ble.types';
-import { DecoderService } from './decoder/decoder.service';
 import { DecodedDevice } from './decoder';
-import { execSync } from 'child_process';
-import { BleConfig } from './ble.options';
-import { ConfigType } from '@nestjs/config';
-import { mkdir, writeFile } from 'fs/promises';
-import stringify from 'json-stringify-safe';
-import { existsSync } from 'fs';
+import { DecoderService } from './decoder/decoder.service';
 
 const STATE_UNKNOWN = 'unknown';
 const STATE_POWERED_ON = 'poweredOn';
@@ -46,6 +45,7 @@ export class BleClient {
   private readonly peripheralIds: DeltaMap<string, BlePeripheral> =
     new DeltaMap();
   private readonly peripheralAddresses: Map<string, string> = new Map();
+  private readonly cancelledCommands: string[] = [];
   readonly peripheralDecoded: Subject<DecodedDevice> = new Subject();
   readonly commandQueue: Subject<BleCommand> = new Subject();
   private peripheralFilter: (peripheral: BlePeripheral) => boolean = () => true;
@@ -68,12 +68,9 @@ export class BleClient {
       }
     });
     this.enabled
-      .pipe(
-        switchMap((enabled) =>
-          enabled ? from(this.onEnabled()) : from(this.onDisabled()),
-        ),
-      )
-      .subscribe();
+      .subscribe(async () => 
+        this.enabled.getValue() ? await this.onEnabled() : await this.onDisabled()
+      );
     interval(10000)
       .pipe(
         filter(() => this.state.getValue() === STATE_POWERED_ON),
@@ -112,10 +109,15 @@ export class BleClient {
         filter(() => this.enabled.getValue()),
         filter((command) => this.peripheralAddresses.has(command.address)),
         distinctUntilKeyChanged('address'),
-
-        // concatMap((command) => from(this.sendCommand(command))),
       )
       .subscribe(async (command) => {
+        if(this.cancelledCommands.includes(command.commandId)) {
+          this.logger.debug('Command cancelled', {
+            ...command,
+            results$: 'subscription'
+          })
+          return;
+        }
         await this.sendCommand(command);
       });
   }
@@ -245,6 +247,7 @@ export class BleClient {
     }
     await sleep(100);
     if (this.noble?.on === undefined) {
+      this.logger.debug('Unable to import BLE library');
       return;
     }
     this.logger.log('BLE enabled');
@@ -265,19 +268,34 @@ export class BleClient {
     this.noble?.on('discover', (peripheral: BlePeripheral) => {
       this.peripheralDiscovered.next(peripheral);
     });
+    try {
+      this.noble?.reset();
+    } catch (_) {
+      // no-op
+    }
     await this.startScanning();
     return true;
   }
 
   async stopScanning() {
     if (this.enabled.getValue() && this.scanning) {
+      this.logger.debug('Stop scanning');
       await this.noble?.stopScanningAsync();
     }
   }
 
   async startScanning() {
     if (this.enabled.getValue() && this.state.getValue() === STATE_POWERED_ON) {
+      this.logger.debug('Start scanning');
       return await this.noble?.startScanningAsync();
+    }
+  }
+
+  cancelCommand(commandId: string) {
+    this.cancelledCommands.push(commandId);
+    if(this.cancelledCommands.length > 100) {
+      const overCount = this.cancelledCommands.length - 100;
+      this.cancelledCommands.splice(0, overCount);
     }
   }
 
@@ -292,6 +310,7 @@ export class BleClient {
       this.logger.warn(`Ble is disabled, unable to send command to ${id}`);
       return results$.complete();
     }
+
     const peripheralId = this.peripheralAddresses.get(address);
     const peripheral = this.peripheralIds.get(peripheralId ?? '');
     if (!peripheral) {

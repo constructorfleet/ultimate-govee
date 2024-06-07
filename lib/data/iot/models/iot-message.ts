@@ -257,7 +257,7 @@ export class IoTMessage {
   @Expose({ name: 'bulb' })
   bulb?: string | string[];
 
-  @Expose({ name: 'Data' })
+  @Expose({ name: 'data' })
   @Type(() => MessageData)
   data?: MessageData;
 }

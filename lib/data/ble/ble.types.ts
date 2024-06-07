@@ -325,6 +325,7 @@ export type NobleBle = {
 };
 
 export type BleCommand = {
+  commandId: string;
   id: DeviceId;
   address: string;
   commands: number[][];

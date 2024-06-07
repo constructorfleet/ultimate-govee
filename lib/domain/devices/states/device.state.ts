@@ -172,6 +172,7 @@ export class DeviceState<StateName extends string, StateValue>
 
   setState(nextState: StateValue): string[] {
     const commandAndStatus = this.stateToCommand(nextState);
+    console.dir(commandAndStatus);
     if (commandAndStatus === undefined) {
       return [];
     }

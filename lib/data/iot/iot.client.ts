@@ -147,9 +147,10 @@ export class IoTClient {
   }
 
   async disconnect() {
-    if (this.connection) {
+    if (this.connection && this.connected) {
+      this.connected = false;
       await this.connection.disconnect();
-      this.subscriptions = [];
+      this.connection = undefined;
     }
   }
 }

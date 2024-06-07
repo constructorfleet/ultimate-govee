@@ -56,7 +56,7 @@ export class DeviceController {
     const device = this.deviceService.getDevice(deviceId)?.debug(true);
     const state = device?.state(stateName);
     const commandId = state?.setState(stateData);
-    device?.debug(false);
+    device?.debug(true);
     if (!commandId) {
       return HttpStatus.NOT_FOUND;
     }

@@ -1,20 +1,21 @@
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
-import { EventBus } from '@nestjs/cqrs';
+import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import { BleClient, DecodedDevice } from '~ultimate-govee-data';
 import { ChannelService } from '../channel.service';
 import { DeviceId, chunk } from '~ultimate-govee-common';
-import { Subject, combineLatest, map } from 'rxjs';
-import { DeviceStatusReceivedEvent } from '../../devices/cqrs';
+import { Subject, combineLatest } from 'rxjs';
+import { CommandExpiredEvent, DeviceStatusReceivedEvent } from '../../devices/cqrs';
 import { Device } from '../../devices/device';
-import { BleChannelChangedEvent } from './events';
 import { BleChannelConfig } from './ble-channel.types';
 import { InjectDeviceIds, InjectEnabled } from './ble-channel.providers';
 import { DeviceStatesType } from '../../devices/devices.types';
 
 @Injectable()
+@EventsHandler(CommandExpiredEvent)
 export class BleChannelService
   extends ChannelService<BleChannelConfig, true>
-  implements OnModuleDestroy
+  implements OnModuleDestroy,
+  IEventHandler<CommandExpiredEvent>
 {
   readonly togglable: true = true as const;
   readonly name: 'ble' = 'ble' as const;
@@ -30,12 +31,9 @@ export class BleChannelService
   ) {
     super(eventBus, enabled, { devices: deviceIds });
     combineLatest([this.onConfigChanged$, this.onEnabledChanged$])
-      .pipe(
-        map(([config, enabled]) => {
-          return new BleChannelChangedEvent(enabled, config);
-        }),
-      )
-      .subscribe((event) => this.eventBus.publish(event));
+      .subscribe(() => {
+        this.bleClient.enabled.next(this.isEnabled);
+      });
 
     bleClient.peripheralDecoded.subscribe((peripheral) => {
       const device = this.devices[peripheral.address];
@@ -54,10 +52,15 @@ export class BleChannelService
       this.logger.debug('Peripheral decoded');
       this.eventBus.publish(event);
     });
+    this.bleClient.enabled.next(this.isEnabled);
   }
 
   private allowedDevice(device: Device): boolean {
     return this.getConfig()?.devices?.includes(device.id) ?? true;
+  }
+
+  handle(event: CommandExpiredEvent) {
+    this.bleClient.cancelCommand(event.commandId);
   }
 
   toPeripheralId(deviceId: DeviceId): string {
@@ -80,18 +83,22 @@ export class BleChannelService
   }
 
   sendCommand(
+    commandId: string,
     id: DeviceId,
     bleAddress: string,
     commands: number[][],
     results$: Subject<number[]>,
   ) {
+    if (!this.isEnabled) {
+      return;
+    }
     const device = this.devices[bleAddress];
     if (!device) {
       this.logger.error(`Device ${id} not known`);
       return results$.complete();
     }
-
     this.bleClient.commandQueue.next({
+      commandId,
       id: id,
       address: bleAddress,
       commands,
