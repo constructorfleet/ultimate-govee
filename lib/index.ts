@@ -106,6 +106,7 @@ export {
   SceneModeStateName,
   ScheduledStartStateName,
   SegmentColorModeStateName,
+  RGBICActiveState,
   SyncBox,
   SyncBoxDevice,
   TemperatureState,

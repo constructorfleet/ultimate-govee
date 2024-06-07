@@ -46,7 +46,10 @@ import {
 import { RGBICLight } from './lights/rgbic/rgbic-light';
 import { DreamView, DreamViewDevice } from './tv/dreamview/dreamview';
 import { SyncBox, SyncBoxDevice } from './tv/sync-box/sync-box';
-import { DiyModeState } from './lights/rgbic/rgbic-light.modes';
+import {
+  DiyModeState,
+  RGBICActiveState,
+} from './lights/rgbic/rgbic-light.modes';
 import {
   AmbiantState,
   AmbiantStateName,
@@ -85,6 +88,7 @@ export {
   PresenceSensor,
   Purifier,
   RGBICLight,
+  RGBICActiveState,
   RGBLight,
   SceneModeStateName,
   ScheduledStartStateName,
