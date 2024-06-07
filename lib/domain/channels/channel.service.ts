@@ -1,20 +1,26 @@
-import { EventBus } from '@nestjs/cqrs';
-import { BehaviorSubject, filter, map, share } from 'rxjs';
-import { ChannelState } from './channel.types';
 import { Logger, OnApplicationBootstrap } from '@nestjs/common';
+import { EventBus } from '@nestjs/cqrs';
+import {
+  BehaviorSubject,
+  distinctUntilChanged,
+  filter,
+  map,
+  share,
+} from 'rxjs';
+import { ChannelState } from './channel.types';
 
-// const areSameConfig = <TConfig extends object>(
-//   data1?: TConfig,
-//   data2?: TConfig,
-// ): boolean => {
-//   if (data1 === undefined && data2 === undefined) {
-//     return true;
-//   }
-//   if (data1 === undefined || data2 === undefined) {
-//     return false;
-//   }
-//   return Object.entries(data1).every(([k, v]) => data2[k] === v);
-// };
+const areSameConfig = <TConfig extends object>(
+  data1?: TConfig,
+  data2?: TConfig,
+): boolean => {
+  if (data1 === undefined && data2 === undefined) {
+    return true;
+  }
+  if (data1 === undefined || data2 === undefined) {
+    return false;
+  }
+  return Object.entries(data1).every(([k, v]) => data2[k] === v);
+};
 
 export abstract class ChannelService<
   TConfig extends object,
@@ -31,17 +37,16 @@ export abstract class ChannelService<
     config: new BehaviorSubject<TConfig | undefined>(undefined),
   };
   protected readonly onEnabledChanged$ = this.state.enabled.pipe(
-    filter((e) => e !== undefined),
-    map((e) => e!),
+    map((e) => e === true),
     share(),
   );
 
   protected readonly onConfigChanged$ = this.state.config.pipe(
     filter((config) => config !== undefined),
     map((config) => config! as TConfig),
-    // distinctUntilChanged(
-    //   (previous, current) => !areSameConfig(previous, current),
-    // ),
+    distinctUntilChanged(
+      (previous, current) => !areSameConfig(previous, current),
+    ),
     share(),
   );
 
@@ -69,6 +74,6 @@ export abstract class ChannelService<
   }
 
   get isEnabled(): boolean {
-    return this.state.enabled.getValue() === true;
+    return this.state.enabled.value === true;
   }
 }
