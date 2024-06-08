@@ -1,3 +1,4 @@
+import 'module-alias/register';
 import * as cqrs from './cqrs';
 import {
   DiyModeStateName,
