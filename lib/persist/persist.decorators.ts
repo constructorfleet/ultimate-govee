@@ -34,7 +34,6 @@ export function PersistResult(options: PersistOptions) {
         (fp: string, arg: any, index: number) => fp.replace(`{${index}}`, arg),
         filePath,
       );
-      // logger.debug(`Persisting result to ${resolvedPath}`);
       const writeData =
         options.transform === undefined ? result : options.transform(result);
       if (options.append === true) {

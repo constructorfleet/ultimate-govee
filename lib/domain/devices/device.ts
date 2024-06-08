@@ -113,7 +113,9 @@ export class Device<States extends DeviceStatesType = DeviceStatesType>
     );
     this.subscriptions.push(
       state.commandBus.subscribe((cmd) => {
-        this.logger.debug('Publishing state command');
+        if (this.isDebug) {
+          this.logger.debug('Publishing state command');
+        }
         this.eventBus.publish(
           new DeviceStateCommandEvent(
             this.id,
@@ -221,7 +223,9 @@ export class Device<States extends DeviceStatesType = DeviceStatesType>
   }
 
   refresh() {
-    this.logger.debug(`Refreshing state ${this.iotTopic} ${this.bleAddress}`);
+    if (this.isDebug) {
+      this.logger.debug(`Refreshing state ${this.iotTopic} ${this.bleAddress}`);
+    }
     this.eventBus.publish(
       new DeviceRefeshEvent(
         this.id,
