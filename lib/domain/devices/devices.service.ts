@@ -1,7 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { EventBus, EventsHandler, IEventHandler, QueryBus } from '@nestjs/cqrs';
 import { ClassConstructor } from 'class-transformer';
-import stringify from 'json-stringify-safe';
 import { map } from 'rxjs';
 import { DeltaMap, DeviceId, Optional } from '~ultimate-govee-common';
 import { GoveeDevice, Product } from '~ultimate-govee-data';
