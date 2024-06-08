@@ -90,7 +90,7 @@ export class OpenAPIService implements OpenAPIMqttMessageHandler {
     if (this.messageCallback === undefined) {
       return;
     }
-    this.logger.debug(`Received MQTT message on topic ${topic}`);
+    this.logger.verbose(`Received MQTT message on topic ${topic}`);
     await this.messageCallback(OpenAPIService.parseMqttMessage(message));
   }
 

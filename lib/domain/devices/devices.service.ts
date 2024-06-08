@@ -44,7 +44,7 @@ export class DevicesService
   }
 
   handle(event: DeviceStatusReceivedEvent) {
-    this.logger.debug('Received event', event);
+    this.logger.verbose('Received event', event);
     const device = this.getDevice(event.deviceStatus.id);
     if (!device) {
       this.logger.error(`Unknown device id ${event.deviceStatus.id}`);
@@ -114,7 +114,6 @@ export class DevicesService
       constructor = WiFiDevice(constructor);
     }
     if (device.iotTopic) {
-      new Logger('createDevice').debug(device.iotTopic);
       constructor = IoTDevice(constructor);
     }
     const newDevice = new constructor({

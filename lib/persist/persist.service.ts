@@ -16,7 +16,6 @@ export class PersistService {
     if (where === undefined) {
       return;
     }
-    // this.logger.debug(`Persisting to ${where}`);
     await this.writer(where, stringify(data), { encoding: 'utf-8' });
   }
 
@@ -27,7 +26,6 @@ export class PersistService {
     if (where === undefined) {
       return undefined;
     }
-    // this.logger.debug(`Retreiving from ${where}`);
     const contents = await this.reader(where, { encoding: 'utf-8' });
     return plainToInstance(as, JSON.parse(contents) as T);
   }

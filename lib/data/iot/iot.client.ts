@@ -20,7 +20,7 @@ export class IoTClient {
   ) {}
 
   async create(iotData: IoTData, handler: IoTHandler): Promise<this> {
-    this.logger.debug(`Adding ${iotData.topic} to subscriptions`);
+    this.logger.verbose(`Adding ${iotData.topic} to subscriptions`);
     if (!this.subscriptions.includes(iotData.topic)) {
       this.subscriptions.push(iotData.topic);
     }
