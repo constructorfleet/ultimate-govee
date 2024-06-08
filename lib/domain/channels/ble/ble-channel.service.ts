@@ -49,7 +49,6 @@ export class BleChannelService
         cmd: 'status',
         state: peripheral.state,
       });
-      this.logger.debug('Peripheral decoded');
       this.eventBus.publish(event);
     });
     this.bleClient.enabled.next(this.isEnabled);

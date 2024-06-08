@@ -161,7 +161,6 @@ export const createDeviceModel = (
     constructor = WiFiDevice(constructor);
   }
   if (device.iotTopic) {
-    new Logger('createDevice').debug(device.iotTopic);
     constructor = IoTDevice(constructor);
   }
   const product = productCategories[device.model];
