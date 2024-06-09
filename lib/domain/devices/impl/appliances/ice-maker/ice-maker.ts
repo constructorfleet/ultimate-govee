@@ -63,7 +63,12 @@ export class IceMakerDevice extends Device<IceMakerStates> implements IceMaker {
   }
   constructor(device: DeviceModel, eventBus: EventBus, commandBus: CommandBus) {
     super(device, eventBus, commandBus, stateFactories);
-    this.addState(this.state<IceMakerStatusState>(IceMakerStatusStateName)!);
+    this.addState(
+      new IceMakerMakingIceState(
+        device,
+        this.state<IceMakerStatusState>(IceMakerStatusStateName)!,
+      ),
+    );
   }
   get [BasketFullStateName](): Optional<IceMakerBasketFull> {
     return this.state(BasketFullStateName);
