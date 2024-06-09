@@ -47,6 +47,10 @@ import { RGBICLight } from './lights/rgbic/rgbic-light';
 import { DreamView, DreamViewDevice } from './tv/dreamview/dreamview';
 import { SyncBox, SyncBoxDevice } from './tv/sync-box/sync-box';
 import {
+  SegmentColorModeState,
+  Segment,
+} from './lights/rgbic/rgbic-light.modes';
+import {
   DiyModeState,
   RGBICActiveState,
 } from './lights/rgbic/rgbic-light.modes';
@@ -102,6 +106,8 @@ export {
   DreamViewDevice,
   SyncBox,
   SyncBoxDevice,
+  SegmentColorModeState,
+  Segment,
 };
 export const DeviceStates: string[] = [
   ...ApplianceStates,

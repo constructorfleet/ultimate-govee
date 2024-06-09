@@ -82,6 +82,8 @@ export {
   LightEffect,
   LightEffectState,
   LightEffectStateName,
+  Segment,
+  SegmentColorModeState,
   MakingIceStateName,
   ManualModeStateName,
   MeatThermometer,
