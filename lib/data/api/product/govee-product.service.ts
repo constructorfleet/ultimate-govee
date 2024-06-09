@@ -58,10 +58,10 @@ export class GoveeProductService {
         this.lastUpdate !== undefined &&
         this.lastUpdate.add(1, 'hour').isAfter(MomentLib())
       ) {
-        this.logger.log('Updated within last hour, using previous result.');
+        this.logger.debug('Updated within last hour, using previous result.');
         return GoveeProductService.previousProductMap;
       }
-      this.logger.log('Retrieving product list from Govee REST API');
+      this.logger.debug('Retrieving product list from Govee REST API');
       const productMap = GoveeProductService.parseResponse(
         await this.getApiReponse(),
       );

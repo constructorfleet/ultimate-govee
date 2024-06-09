@@ -72,7 +72,7 @@ export class GoveeDiyService {
           goodsType,
           device: deviceId,
         },
-      ).get(DIYGroupResponse, `persisted/govee.${deviceId}.raw.diys.json`);
+      ).get(DIYGroupResponse);
       return (response.data as DIYGroupResponse).diyData.diyGroups.reduce(
         (effects, group) => {
           group.diys
