@@ -21,9 +21,9 @@ export class HumidiferUVCState extends DeviceOpState<
     this.stateValue.next(opCommand[0] === 0x01);
   }
 
-  protected stateToCommand(
+  protected readonly stateToCommand = (
     state: Optional<boolean>,
-  ): Optional<StateCommandAndStatus> {
+  ): Optional<StateCommandAndStatus> => {
     return {
       command: {
         data: {
@@ -36,5 +36,5 @@ export class HumidiferUVCState extends DeviceOpState<
         },
       },
     };
-  }
+  };
 }

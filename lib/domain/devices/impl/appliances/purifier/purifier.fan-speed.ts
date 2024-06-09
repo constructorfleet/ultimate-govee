@@ -78,9 +78,9 @@ export class PurifierFanSpeedState extends DeviceOpState<
     }
   }
 
-  protected stateToCommand(
+  protected readonly stateToCommand = (
     nextState: Optional<number>,
-  ): Optional<StateCommandAndStatus> {
+  ): Optional<StateCommandAndStatus> => {
     return {
       command: {
         data: {
@@ -101,5 +101,5 @@ export class PurifierFanSpeedState extends DeviceOpState<
         },
       },
     };
-  }
+  };
 }

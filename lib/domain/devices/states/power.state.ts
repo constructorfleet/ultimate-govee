@@ -46,9 +46,9 @@ export class PowerState extends DeviceOpState<
     }
   }
 
-  protected stateToCommand(
+  protected readonly stateToCommand = (
     nextState: Optional<boolean>,
-  ): Optional<StateCommandAndStatus> {
+  ): Optional<StateCommandAndStatus> => {
     if (nextState === undefined) {
       this.logger.warn('Power was not specified, ignoring command');
       return;
@@ -69,5 +69,5 @@ export class PowerState extends DeviceOpState<
         },
       },
     };
-  }
+  };
 }

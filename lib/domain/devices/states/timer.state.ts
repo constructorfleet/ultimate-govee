@@ -37,7 +37,9 @@ export class TimerState extends DeviceOpState<TimerStateName, Timer> {
     });
   }
 
-  protected stateToCommand(state: Timer): Optional<StateCommandAndStatus> {
+  protected readonly stateToCommand = (
+    state: Timer,
+  ): Optional<StateCommandAndStatus> => {
     const enabled = state.enabled;
     const duration = state.duration;
     if (!isTypeOf(enabled, 'boolean')) {
@@ -75,5 +77,5 @@ export class TimerState extends DeviceOpState<TimerStateName, Timer> {
         },
       })),
     };
-  }
+  };
 }

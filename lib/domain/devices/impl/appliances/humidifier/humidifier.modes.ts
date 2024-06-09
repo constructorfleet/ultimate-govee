@@ -34,7 +34,12 @@ export class ManualModeState extends DeviceOpState<
     this.stateValue.next(command[command.indexOf(0x00) - 1]);
   }
 
-  protected stateToCommand(nextState: number): Optional<StateCommandAndStatus> {
+  protected readonly stateToCommand = (
+    nextState: Optional<number>,
+  ): Optional<StateCommandAndStatus> => {
+    if (nextState === undefined) {
+      return undefined;
+    }
     if (nextState < 0) {
       this.logger.warn('Next state is less than 0, adjusting to 0');
       nextState = 0;
@@ -60,7 +65,7 @@ export class ManualModeState extends DeviceOpState<
         },
       },
     };
-  }
+  };
 }
 
 export const CustomModeStateName: 'customMode' = 'customMode' as const;
@@ -115,9 +120,9 @@ export class CustomModeState extends DeviceOpState<
     this.stateValue.next(this.customModes.currentProgram);
   }
 
-  protected stateToCommand(
+  protected readonly stateToCommand = (
     nextState: Optional<CustomProgram>,
-  ): Optional<StateCommandAndStatus> {
+  ): Optional<StateCommandAndStatus> => {
     if (nextState === undefined) {
       this.logger.warn('Program not specified, ignoring command');
       return;
@@ -210,7 +215,7 @@ export class CustomModeState extends DeviceOpState<
         },
       },
     };
-  }
+  };
 }
 
 export const AutoModeStateName: 'autoMode' = 'autoMode' as const;
@@ -236,10 +241,10 @@ export class AutoModeState extends DeviceOpState<AutoModeStateName, AutoMode> {
     });
   }
 
-  protected stateToCommand(
-    nextState: AutoMode,
-  ): Optional<StateCommandAndStatus> {
-    if (nextState.targetHumidity === undefined) {
+  protected readonly stateToCommand = (
+    nextState: Optional<AutoMode>,
+  ): Optional<StateCommandAndStatus> => {
+    if (nextState?.targetHumidity === undefined) {
       this.logger.warn('Target humidity not specified, ignoring state command');
       return undefined;
     }
@@ -269,7 +274,7 @@ export class AutoModeState extends DeviceOpState<AutoModeStateName, AutoMode> {
         },
       },
     };
-  }
+  };
 }
 
 export class HumidifierActiveState extends ModeState {
@@ -310,6 +315,10 @@ export class HumidifierActiveState extends ModeState {
       }
     });
   }
+
+  protected readonly stateToCommand = () => {
+    return undefined;
+  };
 
   setState(nextState: Optional<DeviceState<string, unknown>>) {
     if (nextState === undefined) {

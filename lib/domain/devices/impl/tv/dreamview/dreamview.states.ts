@@ -291,9 +291,9 @@ export class MicModeState extends DeviceOpState<MicModeStateName, MicMode> {
     });
   }
 
-  protected stateToCommand(
+  protected readonly stateToCommand = (
     nextState: MicMode,
-  ): Optional<StateCommandAndStatus> {
+  ): Optional<StateCommandAndStatus> => {
     const next = {
       micScene: nextState.micScene,
       micSceneId: nextState.micSceneId,
@@ -368,7 +368,7 @@ export class MicModeState extends DeviceOpState<MicModeStateName, MicMode> {
         },
       },
     };
-  }
+  };
 }
 
 export class SceneModeState extends LightEffectState {
@@ -384,9 +384,9 @@ export class SceneModeState extends LightEffectState {
     this.activeEffectCode.next(total(opCommand.slice(0, 2), true));
   }
 
-  protected stateToCommand(
+  protected readonly stateToCommand = (
     nextState: LightEffect,
-  ): Optional<StateCommandAndStatus> {
+  ): Optional<StateCommandAndStatus> => {
     if (nextState.code === undefined && nextState.name === undefined) {
       this.logger.warn(
         `Scene code or name is required to issue commands to ${this.constructor.name}`,
@@ -425,7 +425,7 @@ export class SceneModeState extends LightEffectState {
         },
       },
     };
-  }
+  };
 }
 
 export const VideoModeStateName: 'videoMode' = 'videoMode' as const;
@@ -492,9 +492,9 @@ export class VideoModeState extends DeviceOpState<
     });
   }
 
-  protected stateToCommand(
+  protected readonly stateToCommand = (
     nextState: VideoData,
-  ): Optional<StateCommandAndStatus> {
+  ): Optional<StateCommandAndStatus> => {
     this.logger.log(nextState);
     return undefined;
     // if (nextState.code === undefined && nextState.name === undefined) {
@@ -534,7 +534,7 @@ export class VideoModeState extends DeviceOpState<
     //     },
     //   },
     // };
-  }
+  };
 }
 
 export const DIYModeStateName: 'diyMode' = 'diyMode' as const;
@@ -562,9 +562,9 @@ export class DIYModeState extends DeviceOpState<DIYModeStateName, DIYModeData> {
     });
   }
 
-  protected stateToCommand(
+  protected readonly stateToCommand = (
     state: DIYModeData,
-  ): Optional<StateCommandAndStatus> {
+  ): Optional<StateCommandAndStatus> => {
     if (state.code === undefined) {
       this.logger.warn('diy code not supplied, ignoring command.');
       return;
@@ -592,7 +592,7 @@ export class DIYModeState extends DeviceOpState<DIYModeStateName, DIYModeData> {
         },
       ],
     };
-  }
+  };
 }
 
 export const SegmentColorModeStateName: 'segmentColorMode' =
@@ -667,9 +667,9 @@ export class SegmentColorModeState extends DeviceOpState<
     this.stateValue.next(this.segments);
   }
 
-  protected stateToCommand(
+  protected readonly stateToCommand = (
     nextState: Segment[],
-  ): Optional<StateCommandAndStatus> {
+  ): Optional<StateCommandAndStatus> => {
     const pad = (val: number): string => `000${val}`.slice(-3);
     const groups: SegmentUpdate = nextState.reduce(
       (group, segment) => {
@@ -748,7 +748,7 @@ export class SegmentColorModeState extends DeviceOpState<
         // TODO
       },
     };
-  }
+  };
 }
 
 export class SyncBoxActiveState extends ModeState {
@@ -801,6 +801,10 @@ export class SyncBoxActiveState extends ModeState {
       }
     });
   }
+
+  protected readonly stateToCommand = () => {
+    return undefined;
+  };
 
   setState(nextState: Optional<DeviceState<string, unknown>>) {
     if (nextState === undefined) {

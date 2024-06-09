@@ -72,9 +72,9 @@ export class IceMakerScheduledStart extends DeviceOpState<
     });
   }
 
-  protected stateToCommand(
+  protected readonly stateToCommand = (
     state: IceMakerScheduledStartData,
-  ): Optional<StateCommandAndStatus> {
+  ): Optional<StateCommandAndStatus> => {
     if (state.enabled === undefined) {
       this.logger.warn(
         'Enabled is not included in the state, ignoring command',
@@ -143,5 +143,5 @@ export class IceMakerScheduledStart extends DeviceOpState<
         },
       },
     };
-  }
+  };
 }

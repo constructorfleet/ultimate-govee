@@ -64,9 +64,9 @@ export class EnablePresenceState extends DeviceOpState<
     });
   }
 
-  protected stateToCommand(
+  protected readonly stateToCommand = (
     state: EnablePresenceFlags,
-  ): Optional<StateCommandAndStatus> {
+  ): Optional<StateCommandAndStatus> => {
     if (
       (state.biologicalEnabled ?? this.value.biologicalEnabled) === undefined
     ) {
@@ -110,7 +110,7 @@ export class EnablePresenceState extends DeviceOpState<
         },
       },
     };
-  }
+  };
 }
 
 export const DetectionSettingsStateName: 'detectionSettings' =
@@ -156,9 +156,9 @@ export class DetectionSettingsState extends DeviceOpState<
     });
   }
 
-  protected stateToCommand(
+  protected readonly stateToCommand = (
     state: DetectionSettings,
-  ): Optional<StateCommandAndStatus> {
+  ): Optional<StateCommandAndStatus> => {
     const distance = state.detectionDistance ?? this.value.detectionDistance;
     const absence = state.absenceDuration ?? this.value.absenceDuration;
     const report = state.reportDetection ?? this.value.reportDetection;
@@ -204,5 +204,5 @@ export class DetectionSettingsState extends DeviceOpState<
         },
       },
     };
-  }
+  };
 }
