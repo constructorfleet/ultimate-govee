@@ -46,9 +46,9 @@ export class DisplayScheduleState extends DeviceOpState<
     });
   }
 
-  protected stateToCommand(
+  protected readonly stateToCommand = (
     state: DisplaySchedule,
-  ): Optional<StateCommandAndStatus> {
+  ): Optional<StateCommandAndStatus> => {
     if (
       !isTypeOf(state?.on, 'boolean') ||
       !isTypeOf(state?.from?.hour, 'number') ||
@@ -88,5 +88,5 @@ export class DisplayScheduleState extends DeviceOpState<
         },
       },
     };
-  }
+  };
 }

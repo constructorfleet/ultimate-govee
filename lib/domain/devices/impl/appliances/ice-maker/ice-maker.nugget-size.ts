@@ -32,9 +32,9 @@ export class IceMakerNuggetSizeState extends DeviceOpState<
     );
   }
 
-  protected stateToCommand(
+  protected readonly stateToCommand = (
     nextState: NuggetSize | undefined,
-  ): Optional<StateCommandAndStatus> {
+  ): Optional<StateCommandAndStatus> => {
     if (nextState === undefined) {
       this.logger.warn('Nugget size is undefined, ignoring command');
       return undefined;
@@ -58,5 +58,5 @@ export class IceMakerNuggetSizeState extends DeviceOpState<
         },
       },
     };
-  }
+  };
 }

@@ -44,9 +44,9 @@ export class SceneModeState extends LightEffectState {
     this.activeEffectCode.next(total(opCommand.slice(0, 2), true));
   }
 
-  protected stateToCommand(
+  protected readonly stateToCommand = (
     nextState: LightEffect,
-  ): Optional<StateCommandAndStatus> {
+  ): Optional<StateCommandAndStatus> => {
     if (nextState.code === undefined && nextState.name === undefined) {
       this.logger.warn(
         `Scene code or name is required to issue commands to ${this.constructor.name}`,
@@ -84,7 +84,7 @@ export class SceneModeState extends LightEffectState {
         },
       },
     };
-  }
+  };
 }
 
 export const MicModeStateName: 'micMode' = 'micMode' as const;
@@ -127,9 +127,9 @@ export class MicModeState extends DeviceOpState<MicModeStateName, MicMode> {
     });
   }
 
-  protected stateToCommand(
+  protected readonly stateToCommand = (
     nextState: MicMode,
-  ): Optional<StateCommandAndStatus> {
+  ): Optional<StateCommandAndStatus> => {
     const next = {
       micScene: nextState.micScene ?? this.value.micScene ?? 0,
       sensitivity: nextState.sensitivity ?? this.value.sensitivity ?? 50,
@@ -176,7 +176,7 @@ export class MicModeState extends DeviceOpState<MicModeStateName, MicMode> {
         },
       },
     };
-  }
+  };
 }
 
 export const DiyModeStateName: 'diyEffect' = 'diyEffect' as const;
@@ -213,9 +213,9 @@ export class DiyModeState extends DeviceOpState<
     this.activeEffectCode.next(effectCode);
   }
 
-  protected stateToCommand(
+  protected readonly stateToCommand = (
     state: Partial<DiyEffect>,
-  ): Optional<StateCommandAndStatus> {
+  ): Optional<StateCommandAndStatus> => {
     let newEffect: DiyEffect | undefined;
     if (state?.name === undefined) {
       if (state?.code === undefined) {
@@ -263,7 +263,7 @@ export class DiyModeState extends DeviceOpState<
         },
       },
     };
-  }
+  };
 }
 
 export class ColorTemperatureModeState extends ColorTempState {
@@ -281,9 +281,9 @@ export class ColorTemperatureModeState extends ColorTempState {
     });
   }
 
-  protected stateToCommand(
+  protected readonly stateToCommand = (
     nextState: MeasurementData,
-  ): Optional<StateCommandAndStatus> {
+  ): Optional<StateCommandAndStatus> => {
     if (nextState.current === undefined) {
       this.logger.warn('color temperature not supplied, skipping command');
       return;
@@ -326,7 +326,7 @@ export class ColorTemperatureModeState extends ColorTempState {
         },
       ],
     };
-  }
+  };
 }
 
 export const SegmentColorModeStateName: 'segmentColorMode' =
@@ -401,9 +401,9 @@ export class SegmentColorModeState extends DeviceOpState<
     this.stateValue.next(this.segments);
   }
 
-  protected stateToCommand(
+  protected readonly stateToCommand = (
     nextState: Segment[],
-  ): Optional<StateCommandAndStatus> {
+  ): Optional<StateCommandAndStatus> => {
     const pad = (val: number): string => `000${val}`.slice(-3);
     const groups: SegmentUpdate = nextState.reduce(
       (group, segment) => {
@@ -482,7 +482,7 @@ export class SegmentColorModeState extends DeviceOpState<
         // TODO
       },
     };
-  }
+  };
 }
 
 export const WholeColorModeStateName: 'wholeColorMode' =
@@ -538,7 +538,9 @@ export class ColorModeState extends DeviceOpState<
     });
   }
 
-  protected stateToCommand(state: WholeColor): Optional<StateCommandAndStatus> {
+  protected readonly stateToCommand = (
+    state: WholeColor,
+  ): Optional<StateCommandAndStatus> => {
     return {
       command: [
         {
@@ -584,7 +586,7 @@ export class ColorModeState extends DeviceOpState<
         },
       ],
     };
-  }
+  };
 }
 
 export class RGBICActiveState extends ModeState {
@@ -643,6 +645,10 @@ export class RGBICActiveState extends ModeState {
       }
     });
   }
+
+  protected readonly stateToCommand = () => {
+    return undefined;
+  };
 
   setState(nextState: Optional<DeviceState<string, unknown>>) {
     if (nextState === undefined) {

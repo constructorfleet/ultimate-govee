@@ -66,9 +66,9 @@ export class ColorRGBState extends DeviceOpState<ColorRGBStateName, ColorRGB> {
     }
   }
 
-  protected stateToCommand(
+  protected readonly stateToCommand = (
     nextState: ColorRGB,
-  ): Optional<StateCommandAndStatus> {
+  ): Optional<StateCommandAndStatus> => {
     const { red, green, blue } = nextState ?? {};
     if (
       !isBetween(red, 0, 255) ||
@@ -113,5 +113,5 @@ export class ColorRGBState extends DeviceOpState<ColorRGBStateName, ColorRGB> {
         },
       ],
     };
-  }
+  };
 }

@@ -56,9 +56,9 @@ export class ColorTempState extends DeviceOpState<
     }
   }
 
-  protected stateToCommand(
+  protected readonly stateToCommand = (
     nextState: MeasurementData,
-  ): Optional<StateCommandAndStatus> {
+  ): Optional<StateCommandAndStatus> => {
     const { min, max } =
       nextState?.range ?? this.stateValue.getValue()?.range ?? {};
     if (isTypeOf(min, 'number') && isTypeOf(max, 'number')) {
@@ -92,5 +92,5 @@ export class ColorTempState extends DeviceOpState<
         },
       },
     };
-  }
+  };
 }
