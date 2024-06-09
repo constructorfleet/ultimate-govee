@@ -1,4 +1,4 @@
-import { Logger, OnApplicationBootstrap } from '@nestjs/common';
+import { Logger, OnModuleInit } from '@nestjs/common';
 import { EventBus } from '@nestjs/cqrs';
 import {
   BehaviorSubject,
@@ -25,7 +25,7 @@ const areSameConfig = <TConfig extends object>(
 export abstract class ChannelService<
   TConfig extends object,
   Togglable extends boolean = false,
-> implements OnApplicationBootstrap
+> implements OnModuleInit
 {
   abstract readonly togglable: Togglable;
   abstract readonly name: string;
@@ -56,7 +56,7 @@ export abstract class ChannelService<
     private readonly initialConfig?: TConfig,
   ) {}
 
-  onApplicationBootstrap() {
+  onModuleInit() {
     this.state.enabled.next(this.initialState);
     this.state.config.next(this.initialConfig);
   }
