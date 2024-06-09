@@ -43,6 +43,7 @@ const StateFactory: StateFactories = [
   (device: DeviceModel) => new SceneModeState(device),
   (device: DeviceModel) => new MicModeState(device),
   (device: DeviceModel) => new DiyModeState(device),
+  (device: DeviceModel) => new SegmentColorModeState(device),
 ];
 
 export const RGBICLightType: 'rgbic' = 'rgbic' as const;
