@@ -259,7 +259,7 @@ export class Device<States extends DeviceStatesType = DeviceStatesType>
   ) {
     super(undefined);
     this.next(this);
-    this.refresh$.pipe(sampleTime(5000)).subscribe(() => this.refresh());
+    this.refresh$.pipe(sampleTime(2000)).subscribe(() => this.refresh());
     this.logger = new Logger(`${this.constructor.name}-${device.name}`);
     buildStates(stateFactories, device).forEach((state) => {
       this.addState(state);
@@ -268,9 +268,7 @@ export class Device<States extends DeviceStatesType = DeviceStatesType>
         ...device.status.value,
       });
     });
-    this.subscriptions.push(
-      interval(10000).subscribe(() => this.refresh$.next()),
-    );
+    this.subscriptions.push(interval(10000).subscribe(() => this.refresh()));
     this.subscriptions.push(
       this.deviceStates.delta$.subscribe(() => {
         this.next(this);
