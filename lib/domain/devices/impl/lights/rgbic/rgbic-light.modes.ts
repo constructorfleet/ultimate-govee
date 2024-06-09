@@ -225,13 +225,14 @@ export class DiyModeState extends DeviceOpState<
       newEffect = Array.from(this.effects.entries()).find(
         ([_, effect]) => effect.code === state.code,
       )?.[1];
-    } else {
+    }
+    if (newEffect === undefined) {
       const effect = Array.from(this.effects.values()).find(
         (effect) => effect.name === state.name,
       );
       if (newEffect === undefined && effect === undefined) {
         this.logger.warn(
-          'Unable to determing DIY effect from provide name or code, skipping command',
+          'Unable to determing DIY effect from provided name or code, skipping command',
         );
         return;
       } else if (newEffect === undefined && effect !== undefined) {
