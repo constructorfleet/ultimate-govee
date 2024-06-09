@@ -45,9 +45,9 @@ export class ManualModeState extends DeviceOpState<
     this.stateValue.next(command[this.speedIndex]);
   }
 
-  protected stateToCommand(
+  protected readonly stateToCommand = (
     nextState: Optional<number>,
-  ): Optional<StateCommandAndStatus> {
+  ): Optional<StateCommandAndStatus> => {
     if (nextState === undefined) {
       this.logger.warn('Fan speed not specified, ignoring command');
       return;
@@ -70,7 +70,7 @@ export class ManualModeState extends DeviceOpState<
         },
       },
     };
-  }
+  };
 }
 
 export const CustomModeStateName: 'customMode' = 'customMode' as const;
@@ -125,9 +125,9 @@ export class CustomModeState extends DeviceOpState<
     this.stateValue.next(this.customModes.currentProgram);
   }
 
-  protected stateToCommand(
+  protected readonly stateToCommand = (
     nextState: CustomProgram | undefined,
-  ): Optional<StateCommandAndStatus> {
+  ): Optional<StateCommandAndStatus> => {
     if (nextState === undefined || nextState?.fanSpeed === undefined) {
       this.logger.warn('Fan speed not specified, ignoring command');
       return;
@@ -217,7 +217,7 @@ export class CustomModeState extends DeviceOpState<
         },
       },
     };
-  }
+  };
 }
 
 export class PurifierActiveMode extends ModeState {
@@ -257,6 +257,10 @@ export class PurifierActiveMode extends ModeState {
       }
     });
   }
+
+  protected readonly stateToCommand = () => {
+    return undefined;
+  };
 
   setState(nextState: Optional<DeviceState<string, unknown>>) {
     if (nextState === undefined) {

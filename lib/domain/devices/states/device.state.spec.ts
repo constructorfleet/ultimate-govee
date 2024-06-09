@@ -6,7 +6,9 @@ import { Optional } from '../../../common';
 import { StateCommandAndStatus } from './states.types';
 
 class TestState extends DeviceState<'TEST', string> {
-  protected stateToCommand(state: string): Optional<StateCommandAndStatus> {
+  protected readonly stateToCommand = (
+    state: string,
+  ): Optional<StateCommandAndStatus> => {
     return {
       command: {
         data: {
@@ -15,7 +17,7 @@ class TestState extends DeviceState<'TEST', string> {
       },
       status: {},
     };
-  }
+  };
 }
 
 const getEmittedValue = async (

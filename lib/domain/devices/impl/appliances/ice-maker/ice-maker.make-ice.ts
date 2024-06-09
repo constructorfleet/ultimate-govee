@@ -23,6 +23,10 @@ export class IceMakerMakingIceState extends DeviceState<
     });
   }
 
+  protected readonly stateToCommand = () => {
+    return undefined;
+  };
+
   setState(nextState: boolean | undefined) {
     if (nextState === undefined) {
       this.logger.warn('Value not provided, ignoring command');

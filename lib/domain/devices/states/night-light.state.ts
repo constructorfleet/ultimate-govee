@@ -40,7 +40,9 @@ export class NightLightState extends DeviceOpState<
     });
   }
 
-  protected stateToCommand(state: NightLight): Optional<StateCommandAndStatus> {
+  protected readonly stateToCommand = (
+    state: NightLight,
+  ): Optional<StateCommandAndStatus> => {
     if (!isTypeOf(state?.on, 'boolean')) {
       this.logger.warn('On not included in state, ignoring command');
       return undefined;
@@ -68,5 +70,5 @@ export class NightLightState extends DeviceOpState<
         },
       },
     };
-  }
+  };
 }

@@ -42,9 +42,9 @@ export class ActiveState extends DeviceOpState<
     this.stateValue.next(opCommand[0] === 0x01);
   }
 
-  protected stateToCommand(
+  protected readonly stateToCommand = (
     state: Optional<boolean>,
-  ): Optional<StateCommandAndStatus> {
+  ): Optional<StateCommandAndStatus> => {
     if (!isTypeOf(state, 'boolean')) {
       this.logger.warn('state not provided, skipping command.');
       return undefined;
@@ -64,5 +64,5 @@ export class ActiveState extends DeviceOpState<
         },
       },
     };
-  }
+  };
 }

@@ -91,6 +91,13 @@ export class DeviceState<StateName extends string, StateValue>
     new FixedLengthStack<StateValue>(5);
   protected readonly subscriptions: Subscription[] = [];
   protected readonly parseOption: ParseOption;
+  protected readonly stateToCommand?: (
+    state: StateValue,
+  ) => Optional<StateCommandAndStatus>;
+
+  get isCommandable(): boolean {
+    return this.stateToCommand !== undefined;
+  }
 
   subscribe(
     observerOrNext?:
@@ -171,7 +178,10 @@ export class DeviceState<StateName extends string, StateValue>
   }
 
   setState(nextState: StateValue): string[] {
-    const commandAndStatus = this.stateToCommand(nextState);
+    const commandAndStatus =
+      this.stateToCommand === undefined
+        ? undefined
+        : this.stateToCommand(nextState);
     if (commandAndStatus === undefined) {
       return [];
     }
@@ -192,11 +202,6 @@ export class DeviceState<StateName extends string, StateValue>
       this.commandBus.next(cmd);
       return cmd.commandId;
     });
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  protected stateToCommand(state: StateValue): Optional<StateCommandAndStatus> {
-    return undefined;
   }
 
   onModuleDestroy() {

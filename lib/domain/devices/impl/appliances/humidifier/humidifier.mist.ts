@@ -52,6 +52,10 @@ export class MistLevelState extends DeviceState<
     });
   }
 
+  protected readonly stateToCommand = () => {
+    return undefined;
+  };
+
   setState(nextState: Optional<number>) {
     if (this.active.value === undefined) {
       this.logger.warn('Active state is unknown, ignoring command');

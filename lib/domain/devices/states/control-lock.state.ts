@@ -22,9 +22,9 @@ export class ControlLockState extends DeviceOpState<
     this.stateValue.next(opCommand[0] === 0x01);
   }
 
-  protected stateToCommand(
+  protected readonly stateToCommand = (
     nextState: Optional<boolean>,
-  ): Optional<StateCommandAndStatus> {
+  ): Optional<StateCommandAndStatus> => {
     if (!isTypeOf(nextState, 'boolean')) {
       this.logger.warn('state not provided, skipping command.');
       return;
@@ -43,5 +43,5 @@ export class ControlLockState extends DeviceOpState<
         },
       },
     };
-  }
+  };
 }

@@ -40,6 +40,10 @@ export class TargetHumidityState extends DeviceState<
     });
   }
 
+  protected readonly stateToCommand = () => {
+    return undefined;
+  };
+
   setState(nextState: Optional<number>) {
     if (nextState === undefined) {
       this.logger.warn('Target humidity not specified, ignoring command');

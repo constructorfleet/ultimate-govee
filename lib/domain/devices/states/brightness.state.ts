@@ -51,9 +51,9 @@ export class BrightnessState extends DeviceOpState<
     this.stateValue.next(brightness);
   }
 
-  protected stateToCommand(
+  protected readonly stateToCommand = (
     nextState: Optional<number>,
-  ): Optional<StateCommandAndStatus> {
+  ): Optional<StateCommandAndStatus> => {
     if (!isBetween(nextState, 0, 100)) {
       this.logger.warn('Invalid or missing state, ignoring command.');
       return;
@@ -86,5 +86,5 @@ export class BrightnessState extends DeviceOpState<
         },
       ],
     };
-  }
+  };
 }
