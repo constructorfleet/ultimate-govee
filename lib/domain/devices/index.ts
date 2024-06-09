@@ -19,6 +19,8 @@ import {
   TargetHumidityStateName,
   UVCStateName,
   WholeColorModeStateName,
+  SegmentColorModeState,
+  Segment,
 } from './impl';
 import { DeviceStates as CommonStates } from './states';
 import { Humidifier } from './impl/appliances/humidifier/humidifier';
@@ -212,6 +214,8 @@ export {
   SyncBoxDevice,
   RGBICActiveState,
   ModeStateName,
+  SegmentColorModeState,
+  Segment,
 };
 
 export const CQRS = cqrs;
