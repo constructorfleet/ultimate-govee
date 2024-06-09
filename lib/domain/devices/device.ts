@@ -140,6 +140,7 @@ export class Device<States extends DeviceStatesType = DeviceStatesType>
             this.isDebug,
           ),
         );
+        setTimeout(() => this.refresh(), 2000);
       }),
     );
     return state;

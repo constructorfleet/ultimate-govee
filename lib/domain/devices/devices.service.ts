@@ -1,5 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { EventBus, EventsHandler, IEventHandler, QueryBus } from '@nestjs/cqrs';
+import {
+  CommandHandler,
+  EventBus,
+  EventsHandler,
+  ICommandHandler,
+  IEventHandler,
+  QueryBus,
+} from '@nestjs/cqrs';
 import { ClassConstructor } from 'class-transformer';
 import { map } from 'rxjs';
 import { DeltaMap, DeviceId, Optional } from '~ultimate-govee-common';
@@ -14,11 +21,15 @@ import { Device } from './device';
 import { DevicesFactory } from './devices.factory';
 import { BLEDevice, DeviceModel, IoTDevice, WiFiDevice } from './devices.model';
 import { Version } from './version.info';
+import { RefreshDeviceCommand } from './cqrs/commands/refresh-device.command';
 
 @Injectable()
 @EventsHandler(DeviceStatusReceivedEvent)
+@CommandHandler(RefreshDeviceCommand)
 export class DevicesService
-  implements IEventHandler<DeviceStatusReceivedEvent>
+  implements
+    IEventHandler<DeviceStatusReceivedEvent>,
+    ICommandHandler<RefreshDeviceCommand>
 {
   private readonly logger: Logger = new Logger(DevicesService.name);
 
@@ -74,6 +85,11 @@ export class DevicesService
     }
     this.deviceMap.set(device.id, device);
     return device;
+  }
+
+  async execute(command: RefreshDeviceCommand): Promise<any> {
+    await this.getDevice(command.deviceId)?.refresh();
+    return;
   }
 
   async discoverDevice(goveeDevice: GoveeDevice): Promise<Device> {
