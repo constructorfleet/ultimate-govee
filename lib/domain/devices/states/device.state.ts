@@ -95,7 +95,7 @@ export class DeviceState<StateName extends string, StateValue>
     state: StateValue,
   ) => Optional<StateCommandAndStatus>;
 
-  get commandable(): boolean {
+  get isCommandable(): boolean {
     return this.stateToCommand !== undefined;
   }
 
