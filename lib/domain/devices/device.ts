@@ -259,7 +259,7 @@ export class Device<States extends DeviceStatesType = DeviceStatesType>
   ) {
     super(undefined);
     this.next(this);
-    this.refresh$.pipe(sampleTime(15000)).subscribe(() => this.refresh());
+    this.refresh$.pipe(sampleTime(5000)).subscribe(() => this.refresh());
     this.logger = new Logger(`${this.constructor.name}-${device.name}`);
     buildStates(stateFactories, device).forEach((state) => {
       this.addState(state);
