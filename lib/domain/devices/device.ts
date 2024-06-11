@@ -277,7 +277,9 @@ export class Device<States extends DeviceStatesType = DeviceStatesType>
   ) {
     super(undefined);
     this.next(this);
-    this.refresh$.pipe(sampleTime(2000)).subscribe(() => this.refresh());
+    this.subscriptions.push(
+      this.refresh$.pipe(sampleTime(2000)).subscribe(() => this.refresh()),
+    );
     this.logger = new Logger(`${this.constructor.name}-${device.name}`);
     buildStates(stateFactories, device).forEach((state) => {
       this.addState(state);
@@ -320,7 +322,11 @@ export class Device<States extends DeviceStatesType = DeviceStatesType>
     }
   }
 
-  onModuleDestroy() {
+  closeSubscriptions() {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+  }
+
+  onModuleDestroy() {
+    this.closeSubscriptions();
   }
 }

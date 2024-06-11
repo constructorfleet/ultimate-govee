@@ -2,7 +2,7 @@ import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
 import { CommandBus, EventBus, ofType } from '@nestjs/cqrs';
 import { SetCredentialsCommand } from '~ultimate-govee-domain/auth';
 import { Password, Username } from '~ultimate-govee-common';
-import { Observable, interval } from 'rxjs';
+import { Observable, Subscription, interval } from 'rxjs';
 import {
   InjectGoveeConfig,
   UltimateGoveeConfig,
@@ -23,6 +23,8 @@ import { Device } from './domain/devices/device';
 export class UltimateGoveeService implements OnModuleDestroy {
   private readonly channels: ChannelToggle;
   private readonly logger: Logger = new Logger(UltimateGoveeService.name);
+  private readonly subscriptions: Subscription[] = [];
+
   constructor(
     @InjectGoveeConfig private readonly config: UltimateGoveeConfig,
     private readonly deviceService: DevicesService,
@@ -35,7 +37,7 @@ export class UltimateGoveeService implements OnModuleDestroy {
       iot: moduleRef.get(IoTChannelService, { strict: false }),
       openapi: moduleRef.get(OpenApiChannelService, { strict: false }),
     };
-    interval(10000).subscribe(() => Logger.flush());
+    this.subscriptions.push(interval(5000).subscribe(() => Logger.flush()));
   }
 
   channel<ChannelName extends keyof ChannelToggle>(
@@ -62,13 +64,14 @@ export class UltimateGoveeService implements OnModuleDestroy {
     );
   }
 
-  private shutdownBuses() {
+  closeSubscriptions() {
+    this.subscriptions.map((sub) => sub.unsubscribe());
     this.commandBus.subject$.complete();
     this.eventBus.subject$.complete();
   }
 
   onModuleDestroy(): void {
-    this.shutdownBuses();
+    this.closeSubscriptions();
     Logger.flush();
   }
 }

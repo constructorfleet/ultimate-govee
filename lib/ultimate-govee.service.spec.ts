@@ -15,6 +15,7 @@ import { HumidifierDevice } from './domain/devices/impl/appliances/humidifier/hu
 import { AirQualityDevice } from './domain/devices/impl/home-improvement/air-quality/air-quality';
 import { Version } from './domain/devices/version.info';
 import { MODULE_OPTIONS_TOKEN } from './ultimate-govee.types';
+import { IoTClient } from './data/iot/iot.client';
 
 describe('UltimateGoveeService', () => {
   describe('constructDevice', () => {
@@ -48,6 +49,7 @@ describe('UltimateGoveeService', () => {
     });
 
     afterEach(async () => {
+      service.closeSubscriptions();
       await module.close();
     });
     describe('when passed a DeviceModel', () => {
@@ -84,6 +86,7 @@ describe('UltimateGoveeService', () => {
           expect(device).not.toBeInstanceOf(PurifierDevice);
           expect(device).not.toBeInstanceOf(HumidifierDevice);
           expect(device).not.toBeInstanceOf(AirQualityDevice);
+          device.closeSubscriptions();
         });
       });
       describe('that is a purifier device type', () => {
@@ -116,6 +119,7 @@ describe('UltimateGoveeService', () => {
           const device = service.constructDevice(deviceModel);
           expect(device).toBeDefined();
           expect(device).toBeInstanceOf(PurifierDevice);
+          device.closeSubscriptions();
         });
       });
     });
