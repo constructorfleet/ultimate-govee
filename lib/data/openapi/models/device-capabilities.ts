@@ -17,7 +17,7 @@ export const MusicSettingCapability = 'music_setting' as const;
 export const TemperatureSettingCapability = 'temperature_setting' as const;
 export const EventCapability = 'event' as const;
 
-export type Capabilities =
+export type OpenAPICapabilities =
   | typeof OnOffCapability
   | typeof ToggleCapability
   | typeof ColorSettingCapability
@@ -30,12 +30,12 @@ export type Capabilities =
   | typeof TemperatureSettingCapability
   | typeof EventCapability;
 
-export type Capability<Cap extends Capabilities> =
+export type OpenAPICapability<Cap extends OpenAPICapabilities> =
   `devices.capabilities.${Cap}`;
 
-export class DeviceCapability<
-  Cap extends Capabilities,
-  CapabilityKey = Capability<Cap>,
+export class OpenAPIDeviceCapability<
+  Cap extends OpenAPICapabilities,
+  CapabilityKey = OpenAPICapability<Cap>,
 > {
   @Expose({ name: 'type' })
   type!: CapabilityKey;
@@ -59,9 +59,9 @@ export class DeviceCapability<
   parameters!: Parameter<FieldDataType>;
 }
 
-export class DeviceCapabilityState<
-  Cap extends Capabilities,
-  CapabilityKey = Capability<Cap>,
+export class OpenAPIDeviceCapabilityState<
+  Cap extends OpenAPICapabilities,
+  CapabilityKey = OpenAPICapability<Cap>,
 > {
   @Expose({ name: 'type' })
   type!: CapabilityKey;

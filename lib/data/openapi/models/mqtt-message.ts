@@ -1,6 +1,6 @@
 import { Expose, Type } from 'class-transformer';
 
-export class MqttDeviceState {
+export class OpenAPIMqttDeviceState {
   @Expose({ name: 'name' })
   name!: string;
 
@@ -11,7 +11,7 @@ export class MqttDeviceState {
   message?: string;
 }
 
-export class MqttDeviceCapability {
+export class OpenAPIMqttDeviceCapability {
   @Expose({ name: 'type' })
   type!: string;
 
@@ -19,11 +19,11 @@ export class MqttDeviceCapability {
   instance!: string;
 
   @Expose({ name: 'state' })
-  @Type(() => MqttDeviceState)
-  state!: MqttDeviceState[];
+  @Type(() => OpenAPIMqttDeviceState)
+  state!: OpenAPIMqttDeviceState[];
 }
 
-export class OpenAPIMessage {
+export class OpenAPIMqttMessage {
   @Expose({ name: 'sku' })
   model!: string;
 
@@ -34,6 +34,6 @@ export class OpenAPIMessage {
   deviceName!: string;
 
   @Expose({ name: 'capabilities' })
-  @Type(() => MqttDeviceCapability)
-  capabilities!: MqttDeviceCapability[];
+  @Type(() => OpenAPIMqttDeviceCapability)
+  capabilities!: OpenAPIMqttDeviceCapability[];
 }

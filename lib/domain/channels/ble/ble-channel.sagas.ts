@@ -1,19 +1,19 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { EventBus, ICommand, Saga, ofType } from '@nestjs/cqrs';
-import { Observable, filter, groupBy, map, mergeMap, throttleTime } from 'rxjs';
 import { arrayEquality } from '@santi100/equal-lib';
+import { Observable, filter, groupBy, map, mergeMap, throttleTime } from 'rxjs';
+import { v4 as uuidv4 } from 'uuid';
+import { OpType, asOpCode, base64ToHex } from '~ultimate-govee-common';
+import { DeviceDiscoveredEvent } from '../../devices/cqrs';
+import { DeviceRefeshEvent } from '../../devices/cqrs/events/device-refresh.event';
+import { DeviceStateCommandEvent } from '../../devices/cqrs/events/device-state-command.event';
+import { BleChannelService } from './ble-channel.service';
+import { BlePublishCommand, BleRecordDeviceCommand } from './commands';
+import { ConfigureBleChannelCommand } from './commands/configure-ble-channel.command';
 import {
   BleChannelChangedEvent,
   BleChannelConfigReceivedEvent,
 } from './events';
-import { ConfigureBleChannelCommand } from './commands/configure-ble-channel.command';
-import { DeviceDiscoveredEvent } from '../../devices/cqrs';
-import { BleChannelService } from './ble-channel.service';
-import { BlePublishCommand, BleRecordDeviceCommand } from './commands';
-import { asOpCode, base64ToHex, OpType } from '~ultimate-govee-common';
-import { v4 as uuidv4 } from 'uuid';
-import { DeviceRefeshEvent } from '../../devices/cqrs/events/device-refresh.event';
-import { DeviceStateCommandEvent } from '../../devices/cqrs/events/device-state-command.event';
 
 @Injectable()
 export class BleChannelSagas {

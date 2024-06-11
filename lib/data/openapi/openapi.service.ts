@@ -4,15 +4,15 @@ import { MqttService, Optional } from '~ultimate-govee-common';
 import { GoveeDeviceStatus } from '../govee-device';
 import { BaseRequest, goveeAPIKeyHeaders, request, Request } from '../utils';
 import {
-  DeviceListResponse,
+  OpenAPIDeviceListResponse,
   OpenAPIDevice,
 } from './models/device-list.response';
 import { OpenAPIDeviceScenesResponse } from './models/device-scenes.response';
 import {
-  DeviceStateResponse,
+  OpenAPIDeviceStateResponse,
   OpenAPIDeviceState,
 } from './models/device-state.response';
-import { MqttDeviceCapability } from './models/mqtt-message';
+import { OpenAPIMqttDeviceCapability } from './models/mqtt-message';
 import { OpenAPIMqttPacket } from './openapi.models';
 import { OpenAPIConfigProvider } from './openapi.providers';
 import { OpenAPIConfig, OpenAPIMqttMessageHandler } from './openapi.types';
@@ -29,7 +29,7 @@ export class OpenAPIService implements OpenAPIMqttMessageHandler {
   private apiKey: string | undefined;
 
   private static findState<T>(
-    capabilities: MqttDeviceCapability[],
+    capabilities: OpenAPIMqttDeviceCapability[],
     capabilityInstance: string,
     stateName: string,
   ): T | undefined {
@@ -146,12 +146,12 @@ export class OpenAPIService implements OpenAPIMqttMessageHandler {
   async getDevices(): Promise<OpenAPIDevice[]> {
     try {
       const response = await this.request(this.config.deviceListUrl)?.get(
-        DeviceListResponse,
+        OpenAPIDeviceListResponse,
       );
       if (!response?.data) {
         return [];
       }
-      return (response.data as DeviceListResponse).devices;
+      return (response.data as OpenAPIDeviceListResponse).devices;
     } catch (error) {
       throw new Error('Unable to retreive devices from OpenAPI');
     }
@@ -173,11 +173,11 @@ export class OpenAPIService implements OpenAPIMqttMessageHandler {
             device: deviceId,
           },
         },
-      )?.post(DeviceStateResponse);
+      )?.post(OpenAPIDeviceStateResponse);
       if (!response?.data) {
         return undefined;
       }
-      return (response.data as DeviceStateResponse).device;
+      return (response.data as OpenAPIDeviceStateResponse).device;
     } catch (error) {
       // this.logger.error(`Unable to retrieve device from OpenAPI: ${error}`);
       throw new Error('Unable to retreive device from OpenAPI');

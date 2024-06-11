@@ -1,6 +1,9 @@
 import { Expose, Type } from 'class-transformer';
 import { OpenAPIResponse } from '../openapi.models';
-import { Capabilities, DeviceCapability } from './device-capabilities';
+import {
+  OpenAPICapabilities,
+  OpenAPIDeviceCapability,
+} from './device-capabilities';
 
 export class OpenAPIDevice {
   @Expose({ name: 'sku' })
@@ -10,11 +13,11 @@ export class OpenAPIDevice {
   deviceId!: string;
 
   @Expose({ name: 'capabilities' })
-  @Type(() => DeviceCapability)
-  capabilities!: DeviceCapability<Capabilities>[];
+  @Type(() => OpenAPIDeviceCapability)
+  capabilities!: OpenAPIDeviceCapability<OpenAPICapabilities>[];
 }
 
-export class DeviceListResponse extends OpenAPIResponse {
+export class OpenAPIDeviceListResponse extends OpenAPIResponse {
   @Expose({ name: 'data' })
   @Type(() => OpenAPIDevice)
   devices!: OpenAPIDevice[];

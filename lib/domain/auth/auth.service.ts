@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
 import { EventBus } from '@nestjs/cqrs';
 import {
   Subject,
@@ -8,6 +8,7 @@ import {
   tap,
   filter,
   combineLatest,
+  Subscription,
 } from 'rxjs';
 import { ClientId, Credentials } from '~ultimate-govee-common';
 import { Md5 } from 'ts-md5';
@@ -21,9 +22,9 @@ import {
 } from './events';
 
 @Injectable()
-export class AuthService {
+export class AuthService implements OnModuleDestroy {
   private readonly logger: Logger = new Logger(AuthService.name);
-
+  private readonly subscriptions: Subscription[] = [];
   private readonly authState: AuthState = {};
   private readonly credentials: Subject<Credentials | undefined> =
     new Subject();
@@ -35,58 +36,60 @@ export class AuthService {
     @InjectRefreshMargin
     private readonly refreshMargin: number,
   ) {
-    this.credentials
-      .pipe(
-        filter((creds) => creds !== undefined),
-        map(
-          (creds) =>
-            ({
-              ...creds!,
-              clientId: creds?.clientId ?? this.newClientId,
-            }) as Required<Credentials>,
-        ),
-        map((creds) => new CredentialsChangedEvent(creds)),
-      )
-      .subscribe((event) => {
-        this.eventBus.publish(event);
-      });
-    combineLatest([this.authData, this.communityData])
-      .pipe(
-        filter((value) => value !== undefined),
-        map((value) => value!),
-        tap(([authData, communityData]) => {
-          this.authState.accountAuth = authData;
-          this.authState.bffAuth = communityData;
+    this.subscriptions.push(
+      this.credentials
+        .pipe(
+          filter((creds) => creds !== undefined),
+          map(
+            (creds) =>
+              ({
+                ...creds!,
+                clientId: creds?.clientId ?? this.newClientId,
+              }) as Required<Credentials>,
+          ),
+          map((creds) => new CredentialsChangedEvent(creds)),
+        )
+        .subscribe((event) => {
+          this.eventBus.publish(event);
         }),
-        tap(([authData, communityData]) =>
-          this.eventBus.publish(
-            new AuthenticatedEvent(
-              authData.accountId,
-              authData.clientId,
-              authData.oauth,
-              communityData,
+      combineLatest([this.authData, this.communityData])
+        .pipe(
+          filter((value) => value !== undefined),
+          map((value) => value!),
+          tap(([authData, communityData]) => {
+            this.authState.accountAuth = authData;
+            this.authState.bffAuth = communityData;
+          }),
+          tap(([authData, communityData]) =>
+            this.eventBus.publish(
+              new AuthenticatedEvent(
+                authData.accountId,
+                authData.clientId,
+                authData.oauth,
+                communityData,
+              ),
             ),
           ),
-        ),
-        switchMap(([authData]) =>
-          timer(
-            Math.max(
-              0,
-              authData.oauth.expiresAt - this.refreshMargin - Date.now(),
-            ),
-          ).pipe(
-            map(
-              () =>
-                new AuthExpiringEvent(
-                  authData.accountId,
-                  authData.clientId,
-                  authData.oauth,
-                ),
+          switchMap(([authData]) =>
+            timer(
+              Math.max(
+                0,
+                authData.oauth.expiresAt - this.refreshMargin - Date.now(),
+              ),
+            ).pipe(
+              map(
+                () =>
+                  new AuthExpiringEvent(
+                    authData.accountId,
+                    authData.clientId,
+                    authData.oauth,
+                  ),
+              ),
             ),
           ),
-        ),
-      )
-      .subscribe((event) => this.eventBus.publish(event));
+        )
+        .subscribe((event) => this.eventBus.publish(event)),
+    );
   }
 
   private get newClientId(): ClientId {
@@ -128,5 +131,13 @@ export class AuthService {
 
   setCommunityData(authData: BffAuthData) {
     this.communityData.next(authData);
+  }
+
+  closeSubscriptions() {
+    this.subscriptions.forEach((sub) => sub.unsubscribe);
+  }
+
+  onModuleDestroy() {
+    this.closeSubscriptions();
   }
 }
