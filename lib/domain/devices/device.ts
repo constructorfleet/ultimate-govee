@@ -173,7 +173,7 @@ export class Device<States extends DeviceStatesType = DeviceStatesType>
   }
 
   get images(): Optional<DeviceImage> {
-    const resources = this.device.ext?.externalResources;
+    const resources = this.device.images;
     if (resources === undefined) {
       return {};
     }

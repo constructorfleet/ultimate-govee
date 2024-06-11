@@ -1,6 +1,6 @@
 import { Expose, Type } from 'class-transformer';
 
-export class ControlCapability {
+export class OpenAPIControlCapability {
   @Expose({ name: 'type' })
   type!: string;
 
@@ -11,7 +11,7 @@ export class ControlCapability {
   value!: Record<string, unknown>;
 }
 
-export class ControlDevice {
+export class OpenAPIControlDevice {
   @Expose({ name: 'sku' })
   sku!: string;
 
@@ -19,15 +19,15 @@ export class ControlDevice {
   device!: string;
 
   @Expose({ name: 'capability' })
-  @Type(() => ControlCapability)
-  capability!: ControlCapability;
+  @Type(() => OpenAPIControlCapability)
+  capability!: OpenAPIControlCapability;
 }
 
-export class ControlDeviceRequest {
+export class OpenAPIControlDeviceRequest {
   @Expose({ name: 'requestId' })
   requestId!: string;
 
   @Expose({ name: 'payload' })
-  @Type(() => ControlDevice)
-  payload!: ControlDevice;
+  @Type(() => OpenAPIControlDevice)
+  payload!: OpenAPIControlDevice;
 }

@@ -70,6 +70,13 @@ describe('UltimateGoveeService', () => {
               online: true,
               isOn: true,
             },
+            deviceExt: {
+              externalResources: {
+                imageUrl: 'https://example.com/H4001.png',
+                onImageUrl: 'https://example.com/H4001-on.png',
+                offImageUrl: 'https://example.com/H4001-off.png',
+              },
+            },
           });
           const device = service.constructDevice(deviceModel);
           expect(device).toBeDefined();
@@ -97,6 +104,13 @@ describe('UltimateGoveeService', () => {
             state: {
               online: true,
               isOn: true,
+            },
+            deviceExt: {
+              externalResources: {
+                imageUrl: 'https://example.com/H7121.png',
+                onImageUrl: 'https://example.com/H7121-on.png',
+                offImageUrl: 'https://example.com/H7121-off.png',
+              },
             },
           });
           const device = service.constructDevice(deviceModel);

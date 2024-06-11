@@ -1,13 +1,13 @@
 import { Subscription } from 'rxjs';
-import { DeviceModel } from '../devices.model';
-import { UnknownState } from './unknown.state';
 import { OpType } from '../../../common';
-import { Version } from '../version.info';
-import { GoveeDeviceStatus } from '../../../data';
 import {
   testParseStateCalled,
   testParseStateNotCalled,
 } from '../../../common/test-utils';
+import { GoveeDeviceStatus } from '../../../data';
+import { DeviceModel } from '../devices.model';
+import { Version } from '../version.info';
+import { UnknownState } from './unknown.state';
 
 describe('UnknownState', () => {
   const deviceModel: DeviceModel = new DeviceModel({
@@ -23,6 +23,13 @@ describe('UnknownState', () => {
     pactCode: 4,
     version: new Version('1.0.0', '2.0.0'),
     state: {},
+    deviceExt: {
+      externalResources: {
+        imageUrl: 'https://example.com/H7567.png',
+        onImageUrl: 'https://example.com/H7567-on.png',
+        offImageUrl: 'https://example.com/H7567-off.png',
+      },
+    },
   });
   const unknownState25 = new UnknownState(deviceModel, OpType.REPORT, 0x19);
   const unknownState5_3 = new UnknownState(

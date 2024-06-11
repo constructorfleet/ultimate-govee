@@ -1,9 +1,10 @@
+import { Logger } from '@nestjs/common';
 import { ClassConstructor } from 'class-transformer';
 import { BehaviorSubject } from 'rxjs';
-import { Logger } from '@nestjs/common';
 import { Optional } from '~ultimate-govee-common';
 import {
   DeviceExtensionProperties,
+  DeviceExternalResources,
   GoveeDevice,
   GoveeDeviceStatus,
   Product,
@@ -20,6 +21,16 @@ export class ProductModel {
   ) {}
 }
 
+type ClassToType<Clz extends object | Record<string, unknown>> = Partial<{
+  [K in keyof Clz]: Clz[K] extends object | Record<string, unknown>
+    ? ClassToType<Clz[K]>
+    : Clz[K];
+}>;
+
+export type DeviceImageResources = Partial<
+  ClassToType<DeviceExternalResources>
+>;
+
 export type DeviceConstructorArgs = {
   id: string;
   name: string;
@@ -33,8 +44,7 @@ export type DeviceConstructorArgs = {
   category: string;
   categoryGroup: string;
   version: Version;
-  deviceExt: DeviceExtensionProperties;
-
+  deviceExt: ClassToType<DeviceExtensionProperties>;
   // deviceUpdate: <T>(device: T) => Promise<void>;
 } & GoveeDeviceStatus;
 
@@ -53,7 +63,7 @@ export class DeviceModel {
   public readonly category: string;
   public readonly categoryGroup: string;
   public readonly status: BehaviorSubject<GoveeDeviceStatus>;
-  public readonly ext?: DeviceExtensionProperties;
+  public readonly images?: DeviceImageResources;
 
   constructor(args: DeviceConstructorArgs) {
     this.status = new BehaviorSubject(args as GoveeDeviceStatus);
@@ -69,7 +79,7 @@ export class DeviceModel {
     this.version = args.version;
     this.category = args.category;
     this.categoryGroup = args.categoryGroup;
-    this.ext = args.deviceExt;
+    this.images = args.deviceExt?.externalResources;
   }
 
   private product: Optional<ProductModel>;
