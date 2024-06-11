@@ -1,4 +1,5 @@
 import { DeviceId } from '~ultimate-govee-common';
+import { DeviceExtensionProperties } from './api/device/models/device-list.response';
 
 export type WiFiData = {
   name?: string;
@@ -149,4 +150,5 @@ export type GoveeDevice = {
   hardwareVersion: string;
   wifi?: WiFiData;
   blueTooth?: BluetoothData;
+  deviceExt?: DeviceExtensionProperties;
 } & GoveeDeviceStatus;

@@ -27,6 +27,12 @@ import stringify from 'json-stringify-safe';
 
 export const DefaultFactory: 'default' = 'default' as const;
 
+export type DeviceImage = {
+  sku?: string;
+  on?: string;
+  off?: string;
+};
+
 export type StateFactory<TDevice extends DeviceState<string, unknown>> = (
   device: DeviceModel,
 ) => TDevice;
@@ -164,6 +170,18 @@ export class Device<States extends DeviceStatesType = DeviceStatesType>
 
   get pactCode(): number {
     return this.device.pactCode;
+  }
+
+  get images(): Optional<DeviceImage> {
+    const resources = this.device.ext?.externalResources;
+    if (resources === undefined) {
+      return {};
+    }
+    return {
+      sku: resources.imageUrl,
+      on: resources.onImageUrl,
+      off: resources.offImageUrl,
+    };
   }
 
   get pactType(): number {
