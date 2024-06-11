@@ -32,36 +32,38 @@ export class IoTChannelService
     eventBus: EventBus,
   ) {
     super(eventBus, enabled);
-    combineLatest([this.onConfigChanged$, this.onEnabledChanged$]).subscribe(
-      async ([iotData, enabled]) =>
-        enabled ? await this.connect(iotData) : await this.disconnect(),
-    );
-    this.refreshDevice$
-      .pipe(
-        skipWhile(() => !this.isEnabled),
-        filter(
-          (event) =>
-            event.addresses.iotTopic !== undefined &&
-            typeof event.addresses.iotTopic !== 'string',
-        ),
-      )
-      .subscribe((event) =>
-        this.publishMessage(
-          uuidv4(),
-          event.addresses.iotTopic!,
-          {
-            topic: event.addresses.iotTopic,
-            msg: {
-              accountTopic: this.getConfig()?.topic,
-              cmd: 'status',
-              cmdVersion: 0,
-              transaction: `u_${Date.now()}`,
-              type: 0,
+    this.subscriptions.push(
+      combineLatest([this.onConfigChanged$, this.onEnabledChanged$]).subscribe(
+        async ([iotData, enabled]) =>
+          enabled ? await this.connect(iotData) : await this.disconnect(),
+      ),
+      this.refreshDevice$
+        .pipe(
+          skipWhile(() => !this.isEnabled),
+          filter(
+            (event) =>
+              event.addresses.iotTopic !== undefined &&
+              typeof event.addresses.iotTopic !== 'string',
+          ),
+        )
+        .subscribe((event) =>
+          this.publishMessage(
+            uuidv4(),
+            event.addresses.iotTopic!,
+            {
+              topic: event.addresses.iotTopic,
+              msg: {
+                accountTopic: this.getConfig()?.topic,
+                cmd: 'status',
+                cmdVersion: 0,
+                transaction: `u_${Date.now()}`,
+                type: 0,
+              },
             },
-          },
-          event.debug,
+            event.debug,
+          ),
         ),
-      );
+    );
   }
 
   async handle(
@@ -157,5 +159,6 @@ export class IoTChannelService
 
   async onModuleDestroy() {
     await this.disconnect();
+    super.closeSubscriptions();
   }
 }

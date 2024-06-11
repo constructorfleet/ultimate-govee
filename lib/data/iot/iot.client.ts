@@ -1,5 +1,5 @@
 import { CrtError, iot, mqtt } from 'aws-iot-device-sdk-v2';
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
 import { EOL } from 'os';
 import { ConfigType } from '@nestjs/config';
 import { Optional } from '~ultimate-govee-common';
@@ -8,7 +8,7 @@ import { IoTHandler } from './iot.handler';
 import { IoTData } from '../api';
 
 @Injectable()
-export class IoTClient {
+export class IoTClient implements OnModuleDestroy {
   private readonly logger: Logger = new Logger(IoTClient.name);
   private connection: Optional<mqtt.MqttClientConnection>;
   private connected = false;
@@ -146,10 +146,31 @@ export class IoTClient {
     }
   }
 
+  async unsubscribe() {
+    if (!this.connection || !this.connected) {
+      return;
+    }
+    await Promise.all(
+      this.subscriptions.map(
+        async (sub) => await this.connection?.unsubscribe(sub),
+      ),
+    );
+  }
+
+  async onModuleDestroy() {
+    await this.disconnect();
+  }
+
   async disconnect() {
     if (this.connection && this.connected) {
       this.connected = false;
+      await this.unsubscribe();
       await this.connection.disconnect();
+      await new Promise<void>((resolve) => {
+        if (this.connected === false) {
+          resolve();
+        }
+      });
       this.connection = undefined;
     }
   }

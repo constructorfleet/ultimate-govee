@@ -22,6 +22,13 @@ describe('TimerState', () => {
     pactCode: 4,
     version: new Version('1.0.0', '2.0.0'),
     state: {},
+    deviceExt: {
+      externalResources: {
+        imageUrl: 'https://example.com/H7567.png',
+        onImageUrl: 'https://example.com/H7567-on.png',
+        offImageUrl: 'https://example.com/H7567-off.png',
+      },
+    },
   });
   let state: TimerState;
 

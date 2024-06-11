@@ -30,7 +30,10 @@ export type TogglableChannels = Extract<
 >;
 
 export type ChannelToggle = {
-  [S in TogglableChannels as S['name']]: Pick<S, 'setConfig' | 'setEnabled'>;
+  [S in TogglableChannels as S['name']]: Pick<
+    S,
+    'setConfig' | 'setEnabled' | 'closeSubscriptions'
+  >;
 };
 
 export type ChannelState<TConfig extends object> = {

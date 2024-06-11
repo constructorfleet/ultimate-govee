@@ -48,6 +48,7 @@ describe('UltimateGoveeService', () => {
     });
 
     afterEach(async () => {
+      service.closeSubscriptions();
       await module.close();
     });
     describe('when passed a DeviceModel', () => {
@@ -70,6 +71,13 @@ describe('UltimateGoveeService', () => {
               online: true,
               isOn: true,
             },
+            deviceExt: {
+              externalResources: {
+                imageUrl: 'https://example.com/H4001.png',
+                onImageUrl: 'https://example.com/H4001-on.png',
+                offImageUrl: 'https://example.com/H4001-off.png',
+              },
+            },
           });
           const device = service.constructDevice(deviceModel);
           expect(device).toBeDefined();
@@ -77,6 +85,7 @@ describe('UltimateGoveeService', () => {
           expect(device).not.toBeInstanceOf(PurifierDevice);
           expect(device).not.toBeInstanceOf(HumidifierDevice);
           expect(device).not.toBeInstanceOf(AirQualityDevice);
+          device.closeSubscriptions();
         });
       });
       describe('that is a purifier device type', () => {
@@ -98,10 +107,18 @@ describe('UltimateGoveeService', () => {
               online: true,
               isOn: true,
             },
+            deviceExt: {
+              externalResources: {
+                imageUrl: 'https://example.com/H7121.png',
+                onImageUrl: 'https://example.com/H7121-on.png',
+                offImageUrl: 'https://example.com/H7121-off.png',
+              },
+            },
           });
           const device = service.constructDevice(deviceModel);
           expect(device).toBeDefined();
           expect(device).toBeInstanceOf(PurifierDevice);
+          device.closeSubscriptions();
         });
       });
     });
