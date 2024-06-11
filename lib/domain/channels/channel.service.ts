@@ -1,4 +1,4 @@
-import { Logger, OnModuleInit } from '@nestjs/common';
+import { Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { EventBus } from '@nestjs/cqrs';
 import {
   BehaviorSubject,
@@ -6,6 +6,7 @@ import {
   filter,
   map,
   share,
+  Subscription,
 } from 'rxjs';
 import { ChannelState } from './channel.types';
 
@@ -23,13 +24,14 @@ const areSameConfig = <TConfig extends object>(
 };
 
 export abstract class ChannelService<
-  TConfig extends object,
-  Togglable extends boolean = false,
-> implements OnModuleInit
+    TConfig extends object,
+    Togglable extends boolean = false,
+  >
+  implements OnModuleInit, OnModuleDestroy
 {
   abstract readonly togglable: Togglable;
   abstract readonly name: string;
-
+  protected readonly subscriptions: Subscription[] = [];
   protected logger: Logger = new Logger(this.constructor.name);
 
   private readonly state: ChannelState<TConfig> = {
@@ -61,6 +63,10 @@ export abstract class ChannelService<
     this.state.config.next(this.initialConfig);
   }
 
+  onModuleDestroy() {
+    this.closeSubscriptions();
+  }
+
   getConfig(): TConfig | undefined {
     return this.state.config.getValue();
   }
@@ -75,5 +81,9 @@ export abstract class ChannelService<
 
   get isEnabled(): boolean {
     return this.state.enabled.value === true;
+  }
+
+  closeSubscriptions() {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 }

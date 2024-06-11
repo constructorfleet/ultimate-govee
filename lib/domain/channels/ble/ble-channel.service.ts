@@ -1,21 +1,20 @@
-import { Injectable, OnModuleDestroy } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
-import { BleClient, DecodedDevice } from '~ultimate-govee-data';
-import { ChannelService } from '../channel.service';
-import { DeviceId, chunk } from '~ultimate-govee-common';
 import { Subject, combineLatest } from 'rxjs';
+import { DeviceId, chunk } from '~ultimate-govee-common';
+import { BleClient, DecodedDevice } from '~ultimate-govee-data';
 import { CommandExpiredEvent, DeviceStatusReceivedEvent } from '../../devices/cqrs';
 import { Device } from '../../devices/device';
-import { BleChannelConfig } from './ble-channel.types';
-import { InjectDeviceIds, InjectEnabled } from './ble-channel.providers';
 import { DeviceStatesType } from '../../devices/devices.types';
+import { ChannelService } from '../channel.service';
+import { InjectDeviceIds, InjectEnabled } from './ble-channel.providers';
+import { BleChannelConfig } from './ble-channel.types';
 
 @Injectable()
 @EventsHandler(CommandExpiredEvent)
 export class BleChannelService
   extends ChannelService<BleChannelConfig, true>
-  implements OnModuleDestroy,
-  IEventHandler<CommandExpiredEvent>
+  implements  IEventHandler<CommandExpiredEvent>
 {
   readonly togglable: true = true as const;
   readonly name: 'ble' = 'ble' as const;
@@ -30,27 +29,28 @@ export class BleChannelService
     @InjectDeviceIds deviceIds?: string[],
   ) {
     super(eventBus, enabled, { devices: deviceIds });
-    combineLatest([this.onConfigChanged$, this.onEnabledChanged$])
+    this.subscriptions.push(combineLatest([this.onConfigChanged$, this.onEnabledChanged$])
       .subscribe(() => {
         this.bleClient.enabled.next(this.isEnabled);
-      });
+      }),
 
-    bleClient.peripheralDecoded.subscribe((peripheral) => {
-      const device = this.devices[peripheral.address];
-      if (!device) {
-        return;
-      }
-      this.peripherals[peripheral.id] = peripheral;
-      const event = new DeviceStatusReceivedEvent({
-        id: device.id,
-        model: device.model,
-        pactCode: device.pactCode,
-        pactType: device.pactType,
-        cmd: 'status',
-        state: peripheral.state,
-      });
-      this.eventBus.publish(event);
-    });
+      bleClient.peripheralDecoded.subscribe((peripheral) => {
+        const device = this.devices[peripheral.address];
+        if (!device) {
+          return;
+        }
+        this.peripherals[peripheral.id] = peripheral;
+        const event = new DeviceStatusReceivedEvent({
+          id: device.id,
+          model: device.model,
+          pactCode: device.pactCode,
+          pactType: device.pactType,
+          cmd: 'status',
+          state: peripheral.state,
+        });
+        this.eventBus.publish(event);
+      })
+    );
     this.bleClient.enabled.next(this.isEnabled);
   }
 
@@ -103,9 +103,5 @@ export class BleChannelService
       commands,
       results$,
     });
-  }
-
-  onModuleDestroy() {
-    this.setEnabled(false);
   }
 }

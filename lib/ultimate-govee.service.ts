@@ -68,6 +68,13 @@ export class UltimateGoveeService implements OnModuleDestroy {
     this.subscriptions.map((sub) => sub.unsubscribe());
     this.commandBus.subject$.complete();
     this.eventBus.subject$.complete();
+    try {
+      this.channels.ble.closeSubscriptions();
+      this.channels.iot.closeSubscriptions();
+      this.channels.openapi.closeSubscriptions();
+    } catch (err) {
+      this.logger.warn('Unable to close susbscriptions to control channels.');
+    }
   }
 
   onModuleDestroy(): void {

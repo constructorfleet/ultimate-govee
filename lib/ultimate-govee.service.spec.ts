@@ -15,7 +15,6 @@ import { HumidifierDevice } from './domain/devices/impl/appliances/humidifier/hu
 import { AirQualityDevice } from './domain/devices/impl/home-improvement/air-quality/air-quality';
 import { Version } from './domain/devices/version.info';
 import { MODULE_OPTIONS_TOKEN } from './ultimate-govee.types';
-import { IoTClient } from './data/iot/iot.client';
 
 describe('UltimateGoveeService', () => {
   describe('constructDevice', () => {

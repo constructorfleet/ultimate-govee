@@ -166,6 +166,11 @@ export class IoTClient implements OnModuleDestroy {
       this.connected = false;
       await this.unsubscribe();
       await this.connection.disconnect();
+      await new Promise<void>((resolve) => {
+        if (this.connected === false) {
+          resolve();
+        }
+      });
       this.connection = undefined;
     }
   }
