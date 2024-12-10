@@ -65,6 +65,7 @@ export class UltimateGoveeService implements OnModuleDestroy {
   }
 
   closeSubscriptions() {
+    this.logger.log('Closing Subscriptions');
     this.subscriptions.map((sub) => sub.unsubscribe());
     this.commandBus.subject$.complete();
     this.eventBus.subject$.complete();

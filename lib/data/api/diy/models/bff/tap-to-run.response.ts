@@ -7,7 +7,7 @@ import { GoveeAPIResponse } from '../../../govee-api.models';
 
 export class ComponentsResponse {
   @Expose({ name: 'components' })
-  @Transform(({ value }) => {
+  @Transform(({ value }) =>
     (value ?? []).map((v) =>
       'environments' in v
         ? plainToInstance(EnvironmentComponent, v)
@@ -16,8 +16,8 @@ export class ComponentsResponse {
           : 'feasts' in v
             ? plainToInstance(FeastComponentResponse, v)
             : v,
-    );
-  })
+    ),
+  )
   components!: ComponentResponse[];
 }
 

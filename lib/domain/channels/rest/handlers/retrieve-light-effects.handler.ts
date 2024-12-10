@@ -28,7 +28,7 @@ export class RetrieveLightEffectsCommandHandler
       return;
     }
 
-    const [effects, diys] = await Promise.all([
+    const [effects, diys, oneClicks] = await Promise.all([
       this.api.getEffects(
         authData,
         command.device.model,
@@ -41,6 +41,7 @@ export class RetrieveLightEffectsCommandHandler
         command.device.goodsType,
         command.device.id,
       ),
+      this.diyApi.getOneClicks(authData),
     ]);
     this.eventBus.publish(
       new LightEffectsReceivedEvent(
