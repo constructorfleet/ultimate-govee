@@ -25,7 +25,7 @@ export const rebuildDiyOpCode = (
         asOpCode(163, index === lines.length - 1 ? 255 : index, ...line),
       ),
       asOpCode(OpType.COMMAND, ...(identifier ?? []), code % 256, code >> 8),
-      asOpCode(OpType.REPORT, ...([identifier?.at(0)] ?? []), 1),
+      asOpCode(OpType.REPORT, ...([identifier?.at(0)] || []), 1),
     ];
   };
 };
