@@ -44,7 +44,7 @@ export const bufferToHex = (buffer: Buffer): number[] =>
   hexStringToArray(uint8ToHex(new Uint8Array(buffer)));
 
 export const hexToBase64 = (codes: number[]): string =>
-  encode(Uint8Array.of(...codes));
+  encode(Uint8Array.of(...codes).buffer);
 
 export const total = (codes: number[], reverse: boolean = false) =>
   (reverse ? codes.reverse() : codes).reduce(
