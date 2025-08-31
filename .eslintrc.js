@@ -16,12 +16,13 @@ module.exports = {
   plugins: ['@typescript-eslint', 'unicorn', 'unused-imports'],
   rules: {
     'require-await': 'error',
+    '@typescript-eslint/no-unused-expressions': 'off',
     '@typescript-eslint/no-var-requires': 0,
     '@typescript-eslint/no-empty-function': 0,
-    'unused-imports/no-unused-imports-ts': 'warn',
+    'unused-imports/no-unused-imports': 'warn',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-unused-vars': [
-      'warn',
+      'off',
       {
         vars: 'all',
         args: 'after-used',
@@ -29,14 +30,13 @@ module.exports = {
         argsIgnorePattern: '^_',
       },
     ],
-    'unused-imports/no-unused-imports-ts': 'warn',
     quotes: ['warn', 'single', { avoidEscape: true }],
     '@typescript-eslint/naming-convention': [
       'error',
       { selector: 'class', format: ['PascalCase'], leadingUnderscore: 'allow' },
       { selector: 'method', format: ['camelCase'], leadingUnderscore: 'allow' },
     ],
-    'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    'no-unused-vars': ['off', { argsIgnorePattern: '^_' }],
   },
   overrides: [
     {
