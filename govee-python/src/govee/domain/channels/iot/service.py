@@ -57,6 +57,26 @@ class IotService:
         if topic not in self.subscriptions:
             self.subscriptions.append(topic)
 
+    def _topic_matches_subscription(self, topic: str, subscription: str) -> bool:
+        """Very small topic matching helper.
+
+        Supports exact match and a single '#' suffix wildcard meaning "prefix match".
+        For example:
+          - 'govee/device/42' matches 'govee/device/42'
+          - 'govee/device/42' matches 'govee/device/#' (prefix match)
+
+        This is intentionally minimal to satisfy unit tests; the real
+        implementation would implement full MQTT topic wildcard semantics.
+        """
+        if subscription.endswith('/#'):
+            prefix = subscription[:-2]
+            return topic.startswith(prefix)
+        if subscription.endswith('#') and subscription != '#':
+            # allow 'govee/device/#' or 'govee/#' styles
+            prefix = subscription[:-1]
+            return topic.startswith(prefix)
+        return topic == subscription
+
     def send(self, topic: str, payload: object) -> None:
         """Record a published message.
 
@@ -80,5 +100,12 @@ class IotService:
         Tests can call this to emulate an MQTT message arriving from the broker.
         If no callback is registered the call is a no-op.
         """
-        if self._callback is not None:
-            self._callback(msg)
+        if self._callback is None:
+            return
+
+        # only invoke the callback if the message topic matches at least one
+        # subscription. This mirrors how a broker would route messages.
+        for sub in self.subscriptions:
+            if self._topic_matches_subscription(msg.topic, sub):
+                self._callback(msg)
+                return
