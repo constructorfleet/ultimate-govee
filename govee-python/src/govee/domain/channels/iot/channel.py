@@ -52,3 +52,11 @@ class IoTChannel:
                 return self.iot.send_with_retry(topic, serialized, qos=qos, max_retries=(max_retries or 3), retained=retained)
         # otherwise forward retained and qos to the IotService.send stub
         return self.iot.send(topic, serialized, retained=retained, qos=qos)
+
+    def close_subscriptions(self) -> None:
+        """Unsubscribe the channel's default subscriptions and leave the IoT service clean."""
+        # for our simple adapter we remove any subscriptions that start with the
+        # channel's prefix 'govee/device'
+        to_remove = [s for s in list(self.iot.subscriptions) if s.startswith('govee/device')]
+        for s in to_remove:
+            self.iot.unsubscribe(s)
