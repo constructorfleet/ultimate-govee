@@ -321,6 +321,16 @@ class IotService:
             # add metadata
             msg.send_attempts = 1
             msg.max_retries = max_retries
+            if backoff_intervals is not None:
+                msg.backoff_intervals = list(backoff_intervals)
+            else:
+                msg.backoff_intervals = []
+            # maintain a simple scheduled retries list: (msg, remaining_intervals)
+            if not hasattr(self, '_scheduled_retries'):
+                self._scheduled_retries = []
+            if msg.backoff_intervals:
+                # schedule first retry after the first interval (for tests we don't wait)
+                self._scheduled_retries.append((msg, list(msg.backoff_intervals)))
             self._inflight.append(msg)
         return msg
 
@@ -392,3 +402,35 @@ class IotService:
             "dropped_count": self.dropped_count,
             "inflight_count": self.inflight_count,
         }
+
+    def run_scheduled_retries(self, steps: int = 1) -> None:
+        """Run scheduled retry steps for testing. Each step pops one level
+        from each scheduled item's intervals and triggers retry behavior.
+        """
+        if not hasattr(self, '_scheduled_retries'):
+            return
+        for _ in range(steps):
+            new_sched = []
+            for msg, intervals in list(self._scheduled_retries):
+                if not intervals:
+                    # no intervals left; treat as retry attempt now
+                    msg.send_attempts = getattr(msg, 'send_attempts', 0) + 1
+                    if msg.send_attempts > getattr(msg, 'max_retries', 3):
+                        # drop and call drop callbacks
+                        if hasattr(self, '_drop_callbacks'):
+                            for cb in list(self._drop_callbacks):
+                                try:
+                                    cb(msg)
+                                except Exception:
+                                    pass
+                        # also remove from inflight if present
+                        if hasattr(self, '_inflight') and msg in self._inflight:
+                            self._inflight.remove(msg)
+                    else:
+                        new_sched.append((msg, []))
+                else:
+                    # consume one interval and reschedule
+                    intervals.pop(0)
+                    new_sched.append((msg, intervals))
+            self._scheduled_retries = new_sched
+
