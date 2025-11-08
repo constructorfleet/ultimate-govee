@@ -435,3 +435,9 @@ class IotService:
                         new_sched.append((msg, intervals))
             self._scheduled_retries = new_sched
 
+
+    def metrics_text(self) -> str:
+        """Return metrics in a simple Prometheus-style text format."""
+        m = self.metrics()
+        lines = [f"govee_iot_queued_count {m['queued_count']}", f"govee_iot_dropped_count {m['dropped_count']}", f"govee_iot_inflight_count {m['inflight_count']}"]
+        return "\n".join(lines) + "\n"
