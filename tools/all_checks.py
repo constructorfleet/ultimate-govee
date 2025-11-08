@@ -11,7 +11,7 @@ import shutil
 import subprocess
 import sys
 
-ROOT = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 VENV_PY = os.path.join(ROOT, "govee-python", ".venv", "bin", "python")
 BLACK = os.path.join(ROOT, "govee-python", ".venv", "bin", "black")
 ISORT = os.path.join(ROOT, "govee-python", ".venv", "bin", "isort")
