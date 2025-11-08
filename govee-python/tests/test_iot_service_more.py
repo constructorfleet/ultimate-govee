@@ -153,3 +153,36 @@ def test_multiple_callbacks_and_unregister():
 
     assert called_a.get('topic') == "govee/device/7"
     assert called_b == {}
+
+
+def test_mqtt_wildcard_plus_and_hash():
+    svc = IotService()
+
+    called = {}
+
+    def cb(msg: IotMessage) -> None:
+        called['topic'] = msg.topic
+
+    svc.connect(callback=cb)
+
+    # '+' should match a single topic level
+    svc.subscribe('govee/+/42')
+    svc.simulate_incoming(IotMessage(topic='govee/device/42', payload={}))
+    assert called.get('topic') == 'govee/device/42'
+
+    called.clear()
+    # '+' does not match multiple levels
+    svc.simulate_incoming(IotMessage(topic='govee/device/sub/42', payload={}))
+    assert called == {}
+
+    called.clear()
+    # '#' matches any number of trailing levels
+    svc.subscribe('home/#')
+    svc.simulate_incoming(IotMessage(topic='home/room1/light/state', payload={}))
+    assert called.get('topic') == 'home/room1/light/state'
+
+    called.clear()
+    # single '#' as sole subscription matches any topic
+    svc.subscribe('#')
+    svc.simulate_incoming(IotMessage(topic='random/topic', payload={}))
+    assert called.get('topic') == 'random/topic'
