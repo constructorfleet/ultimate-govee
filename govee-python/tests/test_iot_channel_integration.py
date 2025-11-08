@@ -129,3 +129,17 @@ def test_channel_close_subscriptions_ownership():
 
     # the other subscription should remain
     assert 'govee/device/other' in iot.subscriptions
+
+
+def test_channel_owned_subscriptions_property():
+    iot = IotService()
+    devices = DevicesService()
+    channel = IoTChannel(iot, devices)
+
+    channel.connect()
+    # owned_subscriptions should include the prefix subscription
+    assert 'govee/device/#' in channel.owned_subscriptions
+
+    channel.close_subscriptions()
+    # after closing, owned_subscriptions should be empty
+    assert channel.owned_subscriptions == []
