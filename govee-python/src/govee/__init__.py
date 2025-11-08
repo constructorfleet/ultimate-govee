@@ -4,15 +4,28 @@ This package provides a tiny public surface so tests and tooling can import
 the package during early development.
 """
 
-__all__ = ["__version__", "hello"]
+"""govee package public surface.
+
+Expose lightweight utilities used by the early translated modules and tests.
+"""
+
+from .types import Credentials  # re-export common types for tests
+from .utils import first, partition
+from .errors import GoveeError
+from .bitflags import create_bitflags_enum
+from .fixed_length_stack import FixedLengthStack
+
+__all__ = [
+    "Credentials",
+    "first",
+    "partition",
+    "GoveeError",
+    "create_bitflags_enum",
+    "FixedLengthStack",
+]
 
 __version__ = "0.1.0"
 
+
 def hello(name: str = "world") -> str:
-    """Return a friendly greeting.
-
-    Kept intentionally trivial so early unit tests can run without
-    depending on other modules.
-    """
     return f"hello {name}"
-
