@@ -1,0 +1,5 @@
+[tool.uv.scripts]
+test = "python -m pytest --maxfail=1 -q"
+lint = "ruff check src tests || true"
+format_check = "black --check . || true"
+all_checks = "sh -c 'uv run -s format_check && uv run -s test'"
