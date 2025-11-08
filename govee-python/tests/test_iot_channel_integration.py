@@ -59,3 +59,22 @@ def test_channel_publish_calls_iot_send():
     assert isinstance(last.payload, dict) or isinstance(last.payload, str)
     # publish_message should return the IoT message
     assert sent.topic == last.topic
+
+
+def test_channel_publish_stringifies_payload():
+    import json
+    iot = IotService()
+    devices = DevicesService()
+    channel = IoTChannel(iot, devices)
+
+    channel.connect()
+
+    payload = {'topic': 'govee/device/command', 'msg': {'cmd': 'toggle'}}
+    sent = channel.publish_message('cmd-2', 'govee/device/command', payload, debug=False)
+
+    last = iot.published[-1]
+    assert isinstance(last.payload, str)
+    # ensure it's valid JSON and decodes back to original structure
+    decoded = json.loads(last.payload)
+    assert decoded == payload
+    assert sent.topic == last.topic
