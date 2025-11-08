@@ -102,7 +102,7 @@ class IotService:
         # all subscription levels consumed; topic must not have extra levels
         return i == len(topic_levels)
 
-    def send(self, topic: str, payload: object) -> None:
+    def send(self, topic: str, payload: object, retained: bool = False) -> IotMessage:
         """Record a published message.
 
         The payload in the TS implementation is a JSON string. To keep tests
@@ -113,8 +113,11 @@ class IotService:
         else:
             # keep the payload as a python object for easier assertions in tests
             msg_payload = payload
-        msg = IotMessage(topic=topic, payload=msg_payload)
+        msg = IotMessage(topic=topic, payload=msg_payload, retained=retained)
         self.published.append(msg)
+        if retained:
+            # store a copy of the retained message
+            self._retained[topic] = msg
         return msg
 
     # backward compatible alias used by some tests
