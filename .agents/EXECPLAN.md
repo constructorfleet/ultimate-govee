@@ -123,7 +123,8 @@ A. Add missing lint/check script binding in uv and ensure `uv run -s all_checks`
 B. Implement delta/partial observable primitives used by device states (small task). (done)
 C. Translate LAN receiver socket and receiver.service with unit tests using
    persisted/fixtures (UDP packet parsing). This enables LAN discovery tests. (done)
-D. Translate BLE decoder service and tests.
+D. Translate BLE decoder service and tests. (in progress)
+
 E. Progressively translate IoT and OpenAPI clients and relevant domain handlers.
 
 Committing convention
