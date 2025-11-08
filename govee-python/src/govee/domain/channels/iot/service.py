@@ -113,6 +113,16 @@ class IotService:
         else:
             # keep the payload as a python object for easier assertions in tests
             msg_payload = payload
+        # If retained is True and payload is None, MQTT semantics say to clear
+        # any retained message for the topic.
+        if retained and msg_payload is None:
+            if topic in self._retained:
+                del self._retained[topic]
+            # still record the publish for tests, but do not create a retained entry
+            msg = IotMessage(topic=topic, payload=msg_payload, retained=True)
+            self.published.append(msg)
+            return msg
+
         msg = IotMessage(topic=topic, payload=msg_payload, retained=retained)
         self.published.append(msg)
         if retained:
