@@ -20,5 +20,8 @@ class IotMessage:
     topic: str
     payload: Any
     retained: Optional[bool] = False
+    # optional QoS and timestamp metadata for tests
+    qos: Optional[int] = None
+    timestamp: Optional[float] = None
 
 
