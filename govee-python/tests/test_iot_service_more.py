@@ -221,7 +221,7 @@ def test_clearing_retained_message_with_empty_payload():
     svc.connect(callback=cb)
     # initial subscribe should get retained message
     # if it's present remove it then clear called and clear retained
-    svc.subscriptions.remove('govee/device/5')
+    svc.unsubscribe('govee/device/5')
     svc.subscribe('govee/device/5')
     assert called.get('topic') == 'govee/device/5'
 
@@ -229,7 +229,7 @@ def test_clearing_retained_message_with_empty_payload():
     svc.send('govee/device/5', None, retained=True)
 
     # remove subscription so subscribe logic will attempt to deliver retained messages again
-    svc.subscriptions.remove('govee/device/5')
+    svc.unsubscribe('govee/device/5')
     called.clear()
     svc.subscribe('govee/device/5')
     # no retained message should be delivered after clearing
