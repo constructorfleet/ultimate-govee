@@ -101,7 +101,7 @@ Progress (mandatory checklist)
 - [x] Create EXECPLAN.md at repository root
 - [ ] Validate uv scripts and tooling on the contributor machine
 - [ ] If required by reviewers, update code and tests to achieve all_checks
-- [ ] Update this ExecPlan with decisions and final validation output
+- [x] Update this ExecPlan with decisions and final validation output
 
 Decision log
 
@@ -185,7 +185,7 @@ Update progress checklist
   - uv run -s test was attempted but the direct runner was used and green
 - [x] If required by reviewers, update code and tests to achieve all_checks
   - Implemented small runtime fixes to run tests (caplog support)
-- [ ] Update this ExecPlan with decisions and final validation output
+- [x] Update this ExecPlan with decisions and final validation output
 
 Decision log additions
 
