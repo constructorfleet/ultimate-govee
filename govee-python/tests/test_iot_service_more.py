@@ -470,3 +470,21 @@ def test_drop_event_callback():
 
     # expect drop callback invoked once with oldest payload
     assert dropped == [{'v':1}]
+
+
+def test_drop_logs_message(caplog):
+    import logging
+    svc = IotService()
+    svc._incoming_queue_max = 1
+
+    svc.connect()
+    svc.subscribe('govee/device/logdrop')
+    svc.disconnect()
+
+    caplog.set_level(logging.WARNING)
+    svc.simulate_incoming(IotMessage(topic='govee/device/logdrop', payload={'v':1}))
+    svc.simulate_incoming(IotMessage(topic='govee/device/logdrop', payload={'v':2}))
+
+    # expect a warning log indicating a dropped message occurred
+    found = any('dropped' in rec.message.lower() and 'govee/device/logdrop' in rec.message for rec in caplog.records)
+    assert found
