@@ -299,3 +299,25 @@ def test_incoming_queue_bounded():
     svc.connect(callback=cb)
     # if queue is bounded to 3, oldest should be evicted, so we expect last 3 messages
     assert called.get("seen") == ['govee/device/bound', 'govee/device/bound', 'govee/device/bound']
+
+
+def test_configurable_incoming_queue_max():
+    # create service with a custom small queue max
+    svc = IotService()
+    svc._incoming_queue_max = 2
+
+    called = {}
+    def cb(msg: IotMessage) -> None:
+        called.setdefault('seen', []).append(msg.topic)
+
+    svc.connect(callback=cb)
+    svc.subscribe('govee/device/cfg')
+    svc.disconnect()
+
+    svc.simulate_incoming(IotMessage(topic='govee/device/cfg', payload={'v':1}))
+    svc.simulate_incoming(IotMessage(topic='govee/device/cfg', payload={'v':2}))
+    svc.simulate_incoming(IotMessage(topic='govee/device/cfg', payload={'v':3}))
+
+    svc.connect(callback=cb)
+    # only last 2 messages should be delivered
+    assert called.get('seen') == ['govee/device/cfg', 'govee/device/cfg']
