@@ -249,3 +249,31 @@ def test_publish_records_qos_and_timestamp():
     # should be recorded in published list as well
     assert svc.published[-1].topic == 'govee/device/9'
     assert svc.published[-1].qos == 1
+
+
+def test_queue_messages_while_disconnected():
+    svc = IotService()
+
+    called = {}
+
+    def cb(msg: IotMessage) -> None:
+        called.setdefault('seen', []).append(msg.topic)
+
+    # connect and subscribe
+    svc.connect(callback=cb)
+    svc.subscribe('govee/device/queued')
+
+    # disconnect: messages sent while disconnected should be queued
+    svc.disconnect()
+    svc.simulate_incoming(IotMessage(topic='govee/device/queued', payload={'state': 'x'}))
+    svc.simulate_incoming(IotMessage(topic='govee/device/queued', payload={'state': 'y'}))
+
+    # nothing yet
+    assert called.get('seen') is None
+
+    # reconnect (by calling connect with no-op callback registration)
+    svc.connect(callback=cb)
+
+    # queued messages should be delivered upon reconnect
+    assert called.get('seen') is not None
+    assert called['seen'] == ['govee/device/queued', 'govee/device/queued']
