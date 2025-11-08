@@ -25,7 +25,7 @@ class IotService:
       - publish(msg): compatibility alias for send when given an IotMessage.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, incoming_queue_max: int = 3) -> None:
         self.published: List[IotMessage] = []
         self.subscriptions: List[str] = []
         # retained messages storage: topic -> IotMessage
@@ -33,7 +33,7 @@ class IotService:
         # incoming message queue used while disconnected: list of IotMessage
         # bounded queue with default max size to avoid unbounded memory use.
         self._incoming_queue: List[IotMessage] = []
-        self._incoming_queue_max: int = 3
+        self._incoming_queue_max: int = incoming_queue_max
         self.connected: bool = False
         # store the last iot_data passed to connect for higher-level tests
         self.iot_data: Optional[object] = None
