@@ -13,6 +13,9 @@ class IoTChannel:
         self.iot = iot
         self.devices = devices
         self._connected = False
+        # track subscriptions created by this channel so close_subscriptions
+        # can remove only them and not others in the service.
+        self._owned_subscriptions: List[str] = []
 
     def connect(self, iot_data: Optional[object] = None) -> None:
         # register a callback that will be invoked on incoming messages
@@ -29,11 +32,15 @@ class IoTChannel:
         # to the registered callback. Tests use 'govee/device/<id>' topics, so
         # a simple prefix wildcard is sufficient.
         self.iot.subscribe('govee/device/#')
+        self._owned_subscriptions.append('govee/device/#')
         self._connected = True
 
     def disconnect(self) -> None:
         self.iot.disconnect()
         self._connected = False
+        # track subscriptions created by this channel so close_subscriptions
+        # can remove only them and not others in the service.
+        self._owned_subscriptions: List[str] = []
 
     def publish_message(self, command_id: str, topic: str, payload: object, debug: bool = False, retained: bool = False, qos: Optional[int] = None, max_retries: Optional[int] = None):
         # mirror IoTChannelService.publishMessage behavior in minimal form
@@ -55,8 +62,7 @@ class IoTChannel:
 
     def close_subscriptions(self) -> None:
         """Unsubscribe the channel's default subscriptions and leave the IoT service clean."""
-        # for our simple adapter we remove any subscriptions that start with the
-        # channel's prefix 'govee/device'
-        to_remove = [s for s in list(self.iot.subscriptions) if s.startswith('govee/device')]
-        for s in to_remove:
-            self.iot.unsubscribe(s)
+        for s in list(self._owned_subscriptions):
+            if s in self.iot.subscriptions:
+                self.iot.unsubscribe(s)
+            self._owned_subscriptions.remove(s)
