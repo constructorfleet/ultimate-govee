@@ -119,3 +119,37 @@ def test_topic_wildcard_hash_suffix_matches_prefix():
 
     svc.simulate_incoming(IotMessage(topic="govee/device/42", payload={}))
     assert called.get('topic') == "govee/device/42"
+
+
+def test_multiple_callbacks_and_unregister():
+    svc = IotService()
+
+    called_a = {}
+    called_b = {}
+
+    def cb_a(msg: IotMessage) -> None:
+        called_a['topic'] = msg.topic
+
+    def cb_b(msg: IotMessage) -> None:
+        called_b['topic'] = msg.topic
+
+    # connect with no callback, register two callbacks
+    svc.connect()
+    svc.register_callback(cb_a)
+    svc.register_callback(cb_b)
+
+    svc.subscribe("govee/device/7")
+    svc.simulate_incoming(IotMessage(topic="govee/device/7", payload={}))
+
+    # both callbacks should have been invoked
+    assert called_a.get('topic') == "govee/device/7"
+    assert called_b.get('topic') == "govee/device/7"
+
+    # unregister one callback then simulate again
+    svc.unregister_callback(cb_b)
+    called_a.clear()
+    called_b.clear()
+    svc.simulate_incoming(IotMessage(topic="govee/device/7", payload={}))
+
+    assert called_a.get('topic') == "govee/device/7"
+    assert called_b == {}
