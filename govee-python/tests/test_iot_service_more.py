@@ -83,3 +83,39 @@ def test_connect_stores_iot_data():
     svc.disconnect()
     # disconnect should clear stored iot_data
     assert getattr(svc, "iot_data", None) is None
+
+
+def test_simulate_only_calls_callback_if_subscribed():
+    svc = IotService()
+
+    called = {}
+
+    def cb(msg: IotMessage) -> None:
+        called['topic'] = msg.topic
+
+    svc.connect(callback=cb)
+
+    # not subscribed yet: simulate should be a no-op
+    svc.simulate_incoming(IotMessage(topic="govee/device/100", payload={}))
+    assert called == {}
+
+    # subscribe then simulate should invoke
+    svc.subscribe("govee/device/100")
+    svc.simulate_incoming(IotMessage(topic="govee/device/100", payload={}))
+    assert called.get('topic') == "govee/device/100"
+
+
+def test_topic_wildcard_hash_suffix_matches_prefix():
+    svc = IotService()
+
+    called = {}
+
+    def cb(msg: IotMessage) -> None:
+        called['topic'] = msg.topic
+
+    svc.connect(callback=cb)
+    # subscribe using a simple '#' suffix wildcard meaning prefix match
+    svc.subscribe("govee/device/#")
+
+    svc.simulate_incoming(IotMessage(topic="govee/device/42", payload={}))
+    assert called.get('topic') == "govee/device/42"
