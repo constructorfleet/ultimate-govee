@@ -26,6 +26,27 @@ class DeltaSubject(Subject):
         self._last: Dict[Any, Any] = {}
 
     def next_delta(self, delta: MapDelta) -> None:
-        # In real implementation we'd merge and compute; tests only need shape
+        """Accept a MapDelta and forward it to subscribers.
+
+        Additionally update an internal map of the last seen values so
+        consumers can query the current merged map via `last()`.
+        """
+        # merge the incoming delta into our local 'last' map
+        # note: shallow copy is sufficient for tests
+        merged = dict(self._last)
+        # apply deletions
+        for k in delta.deleted.keys():
+            if k in merged:
+                del merged[k]
+        # apply additions and modifications
+        for k, v in {**delta.added, **delta.modified}.items():
+            merged[k] = v
+
+        self._last = merged
+
         for s in list(self._subs):
             s(delta)
+
+    def last(self) -> Dict[Any, Any]:
+        """Return the current merged map of values."""
+        return dict(self._last)
