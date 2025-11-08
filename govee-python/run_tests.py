@@ -78,7 +78,14 @@ for fn in sorted(os.listdir(TESTS)):
             continue
         num += 1
         try:
-            obj()
+            # If the test function requests a `caplog` parameter, provide the
+            # lightweight _CapLog fixture so tests that were written for
+            # pytest's caplog can still assert on logged messages.
+            sig = inspect.signature(obj)
+            if 'caplog' in sig.parameters:
+                obj(_CapLog())
+            else:
+                obj()
         except AssertionError:
             failures.append((modname, name, traceback.format_exc()))
         except Exception:
