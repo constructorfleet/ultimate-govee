@@ -312,8 +312,8 @@ class IotService:
 
 
     # --- simple inflight retry simulation for QoS tests ---
-    def send_with_retry(self, topic: str, payload: object, qos: int = 0, max_retries: int = 3) -> IotMessage:
-        msg = self.send(topic, payload, qos=qos)
+    def send_with_retry(self, topic: str, payload: object, qos: int = 0, max_retries: int = 3, retained: bool = False) -> IotMessage:
+        msg = self.send(topic, payload, retained=retained, qos=qos)
         # only track inflight for qos > 0
         if qos and qos > 0:
             if not hasattr(self, '_inflight'):
