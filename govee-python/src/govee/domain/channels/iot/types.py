@@ -23,5 +23,7 @@ class IotMessage:
     # optional QoS and timestamp metadata for tests
     qos: Optional[int] = None
     timestamp: Optional[float] = None
+    # QoS delivery acknowledgment flag (used by tests for qos=1)
+    acked: Optional[bool] = False
 
 
