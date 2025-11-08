@@ -1,4 +1,4 @@
-from .govee_device import GoveeDevice, GoveeCommandData  # re-export for convenience
+from .govee_device import GoveeDevice  # re-export for convenience
 
-__all__ = ["GoveeDevice", "GoveeCommandData"]
+__all__ = ["GoveeDevice"]
 
