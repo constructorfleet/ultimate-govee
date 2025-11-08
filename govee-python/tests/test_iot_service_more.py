@@ -450,3 +450,23 @@ def test_queued_count_property():
     svc.connect(callback=cb)
     assert seen == [{"v":1}, {"v":2}]
     assert svc.queued_count == 0
+
+
+def test_drop_event_callback():
+    svc = IotService()
+    svc._incoming_queue_max = 1
+
+    dropped = []
+    def on_drop(msg: IotMessage) -> None:
+        dropped.append(msg.payload)
+
+    svc.register_drop_callback(on_drop)
+    svc.connect()
+    svc.subscribe('govee/device/drop_event')
+    svc.disconnect()
+
+    svc.simulate_incoming(IotMessage(topic='govee/device/drop_event', payload={'v':1}))
+    svc.simulate_incoming(IotMessage(topic='govee/device/drop_event', payload={'v':2}))
+
+    # expect drop callback invoked once with oldest payload
+    assert dropped == [{'v':1}]
