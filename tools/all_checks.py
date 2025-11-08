@@ -36,7 +36,22 @@ def main():
     else:
         print("format/lint tools not available in govee-python/.venv; skipping format_check")
 
-    # Run lightweight test runner
+    # Run tests: prefer pytest in the venv so we can run coverage checks. If
+    # pytest isn't available, fall back to the lightweight run_tests.py
+    # runner to preserve functionality in minimal environments.
+    pytest_bin = os.path.join(ROOT, "govee-python", ".venv", "bin", "pytest")
+    if os.path.isfile(pytest_bin) and os.access(pytest_bin, os.X_OK):
+        print("running pytest with coverage checks...")
+        # enforce a coverage gate; adjust threshold here if needed
+        try:
+            run([pytest_bin, "--maxfail=1", "--disable-warnings", "-q", "--cov=govee", "--cov-fail-under=90"], env=env)
+        except subprocess.CalledProcessError:
+            # pytest returned non-zero (failures or coverage); re-raise to
+            # propagate the failure to CI
+            raise
+        return
+
+    # fallback: run the lightweight test runner
     if os.path.isfile(VENV_PY) and os.access(VENV_PY, os.X_OK):
         run([VENV_PY, os.path.join(ROOT, "govee-python", "run_tests.py")], env=env)
     else:
