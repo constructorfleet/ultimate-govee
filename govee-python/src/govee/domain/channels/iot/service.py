@@ -153,6 +153,8 @@ class IotService:
         import time
         msg.qos = qos
         msg.timestamp = time.time()
+        # ack flag initial state for qos 1
+        msg.acked = False
         self.published.append(msg)
         if retained:
             # store a copy of the retained message
@@ -273,3 +275,7 @@ class IotService:
     def unregister_drop_callback(self, cb: Callable[[IotMessage], None]) -> None:
         if hasattr(self, '_drop_callbacks') and cb in self._drop_callbacks:
             self._drop_callbacks.remove(cb)
+
+    def acknowledge(self, msg: IotMessage) -> None:
+        """Simulate acknowledging a message (QoS 1 semantics in tests)."""
+        msg.acked = True
