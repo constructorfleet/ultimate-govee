@@ -488,3 +488,15 @@ def test_drop_logs_message(caplog):
     # expect a warning log indicating a dropped message occurred
     found = any('dropped' in rec.message.lower() and 'govee/device/logdrop' in rec.message for rec in caplog.records)
     assert found
+
+
+def test_qos1_ack_flow():
+    svc = IotService()
+    # send a qos=1 message
+    msg = svc.send('govee/device/qos1', {'cmd': 'ping'}, qos=1)
+    # acked should default to False
+    assert getattr(msg, 'acked', False) is False
+
+    # calling acknowledge should set acked True
+    svc.acknowledge(msg)
+    assert getattr(msg, 'acked', False) is True
