@@ -43,5 +43,9 @@ __all__ = [
 ]
 
 # Ensure subpackages like govee.data can be imported as packages by tests
-from . import data  # type: ignore  # re-export package for convenience
+def _export_package_data():
+    from . import data  # type: ignore  # re-export package for convenience
+    return data
+
+_data = _export_package_data()
 __all__.append("data")
