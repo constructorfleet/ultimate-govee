@@ -68,7 +68,10 @@ def parse_lan_packet(raw: bytes) -> Dict[str, Any]:
                 if end != -1:
                     inner = payload_text[qstart + 1:end + 1]
                     # replace the inner JSON with a JSON-encoded string
-                    fixed = payload_text[:qstart + 1] + json.dumps(inner) + payload_text[end + 1:]
+                    # replace the entire quoted value (from the opening
+                    # quote at qstart through the closing quote at end+1)
+                    # with a properly JSON-encoded string value.
+                    fixed = payload_text[:qstart] + json.dumps(inner) + payload_text[end + 2:]
                     payload = json.loads(fixed)
                     # decode nested data if it's a string
                     if 'data' in payload and isinstance(payload['data'], str):
