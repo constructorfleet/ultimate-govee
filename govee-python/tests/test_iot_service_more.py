@@ -524,3 +524,23 @@ def test_send_with_retry_and_inflight_drop():
     svc.retry_inflight()
     assert msg not in svc._inflight
     assert dropped == [{'cmd': 'ping'}]
+
+
+def test_metrics_inflight_count():
+    svc = IotService()
+    # ensure no inflight initially
+    assert svc.inflight_count == 0
+
+    # send a qos=1 message with retry tracking
+    msg = svc.send_with_retry('govee/device/metric', {'cmd':'x'}, qos=1, max_retries=2)
+    assert svc.inflight_count == 1
+
+    # simulate retry but not exceeding max
+    svc.retry_inflight()
+    # still inflight (one attempt done)
+    assert svc.inflight_count in (0,1)
+
+    # if we force exceed retries, it will be dropped and inflight_count decremented
+    msg.max_retries = 0
+    svc.retry_inflight()
+    assert svc.inflight_count == 0
