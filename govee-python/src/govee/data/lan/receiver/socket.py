@@ -10,7 +10,7 @@ import asyncio
 from typing import Callable, Optional, Any, Dict
 import asyncio
 
-from ...common.observables import ForwardBehaviorSubject, Subject
+from govee.common.observables import ForwardBehaviorSubject, Subject
 from .types import ReceiverState, MessageEvent
 
 
