@@ -38,3 +38,24 @@ def test_retained_message_via_channel_updates_device():
     assert state is not None
     assert state.power is False
     assert state.brightness == 10
+
+
+def test_channel_publish_calls_iot_send():
+    iot = IotService()
+    devices = DevicesService()
+    channel = IoTChannel(iot, devices)
+
+    channel.connect()
+
+    payload = {'topic': 'govee/device/command', 'msg': {'cmd': 'toggle'}}
+    # publish a message via the channel
+    sent = channel.publish_message('cmd-1', 'govee/device/command', payload, debug=True)
+
+    # ensure the IoT service recorded the sent message
+    assert len(iot.published) >= 1
+    last = iot.published[-1]
+    # payload recorded as dict/object and topic matches
+    assert last.topic == 'govee/device/command'
+    assert isinstance(last.payload, dict) or isinstance(last.payload, str)
+    # publish_message should return the IoT message
+    assert sent.topic == last.topic
