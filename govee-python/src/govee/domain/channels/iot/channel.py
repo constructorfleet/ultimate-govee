@@ -35,15 +35,15 @@ class IoTChannel:
         self.iot.disconnect()
         self._connected = False
 
-    def publish_message(self, command_id: str, topic: str, payload: object, debug: bool = False):
+    def publish_message(self, command_id: str, topic: str, payload: object, debug: bool = False, retained: bool = False, qos: Optional[int] = None):
         # mirror IoTChannelService.publishMessage behavior in minimal form
         if debug:
             pass
-        # the IotService.send in our stub returns the created IotMessage
         import json
 
         if not isinstance(payload, str):
             serialized = json.dumps(payload)
         else:
             serialized = payload
-        return self.iot.send(topic, serialized)
+        # forward retained and qos to the IotService.send stub
+        return self.iot.send(topic, serialized, retained=retained, qos=qos)
