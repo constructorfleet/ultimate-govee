@@ -78,3 +78,21 @@ def test_channel_publish_stringifies_payload():
     decoded = json.loads(last.payload)
     assert decoded == payload
     assert sent.topic == last.topic
+
+
+def test_channel_publish_propagates_retained_and_qos():
+    iot = IotService()
+    devices = DevicesService()
+    channel = IoTChannel(iot, devices)
+
+    channel.connect()
+
+    payload = {'topic': 'govee/device/command', 'msg': {'cmd': 'set'}}
+    sent = channel.publish_message('cmd-3', 'govee/device/command', payload, debug=False, retained=True, qos=1)
+
+    last = iot.published[-1]
+    assert last.topic == 'govee/device/command'
+    # retained and qos should be propagated to the recorded IotMessage
+    assert last.retained is True
+    assert last.qos == 1
+    assert sent.topic == last.topic
