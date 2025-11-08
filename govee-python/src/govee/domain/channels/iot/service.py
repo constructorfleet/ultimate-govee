@@ -279,3 +279,41 @@ class IotService:
     def acknowledge(self, msg: IotMessage) -> None:
         """Simulate acknowledging a message (QoS 1 semantics in tests)."""
         msg.acked = True
+
+
+    # --- simple inflight retry simulation for QoS tests ---
+    def send_with_retry(self, topic: str, payload: object, qos: int = 0, max_retries: int = 3) -> IotMessage:
+        msg = self.send(topic, payload, qos=qos)
+        # only track inflight for qos > 0
+        if qos and qos > 0:
+            if not hasattr(self, '_inflight'):
+                self._inflight: List[IotMessage] = []
+            # add metadata
+            msg.send_attempts = 1
+            msg.max_retries = max_retries
+            self._inflight.append(msg)
+        return msg
+
+    def retry_inflight(self) -> None:
+        """Attempt retrying inflight messages, incrementing send_attempts.
+
+        If attempts exceed max_retries (embedded on msg for tests), drop the
+        message and invoke any drop callbacks.
+        """
+        if not hasattr(self, '_inflight'):
+            return
+        remaining: List[IotMessage] = []
+        for msg in list(self._inflight):
+            max_retries = getattr(msg, 'max_retries', 3)
+            msg.send_attempts = getattr(msg, 'send_attempts', 0) + 1
+            if msg.send_attempts > max_retries:
+                # drop and call drop callbacks
+                if hasattr(self, '_drop_callbacks'):
+                    for cb in list(self._drop_callbacks):
+                        try:
+                            cb(msg)
+                        except Exception:
+                            pass
+            else:
+                remaining.append(msg)
+        self._inflight = remaining
