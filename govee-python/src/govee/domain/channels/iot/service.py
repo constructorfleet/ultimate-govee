@@ -166,9 +166,13 @@ class IotService:
         # listeners; queue messages that match subscriptions so they can be
         # delivered when a callback registers again.
         if not self._callbacks:
-            # if message topic matches any subscription, queue it
+            # if message topic matches any subscription, queue it (bounded)
             for sub in self.subscriptions:
                 if self._topic_matches_subscription(msg.topic, sub):
+                    # enforce max size: evict oldest if needed
+                    if len(self._incoming_queue) >= self._incoming_queue_max:
+                        # drop oldest
+                        self._incoming_queue.pop(0)
                     self._incoming_queue.append(msg)
                     return
             return
