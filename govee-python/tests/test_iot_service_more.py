@@ -594,3 +594,25 @@ def test_set_incoming_queue_max_trims_queue():
     seen = []
     svc.connect(callback=lambda m: seen.append(m.payload))
     assert seen == [{'v':2}, {'v':3}]
+
+
+def test_purge_queue_clears_and_counts_dropped():
+    svc = IotService()
+    svc._incoming_queue_max = 10
+
+    dropped = []
+    svc.register_drop_callback(lambda m: dropped.append(m.payload))
+
+    svc.connect()
+    svc.subscribe('govee/device/purge')
+    svc.disconnect()
+
+    svc.simulate_incoming(IotMessage(topic='govee/device/purge', payload={'v':1}))
+    svc.simulate_incoming(IotMessage(topic='govee/device/purge', payload={'v':2}))
+
+    assert svc.queued_count == 2
+    prev_dropped = svc.dropped_count
+    svc.purge_queue()
+    assert svc.queued_count == 0
+    assert svc.dropped_count == prev_dropped + 2
+    assert dropped == [{'v':1}, {'v':2}]
