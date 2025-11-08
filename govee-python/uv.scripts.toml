@@ -1,4 +1,4 @@
-[tool.uv.scripts]
+[scripts]
 test = "python -m pytest --maxfail=1 -q"
 lint = "ruff check src tests"
 format_check = "black --check . && isort --check-only . && ruff check src tests"
