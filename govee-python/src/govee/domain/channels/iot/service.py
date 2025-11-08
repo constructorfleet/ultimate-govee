@@ -205,3 +205,7 @@ class IotService:
     def dropped_count(self) -> int:
         """Number of messages dropped from the incoming queue due to eviction."""
         return self._dropped_count
+
+    def reset_dropped_count(self) -> None:
+        """Reset the dropped-message counter to zero."""
+        self._dropped_count = 0
