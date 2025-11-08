@@ -101,14 +101,15 @@ class IotService:
         Tests can call this to emulate an MQTT message arriving from the broker.
         If no callback is registered the call is a no-op.
         """
-        if self._callback is None:
+        if not self._callbacks:
             return
 
-        # only invoke the callback if the message topic matches at least one
+        # only invoke callbacks if the message topic matches at least one
         # subscription. This mirrors how a broker would route messages.
         for sub in self.subscriptions:
             if self._topic_matches_subscription(msg.topic, sub):
-                self._callback(msg)
+                for cb in list(self._callbacks):
+                    cb(msg)
                 return
 
     def register_callback(self, cb: Callable[[IotMessage], None]) -> None:
