@@ -48,7 +48,7 @@ in isolation. Marking current state where applicable.
 1) Repo and tooling (status: mostly done)
 - [x] Ensure govee-python package scaffold exists and tests run in the venv
       (govee-python/.venv). Validate uv scripts and pyproject configuration.
-- [ ] Ensure `uv run -s all_checks` exists and enforces ruff/black/isort + pytest
+- [x] Ensure `uv run -s all_checks` exists and enforces ruff/black/isort + pytest
       coverage gate.
 
 2) Core utilities (status: partially done)
