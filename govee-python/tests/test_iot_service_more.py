@@ -430,3 +430,23 @@ def test_simulate_interruption_queues_messages_when_callbacks_present():
     # resume should deliver queued messages in order
     svc.resume()
     assert called == [{'v':1}, {'v':2}]
+
+
+def test_queued_count_property():
+    svc = IotService()
+    svc.connect()
+    svc.subscribe("govee/device/queued_count")
+    svc.disconnect()
+
+    svc.simulate_incoming(IotMessage(topic="govee/device/queued_count", payload={"v":1}))
+    svc.simulate_incoming(IotMessage(topic="govee/device/queued_count", payload={"v":2}))
+
+    assert svc.queued_count == 2
+
+    # after reconnect the queue should be delivered and count reset
+    seen = []
+    def cb(m: IotMessage) -> None:
+        seen.append(m.payload)
+    svc.connect(callback=cb)
+    assert seen == [{"v":1}, {"v":2}]
+    assert svc.queued_count == 0
