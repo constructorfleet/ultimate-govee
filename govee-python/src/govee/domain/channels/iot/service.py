@@ -30,6 +30,8 @@ class IotService:
         self.subscriptions: List[str] = []
         # retained messages storage: topic -> IotMessage
         self._retained: dict[str, IotMessage] = {}
+        # incoming message queue used while disconnected: list of IotMessage
+        self._incoming_queue: List[IotMessage] = []
         self.connected: bool = False
         # store the last iot_data passed to connect for higher-level tests
         self.iot_data: Optional[object] = None
@@ -48,6 +50,18 @@ class IotService:
         self.iot_data = iot_data
         if callback is not None:
             self._callbacks.append(callback)
+            # if there are queued incoming messages deliver them now to the
+            # newly registered callback (and any other callbacks). We deliver
+            # messages in FIFO order and then clear the queue.
+            if self._incoming_queue:
+                for queued in list(self._incoming_queue):
+                    # only deliver queued messages that match subscriptions
+                    for sub in self.subscriptions:
+                        if self._topic_matches_subscription(queued.topic, sub):
+                            for cb in list(self._callbacks):
+                                cb(queued)
+                            break
+                self._incoming_queue.clear()
 
     def disconnect(self) -> None:
         """Simulate disconnecting from the broker."""
@@ -146,7 +160,15 @@ class IotService:
         Tests can call this to emulate an MQTT message arriving from the broker.
         If no callback is registered the call is a no-op.
         """
+        # if there are no callbacks registered we are disconnected from any
+        # listeners; queue messages that match subscriptions so they can be
+        # delivered when a callback registers again.
         if not self._callbacks:
+            # if message topic matches any subscription, queue it
+            for sub in self.subscriptions:
+                if self._topic_matches_subscription(msg.topic, sub):
+                    self._incoming_queue.append(msg)
+                    return
             return
 
         # only invoke callbacks if the message topic matches at least one
