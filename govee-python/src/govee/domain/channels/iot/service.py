@@ -368,3 +368,16 @@ class IotService:
                         cb(dropped)
                     except Exception:
                         pass
+
+    def purge_queue(self) -> None:
+        """Purge the incoming queue, counting drops and invoking drop callbacks."""
+        while self._incoming_queue:
+            dropped = self._incoming_queue.pop(0)
+            self._dropped_count += 1
+            if hasattr(self, '_drop_callbacks'):
+                for cb in list(self._drop_callbacks):
+                    try:
+                        cb(dropped)
+                    except Exception:
+                        pass
+
