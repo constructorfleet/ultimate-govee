@@ -98,16 +98,22 @@ class PartialBehaviorSubject(ForwardBehaviorSubject):
         return unsubscribe
 
     def partial_next(self, value: dict) -> None:
-        # notify partial subscribers
-        for s in list(self._partial_subs):
-            s(value)
+        # Only notify partial subscribers for dict-like partial updates.
+        if isinstance(value, dict):
+            for s in list(self._partial_subs):
+                s(value)
 
-        # merge into current value if it's a dict-like
-        current = self.get_value()
-        if isinstance(current, dict):
-            merged = dict(current)
-            merged.update(value)
-            self.next(merged)
+            # merge into current value if it's a dict-like
+            current = self.get_value()
+            if isinstance(current, dict):
+                merged = dict(current)
+                merged.update(value)
+                self.next(merged)
+            else:
+                # fallback: replace
+                self.next(value)
         else:
-            # fallback: replace
+            # Non-dict partials are treated as full replacements and only
+            # forwarded to full-value subscribers via next(). Partial
+            # subscribers are not notified since they expect dict updates.
             self.next(value)
