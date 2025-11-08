@@ -60,3 +60,26 @@ def test_subscribe_idempotent():
     svc.subscribe("topic/a")
     svc.subscribe("topic/a")
     assert svc.subscriptions.count("topic/a") == 1
+
+
+def test_connect_stores_iot_data():
+    svc = IotService()
+
+    # sample realistic iot_data that a higher-level component might pass
+    iot_data = {
+        "accountId": "acct-123",
+        "clientId": "client-abc",
+        "topic": "govee/device/42",
+        "endpoint": "a1b2c3d4wxyz-ats.iot.us-west-2.amazonaws.com",
+    }
+
+    # initially no iot_data stored
+    assert getattr(svc, "iot_data", None) is None
+
+    svc.connect(iot_data=iot_data)
+    # after connect the service should retain the provided iot_data
+    assert svc.iot_data == iot_data
+
+    svc.disconnect()
+    # disconnect should clear stored iot_data
+    assert getattr(svc, "iot_data", None) is None
