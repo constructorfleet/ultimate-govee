@@ -1,4 +1,5 @@
 from govee.utils import first, partition
+from govee.test_utils import DummyState
 
 
 def test_first_no_predicate():
@@ -14,3 +15,9 @@ def test_partition():
     assert evens == [0, 2, 4]
     assert odds == [1, 3, 5]
 
+
+def test_dummy_state_set_state_emits_command():
+    s = DummyState()
+    cmds = s.set_state({"emit": "do_something"})
+    assert len(cmds) == 1
+    assert s.command_bus[0]["cmd"] == "do_something"
