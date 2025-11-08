@@ -34,6 +34,8 @@ class IotService:
         # bounded queue with default max size to avoid unbounded memory use.
         self._incoming_queue: List[IotMessage] = []
         self._incoming_queue_max: int = incoming_queue_max
+        # counter for how many messages have been dropped due to queue eviction
+        self._dropped_count: int = 0
         self.connected: bool = False
         # store the last iot_data passed to connect for higher-level tests
         self.iot_data: Optional[object] = None
@@ -173,6 +175,7 @@ class IotService:
                     if len(self._incoming_queue) >= self._incoming_queue_max:
                         # drop oldest
                         self._incoming_queue.pop(0)
+                        self._dropped_count += 1
                     self._incoming_queue.append(msg)
                     return
             return
