@@ -148,3 +148,8 @@ class IotService:
     def unregister_callback(self, cb: Callable[[IotMessage], None]) -> None:
         if cb in self._callbacks:
             self._callbacks.remove(cb)
+
+    def unsubscribe(self, topic: str) -> None:
+        """Remove a subscription if present."""
+        if topic in self.subscriptions:
+            self.subscriptions.remove(topic)
