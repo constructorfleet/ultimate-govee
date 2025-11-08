@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import asyncio
 from typing import Callable, Optional, Any, Dict
-import asyncio
 
 from govee.common.observables import ForwardBehaviorSubject, Subject
 from .types import ReceiverState, MessageEvent
