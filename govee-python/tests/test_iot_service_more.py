@@ -368,3 +368,26 @@ def test_dropped_message_metric():
         called.setdefault('seen', []).append(msg.payload)
     svc.connect(callback=cb)
     assert called.get('seen') == [{'v':2}, {'v':3}]
+
+
+def test_dropped_count_property():
+    svc = IotService()
+    svc._incoming_queue_max = 2
+
+    svc.connect()
+    svc.subscribe("govee/device/count")
+    svc.disconnect()
+
+    svc.simulate_incoming(IotMessage(topic="govee/device/count", payload={"v":1}))
+    svc.simulate_incoming(IotMessage(topic="govee/device/count", payload={"v":2}))
+    svc.simulate_incoming(IotMessage(topic="govee/device/count", payload={"v":3}))
+
+    # public property should report number of dropped messages
+    assert svc.dropped_count == 1
+
+    # and on reconnect the queued messages should be delivered
+    seen = []
+    def cb(m: IotMessage) -> None:
+        seen.append(m.payload)
+    svc.connect(callback=cb)
+    assert seen == [{"v":2}, {"v":3}]
