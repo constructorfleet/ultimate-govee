@@ -44,6 +44,8 @@ class IotService:
         self.iot_data: Optional[object] = None
         # support multiple callbacks
         self._callbacks: List[Callable[[IotMessage], None]] = []
+        # public metric for queue length
+        self._queued_count: int = 0
 
     def connect(self, iot_data: object = None, callback: Optional[Callable[[IotMessage], None]] = None) -> None:
         """Simulate connecting to an MQTT broker.
@@ -182,6 +184,8 @@ class IotService:
                         # drop oldest
                         self._incoming_queue.pop(0)
                         self._dropped_count += 1
+                    else:
+                        self._queued_count += 1
                     self._incoming_queue.append(msg)
                     return
             return
