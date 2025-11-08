@@ -35,7 +35,7 @@ class IoTChannel:
         self.iot.disconnect()
         self._connected = False
 
-    def publish_message(self, command_id: str, topic: str, payload: object, debug: bool = False, retained: bool = False, qos: Optional[int] = None):
+    def publish_message(self, command_id: str, topic: str, payload: object, debug: bool = False, retained: bool = False, qos: Optional[int] = None, max_retries: Optional[int] = None):
         # mirror IoTChannelService.publishMessage behavior in minimal form
         if debug:
             pass
@@ -45,5 +45,10 @@ class IoTChannel:
             serialized = json.dumps(payload)
         else:
             serialized = payload
-        # forward retained and qos to the IotService.send stub
+        # For qos>0 allow retry behavior by delegating to send_with_retry
+        if qos and qos > 0:
+            # prefer IoTService.send_with_retry if available
+            if hasattr(self.iot, 'send_with_retry'):
+                return self.iot.send_with_retry(topic, serialized, qos=qos, max_retries=(max_retries or 3))
+        # otherwise forward retained and qos to the IotService.send stub
         return self.iot.send(topic, serialized, retained=retained, qos=qos)
