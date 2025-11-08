@@ -673,5 +673,5 @@ def test_metrics_text_format():
     assert 'govee_iot_dropped_count' in txt
     assert 'govee_iot_inflight_count' in txt
     # numeric values present
-    assert '
-' in txt
+    # numeric values present
+    assert '\n' in txt or txt.endswith('\n')

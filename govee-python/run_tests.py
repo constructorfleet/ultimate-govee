@@ -13,6 +13,40 @@ import sys
 import runpy
 import importlib.util
 import traceback
+import inspect
+import logging
+
+
+class _CapLog:
+    """Minimal caplog-like fixture used by the lightweight test runner.
+
+    Tests in this repository sometimes use the pytest `caplog` fixture to
+    assert logged messages. The lightweight runner doesn't run under pytest,
+    so provide a tiny compatible object with `set_level` and `records` that
+    tests can use.
+    """
+
+    def __init__(self):
+        self.records = []
+        self._handler = None
+
+    def _emit(self, record: logging.LogRecord) -> None:
+        # store a simple record-like object with message and levelname
+        self.records.append(record)
+
+    def set_level(self, level: int) -> None:
+        # attach a handler to root logger to capture emitted records
+        if self._handler is not None:
+            logging.getLogger().removeHandler(self._handler)
+        handler = logging.Handler()
+        handler.emit = self._emit  # type: ignore[attr-defined]
+        logging.getLogger().addHandler(handler)
+        logging.getLogger().setLevel(level)
+        self._handler = handler
+
+    def __del__(self):
+        if self._handler is not None:
+            logging.getLogger().removeHandler(self._handler)
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 SRC = os.path.join(ROOT, "src")
