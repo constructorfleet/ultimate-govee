@@ -384,3 +384,11 @@ class IotService:
                     except Exception:
                         pass
 
+
+    def metrics(self) -> dict:
+        """Return a small snapshot of service metrics useful for tests."""
+        return {
+            "queued_count": self.queued_count,
+            "dropped_count": self.dropped_count,
+            "inflight_count": self.inflight_count,
+        }
