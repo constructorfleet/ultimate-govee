@@ -31,7 +31,9 @@ class IotService:
         # retained messages storage: topic -> IotMessage
         self._retained: dict[str, IotMessage] = {}
         # incoming message queue used while disconnected: list of IotMessage
+        # bounded queue with default max size to avoid unbounded memory use.
         self._incoming_queue: List[IotMessage] = []
+        self._incoming_queue_max: int = 3
         self.connected: bool = False
         # store the last iot_data passed to connect for higher-level tests
         self.iot_data: Optional[object] = None
