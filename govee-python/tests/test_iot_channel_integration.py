@@ -20,3 +20,21 @@ def test_incoming_message_updates_device_state():
     state = devices.get_state('dev-1')
     assert state.power is True
     assert state.brightness == 50
+
+
+def test_retained_message_via_channel_updates_device():
+    iot = IotService()
+    devices = DevicesService()
+    channel = IoTChannel(iot, devices)
+
+    # publish retained message before the channel connects
+    iot.send('govee/device/dev-2', {'id': 'dev-2', 'power': False, 'brightness': 10}, retained=True)
+
+    # connect the channel (which subscribes to device topics)
+    channel.connect()
+
+    # retained message should be delivered on subscribe and update device state
+    state = devices.get_state('dev-2')
+    assert state is not None
+    assert state.power is False
+    assert state.brightness == 10
