@@ -127,3 +127,15 @@ class DeltaMap(MutableMapping, Generic[K, V]):
 class DeltaSet(DeltaMap[V, K]):
     # For tests we don't need extra behavior; keep as alias-ish
     pass
+
+    def close(self) -> None:
+        # ensure any pending updates are published and clear
+        self.resume()
+        self.clear_delta()
+
+# Also provide a close on the DeltaMap itself for parity
+def _delta_map_close(dm: DeltaMap) -> None:
+    dm.resume()
+    dm.clear_delta()
+
+DeltaMap.close = lambda self: _delta_map_close(self)
