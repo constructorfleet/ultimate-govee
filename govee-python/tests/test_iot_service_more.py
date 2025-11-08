@@ -206,3 +206,31 @@ def test_retained_message_delivered_on_subscribe():
     assert called.get('topic') == 'govee/device/5'
     assert called.get('payload') == {'state': 'on'}
     assert called.get('retained') is True
+
+
+def test_clearing_retained_message_with_empty_payload():
+    svc = IotService()
+
+    # publish retained message
+    svc.send('govee/device/5', {'state': 'on'}, retained=True)
+
+    called = {}
+    def cb(msg: IotMessage) -> None:
+        called['topic'] = msg.topic
+
+    svc.connect(callback=cb)
+    # initial subscribe should get retained message
+    # if it's present remove it then clear called and clear retained
+    svc.subscriptions.remove('govee/device/5')
+    svc.subscribe('govee/device/5')
+    assert called.get('topic') == 'govee/device/5'
+
+    # now clear retained by sending an empty payload with retained=True
+    svc.send('govee/device/5', None, retained=True)
+
+    # remove subscription so subscribe logic will attempt to deliver retained messages again
+    svc.subscriptions.remove('govee/device/5')
+    called.clear()
+    svc.subscribe('govee/device/5')
+    # no retained message should be delivered after clearing
+    assert called == {}
