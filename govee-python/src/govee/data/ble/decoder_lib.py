@@ -7,6 +7,7 @@ way in Python as in TypeScript.
 from __future__ import annotations
 
 from typing import List, Any, Dict, Optional
+from govee.data.ble.property_condition import property_matches
 
 # operation constants (mirrors decoder.constants.ts)
 ServiceData = "servicedata"
@@ -185,8 +186,11 @@ class Decoder:
     def decode_properties(device: Dict[str, Any], properties: Dict[str, Any]) -> Dict[str, Any]:
         decoded: Dict[str, Any] = {}
         calibration = None
-        for name, prop in properties.items():
-            # skip conditions for simplicity in this minimal port
+    for name, prop in properties.items():
+            # respect property conditions when present
+            conditions = prop.get('condition')
+            if conditions and not property_matches(device, conditions):
+                continue
             val = Decoder.decode(device, prop.get('decoder', []), prop.get('post_proc'), calibration)
             if val is None:
                 continue
