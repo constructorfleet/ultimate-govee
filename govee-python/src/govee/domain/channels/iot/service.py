@@ -171,9 +171,22 @@ class IotService:
         Tests can call this to emulate an MQTT message arriving from the broker.
         If no callback is registered the call is a no-op.
         """
-        # if there are no callbacks registered we are disconnected from any
-        # listeners; queue messages that match subscriptions so they can be
-        # delivered when a callback registers again.
+        # First, handle incoming ack messages that acknowledge inflight
+        # messages. Process these regardless of subscription state so tests
+        # can simulate ack delivery even when not subscribed.
+        if isinstance(msg.payload, dict) and 'ack_for' in msg.payload:
+            ack_for = msg.payload['ack_for']
+            if hasattr(self, '_inflight'):
+                remaining = []
+                for im in list(self._inflight):
+                    if isinstance(im.payload, dict) and im.payload == ack_for:
+                        im.acked = True
+                        # drop acknowledged message
+                        continue
+                    remaining.append(im)
+                self._inflight = remaining
+                return
+
         # if interrupted or there are no callbacks registered, queue messages
         # that match subscriptions so they can be delivered when resumed or a
         # callback registers again.
