@@ -36,7 +36,6 @@ class DeltaMap(MutableMapping, Generic[K, V]):
 
     def __setitem__(self, key: K, value: V) -> None:
         existed = key in self._store
-        prev = self._store.get(key)
         self._store[key] = value
         if not existed:
             self.added[key] = value
