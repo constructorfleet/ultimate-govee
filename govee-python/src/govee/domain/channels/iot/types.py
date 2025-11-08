@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Optional
 
 
 @dataclass
@@ -13,9 +13,12 @@ class IotMessage:
     pre-serialized JSON string or a native Python dict/object. Keeping this
     flexible makes assertions in unit tests easier without coupling to a
     concrete serialization format.
+
+    A retained flag is included to emulate MQTT retained messages in tests.
     """
 
     topic: str
     payload: Any
+    retained: Optional[bool] = False
 
 
