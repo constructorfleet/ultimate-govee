@@ -1,14 +1,69 @@
-"""IoT channel service minimal stub for tests."""
+"""IoT channel service minimal stub for tests.
+
+This provides a lightweight in-memory implementation of an MQTT/IoT
+client used by the test-suite. It mirrors the JS/TS implementation in
+lib/data/iot as needed for tests: connect, disconnect, subscribe and
+publish/send. The real project talks to AWS IoT Core; tests only need a
+recording stub.
+"""
+
 from __future__ import annotations
 
-from typing import List
+from typing import Callable, List, Optional
 from .types import IotMessage
 
 
 class IotService:
+    """Lightweight in-memory IoT service used by unit tests.
+
+    Methods:
+      - connect(iot_data, callback): mark connected and record a message
+        callback to emulate incoming messages.
+      - disconnect(): mark disconnected.
+      - subscribe(topic): record subscription.
+      - send(topic, payload): record outgoing publish as IotMessage.
+      - publish(msg): compatibility alias for send when given an IotMessage.
+    """
+
     def __init__(self) -> None:
         self.published: List[IotMessage] = []
+        self.subscriptions: List[str] = []
+        self.connected: bool = False
+        self._callback: Optional[Callable[[IotMessage], None]] = None
 
+    def connect(self, iot_data: object = None, callback: Optional[Callable[[IotMessage], None]] = None) -> None:
+        """Simulate connecting to an MQTT broker.
+
+        iot_data is accepted for API-compatibility with the TS implementation
+        but not used in the test stub. If a callback is provided it will be
+        stored and may be invoked by tests to emulate incoming messages.
+        """
+        self.connected = True
+        if callback is not None:
+            self._callback = callback
+
+    def disconnect(self) -> None:
+        """Simulate disconnecting from the broker."""
+        self.connected = False
+        self._callback = None
+
+    def subscribe(self, topic: str) -> None:
+        if topic not in self.subscriptions:
+            self.subscriptions.append(topic)
+
+    def send(self, topic: str, payload: object) -> None:
+        """Record a published message.
+
+        The payload in the TS implementation is a JSON string. To keep tests
+        flexible we accept either a dict/object or a pre-serialized string.
+        """
+        if isinstance(payload, str):
+            msg_payload = payload
+        else:
+            # keep the payload as a python object for easier assertions in tests
+            msg_payload = payload
+        self.published.append(IotMessage(topic=topic, payload=msg_payload))
+
+    # backward compatible alias used by some tests
     def publish(self, msg: IotMessage) -> None:
         self.published.append(msg)
-
