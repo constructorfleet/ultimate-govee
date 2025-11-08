@@ -74,6 +74,10 @@ class DeltaMap(MutableMapping, Generic[K, V]):
     def get_delta(self) -> MapDelta:
         return MapDelta(all=dict(self._store), added=dict(self.added), modified=dict(self.modified), deleted=dict(self.deleted))
 
+    # TypeScript-compatible alias
+    def getDelta(self) -> MapDelta:
+        return self.get_delta()
+
     def _publish_delta_if_needed(self) -> None:
         if not self._publish:
             return
@@ -88,9 +92,16 @@ class DeltaMap(MutableMapping, Generic[K, V]):
     def pause(self) -> None:
         self._publish = False
 
+    # TypeScript-compatible aliases
+    def pauseDelta(self) -> None:
+        return self.pause()
+
     def resume(self) -> None:
         self._publish = True
         self._publish_delta_if_needed()
+
+    def resumeDelta(self) -> None:
+        return self.resume()
 
 
 class DeltaSet(DeltaMap[V, K]):
