@@ -277,3 +277,25 @@ def test_queue_messages_while_disconnected():
     # queued messages should be delivered upon reconnect
     assert called.get('seen') is not None
     assert called['seen'] == ['govee/device/queued', 'govee/device/queued']
+
+
+def test_incoming_queue_bounded():
+    svc = IotService()
+
+    called = {}
+
+    def cb(msg: IotMessage) -> None:
+        called.setdefault("seen", []).append(msg.topic)
+
+    svc.connect(callback=cb)
+    svc.subscribe("govee/device/bound")
+    svc.disconnect()
+    # send more messages than the planned max size (we will set default max 3)
+    svc.simulate_incoming(IotMessage(topic='govee/device/bound', payload={'v':1}))
+    svc.simulate_incoming(IotMessage(topic='govee/device/bound', payload={'v':2}))
+    svc.simulate_incoming(IotMessage(topic='govee/device/bound', payload={'v':3}))
+    svc.simulate_incoming(IotMessage(topic='govee/device/bound', payload={'v':4}))
+
+    svc.connect(callback=cb)
+    # if queue is bounded to 3, oldest should be evicted, so we expect last 3 messages
+    assert called.get("seen") == ['govee/device/bound', 'govee/device/bound', 'govee/device/bound']
