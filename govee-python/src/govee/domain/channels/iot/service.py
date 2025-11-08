@@ -28,6 +28,8 @@ class IotService:
     def __init__(self) -> None:
         self.published: List[IotMessage] = []
         self.subscriptions: List[str] = []
+        # retained messages storage: topic -> IotMessage
+        self._retained: dict[str, IotMessage] = {}
         self.connected: bool = False
         # store the last iot_data passed to connect for higher-level tests
         self.iot_data: Optional[object] = None
@@ -57,6 +59,12 @@ class IotService:
     def subscribe(self, topic: str) -> None:
         if topic not in self.subscriptions:
             self.subscriptions.append(topic)
+            # deliver any retained messages that match the subscription
+            for t, retained_msg in list(self._retained.items()):
+                if self._topic_matches_subscription(t, topic):
+                    # route retained message to callbacks
+                    for cb in list(self._callbacks):
+                        cb(retained_msg)
 
     def _topic_matches_subscription(self, topic: str, subscription: str) -> bool:
         """Topic matching helper with minimal MQTT wildcard support.
@@ -105,7 +113,9 @@ class IotService:
         else:
             # keep the payload as a python object for easier assertions in tests
             msg_payload = payload
-        self.published.append(IotMessage(topic=topic, payload=msg_payload))
+        msg = IotMessage(topic=topic, payload=msg_payload)
+        self.published.append(msg)
+        return msg
 
     # backward compatible alias used by some tests
     def publish(self, msg: IotMessage) -> None:
