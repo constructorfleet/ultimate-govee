@@ -6,10 +6,13 @@ the package wiring is correct. It does not implement actual networking.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Any, Optional
 
 
 @dataclass
 class ReceiverService:
+    socket: Optional[Any] = None
+    config: Optional[Any] = None
     running: bool = False
 
     def start(self) -> None:
@@ -17,5 +20,4 @@ class ReceiverService:
 
     def stop(self) -> None:
         self.running = False
-
 

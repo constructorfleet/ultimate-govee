@@ -12,8 +12,13 @@ from .service import ReceiverService
 
 
 def create_receiver(config: ReceiverConfig | None = None, socket: DummySocket | None = None) -> ReceiverService:
+    """Create a ReceiverService wired with a DummySocket for tests.
+
+    The real project uses DI to assemble these pieces; tests just need a
+    small factory to obtain a working service that will receive messages
+    when the provided DummySocket.feed() is called.
+    """
     cfg = config or default_config
     sock = socket or DummySocket()
-    svc = ReceiverService(socket=sock)
+    svc = ReceiverService(socket=sock, config=cfg)
     return svc
-
