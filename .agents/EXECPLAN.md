@@ -28,7 +28,7 @@ are ordered by priority and should be completed sequentially.
 
 Setup
 
-- [ ] Setup Python package scaffold and tooling: create `govee-python/src/govee`, add pyproject.toml, pytest, ruff, black config, and a basic package __init__.
+- [ ] Setup Python package scaffold and tooling: create `govee-python/src/govee`, initialize the project with `uv init`; add, pytest, ruff, black config, and a basic package __init__.
 
 Core utilities (highest priority)
 
