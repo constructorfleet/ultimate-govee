@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Optional
+from typing import Optional, List
 from govee.domain.channels.iot.service import IotService
 from govee.domain.devices.service import DevicesService
 from govee.domain.channels.iot.types import IotMessage
@@ -42,38 +42,58 @@ class IoTChannel:
     def disconnect(self) -> None:
         self.iot.disconnect()
         self._connected = False
-        # track subscriptions created by this channel so close_subscriptions
-        # can remove only them and not others in the service.
-        self._owned_subscriptions: List[str] = []
+        # clear owned subscriptions tracking (do not attempt to unsubscribe
+        # here; callers should use close_subscriptions to remove subscriptions
+        # from the service while leaving the channel state consistent).
+        self._owned_subscriptions = []
 
-    @property
-    def owned_subscriptions(self) -> List[str]:
-        return list(self._owned_subscriptions)
-
-    def publish_message(self, command_id: str, topic: str, payload: object, debug: bool = False, retained: bool = False, qos: Optional[int] = None, max_retries: Optional[int] = None):
-        # mirror IoTChannelService.publishMessage behavior in minimal form
-        if debug:
-            pass
-        import json
-
-        if not isinstance(payload, str):
-            serialized = json.dumps(payload)
-        else:
-            serialized = payload
-        # For qos>0 allow retry behavior by delegating to send_with_retry
-        if qos and qos > 0:
-            # prefer IoTService.send_with_retry if available
-            if hasattr(self.iot, 'send_with_retry'):
-                return self.iot.send_with_retry(topic, serialized, qos=qos, max_retries=(max_retries or 3), retained=retained)
-        # otherwise forward retained and qos to the IotService.send stub
-        return self.iot.send(topic, serialized, retained=retained, qos=qos)
+    # expose a read-only view of owned subscriptions; defined once above
 
     def close_subscriptions(self) -> None:
-        """Unsubscribe the channel's default subscriptions and leave the IoT service clean."""
-        for s in list(self._owned_subscriptions):
-            if s in self.iot.subscriptions:
-                self.iot.unsubscribe(s)
-            self._owned_subscriptions.remove(s)
+        """Unsubscribe any subscriptions that were created by this channel.
+
+        This removes only the subscriptions recorded in _owned_subscriptions
+        from the underlying IotService and clears the owned list.
+        """
+        for sub in list(self._owned_subscriptions):
+            try:
+                self.iot.unsubscribe(sub)
+            except Exception:
+                # keep best-effort semantics for the test stub
+                pass
+        self._owned_subscriptions = []
+
+    def publish_message(self, cmd_id: str, topic: str, payload: object, debug: bool = False, retained: bool = False, qos: Optional[int] = None) -> IotMessage:
+        """Publish a message via the IoT service.
+
+        - If debug is False the payload will be JSON-stringified so the
+          service records a string payload (mirrors the TS behavior used in
+          tests). If debug is True the payload is passed through as-is.
+        - If qos is provided and > 0 use the service's send_with_retry to
+        exercise inflight/retry semantics in tests; otherwise call send.
+        Returns the IotMessage recorded by the service.
+        """
+        # avoid importing json at module import time for tiny tests
+        if not debug:
+            try:
+                import json
+
+                send_payload = json.dumps(payload)
+            except Exception:
+                # fallback to the raw payload if serialization fails
+                send_payload = payload
+        else:
+            send_payload = payload
+
+        if qos is not None and qos > 0 and hasattr(self.iot, 'send_with_retry'):
+            msg = self.iot.send_with_retry(topic, send_payload, qos=qos, retained=retained)
+        else:
+            msg = self.iot.send(topic, send_payload, retained=retained, qos=qos)
+        return msg
 
     def metrics_text(self) -> str:
-        return self.iot.metrics_text()
+        """Delegate a simple metrics/text snapshot to the underlying service."""
+        if hasattr(self.iot, 'metrics_text'):
+            return self.iot.metrics_text()
+        # fallback to a minimal representation
+        return ""
