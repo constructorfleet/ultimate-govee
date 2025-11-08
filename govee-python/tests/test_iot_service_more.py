@@ -656,3 +656,22 @@ def test_async_retry_backoff_simulation():
     svc.run_scheduled_retries(1)
     assert svc.inflight_count == 0
     assert dropped == [{'cmd': 'x'}]
+
+
+def test_metrics_text_format():
+    svc = IotService()
+    svc._incoming_queue_max = 3
+    svc.connect()
+    svc.subscribe('govee/device/metrics_text')
+    svc.disconnect()
+
+    svc.simulate_incoming(IotMessage(topic='govee/device/metrics_text', payload={'v':1}))
+    svc.simulate_incoming(IotMessage(topic='govee/device/metrics_text', payload={'v':2}))
+
+    txt = svc.metrics_text()
+    assert 'govee_iot_queued_count' in txt
+    assert 'govee_iot_dropped_count' in txt
+    assert 'govee_iot_inflight_count' in txt
+    # numeric values present
+    assert '
+' in txt
