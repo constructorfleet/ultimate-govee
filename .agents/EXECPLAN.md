@@ -58,7 +58,7 @@ in isolation. Marking current state where applicable.
 - [x] fixed_length_stack.py (done)
 - [x] errors.py (done)
 - [x] simple Subject observable (done)
-- [ ] implement delta/partial subject / delta-map observable equivalents
+- [x] implement delta/partial subject / delta-map observable equivalents
       (lib/common/observables/*) — these are used by device state handling and
       will be required for full parity.
 
