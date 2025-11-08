@@ -407,3 +407,26 @@ def test_reset_dropped_count():
     assert svc.dropped_count >= 1
     svc.reset_dropped_count()
     assert svc.dropped_count == 0
+
+
+def test_simulate_interruption_queues_messages_when_callbacks_present():
+    svc = IotService()
+
+    called = []
+    def cb(msg: IotMessage) -> None:
+        called.append(msg.payload)
+
+    svc.connect(callback=cb)
+    svc.subscribe('govee/device/int')
+
+    # simulate interruption: service should queue incoming messages even though callbacks exist
+    svc.interrupt()
+    svc.simulate_incoming(IotMessage(topic='govee/device/int', payload={'v':1}))
+    svc.simulate_incoming(IotMessage(topic='govee/device/int', payload={'v':2}))
+
+    # callbacks should not have been invoked during interruption
+    assert called == []
+
+    # resume should deliver queued messages in order
+    svc.resume()
+    assert called == [{'v':1}, {'v':2}]
