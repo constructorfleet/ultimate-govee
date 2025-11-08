@@ -104,6 +104,16 @@ class DeltaMap(MutableMapping, Generic[K, V]):
         return self.resume()
 
 
+    def clear_delta(self) -> None:
+        """Clear tracked deltas without publishing (snake_case alias)."""
+        self.added.clear()
+        self.modified.clear()
+        self.deleted.clear()
+
+    # TypeScript-compatible alias
+    def clearDelta(self) -> None:
+        return self.clear_delta()
+
 class DeltaSet(DeltaMap[V, K]):
     # For tests we don't need extra behavior; keep as alias-ish
     pass
