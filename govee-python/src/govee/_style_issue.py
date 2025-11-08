@@ -1,3 +1,8 @@
-import os
+"""This module intentionally contains a style issue during RED phase.
 
-# unused import above should trigger ruff
+It will be removed once linting and formatting are configured in the
+development loop.
+"""
+
+def noop():
+    return None
