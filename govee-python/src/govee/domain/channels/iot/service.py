@@ -351,3 +351,20 @@ class IotService:
     @property
     def inflight_count(self) -> int:
         return len(getattr(self, "_inflight", []))
+
+
+    def set_incoming_queue_max(self, new_max: int) -> None:
+        """Adjust the incoming queue max size, dropping oldest messages if
+        the queue needs to be trimmed."""
+        self._incoming_queue_max = new_max
+        # trim the queue if necessary
+        while len(self._incoming_queue) > self._incoming_queue_max:
+            dropped = self._incoming_queue.pop(0)
+            self._dropped_count += 1
+            # invoke callbacks
+            if hasattr(self, '_drop_callbacks'):
+                for cb in list(self._drop_callbacks):
+                    try:
+                        cb(dropped)
+                    except Exception:
+                        pass
