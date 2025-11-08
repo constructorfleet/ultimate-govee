@@ -32,6 +32,10 @@ class _CapLog:
 
     def _emit(self, record: logging.LogRecord) -> None:
         # store a simple record-like object with message and levelname
+        # Pytest caplog exposes records that have a `.message` attribute.
+        # Ensure compatibility by adding a `message` property if missing.
+        if not hasattr(record, 'message'):
+            record.message = record.getMessage()
         self.records.append(record)
 
     def set_level(self, level: int) -> None:
