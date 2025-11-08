@@ -186,7 +186,7 @@ class Decoder:
     def decode_properties(device: Dict[str, Any], properties: Dict[str, Any]) -> Dict[str, Any]:
         decoded: Dict[str, Any] = {}
         calibration = None
-    for name, prop in properties.items():
+        for name, prop in properties.items():
             # respect property conditions when present
             conditions = prop.get('condition')
             if conditions and not property_matches(device, conditions):
