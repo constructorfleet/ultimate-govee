@@ -1,0 +1,11 @@
+#!/usr/bin/env python3
+"""Top-level all_checks shim for uv.
+
+This file is executed by uv when running the "all_checks" script. It
+delegates to tools/all_checks.py to perform the actual checks.
+"""
+import runpy
+import os
+
+here = os.path.dirname(os.path.abspath(__file__))
+runpy.run_path(os.path.join(here, "tools", "all_checks.py"), run_name="__main__")
