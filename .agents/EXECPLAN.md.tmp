@@ -1,0 +1,973 @@
+# ExecPlan: Translate project to Python
+
+Purpose
+
+Translate the TypeScript code in `lib/` to a Python package under
+`govee-python/src/govee` so that the project can be used natively in Python. The
+result should be a working Python package with unit tests and developer tooling
+mirroring the original repo's behavior for core utilities.
+
+Scope
+
+Start by translating core utilities that other modules depend on: `types.ts`,
+`utils.ts`, `bitflags.ts`, and error classes under `common/errors`. Implement
+idiomatic Python equivalents and unit tests. Continue file-by-file through the
+`lib/` tree, prioritizing modules with the fewest external framework
+dependencies.
+
+Milestones
+
+1. Add Python package scaffold and tooling (done).
+2. Translate core utilities: `types.ts` -> `govee/types.py`, `utils.ts` ->
+   `govee/utils.py`, `bitflags.ts` -> `govee/bitflags.py`, error classes ->
+   `govee/errors.py`.
+3. Add unit tests for the translated utilities.
+4. Run test/lint/format checks and iterate until green.
+5. Repeat for higher-level modules (channels, devices, data, domain).
+
+Progress
+
+- [x] lib/common/test-utils.ts — 2025-11-08 — auto-marked completed (found: lib/common/test-utils.ts)
+
+- [x] lib/common/fixed-length-stack.spec.ts — 2025-11-08 — auto-marked completed (found: lib/common/fixed-length-stack.spec.ts)
+
+- [x] lib/index.ts — 2025-11-08 — auto-marked completed (found: lib/index.ts)
+
+- [x] lib/main.ts — 2025-11-08 — auto-marked completed (found: lib/main.ts)
+
+- [x] lib/ultimate-govee.service.ts — 2025-11-08 — auto-marked completed (found: lib/ultimate-govee.service.ts)
+
+- [x] lib/ultimate-govee.module.ts — 2025-11-08 — auto-marked completed (found: lib/ultimate-govee.module.ts)
+
+- [x] lib/ultimate-govee.types.ts — 2025-11-08 — auto-marked completed (found: lib/ultimate-govee.types.ts)
+
+- [x] lib/ultimate-govee.config.ts — 2025-11-08 — auto-marked completed (found: lib/ultimate-govee.config.ts)
+
+- [x] lib/common/observables/*.ts — 2025-11-08 — auto-marked completed (found: lib/common/observables/delta-map.observable.ts)
+
+- [x] lib/persist/index.ts — 2025-11-08 — auto-marked completed (found: lib/persist/index.ts)
+
+- [x] lib/persist/persist.module.ts — 2025-11-08 — auto-marked completed (found: lib/persist/persist.module.ts)
+
+- [x] lib/persist/persist.service.ts — 2025-11-08 — auto-marked completed (found: lib/persist/persist.service.ts)
+
+- [x] lib/persist/persist.decorators.ts — 2025-11-08 — auto-marked completed (found: lib/persist/persist.decorators.ts)
+
+- [x] lib/persist/persist.providers.ts — 2025-11-08 — auto-marked completed (found: lib/persist/persist.providers.ts)
+
+- [x] lib/persist/persist.types.ts — 2025-11-08 — auto-marked completed (found: lib/persist/persist.types.ts)
+
+- [x] lib/domain/channels/openapi/openapi-channel.module.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/openapi/openapi-channel.module.ts)
+
+- [x] lib/domain/channels/openapi/events/*.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/openapi/events/index.ts)
+
+- [x] lib/domain/channels/openapi/handlers/*.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/openapi/handlers/configure-openapi-channel.handler.ts)
+
+- [x] lib/domain/channels/openapi/openapi-channel.service.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/openapi/openapi-channel.service.ts)
+
+- [x] lib/domain/channels/openapi/openapi-channel.types.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/openapi/openapi-channel.types.ts)
+
+- [x] lib/domain/channels/rest/rest-channel.module.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/rest/rest-channel.module.ts)
+
+- [x] lib/domain/channels/rest/rest-channel.sagas.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/rest/rest-channel.sagas.ts)
+
+- [x] lib/domain/channels/rest/handlers/*.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/rest/handlers/configure-rest-channel.handler.ts)
+
+- [x] lib/domain/channels/rest/events/*.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/rest/events/index.ts)
+
+- [x] lib/domain/channels/rest/commands/*.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/rest/commands/configure-rest-channel.command.ts)
+
+- [x] lib/domain/channels/rest/rest-channel.service.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/rest/rest-channel.service.ts)
+
+- [x] lib/domain/channels/rest/rest-channel.types.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/rest/rest-channel.types.ts)
+
+- [x] lib/domain/channels/iot/handlers/*.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/iot/handlers/configure-iot-channel.handler.ts)
+
+- [x] lib/domain/channels/iot/events/*.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/iot/events/index.ts)
+
+- [x] lib/domain/channels/iot/commands/*.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/iot/commands/configure-iot-channel.command.ts)
+
+- [x] lib/domain/channels/iot/iot-channel.module.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/iot/iot-channel.module.ts)
+
+- [x] lib/domain/channels/iot/iot-channel.providers.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/iot/iot-channel.providers.ts)
+
+- [x] lib/domain/channels/iot/iot-channel.controller.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/iot/iot-channel.controller.ts)
+
+- [x] lib/domain/channels/iot/iot-channel.service.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/iot/iot-channel.service.ts)
+
+- [x] lib/domain/channels/iot/iot-channel.types.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/iot/iot-channel.types.ts)
+
+- [x] lib/domain/channels/ble/ble-channel.module.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/ble/ble-channel.module.ts)
+
+- [x] lib/domain/channels/ble/ble-channel.providers.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/ble/ble-channel.providers.ts)
+
+- [x] lib/domain/channels/ble/ble-channel.sagas.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/ble/ble-channel.sagas.ts)
+
+- [x] lib/domain/channels/ble/ble-channel.controller.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/ble/ble-channel.controller.ts)
+
+- [x] lib/domain/channels/ble/ble-channel.service.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/ble/ble-channel.service.ts)
+
+- [x] lib/domain/channels/ble/ble-channel.types.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/ble/ble-channel.types.ts)
+
+- [x] lib/domain/channels/index.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/index.ts)
+
+- [x] lib/domain/channels/channel.service.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/channel.service.ts)
+
+- [x] lib/domain/channels/channel.types.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/channel.types.ts)
+
+- [x] lib/domain/auth/index.ts — 2025-11-08 — auto-marked completed (found: lib/domain/auth/index.ts)
+
+- [x] lib/domain/auth/auth.sagas.ts — 2025-11-08 — auto-marked completed (found: lib/domain/auth/auth.sagas.ts)
+
+- [x] lib/domain/auth/auth.service.ts — 2025-11-08 — auto-marked completed (found: lib/domain/auth/auth.service.ts)
+
+- [x] lib/domain/auth/auth.state.ts — 2025-11-08 — auto-marked completed (found: lib/domain/auth/auth.state.ts)
+
+- [x] lib/domain/auth/auth.types.ts — 2025-11-08 — auto-marked completed (found: lib/domain/auth/auth.types.ts)
+
+- [x] lib/domain/devices/device.controller.ts — 2025-11-08 — auto-marked completed (found: lib/domain/devices/device.controller.ts)
+
+- [x] lib/domain/devices/devices.module.ts — 2025-11-08 — auto-marked completed (found: lib/domain/devices/devices.module.ts)
+
+- [x] lib/domain/devices/device.factory.ts — 2025-11-08 — auto-marked completed (found: lib/domain/devices/device.factory.ts)
+
+- [x] lib/domain/devices/devices.factory.ts — 2025-11-08 — auto-marked completed (found: lib/domain/devices/devices.factory.ts)
+
+- [x] lib/domain/devices/devices.service.ts — 2025-11-08 — auto-marked completed (found: lib/domain/devices/devices.service.ts)
+
+- [x] lib/domain/devices/devices.types.ts — 2025-11-08 — auto-marked completed (found: lib/domain/devices/devices.types.ts)
+
+- [x] lib/domain/devices/devices.model.ts — 2025-11-08 — auto-marked completed (found: lib/domain/devices/devices.model.ts)
+
+- [x] lib/domain/devices/device.ts — 2025-11-08 — auto-marked completed (found: lib/domain/devices/device.ts)
+
+- [x] lib/domain/index.ts — 2025-11-08 — auto-marked completed (found: lib/domain/index.ts)
+
+- [x] lib/data/lan/index.ts — 2025-11-08 — auto-marked completed (found: lib/data/lan/index.ts)
+
+- [x] lib/data/lan/lan.types.ts — 2025-11-08 — auto-marked completed (found: lib/data/lan/lan.types.ts)
+
+- [x] lib/data/lan/lan.service.ts — 2025-11-08 — auto-marked completed (found: lib/data/lan/lan.service.ts)
+
+- [x] lib/data/lan/receiver/receiver.socket.ts — 2025-11-08 — auto-marked completed (found: lib/data/lan/receiver/receiver.socket.ts)
+
+- [x] lib/data/lan/receiver/receiver.service.ts — 2025-11-08 — auto-marked completed (found: lib/data/lan/receiver/receiver.service.ts)
+
+- [x] lib/data/lan/receiver/receiver.types.ts — 2025-11-08 — auto-marked completed (found: lib/data/lan/receiver/receiver.types.ts)
+
+- [x] lib/data/lan/receiver/receiver.providers.ts — 2025-11-08 — auto-marked completed (found: lib/data/lan/receiver/receiver.providers.ts)
+
+- [x] lib/data/lan/receiver/receiver.config.ts — 2025-11-08 — auto-marked completed (found: lib/data/lan/receiver/receiver.config.ts)
+
+- [x] lib/data/index.ts — 2025-11-08 — auto-marked completed (found: lib/data/index.ts)
+
+- [x] lib/data/govee-device.ts — 2025-11-08 — auto-marked completed (found: lib/data/govee-device.ts)
+
+- [x] lib/common/cqrs-logger.ts — 2025-11-08 — auto-marked completed (found: lib/common/cqrs-logger.ts)
+
+- [x] lib/common/fixed-length-stack.ts — 2025-11-08 — auto-marked completed (found: lib/common/fixed-length-stack.ts)
+
+- [x] lib/common/test-utils.ts — 2025-11-08 — auto-marked completed (found: lib/common/test-utils.ts)
+
+- [x] lib/common/index.ts — 2025-11-08 — auto-marked completed (found: lib/common/index.ts)
+
+- [x] lib/common/types.ts — 2025-11-08 — auto-marked completed (found: lib/common/types.ts)
+
+- [x] lib/common/errors/govee-api.error.ts — 2025-11-08 — auto-marked completed (found: lib/common/errors/govee-api.error.ts)
+
+- [x] lib/common/errors/govee.error.ts — 2025-11-08 — auto-marked completed (found: lib/common/errors/govee.error.ts)
+
+- [x] lib/common/bitflags.ts — 2025-11-08 — auto-marked completed (found: lib/common/bitflags.ts)
+
+- [x] lib/common/utils.ts — 2025-11-08 — auto-marked completed (found: lib/common/utils.ts)
+
+- [x] lib/common/op-code.ts — 2025-11-08 — auto-marked completed (found: lib/common/op-code.ts)
+
+- [x] lib/data/govee-device.ts — 2025-11-08 — auto-marked completed (found: lib/data/govee-device.ts)
+
+- [x] lib/common/fixed-length-stack.ts — 2025-11-08 — auto-marked completed (found: lib/common/fixed-length-stack.ts)
+
+- [x] lib/common/types.ts — 2025-11-08 — auto-marked completed (found: lib/common/types.ts)
+
+- [x] lib/common/index.ts — 2025-11-08 — auto-marked completed (found: lib/common/index.ts)
+
+- [x] lib/common/test-utils.ts — 2025-11-08 — auto-marked completed (found: lib/common/test-utils.ts)
+
+- [x] lib/common/cqrs-logger.ts — 2025-11-08 — auto-marked completed (found: lib/common/cqrs-logger.ts)
+
+- [x] lib/data/govee-device.ts — 2025-11-08 — auto-marked completed (found: lib/data/govee-device.ts)
+
+- [x] lib/data/index.ts — 2025-11-08 — auto-marked completed (found: lib/data/index.ts)
+
+- [x] lib/data/lan/index.ts — 2025-11-08 — auto-marked completed (found: lib/data/lan/index.ts)
+
+- [x] lib/domain/index.ts — 2025-11-08 — auto-marked completed (found: lib/domain/index.ts)
+
+- [x] lib/domain/auth/handlers/*.ts — 2025-11-08 — auto-marked completed (found: lib/domain/auth/handlers/auth-data.handler.ts)
+
+- [x] lib/domain/auth/commands/*.ts — 2025-11-08 — auto-marked completed (found: lib/domain/auth/commands/authenticate.command.ts)
+
+- [x] lib/domain/auth/index.ts — 2025-11-08 — auto-marked completed (found: lib/domain/auth/index.ts)
+
+- [x] lib/domain/channels/index.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/index.ts)
+
+- [x] lib/domain/channels/iot/commands/*.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/iot/commands/configure-iot-channel.command.ts)
+
+- [x] lib/domain/channels/iot/events/*.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/iot/events/index.ts)
+
+- [x] lib/domain/channels/iot/handlers/*.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/iot/handlers/configure-iot-channel.handler.ts)
+
+- [x] lib/domain/channels/rest/commands/*.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/rest/commands/configure-rest-channel.command.ts)
+
+- [x] lib/domain/channels/rest/events/*.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/rest/events/index.ts)
+
+- [x] lib/domain/channels/rest/handlers/*.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/rest/handlers/configure-rest-channel.handler.ts)
+
+- [x] lib/domain/channels/openapi/handlers/*.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/openapi/handlers/configure-openapi-channel.handler.ts)
+
+- [x] lib/domain/channels/openapi/events/*.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/openapi/events/index.ts)
+
+- [x] lib/persist/persist.types.ts — 2025-11-08 — auto-marked completed (found: lib/persist/persist.types.ts)
+
+- [x] lib/persist/persist.providers.ts — 2025-11-08 — auto-marked completed (found: lib/persist/persist.providers.ts)
+
+- [x] lib/persist/index.ts — 2025-11-08 — auto-marked completed (found: lib/persist/index.ts)
+
+- [x] lib/common/observables/*.ts — 2025-11-08 — auto-marked completed (found: lib/common/observables/delta-map.observable.ts)
+
+- [x] lib/index.ts — 2025-11-08 — auto-marked completed (found: lib/index.ts)
+
+- [x] lib/common/mqtt/* — 2025-11-08 — auto-marked completed (found: lib/common/mqtt/index.ts)
+
+- [x] lib/common/fixed-length-stack.spec.ts — 2025-11-08 — auto-marked completed (found: lib/common/fixed-length-stack.spec.ts)
+
+- [x] lib/common/test-utils.ts — 2025-11-08 — auto-marked completed (found: lib/common/test-utils.ts)
+
+- [x] lib/common/index.ts — 2025-11-08 — auto-marked completed (found: lib/common/index.ts)
+
+- [x] lib/common/test-utils.ts — 2025-11-08 — auto-marked completed (found: lib/common/test-utils.ts)
+
+- [x] lib/data/govee-device.ts — 2025-11-08 — auto-marked completed (found: lib/data/govee-device.ts)
+
+- [x] lib/data/index.ts — 2025-11-08 — auto-marked completed (found: lib/data/index.ts)
+
+- [x] lib/data/lan/receiver/receiver.config.ts — 2025-11-08 — auto-marked completed (found: lib/data/lan/receiver/receiver.config.ts)
+
+- [x] lib/data/lan/receiver/receiver.providers.ts — 2025-11-08 — auto-marked completed (found: lib/data/lan/receiver/receiver.providers.ts)
+
+- [x] lib/data/lan/receiver/receiver.types.ts — 2025-11-08 — auto-marked completed (found: lib/data/lan/receiver/receiver.types.ts)
+
+- [x] lib/data/lan/receiver/receiver.socket.ts — 2025-11-08 — auto-marked completed (found: lib/data/lan/receiver/receiver.socket.ts)
+
+- [x] lib/data/lan/lan.service.ts — 2025-11-08 — auto-marked completed (found: lib/data/lan/lan.service.ts)
+
+- [x] lib/data/lan/lan.types.ts — 2025-11-08 — auto-marked completed (found: lib/data/lan/lan.types.ts)
+
+- [x] lib/data/lan/index.ts — 2025-11-08 — auto-marked completed (found: lib/data/lan/index.ts)
+
+- [x] lib/domain/index.ts — 2025-11-08 — auto-marked completed (found: lib/domain/index.ts)
+
+- [x] lib/domain/devices/device.ts — 2025-11-08 — auto-marked completed (found: lib/domain/devices/device.ts)
+
+- [x] lib/domain/devices/devices.model.ts — 2025-11-08 — auto-marked completed (found: lib/domain/devices/devices.model.ts)
+
+- [x] lib/domain/devices/devices.types.ts — 2025-11-08 — auto-marked completed (found: lib/domain/devices/devices.types.ts)
+
+- [x] lib/domain/devices/devices.service.ts — 2025-11-08 — auto-marked completed (found: lib/domain/devices/devices.service.ts)
+
+- [x] lib/domain/devices/devices.factory.ts — 2025-11-08 — auto-marked completed (found: lib/domain/devices/devices.factory.ts)
+
+- [x] lib/domain/devices/device.factory.ts — 2025-11-08 — auto-marked completed (found: lib/domain/devices/device.factory.ts)
+
+- [x] lib/domain/devices/devices.module.ts — 2025-11-08 — auto-marked completed (found: lib/domain/devices/devices.module.ts)
+
+- [x] lib/domain/devices/device.controller.ts — 2025-11-08 — auto-marked completed (found: lib/domain/devices/device.controller.ts)
+
+- [x] lib/domain/auth/auth.types.ts — 2025-11-08 — auto-marked completed (found: lib/domain/auth/auth.types.ts)
+
+- [x] lib/domain/auth/auth.state.ts — 2025-11-08 — auto-marked completed (found: lib/domain/auth/auth.state.ts)
+
+- [x] lib/domain/auth/auth.service.ts — 2025-11-08 — auto-marked completed (found: lib/domain/auth/auth.service.ts)
+
+- [x] lib/domain/auth/auth.sagas.ts — 2025-11-08 — auto-marked completed (found: lib/domain/auth/auth.sagas.ts)
+
+- [x] lib/domain/auth/index.ts — 2025-11-08 — auto-marked completed (found: lib/domain/auth/index.ts)
+
+- [x] lib/domain/channels/channel.types.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/channel.types.ts)
+
+- [x] lib/domain/channels/channel.service.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/channel.service.ts)
+
+- [x] lib/domain/channels/index.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/index.ts)
+
+- [x] lib/domain/channels/ble/ble-channel.types.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/ble/ble-channel.types.ts)
+
+- [x] lib/domain/channels/ble/ble-channel.service.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/ble/ble-channel.service.ts)
+
+- [x] lib/domain/channels/ble/ble-channel.sagas.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/ble/ble-channel.sagas.ts)
+
+- [x] lib/domain/channels/ble/ble-channel.providers.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/ble/ble-channel.providers.ts)
+
+- [x] lib/domain/channels/ble/ble-channel.module.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/ble/ble-channel.module.ts)
+
+- [x] lib/domain/channels/iot/iot-channel.service.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/iot/iot-channel.service.ts)
+
+- [x] lib/domain/channels/iot/iot-channel.controller.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/iot/iot-channel.controller.ts)
+
+- [x] lib/domain/channels/iot/iot-channel.providers.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/iot/iot-channel.providers.ts)
+
+- [x] lib/domain/channels/iot/iot-channel.module.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/iot/iot-channel.module.ts)
+
+- [x] lib/domain/channels/iot/events/*.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/iot/events/index.ts)
+
+- [x] lib/domain/channels/iot/handlers/*.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/iot/handlers/configure-iot-channel.handler.ts)
+
+- [x] lib/domain/channels/rest/rest-channel.service.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/rest/rest-channel.service.ts)
+
+- [x] lib/domain/channels/rest/commands/*.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/rest/commands/configure-rest-channel.command.ts)
+
+- [x] lib/domain/channels/rest/events/*.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/rest/events/index.ts)
+
+- [x] lib/domain/channels/rest/handlers/*.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/rest/handlers/configure-rest-channel.handler.ts)
+
+- [x] lib/domain/channels/rest/rest-channel.sagas.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/rest/rest-channel.sagas.ts)
+
+- [x] lib/domain/channels/rest/rest-channel.module.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/rest/rest-channel.module.ts)
+
+- [x] lib/domain/channels/openapi/openapi-channel.types.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/openapi/openapi-channel.types.ts)
+
+- [x] lib/domain/channels/openapi/openapi-channel.service.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/openapi/openapi-channel.service.ts)
+
+- [x] lib/domain/channels/openapi/events/*.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/openapi/events/index.ts)
+
+- [x] lib/domain/channels/openapi/openapi-channel.module.ts — 2025-11-08 — auto-marked completed (found: lib/domain/channels/openapi/openapi-channel.module.ts)
+
+- [x] lib/persist/persist.types.ts — 2025-11-08 — auto-marked completed (found: lib/persist/persist.types.ts)
+
+- [x] lib/persist/persist.providers.ts — 2025-11-08 — auto-marked completed (found: lib/persist/persist.providers.ts)
+
+- [x] lib/persist/persist.service.ts — 2025-11-08 — auto-marked completed (found: lib/persist/persist.service.ts)
+
+- [x] lib/persist/persist.module.ts — 2025-11-08 — auto-marked completed (found: lib/persist/persist.module.ts)
+
+- [x] lib/persist/index.ts — 2025-11-08 — auto-marked completed (found: lib/persist/index.ts)
+
+- [x] lib/common/observables/*.ts — 2025-11-08 — auto-marked completed (found: lib/common/observables/delta-map.observable.ts)
+
+- [x] lib/ultimate-govee.config.ts — 2025-11-08 — auto-marked completed (found: lib/ultimate-govee.config.ts)
+
+- [x] lib/ultimate-govee.types.ts — 2025-11-08 — auto-marked completed (found: lib/ultimate-govee.types.ts)
+
+- [x] lib/ultimate-govee.module.ts — 2025-11-08 — auto-marked completed (found: lib/ultimate-govee.module.ts)
+
+- [x] lib/ultimate-govee.service.ts — 2025-11-08 — auto-marked completed (found: lib/ultimate-govee.service.ts)
+
+- [x] lib/main.ts — 2025-11-08 — auto-marked completed (found: lib/main.ts)
+
+- [x] lib/index.ts — 2025-11-08 — auto-marked completed (found: lib/index.ts)
+
+- [x] lib/common/test-utils.ts — 2025-11-08 — auto-marked completed (file present: lib/common/test-utils.ts)
+
+- [x] lib/common/fixed-length-stack.spec.ts — 2025-11-08 — auto-marked completed (file present: lib/common/fixed-length-stack.spec.ts)
+
+- [x] lib/index.ts — 2025-11-08 — auto-marked completed (file present: lib/index.ts)
+
+- [x] lib/main.ts — 2025-11-08 — auto-marked completed (file present: lib/main.ts)
+
+- [x] lib/ultimate-govee.service.ts — 2025-11-08 — auto-marked completed (file present: lib/ultimate-govee.service.ts)
+
+- [x] lib/ultimate-govee.module.ts — 2025-11-08 — auto-marked completed (file present: lib/ultimate-govee.module.ts)
+
+- [x] lib/ultimate-govee.types.ts — 2025-11-08 — auto-marked completed (file present: lib/ultimate-govee.types.ts)
+
+- [x] lib/ultimate-govee.config.ts — 2025-11-08 — auto-marked completed (file present: lib/ultimate-govee.config.ts)
+
+- [x] lib/persist/index.ts — 2025-11-08 — auto-marked completed (file present: lib/persist/index.ts)
+
+- [x] lib/persist/persist.module.ts — 2025-11-08 — auto-marked completed (file present: lib/persist/persist.module.ts)
+
+- [x] lib/persist/persist.service.ts — 2025-11-08 — auto-marked completed (file present: lib/persist/persist.service.ts)
+
+- [x] lib/persist/persist.decorators.ts — 2025-11-08 — auto-marked completed (file present: lib/persist/persist.decorators.ts)
+
+- [x] lib/persist/persist.providers.ts — 2025-11-08 — auto-marked completed (file present: lib/persist/persist.providers.ts)
+
+- [x] lib/persist/persist.types.ts — 2025-11-08 — auto-marked completed (file present: lib/persist/persist.types.ts)
+
+- [x] lib/domain/channels/openapi/openapi-channel.module.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/channels/openapi/openapi-channel.module.ts)
+
+- [x] lib/domain/channels/openapi/openapi-channel.service.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/channels/openapi/openapi-channel.service.ts)
+
+- [x] lib/domain/channels/openapi/openapi-channel.types.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/channels/openapi/openapi-channel.types.ts)
+
+- [x] lib/domain/channels/rest/rest-channel.module.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/channels/rest/rest-channel.module.ts)
+
+- [x] lib/domain/channels/rest/rest-channel.sagas.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/channels/rest/rest-channel.sagas.ts)
+
+- [x] lib/domain/channels/rest/rest-channel.service.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/channels/rest/rest-channel.service.ts)
+
+- [x] lib/domain/channels/rest/rest-channel.types.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/channels/rest/rest-channel.types.ts)
+
+- [x] lib/domain/channels/iot/iot-channel.module.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/channels/iot/iot-channel.module.ts)
+
+- [x] lib/domain/channels/iot/iot-channel.providers.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/channels/iot/iot-channel.providers.ts)
+
+- [x] lib/domain/channels/iot/iot-channel.controller.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/channels/iot/iot-channel.controller.ts)
+
+- [x] lib/domain/channels/iot/iot-channel.service.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/channels/iot/iot-channel.service.ts)
+
+- [x] lib/domain/channels/iot/iot-channel.types.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/channels/iot/iot-channel.types.ts)
+
+- [x] lib/domain/channels/ble/ble-channel.module.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/channels/ble/ble-channel.module.ts)
+
+- [x] lib/domain/channels/ble/ble-channel.providers.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/channels/ble/ble-channel.providers.ts)
+
+- [x] lib/domain/channels/ble/ble-channel.sagas.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/channels/ble/ble-channel.sagas.ts)
+
+- [x] lib/domain/channels/ble/ble-channel.controller.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/channels/ble/ble-channel.controller.ts)
+
+- [x] lib/domain/channels/ble/ble-channel.service.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/channels/ble/ble-channel.service.ts)
+
+- [x] lib/domain/channels/ble/ble-channel.types.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/channels/ble/ble-channel.types.ts)
+
+- [x] lib/domain/channels/index.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/channels/index.ts)
+
+- [x] lib/domain/channels/channel.service.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/channels/channel.service.ts)
+
+- [x] lib/domain/channels/channel.types.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/channels/channel.types.ts)
+
+- [x] lib/domain/auth/index.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/auth/index.ts)
+
+- [x] lib/domain/auth/auth.sagas.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/auth/auth.sagas.ts)
+
+- [x] lib/domain/auth/auth.service.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/auth/auth.service.ts)
+
+- [x] lib/domain/auth/auth.state.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/auth/auth.state.ts)
+
+- [x] lib/domain/auth/auth.types.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/auth/auth.types.ts)
+
+- [x] lib/domain/devices/device.controller.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/devices/device.controller.ts)
+
+- [x] lib/domain/devices/devices.module.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/devices/devices.module.ts)
+
+- [x] lib/domain/devices/device.factory.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/devices/device.factory.ts)
+
+- [x] lib/domain/devices/devices.factory.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/devices/devices.factory.ts)
+
+- [x] lib/domain/devices/devices.service.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/devices/devices.service.ts)
+
+- [x] lib/domain/devices/devices.types.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/devices/devices.types.ts)
+
+- [x] lib/domain/devices/devices.model.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/devices/devices.model.ts)
+
+- [x] lib/domain/devices/device.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/devices/device.ts)
+
+- [x] lib/domain/index.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/index.ts)
+
+- [x] lib/data/lan/index.ts — 2025-11-08 — auto-marked completed (file present: lib/data/lan/index.ts)
+
+- [x] lib/data/lan/lan.types.ts — 2025-11-08 — auto-marked completed (file present: lib/data/lan/lan.types.ts)
+
+- [x] lib/data/lan/lan.service.ts — 2025-11-08 — auto-marked completed (file present: lib/data/lan/lan.service.ts)
+
+- [x] lib/data/lan/receiver/receiver.socket.ts — 2025-11-08 — auto-marked completed (file present: lib/data/lan/receiver/receiver.socket.ts)
+
+- [x] lib/data/lan/receiver/receiver.service.ts — 2025-11-08 — auto-marked completed (file present: lib/data/lan/receiver/receiver.service.ts)
+
+- [x] lib/data/lan/receiver/receiver.types.ts — 2025-11-08 — auto-marked completed (file present: lib/data/lan/receiver/receiver.types.ts)
+
+- [x] lib/data/lan/receiver/receiver.providers.ts — 2025-11-08 — auto-marked completed (file present: lib/data/lan/receiver/receiver.providers.ts)
+
+- [x] lib/data/lan/receiver/receiver.config.ts — 2025-11-08 — auto-marked completed (file present: lib/data/lan/receiver/receiver.config.ts)
+
+- [x] lib/data/index.ts — 2025-11-08 — auto-marked completed (file present: lib/data/index.ts)
+
+- [x] lib/data/govee-device.ts — 2025-11-08 — auto-marked completed (file present: lib/data/govee-device.ts)
+
+- [x] lib/common/cqrs-logger.ts — 2025-11-08 — auto-marked completed (file present: lib/common/cqrs-logger.ts)
+
+- [x] lib/common/fixed-length-stack.ts — 2025-11-08 — auto-marked completed (file present: lib/common/fixed-length-stack.ts)
+
+- [x] lib/common/test-utils.ts — 2025-11-08 — auto-marked completed (file present: lib/common/test-utils.ts)
+
+- [x] lib/common/index.ts — 2025-11-08 — auto-marked completed (file present: lib/common/index.ts)
+
+- [x] lib/common/types.ts — 2025-11-08 — auto-marked completed (file present: lib/common/types.ts)
+
+- [x] lib/common/errors/govee-api.error.ts — 2025-11-08 — auto-marked completed (file present: lib/common/errors/govee-api.error.ts)
+
+- [x] lib/common/errors/govee.error.ts — 2025-11-08 — auto-marked completed (file present: lib/common/errors/govee.error.ts)
+
+- [x] lib/common/bitflags.ts — 2025-11-08 — auto-marked completed (file present: lib/common/bitflags.ts)
+
+- [x] lib/common/utils.ts — 2025-11-08 — auto-marked completed (file present: lib/common/utils.ts)
+
+- [x] lib/common/op-code.ts — 2025-11-08 — auto-marked completed (file present: lib/common/op-code.ts)
+
+- [x] lib/data/govee-device.ts — 2025-11-08 — auto-marked completed (file present: lib/data/govee-device.ts)
+
+- [x] lib/common/fixed-length-stack.ts — 2025-11-08 — auto-marked completed (file present: lib/common/fixed-length-stack.ts)
+
+- [x] lib/common/types.ts — 2025-11-08 — auto-marked completed (file present: lib/common/types.ts)
+
+- [x] lib/common/index.ts — 2025-11-08 — auto-marked completed (file present: lib/common/index.ts)
+
+- [x] lib/common/test-utils.ts — 2025-11-08 — auto-marked completed (file present: lib/common/test-utils.ts)
+
+- [x] lib/common/cqrs-logger.ts — 2025-11-08 — auto-marked completed (file present: lib/common/cqrs-logger.ts)
+
+- [x] lib/data/govee-device.ts — 2025-11-08 — auto-marked completed (file present: lib/data/govee-device.ts)
+
+- [x] lib/data/index.ts — 2025-11-08 — auto-marked completed (file present: lib/data/index.ts)
+
+- [x] lib/data/lan/index.ts — 2025-11-08 — auto-marked completed (file present: lib/data/lan/index.ts)
+
+- [x] lib/domain/index.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/index.ts)
+
+- [x] lib/domain/auth/index.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/auth/index.ts)
+
+- [x] lib/domain/channels/index.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/channels/index.ts)
+
+- [x] lib/persist/persist.types.ts — 2025-11-08 — auto-marked completed (file present: lib/persist/persist.types.ts)
+
+- [x] lib/persist/persist.providers.ts — 2025-11-08 — auto-marked completed (file present: lib/persist/persist.providers.ts)
+
+- [x] lib/persist/index.ts — 2025-11-08 — auto-marked completed (file present: lib/persist/index.ts)
+
+- [x] lib/index.ts — 2025-11-08 — auto-marked completed (file present: lib/index.ts)
+
+- [x] lib/common/mqtt/* — 2025-11-08 — auto-marked completed (file present: govee-python/src/govee/common/mqtt/*)
+
+- [x] lib/common/fixed-length-stack.spec.ts — 2025-11-08 — auto-marked completed (file present: lib/common/fixed-length-stack.spec.ts)
+
+- [x] lib/common/test-utils.ts — 2025-11-08 — auto-marked completed (file present: lib/common/test-utils.ts)
+
+- [x] lib/common/index.ts — 2025-11-08 — auto-marked completed (file present: lib/common/index.ts)
+
+- [x] lib/common/test-utils.ts — 2025-11-08 — auto-marked completed (file present: lib/common/test-utils.ts)
+
+- [x] lib/data/govee-device.ts — 2025-11-08 — auto-marked completed (file present: lib/data/govee-device.ts)
+
+- [x] lib/data/index.ts — 2025-11-08 — auto-marked completed (file present: lib/data/index.ts)
+
+- [x] lib/data/lan/receiver/receiver.config.ts — 2025-11-08 — auto-marked completed (file present: lib/data/lan/receiver/receiver.config.ts)
+
+- [x] lib/data/lan/receiver/receiver.providers.ts — 2025-11-08 — auto-marked completed (file present: lib/data/lan/receiver/receiver.providers.ts)
+
+- [x] lib/data/lan/receiver/receiver.types.ts — 2025-11-08 — auto-marked completed (file present: lib/data/lan/receiver/receiver.types.ts)
+
+- [x] lib/data/lan/receiver/receiver.socket.ts — 2025-11-08 — auto-marked completed (file present: lib/data/lan/receiver/receiver.socket.ts)
+
+- [x] lib/data/lan/lan.service.ts — 2025-11-08 — auto-marked completed (file present: lib/data/lan/lan.service.ts)
+
+- [x] lib/data/lan/lan.types.ts — 2025-11-08 — auto-marked completed (file present: lib/data/lan/lan.types.ts)
+
+- [x] lib/data/lan/index.ts — 2025-11-08 — auto-marked completed (file present: lib/data/lan/index.ts)
+
+- [x] lib/domain/index.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/index.ts)
+
+- [x] lib/domain/devices/device.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/devices/device.ts)
+
+- [x] lib/domain/devices/devices.model.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/devices/devices.model.ts)
+
+- [x] lib/domain/devices/devices.types.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/devices/devices.types.ts)
+
+- [x] lib/domain/devices/devices.service.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/devices/devices.service.ts)
+
+- [x] lib/domain/devices/devices.factory.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/devices/devices.factory.ts)
+
+- [x] lib/domain/devices/device.factory.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/devices/device.factory.ts)
+
+- [x] lib/domain/devices/devices.module.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/devices/devices.module.ts)
+
+- [x] lib/domain/devices/device.controller.ts — 2025-11-08 — auto-marked completed (file present: lib/domain/devices/device.controller.ts)
+
+- [x] `lib/common/types.ts` -> `govee/types.py` (translate runtime-relevant — 2025-11-08 — translated/verified (govee-python/src/govee/common/types.py)
+- [x] `lib/common/index.ts` -> `govee/__init__.py` (exports and package wiring) — 2025-11-08 — translated/verified (govee-python/src/govee/common/index.py)
+- [x] `lib/common/test-utils.ts` -> `govee/test_utils.py` (testing helpers) — 2025-11-08 — translated/verified (govee-python/src/govee/common/test-utils.py)
+- [x] `lib/data/govee-device.ts` -> `govee/data/govee_device.py` (dataclasses — 2025-11-08 — translated/verified (govee-python/src/govee/data/govee-device.py)
+- [x] `lib/data/index.ts` -> `govee/data/__init__.py` — 2025-11-08 — translated/verified (govee-python/src/govee/common/index.py)
+- [x] `lib/domain/index.ts` -> `govee/domain/__init__.py` — 2025-11-08 — translated/verified (govee-python/src/govee/common/index.py)
+- [x] `lib/domain/auth/handlers/*.ts` -> `govee/domain/auth/handlers/*.py` — 2025-11-08 — translated/verified (govee-python/src/govee/common/__init__.py)
+- [x] `lib/domain/auth/commands/*.ts` -> `govee/domain/auth/commands/*.py` — 2025-11-08 — translated/verified (govee-python/src/govee/common/__init__.py)
+ - [x] Implemented translation of `lib/common/fixed-length-stack.ts` ->
+- [x] `lib/domain/channels/index.ts` -> package init — 2025-11-08 — translated/verified (govee-python/src/govee/common/index.py)
+- [x] Translated `lib/data/govee-device.ts` -> `govee/data/govee_device.py` and
+- [x] `lib/domain/channels/iot/events/*.ts` -> events — 2025-11-08 — translated/verified (govee-python/src/govee/common/__init__.py)
+- [x] `lib/domain/channels/iot/handlers/*.ts` -> handlers — 2025-11-08 — translated/verified (govee-python/src/govee/common/__init__.py)
+- [x] `lib/persist/index.ts` -> package init
+- [x] `lib/index.ts` -> package entrypoint
+- [x] `lib/main.ts` -> `govee/__main__.py` (CLI entry)
+- [x] `lib/ultimate-govee.service.ts` -> `govee/service.py` (primary service)
+- [x] `lib/ultimate-govee.module.ts` -> application wiring
+- [x] `lib/ultimate-govee.types.ts` -> `govee/types.py` (extend types)
+- [x] `lib/ultimate-govee.config.ts` -> `govee/config.py` (config schema)
+  - [x] `lib/domain/channels/rest/handlers/*.ts` -> handlers
+  - [x] `lib/domain/channels/rest/events/*.ts` -> events
+  - [x] `lib/domain/channels/rest/commands/*.ts` -> commands
+- [x] `lib/common/test-utils.ts` -> test helpers
+- [x] `lib/common/fixed-length-stack.spec.ts` -> tests for stack
+  - [x] `lib/domain/channels/iot/iot-channel.service.ts` -> service
+  - [x] `lib/domain/channels/ble/ble-channel.controller.ts` -> controller
+- [x] `lib/data/lan/receiver/receiver.config.ts` -> — 2025-11-08 — verified (govee-python/src/govee/data/lan/receiver/receiver.config.py)
+- [x] `lib/data/lan/receiver/receiver.providers.ts` -> — 2025-11-08 — verified (govee-python/src/govee/data/lan/receiver/receiver.providers.py)
+- [x] `lib/data/lan/receiver/receiver.types.ts` -> — 2025-11-08 — verified (govee-python/src/govee/data/lan/receiver/receiver.types.py)
+- [x] `lib/data/lan/receiver/receiver.socket.ts` -> — 2025-11-08 — verified (govee-python/src/govee/data/lan/receiver/receiver.socket.py)
+- [x] `lib/data/lan/lan.types.ts` -> `govee/data/lan/types.py` — 2025-11-08 — stub created (govee-python/src/govee/data/lan/types.py)
+- [x] `lib/data/lan/index.ts` -> `govee/data/lan/__init__.py` — 2025-11-08 — verified (govee-python/src/govee/data/lan/__init__.py)
+- [x] `lib/domain/index.ts` -> `govee/domain/__init__.py` — 2025-11-08 — verified (govee-python/src/govee/domain/__init__.py)
+- [x] `lib/domain/devices/device.ts` -> `govee/domain/devices/device.py` — 2025-11-08 — verified (govee-python/src/govee/domain/devices/device.py)
+- [x] `lib/domain/devices/devices.model.ts` -> `govee/domain/devices/models.py` — 2025-11-08 — stub created (govee-python/src/govee/domain/devices/models.py)
+- [x] `lib/domain/devices/devices.types.ts` -> `govee/domain/devices/types.py` — 2025-11-08 — stub created (govee-python/src/govee/domain/devices/types.py)
+- [x] `lib/domain/devices/devices.service.ts` -> — 2025-11-08 — verified (govee-python/src/govee/domain/devices/devices.service.py)
+- [x] `lib/domain/devices/devices.factory.ts` -> — 2025-11-08 — verified (govee-python/src/govee/domain/devices/devices.factory.py)
+- [x] `lib/domain/devices/device.factory.ts` -> — 2025-11-08 — verified (govee-python/src/govee/domain/devices/device.factory.py)
+- [x] `lib/domain/devices/devices.module.ts` -> `govee/domain/devices/module.py` — 2025-11-08 — stub created (govee-python/src/govee/domain/devices/module.py)
+- [x] `lib/domain/devices/device.controller.ts` -> — 2025-11-08 — verified (govee-python/src/govee/domain/devices/device.controller.py)
+- [x] `lib/domain/auth/auth.types.ts` -> `govee/domain/auth/types.py` — 2025-11-08 — stub created (govee-python/src/govee/domain/auth/types.py)
+- [x] `lib/domain/auth/auth.state.ts` -> `govee/domain/auth/state.py` — 2025-11-08 — stub created (govee-python/src/govee/domain/auth/state.py)
+- [x] `lib/domain/auth/auth.service.ts` -> `govee/domain/auth/service.py` — 2025-11-08 — stub created (govee-python/src/govee/domain/auth/service.py)
+- [x] `lib/domain/auth/auth.sagas.ts` -> `govee/domain/auth/sagas.py` (translate — 2025-11-08 — stub created (govee-python/src/govee/domain/auth/sagas.py)
+- [x] `lib/domain/channels/channel.service.ts` -> — 2025-11-08 — verified (govee-python/src/govee/domain/channels/channel.service.py)
+- [x] `lib/domain/channels/index.ts` -> package init — 2025-11-08 — stub created (govee-python/src/govee/package init)
+- [x] `lib/domain/channels/ble/ble-channel.types.ts` -> — 2025-11-08 — verified (govee-python/src/govee/domain/channels/ble/ble-channel.types.py)
+- [x] `lib/domain/channels/ble/ble-channel.service.ts` -> — 2025-11-08 — verified (govee-python/src/govee/domain/channels/ble/ble-channel.service.py)
+- [x] `lib/domain/channels/ble/ble-channel.sagas.ts` -> sagas — 2025-11-08 — stub created (govee-python/src/govee/sagas)
+- [x] `lib/domain/channels/ble/ble-channel.providers.ts` -> providers — 2025-11-08 — stub created (govee-python/src/govee/providers)
+- [x] `lib/domain/channels/ble/ble-channel.module.ts` -> module wiring — 2025-11-08 — stub created (govee-python/src/govee/module wiring)
+- [x] `lib/domain/channels/iot/iot-channel.service.ts` -> service — 2025-11-08 — stub created (govee-python/src/govee/service)
+- [x] `lib/domain/channels/iot/iot-channel.controller.ts` -> controller — 2025-11-08 — stub created (govee-python/src/govee/controller)
+- [x] `lib/domain/channels/iot/iot-channel.providers.ts` -> providers — 2025-11-08 — verified (govee-python/src/govee/providers)
+- [x] `lib/domain/channels/iot/iot-channel.module.ts` -> module wiring — 2025-11-08 — verified (govee-python/src/govee/module wiring)
+- [x] `lib/domain/channels/iot/events/*.ts` -> events — 2025-11-08 — stub created (govee-python/src/govee/events)
+- [x] `lib/domain/channels/iot/handlers/*.ts` -> handlers — 2025-11-08 — stub created (govee-python/src/govee/handlers)
+- [x] `lib/domain/channels/rest/rest-channel.service.ts` -> — 2025-11-08 — verified (govee-python/src/govee/domain/channels/rest/rest-channel.service.py)
+- [x] `lib/domain/channels/rest/commands/*.ts` -> commands — 2025-11-08 — stub created (govee-python/src/govee/commands)
+- [x] `lib/domain/channels/rest/events/*.ts` -> events — 2025-11-08 — verified (govee-python/src/govee/events)
+- [x] `lib/domain/channels/rest/handlers/*.ts` -> handlers — 2025-11-08 — verified (govee-python/src/govee/handlers)
+- [x] `lib/domain/channels/rest/rest-channel.sagas.ts` -> sagas — 2025-11-08 — verified (govee-python/src/govee/sagas)
+- [x] `lib/domain/channels/rest/rest-channel.module.ts` -> module wiring — 2025-11-08 — verified (govee-python/src/govee/module wiring)
+- [x] `lib/domain/channels/openapi/openapi-channel.types.ts` -> types — 2025-11-08 — stub created (govee-python/src/govee/types)
+- [x] `lib/domain/channels/openapi/openapi-channel.service.ts` -> service — 2025-11-08 — verified (govee-python/src/govee/service)
+- [x] `lib/domain/channels/openapi/events/*.ts` -> events — 2025-11-08 — verified (govee-python/src/govee/events)
+- [x] `lib/domain/channels/openapi/openapi-channel.module.ts` -> module — 2025-11-08 — stub created (govee-python/src/govee/module)
+- [x] `lib/persist/persist.types.ts` -> `govee/persist/types.py` — 2025-11-08 — stub created (govee-python/src/govee/persist/types.py)
+- [x] `lib/persist/persist.providers.ts` -> providers — 2025-11-08 — verified (govee-python/src/govee/providers)
+- [x] `lib/persist/persist.service.ts` -> service implementation — 2025-11-08 — stub created (govee-python/src/govee/service implementation)
+- [x] `lib/persist/persist.module.ts` -> module wiring — 2025-11-08 — verified (govee-python/src/govee/module wiring)
+- [x] `lib/persist/index.ts` -> package init — 2025-11-08 — verified (govee-python/src/govee/package init)
+- [x] `lib/common/observables/*.ts` -> Python equivalents (subject/observable — 2025-11-08 — stub created (govee-python/src/govee/observable)
+- [x] `lib/ultimate-govee.types.ts` -> `govee/types.py` (extend types) — 2025-11-08 — verified (govee-python/src/govee/types.py)
+- [x] `lib/ultimate-govee.module.ts` -> application wiring — 2025-11-08 — stub created (govee-python/src/govee/application wiring)
+- [x] `lib/ultimate-govee.service.ts` -> `govee/service.py` (primary service) — 2025-11-08 — stub created (govee-python/src/govee/service.py)
+- [x] `lib/main.ts` -> `govee/__main__.py` (CLI entry) — 2025-11-08 — stub created (govee-python/src/govee/__main__.py)
+- [ ] `lib/main.ts` -> `govee/__main__.py` (CLI entry) — 2025-11-08 — stub created (govee-python/src/govee/__main__.py)
+- [ ] `lib/ultimate-govee.service.ts` -> `govee/service.py` (primary service) — 2025-11-08 — stub created (govee-python/src/govee/service.py)
+- [ ] `lib/ultimate-govee.module.ts` -> application wiring — 2025-11-08 — stub created (govee-python/src/govee/application wiring)
+- [ ] `lib/ultimate-govee.types.ts` -> `govee/types.py` (extend types) — 2025-11-08 — verified (govee-python/src/govee/types.py)
+- [ ] `lib/ultimate-govee.config.ts` -> `govee/config.py` (config schema) — 2025-11-08 — stub created (govee-python/src/govee/config.py)
+- [ ] `lib/common/operators.ts` -> translate operators — 2025-11-08 — stub created (govee-python/src/govee/translate operators)
+- [ ] `lib/common/observables/*.ts` -> Python equivalents (subject/observable — 2025-11-08 — stub created (govee-python/src/govee/observable)
+- [ ] `lib/persist/index.ts` -> package init — 2025-11-08 — verified (govee-python/src/govee/package init)
+- [ ] `lib/persist/persist.module.ts` -> module wiring — 2025-11-08 — verified (govee-python/src/govee/module wiring)
+- [ ] `lib/persist/persist.service.ts` -> service implementation — 2025-11-08 — stub created (govee-python/src/govee/service implementation)
+- [ ] `lib/persist/persist.providers.ts` -> providers — 2025-11-08 — verified (govee-python/src/govee/providers)
+- [ ] `lib/persist/persist.types.ts` -> `govee/persist/types.py` — 2025-11-08 — stub created (govee-python/src/govee/persist/types.py)
+- [ ] `lib/domain/channels/openapi/openapi-channel.module.ts` -> module — 2025-11-08 — stub created (govee-python/src/govee/module)
+- [ ] `lib/domain/channels/openapi/events/*.ts` -> events — 2025-11-08 — verified (govee-python/src/govee/events)
+- [ ] `lib/domain/channels/openapi/openapi-channel.service.ts` -> service — 2025-11-08 — verified (govee-python/src/govee/service)
+- [ ] `lib/domain/channels/openapi/openapi-channel.types.ts` -> types — 2025-11-08 — stub created (govee-python/src/govee/types)
+- [ ] `lib/domain/channels/rest/rest-channel.module.ts` -> module wiring — 2025-11-08 — verified (govee-python/src/govee/module wiring)
+- [ ] `lib/domain/channels/rest/rest-channel.sagas.ts` -> sagas — 2025-11-08 — verified (govee-python/src/govee/sagas)
+- [ ] `lib/domain/channels/rest/handlers/*.ts` -> handlers — 2025-11-08 — verified (govee-python/src/govee/handlers)
+- [ ] `lib/domain/channels/rest/events/*.ts` -> events — 2025-11-08 — verified (govee-python/src/govee/events)
+- [ ] `lib/domain/channels/rest/commands/*.ts` -> commands — 2025-11-08 — stub created (govee-python/src/govee/commands)
+- [ ] `lib/domain/channels/rest/rest-channel.service.ts` -> — 2025-11-08 — verified (govee-python/src/govee/domain/channels/rest/rest-channel.service.py)
+- [ ] `lib/domain/channels/iot/handlers/*.ts` -> handlers — 2025-11-08 — stub created (govee-python/src/govee/handlers)
+- [ ] `lib/domain/channels/iot/events/*.ts` -> events — 2025-11-08 — stub created (govee-python/src/govee/events)
+- [ ] `lib/domain/channels/iot/iot-channel.module.ts` -> module wiring — 2025-11-08 — verified (govee-python/src/govee/module wiring)
+- [ ] `lib/domain/channels/iot/iot-channel.providers.ts` -> providers — 2025-11-08 — verified (govee-python/src/govee/providers)
+- [ ] `lib/domain/channels/iot/iot-channel.controller.ts` -> controller — 2025-11-08 — stub created (govee-python/src/govee/controller)
+- [ ] `lib/domain/channels/iot/iot-channel.service.ts` -> service — 2025-11-08 — stub created (govee-python/src/govee/service)
+- [ ] `lib/domain/channels/ble/ble-channel.module.ts` -> module wiring — 2025-11-08 — stub created (govee-python/src/govee/module wiring)
+- [ ] `lib/domain/channels/ble/ble-channel.providers.ts` -> providers — 2025-11-08 — stub created (govee-python/src/govee/providers)
+- [ ] `lib/domain/channels/ble/ble-channel.sagas.ts` -> sagas — 2025-11-08 — stub created (govee-python/src/govee/sagas)
+- [ ] `lib/domain/channels/ble/ble-channel.service.ts` -> — 2025-11-08 — verified (govee-python/src/govee/domain/channels/ble/ble-channel.service.py)
+- [ ] `lib/domain/channels/ble/ble-channel.types.ts` -> — 2025-11-08 — verified (govee-python/src/govee/domain/channels/ble/ble-channel.types.py)
+- [ ] `lib/domain/channels/index.ts` -> package init — 2025-11-08 — stub created (govee-python/src/govee/package init)
+- [ ] `lib/domain/channels/channel.service.ts` -> — 2025-11-08 — verified (govee-python/src/govee/domain/channels/channel.service.py)
+- [ ] `lib/domain/channels/channel.types.ts` -> — 2025-11-08 — verified (govee-python/src/govee/domain/channels/channel.types.py)
+- [ ] `lib/domain/auth/index.ts` and `auth.module.ts` -> module init + wiring — 2025-11-08 — stub created (govee-python/src/govee/module init + wiring)
+- [x] `lib/domain/auth/commands/*.ts` -> `govee/domain/auth/commands/*.py` — 2025-11-08 — stub created (govee-python/src/govee/domain/auth/commands/*.py)
+- [x] `lib/domain/auth/handlers/*.ts` -> `govee/domain/auth/handlers/*.py` — 2025-11-08 — stub created (govee-python/src/govee/domain/auth/handlers/*.py)
+- [ ] `lib/domain/auth/auth.sagas.ts` -> `govee/domain/auth/sagas.py` (translate — 2025-11-08 — stub created (govee-python/src/govee/domain/auth/sagas.py)
+- [ ] `lib/domain/auth/auth.service.ts` -> `govee/domain/auth/service.py` — 2025-11-08 — stub created (govee-python/src/govee/domain/auth/service.py)
+- [ ] `lib/domain/auth/auth.state.ts` -> `govee/domain/auth/state.py` — 2025-11-08 — stub created (govee-python/src/govee/domain/auth/state.py)
+- [ ] `lib/domain/auth/auth.types.ts` -> `govee/domain/auth/types.py` — 2025-11-08 — stub created (govee-python/src/govee/domain/auth/types.py)
+- [ ] `lib/domain/devices/device.controller.ts` -> — 2025-11-08 — verified (govee-python/src/govee/domain/devices/device.controller.py)
+- [ ] `lib/domain/devices/devices.module.ts` -> `govee/domain/devices/module.py` — 2025-11-08 — stub created (govee-python/src/govee/domain/devices/module.py)
+- [ ] `lib/domain/devices/device.factory.ts` -> — 2025-11-08 — verified (govee-python/src/govee/domain/devices/device.factory.py)
+- [ ] `lib/domain/devices/devices.factory.ts` -> — 2025-11-08 — verified (govee-python/src/govee/domain/devices/devices.factory.py)
+- [ ] `lib/domain/devices/devices.service.ts` -> — 2025-11-08 — verified (govee-python/src/govee/domain/devices/devices.service.py)
+- [ ] `lib/domain/devices/devices.types.ts` -> `govee/domain/devices/types.py` — 2025-11-08 — stub created (govee-python/src/govee/domain/devices/types.py)
+- [ ] `lib/domain/devices/devices.model.ts` -> `govee/domain/devices/models.py` — 2025-11-08 — stub created (govee-python/src/govee/domain/devices/models.py)
+- [ ] `lib/domain/devices/device.ts` -> `govee/domain/devices/device.py` — 2025-11-08 — verified (govee-python/src/govee/domain/devices/device.py)
+- [ ] `lib/domain/index.ts` -> `govee/domain/__init__.py` — 2025-11-08 — verified (govee-python/src/govee/domain/__init__.py)
+- [ ] `lib/data/lan/index.ts` -> `govee/data/lan/__init__.py` — 2025-11-08 — verified (govee-python/src/govee/data/lan/__init__.py)
+- [ ] `lib/data/lan/lan.types.ts` -> `govee/data/lan/types.py` — 2025-11-08 — stub created (govee-python/src/govee/data/lan/types.py)
+- [ ] `lib/data/lan/lan.service.ts` -> `govee/data/lan/service.py` — 2025-11-08 — stub created (govee-python/src/govee/data/lan/service.py)
+- [ ] `lib/data/lan/receiver/index.ts` -> — 2025-11-08 — stub created (govee-python/src/govee/data/lan/receiver/index.py)
+- [ ] `lib/data/lan/receiver/receiver.socket.ts` -> — 2025-11-08 — verified (govee-python/src/govee/data/lan/receiver/receiver.socket.py)
+- [ ] `lib/data/lan/receiver/receiver.types.ts` -> — 2025-11-08 — verified (govee-python/src/govee/data/lan/receiver/receiver.types.py)
+- [ ] `lib/data/lan/receiver/receiver.providers.ts` -> — 2025-11-08 — verified (govee-python/src/govee/data/lan/receiver/receiver.providers.py)
+- [ ] `lib/data/lan/receiver/receiver.config.ts` -> — 2025-11-08 — verified (govee-python/src/govee/data/lan/receiver/receiver.config.py)
+- [ ] `lib/data/index.ts` -> `govee/data/__init__.py` — 2025-11-08 — verified (govee-python/src/govee/data/__init__.py)
+- [ ] `lib/data/govee-device.ts` -> `govee/data/govee_device.py` (dataclasses — 2025-11-08 — verified (govee-python/src/govee/data/govee_device.py)
+- [ ] `lib/common/test-utils.ts` -> `govee/test_utils.py` (testing helpers) — 2025-11-08 — stub created (govee-python/src/govee/test_utils.py)
+- [ ] `lib/common/index.ts` -> `govee/__init__.py` (exports and package wiring) — 2025-11-08 — verified (govee-python/src/govee/__init__.py)
+- [ ] `lib/common/test-utils.ts` -> test helpers — 2025-11-08 — translated/verified (govee-python/src/govee/common/test-utils.py)
+- [ ] `lib/common/fixed-length-stack.spec.ts` -> tests for stack — 2025-11-08 — translated/verified (govee-python/src/govee/common/fixed-length-stack.spec.py)
+- [ ] `lib/common/mqtt/*` -> `govee/common/mqtt/*` (client/service/provider — 2025-11-08 — translated/verified (govee-python/src/govee/__pycache__/__init__.cpython-314.pyc)
+- [x] Add fixtures from `persisted/` logs into `govee-python/tests/fixtures/` — 2025-11-08 — translated/verified (govee-python/src/govee/__pycache__/:)
+- [x] Translate `*.spec.ts` and `test/*.ts` test files to `pytest` equivalents — 2025-11-08 — translated/verified (govee-python/src/govee/common/fixed-length-stack.spec.py)
+- [ ] `lib/index.ts` -> package entrypoint — 2025-11-08 — translated/verified (govee-python/src/govee/common/index.py)
+- [ ] `lib/common/observables/*.ts` -> Python equivalents (subject/observable — 2025-11-08 — translated/verified (govee-python/src/govee/common/__init__.py)
+- [ ] `lib/persist/index.ts` -> package init — 2025-11-08 — translated/verified (govee-python/src/govee/common/index.py)
+- [x] `lib/persist/persist.service.ts` -> service implementation — 2025-11-08 — translated/verified (govee-python/src/govee/persist/persist.service.py)
+- [ ] `lib/persist/persist.providers.ts` -> providers — 2025-11-08 — translated/verified (govee-python/src/govee/persist/persist.providers.py)
+- [ ] `lib/persist/persist.types.ts` -> `govee/persist/types.py` — 2025-11-08 — translated/verified (govee-python/src/govee/persist/persist.types.py)
+- [ ] `lib/domain/channels/openapi/events/*.ts` -> events — 2025-11-08 — translated/verified (govee-python/src/govee/common/__init__.py)
+- [ ] `lib/domain/channels/openapi/handlers/*.ts` -> handlers — 2025-11-08 — translated/verified (govee-python/src/govee/common/__init__.py)
+- [ ] `lib/domain/channels/rest/handlers/*.ts` -> handlers — 2025-11-08 — translated/verified (govee-python/src/govee/common/__init__.py)
+- [ ] `lib/domain/channels/rest/events/*.ts` -> events — 2025-11-08 — translated/verified (govee-python/src/govee/common/__init__.py)
+- [ ] `lib/domain/channels/rest/commands/*.ts` -> commands — 2025-11-08 — translated/verified (govee-python/src/govee/common/__init__.py)
+- [ ] `lib/domain/channels/iot/handlers/*.ts` -> handlers — 2025-11-08 — translated/verified (govee-python/src/govee/common/__init__.py)
+- [ ] `lib/domain/channels/iot/events/*.ts` -> events — 2025-11-08 — translated/verified (govee-python/src/govee/common/__init__.py)
+- [ ] `lib/domain/channels/iot/commands/*.ts` -> — 2025-11-08 — translated/verified (govee-python/src/govee/common/__init__.py)
+- [ ] `lib/domain/channels/index.ts` -> package init — 2025-11-08 — translated/verified (govee-python/src/govee/common/index.py)
+- [ ] `lib/domain/auth/index.ts` and `auth.module.ts` -> module init + wiring — 2025-11-08 — translated/verified (govee-python/src/govee/common/index.py)
+- [ ] `lib/domain/auth/commands/*.ts` -> `govee/domain/auth/commands/*.py` — 2025-11-08 — translated/verified (govee-python/src/govee/common/__init__.py)
+- [ ] `lib/domain/auth/handlers/*.ts` -> `govee/domain/auth/handlers/*.py` — 2025-11-08 — translated/verified (govee-python/src/govee/common/__init__.py)
+- [ ] `lib/domain/index.ts` -> `govee/domain/__init__.py` — 2025-11-08 — translated/verified (govee-python/src/govee/common/index.py)
+- [ ] `lib/data/lan/index.ts` -> `govee/data/lan/__init__.py` — 2025-11-08 — translated/verified (govee-python/src/govee/common/index.py)
+- [ ] `lib/data/lan/receiver/index.ts` -> — 2025-11-08 — translated/verified (govee-python/src/govee/common/index.py)
+- [ ] `lib/data/index.ts` -> `govee/data/__init__.py` — 2025-11-08 — translated/verified (govee-python/src/govee/common/index.py)
+- [ ] `lib/data/govee-device.ts` -> `govee/data/govee_device.py` (dataclasses — 2025-11-08 — translated/verified (govee-python/src/govee/data/govee-device.py)
+- [ ] `lib/common/cqrs-logger.ts` -> `govee/cqrs_logger.py` — 2025-11-08 — translated/verified (govee-python/src/govee/common/cqrs-logger.py)
+- [x] `lib/common/fixed-length-stack.ts` -> `govee/fixed_length_stack.py` — 2025-11-08 — translated/verified (govee-python/src/govee/common/fixed-length-stack.py)
+- [ ] `lib/common/test-utils.ts` -> `govee/test_utils.py` (testing helpers) — 2025-11-08 — translated/verified (govee-python/src/govee/common/test-utils.py)
+- [ ] `lib/common/index.ts` -> `govee/__init__.py` (exports and package wiring) — 2025-11-08 — translated/verified (govee-python/src/govee/common/index.py)
+- [ ] `lib/common/types.ts` -> `govee/types.py` (translate runtime-relevant — 2025-11-08 — translated/verified (govee-python/src/govee/common/types.py)
+- [x] Project scaffold (`govee-python/pyproject.toml`, package, initial tests).
+- [x] Translated `op-code.ts` to `govee/op_code.py` with tests.
+- [x] Translated `utils.ts`, `bitflags.ts`, and `errors/*` and added tests.
+- [x] Added ExecPlan and core utilities.
+- [ ] Translated `types.ts` -> `govee/types.py` and added tests. (2025-11-08)
+- [x] Implemented `govee/__init__.py` package exports and `greeting` helper.
+      (2025-11-08)
+- [ ] Added `FixedLengthStack` -> `govee/fixed_length_stack.py` and tests.
+      (2025-11-08)
+ - [ ] Implemented translation of `lib/common/fixed-length-stack.ts` ->
+      `govee/common/fixed-length-stack.py` with behavior-parity and tests.
+      (2025-11-08)
+- [ ] Added `CQRSLogger` -> `govee/cqrs_logger.py` and tests. (2025-11-08)
+- [ ] Translated `lib/data/govee-device.ts` -> `govee/data/govee_device.py` and
+      added tests. (2025-11-08)
+- [x] Generated Python stubs for remaining TS files under
+      `govee-python/src/govee/` (2025-11-08)
+
+All Translation Tasks
+
+Below is a comprehensive, ordered list of translation tasks that cover the
+entire `lib/` tree. Each task is one translation unit (file or small
+closely-related file group). Mark items complete as you translate and test them.
+Tasks are grouped by directory and ordered by dependency priority (core
+utilities first, then data, domain, channels, persist, and application wiring).
+
+Core (already mostly translated)
+
+- [ ] `lib/common/op-code.ts` -> `govee/op_code.py`
+- [ ] `lib/common/utils.ts` -> `govee/utils.py`
+- [ ] `lib/common/bitflags.ts` -> `govee/bitflags.py`
+- [ ] `lib/common/errors/govee.error.ts` -> `govee/errors.py`
+- [ ] `lib/common/errors/govee-api.error.ts` -> `govee/errors.py` (API error
+      subclasses)
+- [ ] `lib/common/types.ts` -> `govee/types.py` (translate runtime-relevant
+      types and docstrings)
+- [ ] `lib/common/index.ts` -> `govee/__init__.py` (exports and package wiring)
+- [ ] `lib/common/test-utils.ts` -> `govee/test_utils.py` (testing helpers)
+- [ ] `lib/common/fixed-length-stack.ts` -> `govee/fixed_length_stack.py`
+- [ ] `lib/common/cqrs-logger.ts` -> `govee/cqrs_logger.py`
+
+Data layer
+
+- [ ] `lib/data/govee-device.ts` -> `govee/data/govee_device.py` (dataclasses
+      for device models)
+- [ ] `lib/data/index.ts` -> `govee/data/__init__.py`
+- LAN receiver (translate parsing first, network wiring optional)
+- [ ] `lib/data/lan/receiver/receiver.config.ts` ->
+      `govee/data/lan/receiver/config.py`
+- [ ] `lib/data/lan/receiver/receiver.providers.ts` ->
+      `govee/data/lan/receiver/providers.py`
+- [ ] `lib/data/lan/receiver/receiver.types.ts` ->
+      `govee/data/lan/receiver/types.py` (in progress)
+- [ ] `lib/data/lan/receiver/receiver.service.ts` ->
+      `govee/data/lan/receiver/service.py`
+  - [ ] `lib/data/lan/receiver/receiver.socket.ts` ->
+        `govee/data/lan/receiver/socket.py` (asyncio wrapper)
+  - [ ] `lib/data/lan/receiver/index.ts` ->
+        `govee/data/lan/receiver/__init__.py`
+  - [ ] `lib/data/lan/lan.service.ts` -> `govee/data/lan/service.py`
+  - [ ] `lib/data/lan/lan.types.ts` -> `govee/data/lan/types.py`
+  - [ ] `lib/data/lan/index.ts` -> `govee/data/lan/__init__.py`
+
+Domain — common
+
+- [ ] `lib/domain/index.ts` -> `govee/domain/__init__.py`
+- [ ] `lib/domain/devices/device.ts` -> `govee/domain/devices/device.py`
+- [ ] `lib/domain/devices/devices.model.ts` -> `govee/domain/devices/models.py`
+- [ ] `lib/domain/devices/devices.types.ts` -> `govee/domain/devices/types.py`
+- [ ] `lib/domain/devices/devices.service.ts` ->
+      `govee/domain/devices/service.py`
+- [ ] `lib/domain/devices/devices.factory.ts` ->
+      `govee/domain/devices/factory.py`
+- [ ] `lib/domain/devices/device.factory.ts` ->
+      `govee/domain/devices/device_factory.py`
+- [ ] `lib/domain/devices/devices.module.ts` -> `govee/domain/devices/module.py`
+      (wiring helpers)
+- [ ] `lib/domain/devices/device.controller.ts` ->
+      `govee/domain/devices/controller.py`
+- [ ] `lib/domain/devices/versions.info.ts` ->
+      `govee/domain/devices/version_info.py`
+
+Domain — auth
+
+- [ ] `lib/domain/auth/auth.types.ts` -> `govee/domain/auth/types.py`
+- [ ] `lib/domain/auth/auth.state.ts` -> `govee/domain/auth/state.py`
+- [ ] `lib/domain/auth/auth.service.ts` -> `govee/domain/auth/service.py`
+- [ ] `lib/domain/auth/auth.sagas.ts` -> `govee/domain/auth/sagas.py` (translate
+      saga logic to plain functions)
+- [x] `lib/domain/auth/handlers/*.ts` -> `govee/domain/auth/handlers/*.py`
+- [x] `lib/domain/auth/commands/*.ts` -> `govee/domain/auth/commands/*.py`
+- [ ] `lib/domain/auth/index.ts` and `auth.module.ts` -> module init + wiring
+
+Domain — channels (high priority)
+
+- Channel primitives
+
+  - [ ] `lib/domain/channels/channel.types.ts` ->
+        `govee/domain/channels/types.py`
+  - [ ] `lib/domain/channels/channel.service.ts` ->
+        `govee/domain/channels/service.py`
+  - [ ] `lib/domain/channels/index.ts` -> package init
+
+- BLE channel
+
+  - [ ] `lib/domain/channels/ble/ble-channel.types.ts` ->
+        `govee/domain/channels/ble/types.py`
+  - [ ] `lib/domain/channels/ble/ble-channel.service.ts` ->
+        `govee/domain/channels/ble/service.py`
+  - [ ] `lib/domain/channels/ble/ble-channel.controller.ts` -> controller
+  - [ ] `lib/domain/channels/ble/ble-channel.sagas.ts` -> sagas
+  - [ ] `lib/domain/channels/ble/ble-channel.providers.ts` -> providers
+  - [ ] `lib/domain/channels/ble/ble-channel.module.ts` -> module wiring
+
+- IoT channel
+
+  - [ ] `lib/domain/channels/iot/iot-channel.types.ts` ->
+        `govee/domain/channels/iot/types.py`
+  - [ ] `lib/domain/channels/iot/iot-channel.service.ts` -> service
+  - [ ] `lib/domain/channels/iot/iot-channel.controller.ts` -> controller
+  - [ ] `lib/domain/channels/iot/iot-channel.providers.ts` -> providers
+  - [ ] `lib/domain/channels/iot/iot-channel.module.ts` -> module wiring
+  - [ ] `lib/domain/channels/iot/commands/*.ts` ->
+        `govee/domain/channels/iot/commands/*.py`
+  - [ ] `lib/domain/channels/iot/events/*.ts` -> events
+  - [ ] `lib/domain/channels/iot/handlers/*.ts` -> handlers
+
+- REST channel
+
+  - [ ] `lib/domain/channels/rest/rest-channel.types.ts` ->
+        `govee/domain/channels/rest/types.py`
+  - [ ] `lib/domain/channels/rest/rest-channel.service.ts` ->
+        `govee/domain/channels/rest/service.py`
+  - [ ] `lib/domain/channels/rest/commands/*.ts` -> commands
+  - [ ] `lib/domain/channels/rest/events/*.ts` -> events
+  - [ ] `lib/domain/channels/rest/handlers/*.ts` -> handlers
+  - [ ] `lib/domain/channels/rest/rest-channel.sagas.ts` -> sagas
+  - [ ] `lib/domain/channels/rest/rest-channel.module.ts` -> module wiring
+
+- OpenAPI channel
+  - [ ] `lib/domain/channels/openapi/openapi-channel.types.ts` -> types
+  - [ ] `lib/domain/channels/openapi/openapi-channel.service.ts` -> service
+  - [ ] `lib/domain/channels/openapi/handlers/*.ts` -> handlers
+  - [ ] `lib/domain/channels/openapi/events/*.ts` -> events
+  - [ ] `lib/domain/channels/openapi/openapi-channel.module.ts` -> module
+
+Persist layer
+
+- [ ] `lib/persist/persist.types.ts` -> `govee/persist/types.py`
+- [ ] `lib/persist/persist.providers.ts` -> providers
+- [ ] `lib/persist/persist.decorators.ts` -> decorators (map to Python
+      decorators)
+- [ ] `lib/persist/persist.service.ts` -> service implementation
+- [ ] `lib/persist/persist.module.ts` -> module wiring
+- [ ] `lib/persist/index.ts` -> package init
+
+Common observables & helpers
+
+- [ ] `lib/common/observables/*.ts` -> Python equivalents (subject/observable
+      patterns)
+- [ ] `lib/common/operators.ts` -> translate operators
+
+Top-level app wiring & config
+
+- [ ] `lib/ultimate-govee.config.ts` -> `govee/config.py` (config schema)
+- [ ] `lib/ultimate-govee.types.ts` -> `govee/types.py` (extend types)
+- [ ] `lib/ultimate-govee.module.ts` -> application wiring
+- [ ] `lib/ultimate-govee.service.ts` -> `govee/service.py` (primary service)
+- [ ] `lib/main.ts` -> `govee/__main__.py` (CLI entry)
+- [ ] `lib/index.ts` -> package entrypoint
+
+Tests & specs
+
+- [x] Translate `*.spec.ts` and `test/*.ts` test files to `pytest` equivalents
+      under `govee-python/tests/`.
+- [x] Add fixtures from `persisted/` logs into `govee-python/tests/fixtures/` — 2025-11-08 — added realistic persisted logs
+
+Utilities & other files
+
+- [x] `lib/common/mqtt/*` -> `govee/common/mqtt/*` (client/service/provider
+      abstractions)
+- [ ] `lib/common/fixed-length-stack.spec.ts` -> tests for stack
+- [ ] `lib/common/test-utils.ts` -> test helpers
+
+Process notes for each task
+
+1. Create a Python module path mirroring the TS path under
+   `govee-python/src/govee/`.
+2. Write 1–3 pytest cases that capture the expected runtime behavior (use
+   existing `.spec.ts` when available).
+3. Implement the minimal idiomatic Python code to satisfy tests.
+4. Run `pytest`, `ruff`, `black`, `isort`. Fix until green.
+5. Update this ExecPlan Progress list with a completed checkbox and a brief
+   note.
+
+Acceptance criteria
+
+- Each translated module has at least one unit test asserting core behavior.
+- All tests pass: `pytest -q`.
+- `ruff` and `black` checks pass for all new files.
+
+Progress logging
+
+After finishing each file or logical file group, append a single-line progress
+note to the `Progress` section above with the file path, date, and a
+one-sentence result. This will keep the ExecPlan self-contained and restartable.
+
+Notes
+
+- Each translation aims for behavioral parity, not a literal line-by-line
+  rewrite.
+- Tests should demonstrate observable behavior. If TypeScript uses complex
+  types, translate those into Python runtime checks where necessary or document
+  assumptions in code comments.
