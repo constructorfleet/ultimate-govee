@@ -4,7 +4,7 @@ Provide a small API to create named bit flags and operate on them.
 """
 from __future__ import annotations
 
-from typing import List, Dict, Any
+from typing import List
 
 
 class BitFlagValue:
