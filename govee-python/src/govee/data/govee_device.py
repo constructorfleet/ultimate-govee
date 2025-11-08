@@ -1,70 +1,47 @@
-"""Data models for Govee devices translated from lib/data/govee-device.ts
+"""Data models for Govee devices.
 
-Provide typed dataclasses representing the device status and command
-payloads used across the codebase. Kept intentionally simple but faithful to
-the TypeScript shapes so tests can validate parsing and mapping logic.
+This is a minimal translation of lib/data/govee-device.ts providing a
+dataclass for device metadata and a helper to create devices from a
+LAN-discovery-like payload used in tests and fixtures.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Optional, Dict, Any
 
 
 @dataclass
-class Measurement:
-    min: Optional[float] = None
-    max: Optional[float] = None
-    calibration: Optional[float] = None
-    warning: Optional[bool] = None
-    current: Optional[float] = None
+class GoveeDevice:
+    device_id: str
+    model: Optional[str] = None
+    name: Optional[str] = None
+    firmware: Optional[str] = None
+    addresses: Dict[str, Optional[str]] = None
 
 
-@dataclass
-class Color:
-    red: int = 0
-    green: int = 0
-    blue: int = 0
+def from_lan_payload(payload: Dict[str, Any]) -> GoveeDevice:
+    """Create a GoveeDevice from a typical LAN discovery payload.
 
+    Example payload used in tests:
+    {
+        "device": "1234",
+        "model": "H6009",
+        "name": "Living Room",
+        "version": "1.2.3",
+        "ip": "192.168.1.10",
+        "mac": "AA:BB:CC:DD:EE:FF",
+    }
+    """
+    device_id = payload.get("device") or payload.get("deviceId") or payload.get("id")
+    if not device_id:
+        raise ValueError("payload missing device id")
 
-@dataclass
-class GoveeDeviceStatus:
-    id: str
-    model: str
-    pactType: int = 0
-    pactCode: int = 0
-    state: Dict[str, Any] = field(default_factory=dict)
-    cmd: Optional[str] = None
-    op: Optional[Dict[str, Any]] = None
-
-
-@dataclass
-class GoveeDevice(GoveeDeviceStatus):
-    name: str = ""
-    ic: int = 0
-    iotTopic: Optional[str] = None
-    groupId: int = 0
-    goodsType: int = 0
-    softwareVersion: str = ""
-    hardwareVersion: str = ""
-    wifi: Optional[Dict[str, Any]] = None
-    blueTooth: Optional[Dict[str, Any]] = None
-    deviceExt: Optional[Dict[str, Any]] = None
-
-
-@dataclass
-class GoveeCommandDataColor:
-    red: int
-    green: int
-    blue: int
-
-
-@dataclass
-class GoveeCommandData:
-    command: Optional[Any] = None
-    color: Optional[GoveeCommandDataColor] = None
-    value: Optional[Any] = None
-    val: Optional[Any] = None
-    colorTemInKelvin: Optional[int] = None
-    opcode: Optional[str] = None
-    modeValue: Optional[str] = None
+    addresses = {"ip": payload.get("ip"), "mac": payload.get("mac")}
+    return GoveeDevice(
+        device_id=str(device_id),
+        model=payload.get("model"),
+        name=payload.get("name"),
+        firmware=payload.get("version"),
+        addresses=addresses,
+    )
 
