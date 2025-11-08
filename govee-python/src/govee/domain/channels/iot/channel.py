@@ -17,6 +17,10 @@ class IoTChannel:
         # can remove only them and not others in the service.
         self._owned_subscriptions: List[str] = []
 
+    @property
+    def owned_subscriptions(self) -> List[str]:
+        return list(self._owned_subscriptions)
+
     def connect(self, iot_data: Optional[object] = None) -> None:
         # register a callback that will be invoked on incoming messages
         def on_msg(msg: IotMessage) -> None:
@@ -41,6 +45,10 @@ class IoTChannel:
         # track subscriptions created by this channel so close_subscriptions
         # can remove only them and not others in the service.
         self._owned_subscriptions: List[str] = []
+
+    @property
+    def owned_subscriptions(self) -> List[str]:
+        return list(self._owned_subscriptions)
 
     def publish_message(self, command_id: str, topic: str, payload: object, debug: bool = False, retained: bool = False, qos: Optional[int] = None, max_retries: Optional[int] = None):
         # mirror IoTChannelService.publishMessage behavior in minimal form
