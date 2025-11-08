@@ -13,6 +13,8 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
+**/.venv/
+**/*.pyc
 # OS
 .DS_Store
 
@@ -40,3 +42,7 @@ persisted/
 libs/ultimate-govee/persisted
 android/
 ble/
+
+**/.pytest_cache/
+**/__pycache__/
+**/venv/
