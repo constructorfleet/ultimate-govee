@@ -45,7 +45,7 @@ class ReceiverService:
         # listen for state changes
         fut = None
 
-        from asyncio import get_event_loop, Future
+        from asyncio import get_event_loop
 
         loop = get_event_loop()
         fut = loop.create_future()

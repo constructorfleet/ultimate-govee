@@ -1,5 +1,4 @@
 from govee.data.lan.sender.socket import SenderSocket, DummySocket
-from govee.data.lan.receiver.types import ReceiverState
 
 
 def test_sender_socket_send_and_bind():
