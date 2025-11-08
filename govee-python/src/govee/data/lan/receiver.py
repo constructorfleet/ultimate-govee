@@ -41,9 +41,44 @@ def parse_lan_packet(raw: bytes) -> Dict[str, Any]:
     payload_text = text[first:last + 1]
     try:
         payload = json.loads(payload_text)
-    except Exception as exc:
-        # Provide more context when debugging failing payloads in tests.
-        raise ValueError(f"failed to decode JSON payload: {payload_text!r}") from exc
+    except Exception:
+        # Fallback: sometimes the captured payload contains an unescaped
+        # inner JSON object in the `data` field (e.g. "data":"{...}"). In
+        # that case the outer JSON is invalid. Attempt to locate the inner
+        # object and replace it with a JSON-encoded string so the outer JSON
+        # becomes valid.
+        idx = payload_text.find('"data":')
+        if idx != -1:
+            # find the opening quote for the data value
+            qstart = payload_text.find('"', idx + len('"data":'))
+            if qstart != -1 and qstart + 1 < len(payload_text) and payload_text[qstart + 1] == '{':
+                # locate the matching closing brace for the inner JSON
+                depth = 0
+                end = -1
+                for i in range(qstart + 1, len(payload_text)):
+                    ch = payload_text[i]
+                    if ch == '{':
+                        depth += 1
+                    elif ch == '}':
+                        depth -= 1
+                        if depth == 0:
+                            end = i
+                            break
+
+                if end != -1:
+                    inner = payload_text[qstart + 1:end + 1]
+                    # replace the inner JSON with a JSON-encoded string
+                    fixed = payload_text[:qstart + 1] + json.dumps(inner) + payload_text[end + 1:]
+                    payload = json.loads(fixed)
+                    # decode nested data if it's a string
+                    if 'data' in payload and isinstance(payload['data'], str):
+                        try:
+                            payload['data'] = json.loads(payload['data'])
+                        except Exception:
+                            pass
+                    return payload
+
+        raise ValueError(f"failed to decode JSON payload: {payload_text!r}")
 
     # try to parse nested JSON in `data` if present and is a string
     if 'data' in payload and isinstance(payload['data'], str):
