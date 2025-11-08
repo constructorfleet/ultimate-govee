@@ -123,7 +123,15 @@ class IotService:
             self.published.append(msg)
             return msg
 
+        import time
+
         msg = IotMessage(topic=topic, payload=msg_payload, retained=retained)
+        # attach metadata if provided via kwargs style (qos) and always timestamp
+        try:
+            msg.qos = None
+            msg.timestamp = time.time()
+        except Exception:
+            pass
         self.published.append(msg)
         if retained:
             # store a copy of the retained message
