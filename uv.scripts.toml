@@ -5,7 +5,7 @@
 # project-specific scripts in govee-python/uv.scripts.toml remain the
 # canonical place for the full workflow used during development.
 
-test = "python3 govee-python/run_tests.py"
-lint = "echo 'lint skipped in lightweight root script'"
-format_check = "echo 'format check skipped in lightweight root script'"
-all_checks = "sh -c 'uv run -s test || python3 govee-python/run_tests.py'"
+test = "govee-python/.venv/bin/python govee-python/run_tests.py"
+lint = "govee-python/.venv/bin/ruff check govee-python/src govee-python/tests || true"
+format_check = "govee-python/.venv/bin/black --check govee-python && govee-python/.venv/bin/isort --check-only govee-python && govee-python/.venv/bin/ruff check govee-python/src govee-python/tests"
+all_checks = "sh -c 'uv run -s format_check && uv run -s test'"
