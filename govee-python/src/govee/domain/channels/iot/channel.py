@@ -34,3 +34,10 @@ class IoTChannel:
     def disconnect(self) -> None:
         self.iot.disconnect()
         self._connected = False
+
+    def publish_message(self, command_id: str, topic: str, payload: object, debug: bool = False):
+        # mirror IoTChannelService.publishMessage behavior in minimal form
+        if debug:
+            pass
+        # the IotService.send in our stub returns the created IotMessage
+        return self.iot.send(topic, payload)
