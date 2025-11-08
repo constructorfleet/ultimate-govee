@@ -29,3 +29,6 @@ __version__ = "0.1.0"
 
 def hello(name: str = "world") -> str:
     return f"hello {name}"
+
+# Ensure subpackages like govee.data can be imported as packages by tests
+from . import data  # type: ignore
