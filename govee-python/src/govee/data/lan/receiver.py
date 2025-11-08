@@ -39,7 +39,11 @@ def parse_lan_packet(raw: bytes) -> Dict[str, Any]:
         raise ValueError('no JSON object found in packet')
 
     payload_text = text[first:last + 1]
-    payload = json.loads(payload_text)
+    try:
+        payload = json.loads(payload_text)
+    except Exception as exc:
+        # Provide more context when debugging failing payloads in tests.
+        raise ValueError(f"failed to decode JSON payload: {payload_text!r}") from exc
 
     # try to parse nested JSON in `data` if present and is a string
     if 'data' in payload and isinstance(payload['data'], str):
