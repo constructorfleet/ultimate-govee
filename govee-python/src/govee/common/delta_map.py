@@ -114,6 +114,16 @@ class DeltaMap(MutableMapping, Generic[K, V]):
     def clearDelta(self) -> None:
         return self.clear_delta()
 
+    def delete_multiple(self, entry_ids: Iterable[K]) -> None:
+        for entry_id in entry_ids:
+            if entry_id in self._store:
+                # reuse deletion logic
+                del self[entry_id]
+
+    # TypeScript-compatible alias
+    def deleteMultiple(self, entry_ids: Iterable[K]) -> None:
+        return self.delete_multiple(entry_ids)
+
 class DeltaSet(DeltaMap[V, K]):
     # For tests we don't need extra behavior; keep as alias-ish
     pass
