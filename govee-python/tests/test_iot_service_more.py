@@ -321,3 +321,25 @@ def test_configurable_incoming_queue_max():
     svc.connect(callback=cb)
     # only last 2 messages should be delivered
     assert called.get('seen') == ['govee/device/cfg', 'govee/device/cfg']
+
+
+def test_constructor_queue_max():
+    # construct service with a specific max queue size
+    svc = IotService()
+    svc._incoming_queue_max = 2
+
+    called = {}
+    def cb(msg: IotMessage) -> None:
+        called.setdefault('seen', []).append(msg.topic)
+
+    svc.connect(callback=cb)
+    svc.subscribe('govee/device/constr')
+    svc.disconnect()
+
+    svc.simulate_incoming(IotMessage(topic='govee/device/constr', payload={'v':1}))
+    svc.simulate_incoming(IotMessage(topic='govee/device/constr', payload={'v':2}))
+    svc.simulate_incoming(IotMessage(topic='govee/device/constr', payload={'v':3}))
+
+    svc.connect(callback=cb)
+    # only last 2 messages should be delivered
+    assert called.get('seen') == ['govee/device/constr', 'govee/device/constr']
