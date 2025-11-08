@@ -334,6 +334,9 @@ class IotService:
             return
         remaining: List[IotMessage] = []
         for msg in list(self._inflight):
+            # if message has been acknowledged, drop it from inflight silently
+            if getattr(msg, 'acked', False):
+                continue
             max_retries = getattr(msg, 'max_retries', 3)
             msg.send_attempts = getattr(msg, 'send_attempts', 0) + 1
             if msg.send_attempts > max_retries:
