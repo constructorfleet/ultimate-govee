@@ -182,8 +182,15 @@ class IotService:
                     # enforce max size: evict oldest if needed
                     if len(self._incoming_queue) >= self._incoming_queue_max:
                         # drop oldest
-                        self._incoming_queue.pop(0)
+                        dropped = self._incoming_queue.pop(0)
                         self._dropped_count += 1
+                        # invoke any registered drop callbacks
+                        if hasattr(self, '_drop_callbacks'):
+                            for cb in list(self._drop_callbacks):
+                                try:
+                                    cb(dropped)
+                                except Exception:
+                                    pass
                     else:
                         self._queued_count += 1
                     self._incoming_queue.append(msg)
@@ -246,3 +253,14 @@ class IotService:
     def queued_count(self) -> int:
         """Number of messages currently queued for delivery."""
         return len(self._incoming_queue)
+
+    def register_drop_callback(self, cb: Callable[[IotMessage], None]) -> None:
+        """Register a callback invoked when messages are dropped due to queue eviction."""
+        if not hasattr(self, '_drop_callbacks'):
+            self._drop_callbacks = []
+        if cb not in self._drop_callbacks:
+            self._drop_callbacks.append(cb)
+
+    def unregister_drop_callback(self, cb: Callable[[IotMessage], None]) -> None:
+        if hasattr(self, '_drop_callbacks') and cb in self._drop_callbacks:
+            self._drop_callbacks.remove(cb)
