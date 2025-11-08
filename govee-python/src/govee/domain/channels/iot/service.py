@@ -67,3 +67,12 @@ class IotService:
     # backward compatible alias used by some tests
     def publish(self, msg: IotMessage) -> None:
         self.published.append(msg)
+
+    def simulate_incoming(self, msg: IotMessage) -> None:
+        """Invoke the registered incoming-message callback with msg.
+
+        Tests can call this to emulate an MQTT message arriving from the broker.
+        If no callback is registered the call is a no-op.
+        """
+        if self._callback is not None:
+            self._callback(msg)
