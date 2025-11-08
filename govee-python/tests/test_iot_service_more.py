@@ -500,3 +500,27 @@ def test_qos1_ack_flow():
     # calling acknowledge should set acked True
     svc.acknowledge(msg)
     assert getattr(msg, 'acked', False) is True
+
+
+def test_send_with_retry_and_inflight_drop():
+    svc = IotService()
+
+    # register drop callback to observe dropped inflight message
+    dropped = []
+    svc.register_drop_callback(lambda m: dropped.append(m.payload))
+
+    # send with retry semantics (qos=1) and max_retries=2
+    msg = svc.send_with_retry('govee/device/retry', {'cmd': 'ping'}, qos=1, max_retries=2)
+    assert getattr(msg, 'send_attempts', 0) == 1
+    # msg should be in inflight list
+    assert msg in svc._inflight
+
+    # first retry: attempts -> 2 (still <= max_retries)
+    svc.retry_inflight()
+    assert msg.send_attempts == 2
+    assert dropped == []
+
+    # second retry: attempts -> 3 which is > max_retries, should be dropped
+    svc.retry_inflight()
+    assert msg not in svc._inflight
+    assert dropped == [{'cmd': 'ping'}]
