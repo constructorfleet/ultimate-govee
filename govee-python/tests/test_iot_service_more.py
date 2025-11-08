@@ -544,3 +544,16 @@ def test_metrics_inflight_count():
     msg.max_retries = 0
     svc.retry_inflight()
     assert svc.inflight_count == 0
+
+
+def test_ack_removes_inflight():
+    svc = IotService()
+    # send with retry tracking
+    msg = svc.send_with_retry('govee/device/ack', {'cmd': 'ping'}, qos=1, max_retries=3)
+    assert svc.inflight_count == 1
+
+    # acknowledge should remove from inflight
+    svc.acknowledge(msg)
+    # remove inflight entries that were acked
+    svc.retry_inflight()
+    assert svc.inflight_count == 0
