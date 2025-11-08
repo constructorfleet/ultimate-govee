@@ -49,6 +49,6 @@ class IoTChannel:
         if qos and qos > 0:
             # prefer IoTService.send_with_retry if available
             if hasattr(self.iot, 'send_with_retry'):
-                return self.iot.send_with_retry(topic, serialized, qos=qos, max_retries=(max_retries or 3))
+                return self.iot.send_with_retry(topic, serialized, qos=qos, max_retries=(max_retries or 3), retained=retained)
         # otherwise forward retained and qos to the IotService.send stub
         return self.iot.send(topic, serialized, retained=retained, qos=qos)
