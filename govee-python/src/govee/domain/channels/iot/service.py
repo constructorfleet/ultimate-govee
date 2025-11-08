@@ -191,6 +191,15 @@ class IotService:
                                     cb(dropped)
                                 except Exception:
                                     pass
+                        # log the drop for observability
+                        try:
+                            import logging
+
+                            logging.getLogger(__name__).warning(
+                                "Dropped incoming message for topic %s", dropped.topic
+                            )
+                        except Exception:
+                            pass
                     else:
                         self._queued_count += 1
                     self._incoming_queue.append(msg)
