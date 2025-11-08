@@ -317,3 +317,7 @@ class IotService:
             else:
                 remaining.append(msg)
         self._inflight = remaining
+
+    @property
+    def inflight_count(self) -> int:
+        return len(getattr(self, "_inflight", []))
