@@ -40,4 +40,10 @@ class IoTChannel:
         if debug:
             pass
         # the IotService.send in our stub returns the created IotMessage
-        return self.iot.send(topic, payload)
+        import json
+
+        if not isinstance(payload, str):
+            serialized = json.dumps(payload)
+        else:
+            serialized = payload
+        return self.iot.send(topic, serialized)
