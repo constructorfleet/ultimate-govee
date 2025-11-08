@@ -25,6 +25,10 @@ class IoTChannel:
                 self.devices.update_state(device_id, payload)
 
         self.iot.connect(iot_data, on_msg)
+        # subscribe to device topics by default so incoming messages are routed
+        # to the registered callback. Tests use 'govee/device/<id>' topics, so
+        # a simple prefix wildcard is sufficient.
+        self.iot.subscribe('govee/device/#')
         self._connected = True
 
     def disconnect(self) -> None:
