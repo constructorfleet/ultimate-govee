@@ -572,3 +572,25 @@ def test_auto_ack_on_incoming():
     # the inflight message should have been acknowledged and removed
     assert getattr(msg, 'acked', False) is True
     assert svc.inflight_count == 0
+
+
+def test_set_incoming_queue_max_trims_queue():
+    svc = IotService()
+    svc.connect()
+    svc.subscribe('govee/device/trim')
+    svc.disconnect()
+
+    svc.simulate_incoming(IotMessage(topic='govee/device/trim', payload={'v':1}))
+    svc.simulate_incoming(IotMessage(topic='govee/device/trim', payload={'v':2}))
+    svc.simulate_incoming(IotMessage(topic='govee/device/trim', payload={'v':3}))
+
+    # shrink max to 2; this should drop the oldest queued message
+    prev_dropped = svc.dropped_count
+    svc.set_incoming_queue_max(2)
+    assert svc.queued_count == 2
+    assert svc.dropped_count == prev_dropped + 1
+
+    # reconnect should deliver remaining two messages
+    seen = []
+    svc.connect(callback=lambda m: seen.append(m.payload))
+    assert seen == [{'v':2}, {'v':3}]
