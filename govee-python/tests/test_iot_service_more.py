@@ -343,3 +343,28 @@ def test_constructor_queue_max():
     svc.connect(callback=cb)
     # only last 2 messages should be delivered
     assert called.get('seen') == ['govee/device/constr', 'govee/device/constr']
+
+
+def test_dropped_message_metric():
+    svc = IotService()
+    # small queue to force eviction
+    svc._incoming_queue_max = 2
+
+    svc.connect()
+    svc.subscribe('govee/device/drop')
+    svc.disconnect()
+
+    # send 3 messages, expect 1 to be dropped (oldest)
+    svc.simulate_incoming(IotMessage(topic='govee/device/drop', payload={'v':1}))
+    svc.simulate_incoming(IotMessage(topic='govee/device/drop', payload={'v':2}))
+    svc.simulate_incoming(IotMessage(topic='govee/device/drop', payload={'v':3}))
+
+    # check internal dropped counter (to be implemented)
+    assert getattr(svc, '_dropped_count', None) == 1
+
+    # now reconnect and ensure we get the last 2 messages
+    called = {}
+    def cb(msg: IotMessage) -> None:
+        called.setdefault('seen', []).append(msg.payload)
+    svc.connect(callback=cb)
+    assert called.get('seen') == [{'v':2}, {'v':3}]
