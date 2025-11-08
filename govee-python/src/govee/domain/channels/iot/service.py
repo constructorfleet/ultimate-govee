@@ -429,8 +429,24 @@ class IotService:
                     else:
                         new_sched.append((msg, []))
                 else:
-                    # consume one interval and reschedule
+                    # consume one interval and reschedule; if this leaves no
+                    # intervals, treat as a retry attempt immediately in this
+                    # step.
                     intervals.pop(0)
-                    new_sched.append((msg, intervals))
+                    if not intervals:
+                        # no intervals left; treat as retry attempt now
+                        msg.send_attempts = getattr(msg, 'send_attempts', 0) + 1
+                        if msg.send_attempts > getattr(msg, 'max_retries', 3):
+                            # drop and call drop callbacks
+                            if hasattr(self, '_drop_callbacks'):
+                                for cb in list(self._drop_callbacks):
+                                    try:
+                                        cb(msg)
+                                    except Exception:
+                                        pass
+                            if hasattr(self, '_inflight') and msg in self._inflight:
+                                self._inflight.remove(msg)
+                    else:
+                        new_sched.append((msg, intervals))
             self._scheduled_retries = new_sched
 
