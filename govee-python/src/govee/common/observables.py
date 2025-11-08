@@ -55,6 +55,11 @@ class DeltaSubject(Subject):
         for s in list(self._subs):
             s(delta)
 
+    @property
+    def observed(self) -> bool:
+        """Compatibility alias: whether there are subscribers."""
+        return bool(self._subs)
+
     def last(self) -> Dict[Any, Any]:
         """Return the current merged map of values."""
         return dict(self._last)
@@ -71,6 +76,10 @@ class ForwardBehaviorSubject(Subject):
 
     def get_value(self) -> Any:
         return self._value
+
+    # TypeScript-compatible alias
+    def getValue(self) -> Any:
+        return self.get_value()
 
     def next(self, value: Any) -> None:
         self._value = value
@@ -117,3 +126,10 @@ class PartialBehaviorSubject(ForwardBehaviorSubject):
             # forwarded to full-value subscribers via next(). Partial
             # subscribers are not notified since they expect dict updates.
             self.next(value)
+
+    # TypeScript-compatible aliases
+    def partialSubscribe(self, fn: Callable[[Any], None]):
+        return self.partial_subscribe(fn)
+
+    def partialNext(self, value: dict) -> None:
+        return self.partial_next(value)
