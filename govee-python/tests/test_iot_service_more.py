@@ -391,3 +391,19 @@ def test_dropped_count_property():
         seen.append(m.payload)
     svc.connect(callback=cb)
     assert seen == [{"v":2}, {"v":3}]
+
+
+def test_reset_dropped_count():
+    svc = IotService()
+    svc._incoming_queue_max = 1
+
+    svc.connect()
+    svc.subscribe('govee/device/reset')
+    svc.disconnect()
+
+    svc.simulate_incoming(IotMessage(topic='govee/device/reset', payload={'v':1}))
+    svc.simulate_incoming(IotMessage(topic='govee/device/reset', payload={'v':2}))
+
+    assert svc.dropped_count >= 1
+    svc.reset_dropped_count()
+    assert svc.dropped_count == 0
