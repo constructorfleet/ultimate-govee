@@ -106,10 +106,12 @@ def test_channel_close_subscriptions():
     channel.connect()
     # subscribe to an extra topic directly
     iot.subscribe('govee/device/extra')
-    # close subscriptions should clear all subscriptions the channel created
+    # close_subscriptions should remove only subscriptions created by the channel
     channel.close_subscriptions()
-    # ensure the service no longer has the channel subscription prefix
-    assert not any(s.startswith('govee/device') for s in iot.subscriptions)
+    # the extra subscription created directly on the service should remain
+    assert 'govee/device/extra' in iot.subscriptions
+    # the channel-owned subscription should have been removed
+    assert not any(s == 'govee/device/#' for s in iot.subscriptions)
 
 
 def test_channel_close_subscriptions_ownership():
