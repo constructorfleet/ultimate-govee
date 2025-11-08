@@ -1,0 +1,22 @@
+[project]
+name = "govee-ultimate"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13.1"
+dependencies = []
+
+[tool.uv.scripts]
+test = "python -m pytest --maxfail=1 -q"
+lint = "ruff check src tests"
+format_check = "black --check . && isort --check-only . && ruff check src tests"
+all_checks = "sh -c 'uv run -s format_check && uv run -s test'"
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "--cov=src/govee --cov-report=term-missing --cov-fail-under=80"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 88
+exclude = [".venv", "dist", "build", "node_modules"]
