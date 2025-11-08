@@ -1,0 +1,11 @@
+[scripts]
+# Lightweight scripts for working with the translated Python package.
+# These are intentionally minimal so tests can be run in environments without
+# uv installed or where installing dependencies is not possible. The
+# project-specific scripts in govee-python/uv.scripts.toml remain the
+# canonical place for the full workflow used during development.
+
+test = "python3 govee-python/run_tests.py"
+lint = "echo 'lint skipped in lightweight root script'"
+format_check = "echo 'format check skipped in lightweight root script'"
+all_checks = "sh -c 'uv run -s test || python3 govee-python/run_tests.py'"
