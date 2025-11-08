@@ -634,3 +634,25 @@ def test_metrics_accessor():
     assert m['queued_count'] == 2
     assert 'dropped_count' in m
     assert 'inflight_count' in m
+
+
+def test_async_retry_backoff_simulation():
+    svc = IotService()
+
+    dropped = []
+    svc.register_drop_callback(lambda m: dropped.append(m.payload))
+
+    # send_with_retry with backoff intervals schedules retry events
+    msg = svc.send_with_retry('govee/device/backoff', {'cmd': 'x'}, qos=1, max_retries=2, backoff_intervals=[0.01, 0.02])
+    assert svc.inflight_count == 1
+    assert getattr(msg, 'send_attempts', 0) == 1
+
+    # run first scheduled retry (simulate passage of time)
+    svc.run_scheduled_retries(1)
+    # an attempt was made
+    assert getattr(msg, 'send_attempts', 0) == 2
+
+    # run second scheduled retry -> exceeds max_retries and drops
+    svc.run_scheduled_retries(1)
+    assert svc.inflight_count == 0
+    assert dropped == [{'cmd': 'x'}]
