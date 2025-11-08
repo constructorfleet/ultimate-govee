@@ -37,6 +37,9 @@ class IotService:
         # counter for how many messages have been dropped due to queue eviction
         self._dropped_count: int = 0
         self.connected: bool = False
+        # interruption flag: when True, incoming messages are queued even if
+        # callbacks are registered (simulates transient network interruption)
+        self._interrupted: bool = False
         # store the last iot_data passed to connect for higher-level tests
         self.iot_data: Optional[object] = None
         # support multiple callbacks
@@ -167,7 +170,10 @@ class IotService:
         # if there are no callbacks registered we are disconnected from any
         # listeners; queue messages that match subscriptions so they can be
         # delivered when a callback registers again.
-        if not self._callbacks:
+        # if interrupted or there are no callbacks registered, queue messages
+        # that match subscriptions so they can be delivered when resumed or a
+        # callback registers again.
+        if self._interrupted or not self._callbacks:
             # if message topic matches any subscription, queue it (bounded)
             for sub in self.subscriptions:
                 if self._topic_matches_subscription(msg.topic, sub):
