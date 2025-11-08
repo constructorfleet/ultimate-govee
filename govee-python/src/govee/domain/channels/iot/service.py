@@ -102,7 +102,7 @@ class IotService:
         # all subscription levels consumed; topic must not have extra levels
         return i == len(topic_levels)
 
-    def send(self, topic: str, payload: object, retained: bool = False) -> IotMessage:
+    def send(self, topic: str, payload: object, retained: bool = False, qos: Optional[int] = None) -> IotMessage:
         """Record a published message.
 
         The payload in the TS implementation is a JSON string. To keep tests
@@ -126,12 +126,10 @@ class IotService:
         import time
 
         msg = IotMessage(topic=topic, payload=msg_payload, retained=retained)
-        # attach metadata if provided via kwargs style (qos) and always timestamp
-        try:
-            msg.qos = None
-            msg.timestamp = time.time()
-        except Exception:
-            pass
+        # attach metadata
+        import time
+        msg.qos = qos
+        msg.timestamp = time.time()
         self.published.append(msg)
         if retained:
             # store a copy of the retained message
