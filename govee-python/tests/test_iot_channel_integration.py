@@ -143,3 +143,21 @@ def test_channel_owned_subscriptions_property():
     channel.close_subscriptions()
     # after closing, owned_subscriptions should be empty
     assert channel.owned_subscriptions == []
+
+
+def test_channel_metrics_text_delegates_to_service():
+    svc = IotService()
+    devices = DevicesService()
+    channel = IoTChannel(svc, devices)
+
+    # queue some messages to affect metrics
+    svc.connect()
+    svc.subscribe('govee/device/metrics_via_channel')
+    svc.disconnect()
+    svc.simulate_incoming(IotMessage(topic='govee/device/metrics_via_channel', payload={'v':1}))
+
+    # Channel should expose a metrics_text that delegates to the service
+    txt1 = svc.metrics_text()
+    txt2 = channel.metrics_text()
+    assert txt1 == txt2
+    assert 'govee_iot_queued_count' in txt2
