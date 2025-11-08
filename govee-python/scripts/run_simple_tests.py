@@ -14,6 +14,10 @@ import sys
 import traceback
 
 ROOT = os.path.dirname(os.path.dirname(__file__))
+# Ensure the package source dir is on sys.path so tests can import `govee`.
+SRC = os.path.join(ROOT, 'src')
+if SRC not in sys.path:
+    sys.path.insert(0, SRC)
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
