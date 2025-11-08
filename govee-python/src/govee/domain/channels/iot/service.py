@@ -212,6 +212,23 @@ class IotService:
         # subscription. This mirrors how a broker would route messages.
         for sub in self.subscriptions:
             if self._topic_matches_subscription(msg.topic, sub):
+                # If the incoming message looks like an ack for inflight
+                # messages (contains an 'ack_for' key) then match and ack
+                # inflight messages instead of delivering the message.
+                if isinstance(msg.payload, dict) and 'ack_for' in msg.payload:
+                    ack_for = msg.payload['ack_for']
+                    # find matching inflight message(s)
+                    if hasattr(self, '_inflight'):
+                        remaining = []
+                        for im in list(self._inflight):
+                            if isinstance(im.payload, dict) and im.payload == ack_for:
+                                im.acked = True
+                                # invoke acknowledge semantics
+                                # drop from inflight
+                                continue
+                            remaining.append(im)
+                        self._inflight = remaining
+                        return
                 for cb in list(self._callbacks):
                     cb(msg)
                 return
