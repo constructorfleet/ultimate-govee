@@ -36,9 +36,19 @@ def test_is_token_valid():
     assert svc.is_token_valid(token) is True
 
 
-def test_authenticate_flow(tmp_path):
-    persist_path = tmp_path / "acct.json"
-    svc = GoveeAccountService(persist=type("P", (), {"save": lambda self,obj: persist_path.write_text(obj.__repr__()), "load": lambda self: None})(), request=fake_request, parse_p12=fake_parse_p12)
+def test_authenticate_flow():
+    # Create a tiny in-memory persist stub compatible with PersistService API
+    class StubPersist:
+        def __init__(self):
+            self.stored = None
+
+        def save(self, obj):
+            self.stored = obj
+
+        def load(self):
+            return None
+
+    svc = GoveeAccountService(persist=StubPersist(), request=fake_request, parse_p12=fake_parse_p12)
     account = svc.authenticate({"username": "u", "password": "p", "clientId": "c"})
     assert account.accountId == "acct-1"
     assert account.clientId == "client-x"
