@@ -110,3 +110,20 @@ def test_channel_close_subscriptions():
     channel.close_subscriptions()
     # ensure the service no longer has the channel subscription prefix
     assert not any(s.startswith('govee/device') for s in iot.subscriptions)
+
+
+def test_channel_close_subscriptions_ownership():
+    iot = IotService()
+    devices = DevicesService()
+    channel = IoTChannel(iot, devices)
+
+    # channel subscribes on connect
+    channel.connect()
+    # another consumer subscribes to a different topic in same namespace
+    iot.subscribe('govee/device/other')
+
+    # close_subscriptions should only remove those created by channel
+    channel.close_subscriptions()
+
+    # the other subscription should remain
+    assert 'govee/device/other' in iot.subscriptions
