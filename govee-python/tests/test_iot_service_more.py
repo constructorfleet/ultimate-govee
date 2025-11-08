@@ -557,3 +557,18 @@ def test_ack_removes_inflight():
     # remove inflight entries that were acked
     svc.retry_inflight()
     assert svc.inflight_count == 0
+
+
+def test_auto_ack_on_incoming():
+    svc = IotService()
+    # send with retry tracking
+    msg = svc.send_with_retry('govee/device/autoack', {'cmd': 'ping'}, qos=1, max_retries=3)
+    assert svc.inflight_count == 1
+
+    # simulate incoming ack message referencing the payload
+    ack_payload = {'ack_for': {'cmd': 'ping'}}
+    svc.simulate_incoming(IotMessage(topic='govee/device/autoack', payload=ack_payload))
+
+    # the inflight message should have been acknowledged and removed
+    assert getattr(msg, 'acked', False) is True
+    assert svc.inflight_count == 0
