@@ -241,3 +241,8 @@ class IotService:
                             cb(queued)
                         break
             self._incoming_queue.clear()
+
+    @property
+    def queued_count(self) -> int:
+        """Number of messages currently queued for delivery."""
+        return len(self._incoming_queue)
