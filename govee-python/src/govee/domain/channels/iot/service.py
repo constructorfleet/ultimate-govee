@@ -29,6 +29,8 @@ class IotService:
         self.published: List[IotMessage] = []
         self.subscriptions: List[str] = []
         self.connected: bool = False
+        # store the last iot_data passed to connect for higher-level tests
+        self.iot_data: Optional[object] = None
         self._callback: Optional[Callable[[IotMessage], None]] = None
 
     def connect(self, iot_data: object = None, callback: Optional[Callable[[IotMessage], None]] = None) -> None:
@@ -39,6 +41,8 @@ class IotService:
         stored and may be invoked by tests to emulate incoming messages.
         """
         self.connected = True
+        # persist the iot_data for tests that need access to the connection info
+        self.iot_data = iot_data
         if callback is not None:
             self._callback = callback
 
@@ -46,6 +50,8 @@ class IotService:
         """Simulate disconnecting from the broker."""
         self.connected = False
         self._callback = None
+        # clear stored iot_data on disconnect
+        self.iot_data = None
 
     def subscribe(self, topic: str) -> None:
         if topic not in self.subscriptions:
