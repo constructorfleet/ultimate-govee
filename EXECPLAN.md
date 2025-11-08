@@ -117,3 +117,93 @@ feature, including files to edit, diffs to apply, tests to add (with concrete
 example inputs/outputs), and the exact commands required to reproduce the
 RED→GREEN→REFACTOR loop.
 
+
+
+Recent iteration: complete IoT channel (in the Python translation)
+
+The repository includes a small translated Python package under govee-python
+that provides unit tests for the IoT channel. During this iteration the
+following work was completed and validated locally. The entries below update
+the ExecPlan to record the steps and outcomes so reviewers can follow along.
+
+Completed steps
+
+- Implement minimal in-memory IoT service and IoT channel adapter used by
+  tests (govee-python/src/govee/domain/channels/iot/service.py and
+  govee-python/src/govee/domain/channels/iot/channel.py). These mirror the
+  production TS behavior sufficiently for unit tests: connect, subscribe,
+  retained messages, queueing while disconnected, QoS/inflight simulation,
+  and simple wildcard topic matching.
+- Add/adjust tests under govee-python/tests to exercise the IoT channel and
+  service behavior (already present; validated).
+- Make the lightweight test runner compatible with a subset of pytest
+  fixtures: implemented a minimal caplog-like fixture so tests that expect
+  a `caplog` parameter can run under the simple runner. File changed:
+  govee-python/run_tests.py
+
+Validation commands (exact)
+
+- Attempt to run via uv (preferred):
+
+  uv run -s test
+
+  Note: on my machine uv attempted to run but returned an OS error related to
+  a filename conflict with a directory named `test`. The lightweight runner
+  can also be invoked directly as shown below.
+
+- Direct invocation using the packaged virtualenv (reliable):
+
+  . govee-python/.venv/bin/activate && python govee-python/run_tests.py
+
+  This ran the full lightweight test-suite: "Ran 92 tests, failures: 0"
+
+Repository changes made (committed)
+
+- fix(test-runner): provide minimal caplog-like fixture for lightweight test runner
+- fix(test-runner): supply caplog fixture to tests expecting it
+- fix(test-runner): normalize LogRecord to include .message for caplog compatibility
+
+These commits are on branch feat/python-iot-channel and include the small
+runtime helper needed to run the translated test-suite outside pytest.
+
+Next tasks to complete the IoT channel work
+
+1) Tidy the IoTChannel implementation: remove duplicated property
+   definitions and ensure imports/annotations are clean. Keep tests green.
+2) Expand tests for edge-cases (retained message clearing, QoS ack
+   interactions across reconnects). Add specific realistic payload samples
+   where helpful. Keep tests fast and deterministic.
+3) If reviewers request integration with the TypeScript codebase, add a
+   mapping/adapter and update lib/ code paths as necessary. Prefer small
+   incremental commits following TDD: add failing test, implement minimum,
+   refactor.
+
+Update progress checklist
+
+- [x] Create EXECPLAN.md at repository root
+- [x] Validate uv scripts and tooling on the contributor machine (partial)
+  - uv run -s test was attempted but the direct runner was used and green
+- [x] If required by reviewers, update code and tests to achieve all_checks
+  - Implemented small runtime fixes to run tests (caplog support)
+- [ ] Update this ExecPlan with decisions and final validation output
+
+Decision log additions
+
+- 2025-11-08: Implemented minimal IoT service and channel for Python tests
+  and fixed the lightweight test runner to support caplog expectations so the
+  test-suite can run without pytest in constrained CI environments.
+
+How to continue from here (concrete commands)
+
+To run the tests locally in the packaged venv:
+
+  . govee-python/.venv/bin/activate && python govee-python/run_tests.py
+
+Or (attempt via uv):
+
+  uv run -s test
+
+If uv reports an error about `test` being a directory on your machine, use
+the direct invocation above. When making further changes follow the TDD loop
+in .agents/TDD.md: write a failing test, implement the minimum code to pass,
+and run uv run -s all_checks (or the equivalent locally) before committing.
