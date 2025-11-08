@@ -7,8 +7,18 @@ the package during early development.
 """govee package public surface.
 
 Expose lightweight utilities used by the early translated modules and tests.
+
+Imports are intentionally local to avoid executing package-level side-effects
+when tests manipulate sys.path. Public names are re-exported via __all__.
 """
 
+__version__ = "0.1.0"
+
+def hello(name: str = "world") -> str:
+    return f"hello {name}"
+
+# Re-export commonly used utilities used by the test-suite. Imported here so
+# they become available when `import govee` is used in tests.
 from .types import Credentials  # re-export common types for tests
 from .utils import first, partition
 from .errors import GoveeError
@@ -24,11 +34,5 @@ __all__ = [
     "FixedLengthStack",
 ]
 
-__version__ = "0.1.0"
-
-
-def hello(name: str = "world") -> str:
-    return f"hello {name}"
-
 # Ensure subpackages like govee.data can be imported as packages by tests
-from . import data  # type: ignore
+from . import data  # type: ignore  # re-export package for convenience
