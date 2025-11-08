@@ -31,7 +31,8 @@ class IotService:
         self.connected: bool = False
         # store the last iot_data passed to connect for higher-level tests
         self.iot_data: Optional[object] = None
-        self._callback: Optional[Callable[[IotMessage], None]] = None
+        # support multiple callbacks
+        self._callbacks: List[Callable[[IotMessage], None]] = []
 
     def connect(self, iot_data: object = None, callback: Optional[Callable[[IotMessage], None]] = None) -> None:
         """Simulate connecting to an MQTT broker.
@@ -44,12 +45,12 @@ class IotService:
         # persist the iot_data for tests that need access to the connection info
         self.iot_data = iot_data
         if callback is not None:
-            self._callback = callback
+            self._callbacks.append(callback)
 
     def disconnect(self) -> None:
         """Simulate disconnecting from the broker."""
         self.connected = False
-        self._callback = None
+        self._callbacks = []
         # clear stored iot_data on disconnect
         self.iot_data = None
 
@@ -109,3 +110,11 @@ class IotService:
             if self._topic_matches_subscription(msg.topic, sub):
                 self._callback(msg)
                 return
+
+    def register_callback(self, cb: Callable[[IotMessage], None]) -> None:
+        if cb not in self._callbacks:
+            self._callbacks.append(cb)
+
+    def unregister_callback(self, cb: Callable[[IotMessage], None]) -> None:
+        if cb in self._callbacks:
+            self._callbacks.remove(cb)
