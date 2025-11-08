@@ -59,24 +59,40 @@ class IotService:
             self.subscriptions.append(topic)
 
     def _topic_matches_subscription(self, topic: str, subscription: str) -> bool:
-        """Very small topic matching helper.
+        """Topic matching helper with minimal MQTT wildcard support.
 
-        Supports exact match and a single '#' suffix wildcard meaning "prefix match".
-        For example:
-          - 'govee/device/42' matches 'govee/device/42'
-          - 'govee/device/42' matches 'govee/device/#' (prefix match)
+        Supported semantics:
+          - exact match
+          - '+' matches exactly one topic level
+          - '#' matches any number of trailing levels (including zero)
 
-        This is intentionally minimal to satisfy unit tests; the real
-        implementation would implement full MQTT topic wildcard semantics.
+        This implements the common MQTT rules sufficient for unit tests.
         """
-        if subscription.endswith('/#'):
-            prefix = subscription[:-2]
-            return topic.startswith(prefix)
-        if subscription.endswith('#') and subscription != '#':
-            # allow 'govee/device/#' or 'govee/#' styles
-            prefix = subscription[:-1]
-            return topic.startswith(prefix)
-        return topic == subscription
+        # handle full wildcard '#'
+        if subscription == '#':
+            return True
+
+        topic_levels = topic.split('/')
+        sub_levels = subscription.split('/')
+
+        i = 0
+        while i < len(sub_levels):
+            s = sub_levels[i]
+            # if '#' is encountered it matches any remaining levels
+            if s == '#':
+                return True
+            if i >= len(topic_levels):
+                return False
+            t = topic_levels[i]
+            if s == '+':
+                # matches exactly one level
+                pass
+            elif s != t:
+                return False
+            i += 1
+
+        # all subscription levels consumed; topic must not have extra levels
+        return i == len(topic_levels)
 
     def send(self, topic: str, payload: object) -> None:
         """Record a published message.
