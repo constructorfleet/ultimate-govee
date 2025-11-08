@@ -234,3 +234,18 @@ def test_clearing_retained_message_with_empty_payload():
     svc.subscribe('govee/device/5')
     # no retained message should be delivered after clearing
     assert called == {}
+
+
+def test_publish_records_qos_and_timestamp():
+    import time
+    svc = IotService()
+
+    # publish with explicit qos and let service stamp timestamp
+    msg = svc.send('govee/device/9', {'on': True}, retained=False, qos=1)
+
+    assert msg.topic == 'govee/device/9'
+    assert msg.qos == 1
+    assert isinstance(msg.timestamp, float)
+    # should be recorded in published list as well
+    assert svc.published[-1].topic == 'govee/device/9'
+    assert svc.published[-1].qos == 1
