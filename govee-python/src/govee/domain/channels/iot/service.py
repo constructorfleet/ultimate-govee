@@ -200,3 +200,8 @@ class IotService:
         """Remove a subscription if present."""
         if topic in self.subscriptions:
             self.subscriptions.remove(topic)
+
+    @property
+    def dropped_count(self) -> int:
+        """Number of messages dropped from the incoming queue due to eviction."""
+        return self._dropped_count
