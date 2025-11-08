@@ -209,3 +209,25 @@ class IotService:
     def reset_dropped_count(self) -> None:
         """Reset the dropped-message counter to zero."""
         self._dropped_count = 0
+
+
+        # mark as interrupted; simulate temporary network interruption
+        self._interrupted = False
+
+    def interrupt(self) -> None:
+        """Simulate an interruption where incoming messages are queued even
+        if callbacks are registered. Useful for testing network blips."""
+        self._interrupted = True
+
+    def resume(self) -> None:
+        """Resume normal processing and deliver any queued messages."""
+        self._interrupted = False
+        # deliver queued messages
+        if self._incoming_queue:
+            for queued in list(self._incoming_queue):
+                for sub in self.subscriptions:
+                    if self._topic_matches_subscription(queued.topic, sub):
+                        for cb in list(self._callbacks):
+                            cb(queued)
+                        break
+            self._incoming_queue.clear()
