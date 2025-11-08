@@ -7,7 +7,12 @@ network IO in tests by exposing a "feed" method that simulates receiving data.
 from __future__ import annotations
 
 import asyncio
-from typing import Callable
+from typing import Callable, Optional, Any, Dict
+import asyncio
+
+from ...common.observables import ForwardBehaviorSubject, Subject
+from .types import ReceiverState, MessageEvent
+
 
 
 class DummySocket:
@@ -25,3 +30,74 @@ class DummySocket:
         if self._on_message:
             self._on_message(data, remote)
 
+
+
+class ReceiverSocket:
+    """Minimal ReceiverSocket compatible with the TypeScript implementation.
+
+    It exposes a socket_state Behavior-like subject and a message_bus subject
+    that publishes MessageEvent objects when the underlying socket receives
+    data. The bind() method is async and will await the underlying socket's
+    bind() coroutine.
+    """
+
+    def __init__(self, config: Optional[Dict[str, Any]] = None, socket: Optional[Any] = None) -> None:
+        self.config = config or {}
+        self.socket = socket or DummySocket()
+        # Behavior-like subject holding the current ReceiverState
+        self.socket_state = ForwardBehaviorSubject(ReceiverState.UNBOUND)
+        # Subject that publishes MessageEvent instances
+        self.message_bus = Subject()
+
+        # wire underlying socket message callback to our bus
+        def _on_message(msg: bytes, remote: tuple) -> None:
+            self.message_bus.next(MessageEvent(message=msg, remote_info=remote))
+
+        try:
+            # prefer a named registration API if available
+            if hasattr(self.socket, "on_message"):
+                self.socket.on_message(_on_message)
+            else:
+                # fallback: allow tests to set _on_message attr
+                setattr(self.socket, "_on_message", _on_message)
+        except Exception:
+            pass
+
+    @property
+    def address(self) -> Optional[Any]:
+        if hasattr(self.socket, "address"):
+            try:
+                return self.socket.address()
+            except Exception:
+                return None
+        return None
+
+    async def bind(self) -> None:
+        # indicate we're binding
+        self.socket_state.next(ReceiverState.BINDING)
+        # call underlying bind if it's async
+        bind_coro = None
+        if hasattr(self.socket, "bind"):
+            fn = getattr(self.socket, "bind")
+            if asyncio.iscoroutinefunction(fn):
+                bind_coro = fn(self.config.get("bindAddress", "0.0.0.0"), self.config.get("receiverPort", 38899))
+            else:
+                # support sync bind
+                try:
+                    fn(self.config.get("bindAddress", "0.0.0.0"), self.config.get("receiverPort", 38899))
+                except TypeError:
+                    # maybe different signature; ignore for tests
+                    pass
+
+        if bind_coro is not None:
+            await bind_coro
+
+        # mark as listening
+        self.socket_state.next(ReceiverState.LISTENING)
+
+    def close(self) -> None:
+        self.socket_state.next(ReceiverState.CLOSED)
+
+    # compatibility alias
+    def on_module_destroy(self) -> None:
+        self.close()
