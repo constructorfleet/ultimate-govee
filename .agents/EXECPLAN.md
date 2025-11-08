@@ -119,7 +119,7 @@ in isolation. Marking current state where applicable.
 
 Execution plan (next actionable steps)
 
-A. Add missing lint/check script binding in uv and ensure `uv run -s all_checks` works.
+A. Add missing lint/check script binding in uv and ensure `uv run -s all_checks` works. (done)
 B. Implement delta/partial observable primitives used by device states (small task).
 C. Translate LAN receiver socket and receiver.service with unit tests using
    persisted/fixtures (UDP packet parsing). This enables LAN discovery tests.
