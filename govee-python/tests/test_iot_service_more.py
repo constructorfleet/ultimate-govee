@@ -186,3 +186,23 @@ def test_mqtt_wildcard_plus_and_hash():
     svc.subscribe('#')
     svc.simulate_incoming(IotMessage(topic='random/topic', payload={}))
     assert called.get('topic') == 'random/topic'
+
+
+def test_retained_message_delivered_on_subscribe():
+    svc = IotService()
+
+    # simulate a retained message being published before any subscribers
+    svc.send('govee/device/5', {'state': 'on'}, retained=True)
+
+    called = {}
+    def cb(msg: IotMessage) -> None:
+        called['topic'] = msg.topic
+        called['payload'] = msg.payload
+        called['retained'] = getattr(msg, 'retained', False)
+
+    svc.connect(callback=cb)
+    # subscribing should immediately deliver the retained message to the callback
+    svc.subscribe('govee/device/5')
+    assert called.get('topic') == 'govee/device/5'
+    assert called.get('payload') == {'state': 'on'}
+    assert called.get('retained') is True
