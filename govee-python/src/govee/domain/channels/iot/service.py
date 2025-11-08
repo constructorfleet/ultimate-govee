@@ -412,41 +412,26 @@ class IotService:
         for _ in range(steps):
             new_sched = []
             for msg, intervals in list(self._scheduled_retries):
-                if not intervals:
-                    # no intervals left; treat as retry attempt now
-                    msg.send_attempts = getattr(msg, 'send_attempts', 0) + 1
-                    if msg.send_attempts > getattr(msg, 'max_retries', 3):
-                        # drop and call drop callbacks
-                        if hasattr(self, '_drop_callbacks'):
-                            for cb in list(self._drop_callbacks):
-                                try:
-                                    cb(msg)
-                                except Exception:
-                                    pass
-                        # also remove from inflight if present
-                        if hasattr(self, '_inflight') and msg in self._inflight:
-                            self._inflight.remove(msg)
-                    else:
-                        new_sched.append((msg, []))
-                else:
-                    # consume one interval and reschedule; if this leaves no
-                    # intervals, treat as a retry attempt immediately in this
-                    # step.
+                # consume one interval and attempt a retry now; if this leaves intervals
+                # remaining we reschedule the next retry; otherwise this was the
+                # last scheduled retry and we still check max_retries behavior.
+                if intervals:
                     intervals.pop(0)
-                    if not intervals:
-                        # no intervals left; treat as retry attempt now
-                        msg.send_attempts = getattr(msg, 'send_attempts', 0) + 1
-                        if msg.send_attempts > getattr(msg, 'max_retries', 3):
-                            # drop and call drop callbacks
-                            if hasattr(self, '_drop_callbacks'):
-                                for cb in list(self._drop_callbacks):
-                                    try:
-                                        cb(msg)
-                                    except Exception:
-                                        pass
-                            if hasattr(self, '_inflight') and msg in self._inflight:
-                                self._inflight.remove(msg)
-                    else:
+                # attempt retry now
+                msg.send_attempts = getattr(msg, 'send_attempts', 0) + 1
+                if msg.send_attempts > getattr(msg, 'max_retries', 3):
+                    # drop and call drop callbacks
+                    if hasattr(self, '_drop_callbacks'):
+                        for cb in list(self._drop_callbacks):
+                            try:
+                                cb(msg)
+                            except Exception:
+                                pass
+                    if hasattr(self, '_inflight') and msg in self._inflight:
+                        self._inflight.remove(msg)
+                else:
+                    # if there are remaining intervals schedule next step
+                    if intervals:
                         new_sched.append((msg, intervals))
             self._scheduled_retries = new_sched
 
