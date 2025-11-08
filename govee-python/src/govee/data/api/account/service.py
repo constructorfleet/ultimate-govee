@@ -15,7 +15,7 @@ import time
 import logging
 from typing import Optional, Callable, Dict, Any
 
-from ...persist.service import PersistService
+from govee.persist.service import PersistService
 from .models import GoveeAccount, OAuthData, IoTData
 from .configuration import AUTH_URL, COMMUNITY_AUTH_URL, IOT_CERT_URL, REFRESH_TOKEN_URL
 
