@@ -148,13 +148,17 @@ class Decoder:
     @staticmethod
     def decode(device: Dict[str, Any], decoder_args: List[Any], post_proc: Optional[List[Any]] = None, calibration: Optional[int] = None) -> Optional[Any]:
         # choose decoder based on decoder_args[0]
-        decoder_name = decoder_args[0]
-        if ValueFromHex in decoder_name:
-            func = value_from_hex_string
-        elif 'bf' in decoder_name:
+        decoder_name = str(decoder_args[0])
+        # decoder names in the TypeScript sources use tokens like
+        # 'value_from_hex_data' and 'bf_value_from_hex'. Match on the
+        # common substring 'value_from_hex' to select the hex parsers and
+        # prefer the 'bf' (BCF) variant when present.
+        if 'bf' in decoder_name:
             func = bcf_value_from_hex_string
+        elif 'value_from_hex' in decoder_name:
+            func = value_from_hex_string
         else:
-            # unsupported decoder - return None
+            # unsupported decoder - return None for parity with TS
             return None
 
         data_source = decoder_args[1]
