@@ -19,11 +19,19 @@ def hello(name: str = "world") -> str:
 
 # Re-export commonly used utilities used by the test-suite. Imported here so
 # they become available when `import govee` is used in tests.
-from .types import Credentials  # re-export common types for tests
-from .utils import first, partition
-from .errors import GoveeError
-from .bitflags import create_bitflags_enum
-from .fixed_length_stack import FixedLengthStack
+def _export_public_names():
+    # local import so module-level side effects are minimised when tests
+    # manipulate sys.path.
+    from .types import Credentials  # re-export common types for tests
+    from .utils import first, partition
+    from .errors import GoveeError
+    from .bitflags import create_bitflags_enum
+    from .fixed_length_stack import FixedLengthStack
+
+    return Credentials, first, partition, GoveeError, create_bitflags_enum, FixedLengthStack
+
+
+Credentials, first, partition, GoveeError, create_bitflags_enum, FixedLengthStack = _export_public_names()
 
 __all__ = [
     "Credentials",
@@ -36,3 +44,4 @@ __all__ = [
 
 # Ensure subpackages like govee.data can be imported as packages by tests
 from . import data  # type: ignore  # re-export package for convenience
+__all__.append("data")
