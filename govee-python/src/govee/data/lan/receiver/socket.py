@@ -53,23 +53,31 @@ class ReceiverSocket:
         def _on_message(msg: bytes, remote: tuple) -> None:
             self.message_bus.next(MessageEvent(message=msg, remote_info=remote))
 
-        try:
-            # prefer a named registration API if available
-            if hasattr(self.socket, "on_message"):
+        # prefer a named registration API if available
+        if hasattr(self.socket, "on_message"):
+            try:
                 self.socket.on_message(_on_message)
-            else:
-                # fallback: allow tests to set _on_message attr
+            except Exception:
+                # some test doubles may expect a different API; fall back
+                # to setting the attribute directly
                 setattr(self.socket, "_on_message", _on_message)
-        except Exception:
-            pass
+        else:
+            # fallback: allow tests to set _on_message attr
+            setattr(self.socket, "_on_message", _on_message)
 
     @property
     def address(self) -> Optional[Any]:
+        # mirror Node's dgram Socket.address() behavior when present
         if hasattr(self.socket, "address"):
+            fn = getattr(self.socket, "address")
             try:
-                return self.socket.address()
+                return fn()
             except Exception:
                 return None
+        # some socket implementations expose an `addr` or `address` attr
+        for attr in ("addr", "_address", "address_info"):
+            if hasattr(self.socket, attr):
+                return getattr(self.socket, attr)
         return None
 
     async def bind(self) -> None:
@@ -91,6 +99,15 @@ class ReceiverSocket:
 
         if bind_coro is not None:
             await bind_coro
+
+        # replicate Node.Dgram addMembership behavior when available. Tests
+        # that use a real socket may expect addMembership(broadcast, iface).
+        if hasattr(self.socket, "addMembership"):
+            try:
+                self.socket.addMembership(self.config.get("broadcastAddress"), self.config.get("bindAddress"))
+            except Exception:
+                # ignore if the test double does not support addMembership
+                pass
 
         # mark as listening
         self.socket_state.next(ReceiverState.LISTENING)
