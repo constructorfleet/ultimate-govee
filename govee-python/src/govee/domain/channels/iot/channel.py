@@ -74,3 +74,6 @@ class IoTChannel:
             if s in self.iot.subscriptions:
                 self.iot.unsubscribe(s)
             self._owned_subscriptions.remove(s)
+
+    def metrics_text(self) -> str:
+        return self.iot.metrics_text()
