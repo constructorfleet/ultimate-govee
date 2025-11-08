@@ -616,3 +616,21 @@ def test_purge_queue_clears_and_counts_dropped():
     assert svc.queued_count == 0
     assert svc.dropped_count == prev_dropped + 2
     assert dropped == [{'v':1}, {'v':2}]
+
+
+def test_metrics_accessor():
+    svc = IotService()
+    svc._incoming_queue_max = 3
+    svc.connect()
+    svc.subscribe('govee/device/metrics')
+    svc.disconnect()
+
+    svc.simulate_incoming(IotMessage(topic='govee/device/metrics', payload={'v':1}))
+    svc.simulate_incoming(IotMessage(topic='govee/device/metrics', payload={'v':2}))
+
+    # metrics should include queued_count and dropped_count and inflight_count
+    m = svc.metrics()
+    assert isinstance(m, dict)
+    assert m['queued_count'] == 2
+    assert 'dropped_count' in m
+    assert 'inflight_count' in m
