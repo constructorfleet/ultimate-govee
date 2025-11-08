@@ -96,3 +96,17 @@ def test_channel_publish_propagates_retained_and_qos():
     assert last.retained is True
     assert last.qos == 1
     assert sent.topic == last.topic
+
+
+def test_channel_close_subscriptions():
+    iot = IotService()
+    devices = DevicesService()
+    channel = IoTChannel(iot, devices)
+
+    channel.connect()
+    # subscribe to an extra topic directly
+    iot.subscribe('govee/device/extra')
+    # close subscriptions should clear all subscriptions the channel created
+    channel.close_subscriptions()
+    # ensure the service no longer has the channel subscription prefix
+    assert not any(s.startswith('govee/device') for s in iot.subscriptions)
