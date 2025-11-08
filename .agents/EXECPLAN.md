@@ -64,7 +64,7 @@ in isolation. Marking current state where applicable.
 
 3) Data layer (status: partially done)
 - [x] govee_device dataclass (done)
-- [x] LAN receiver/sender socket wrappers and parsing (lib/data/lan/*)
+- [x] LAN receiver/sender socket wrappers and parsing (lib/data/lan/*) (done)
       - translate receiver.socket.ts, sender.socket.ts (asyncio UDP wrappers)
       - translate receiver.service.ts/sender.service.ts
       - unit tests using persisted LAN fixtures
