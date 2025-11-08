@@ -125,6 +125,36 @@ C. Translate LAN receiver socket and receiver.service with unit tests using
    persisted/fixtures (UDP packet parsing). This enables LAN discovery tests. (done)
 D. Translate BLE decoder service and tests. (in progress)
 
+Progress update:
+
+- Implemented a near-parity Python port of the TypeScript decoder lib at
+  govee-python/src/govee/data/ble/decoder_lib.py. This includes
+  value_from_hex_string, bcf conversion, post-processing, and a Decoder
+  wrapper with decode and decode_properties helpers.
+- Added unit tests exercising many of the decoder.spec.ts cases in
+  govee-python/tests/test_decoder_lib.py.
+- Implemented a minimal DecoderService stub (govee-python/src/govee/data/ble/decoder_service.py)
+  and added tests for manufacturer_data parsing (govee-python/tests/test_decoder_service.py).
+
+Remaining gaps (not yet translated):
+
+- Full DecoderService behavior from TypeScript: parsing of model-specific
+  decoders, retrieving remote device specification headers, condition
+  matching using device.condition and property.condition modules, and
+  integration with the IoTManager-based decoding path.
+- Extensive device condition/property condition logic and the assets
+  JSON/spec processing done in the TS DecoderService remain to be
+  ported.
+
+Next steps:
+
+- Port device.condition and property.condition logic or adapt the
+  Python decoder to accept the TS JSON specs for full parity.
+- Add tests to cover the remaining decoder.spec.ts sections (many
+  device-specific decoding scenarios) and iterate until parity is
+  achieved. Do NOT mark this task complete until feature parity with
+  TypeScript decoder.service and decoder.lib is achieved.
+
 E. Progressively translate IoT and OpenAPI clients and relevant domain handlers.
 
 Committing convention
