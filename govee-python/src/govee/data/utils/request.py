@@ -93,11 +93,21 @@ class Request:
         return content
 
 
-from .httpx_session import default_session
+from .async_http_session import default_async_session
 
 
 def request(url: str, headers: Dict[str, str], payload: Optional[Dict[str, Any]] = None, session: Optional[Callable[..., Dict[str, Any]]] = None) -> Request:
-    # if no session provided, use the httpx default session wrapper
+    # if no session provided, use the default async session. We adapt the
+    # coroutine-based session into a sync-friendly wrapper that exposes get/post
+    # coroutines on the returned Request object.
     if session is None:
-        session = default_session
+        async_session = default_async_session
+
+        def session_wrapper(method: str, url: str, headers: Optional[Dict[str, str]] = None, params: Optional[Dict[str, Any]] = None, json_body: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+            import asyncio
+
+            return asyncio.get_event_loop().run_until_complete(async_session(method=method, url=url, headers=headers, params=params, json=json_body))
+
+        session = session_wrapper
+
     return Request(url, headers, payload, session=session)

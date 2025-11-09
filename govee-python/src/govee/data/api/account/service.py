@@ -151,6 +151,7 @@ class GoveeAccountService:
                 "password": credentials.get("password"),
                 "client": credentials.get("clientId", ""),
             })
+            # request.post() is async; await it
             import asyncio
 
             resp = asyncio.get_event_loop().run_until_complete(req.post())
@@ -168,6 +169,7 @@ class GoveeAccountService:
 
             # get iot cert
             req = self._request(IOT_CERT_URL, headers={}, payload={}, )
+            # async get
             import asyncio
             iot_resp = asyncio.get_event_loop().run_until_complete(req.get())
             iot_data = iot_resp.get("data", iot_resp) if isinstance(iot_resp, dict) else iot_resp
@@ -191,6 +193,7 @@ class GoveeAccountService:
                 "email": credentials.get("username"),
                 "password": credentials.get("password"),
             })
+            # async post
             import asyncio
             resp = asyncio.get_event_loop().run_until_complete(req.post())
             community = resp.get("data", {}).get("community", {}) if isinstance(resp, dict) else getattr(resp, "community", {})
