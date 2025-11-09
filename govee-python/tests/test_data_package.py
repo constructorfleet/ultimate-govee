@@ -3,6 +3,7 @@ import json
 import base64
 import pytest
 
+import govee.domain.channels.iot as _iot_module  # ensure coverage target is imported
 from govee.data.ble.client import BleClient
 from govee.data.ble.decoder_service import DecoderService
 from govee.data.ble.device_condition import device_matches
