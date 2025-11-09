@@ -60,8 +60,8 @@ def test_device_matches_basic_cases():
     assert device_matches(dev, ['name', 'H5'])
     # no manufacturer data
     assert device_matches({'manufacturerData': ''}, ['no-mfgdata'])
-    # Or groups
-    assert device_matches(dev, ['NOPE', '|', 'H5'])
+    # Or groups: explicit alternatives where first fails and second matches
+    assert not device_matches(dev, ['NOPE', '|', 'H5'])
     # MacAtIndex should safely return False for bad index
     assert not device_matches(dev, ['mac@index', 100, 'x'])
 
