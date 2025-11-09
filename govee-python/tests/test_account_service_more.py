@@ -13,6 +13,17 @@ def make_jwt(payload: dict) -> str:
 
 
 def test_refresh_called_and_returns_new_oauth():
+    class StubPersist:
+        def __init__(self):
+            self.saved = None
+
+        def save(self, obj):
+            self.saved = obj
+
+        def load(self):
+            return None
+
+
     calls = {"refresh": 0}
 
     def fake_request(url, headers=None, payload=None):
@@ -30,7 +41,7 @@ def test_refresh_called_and_returns_new_oauth():
 
         return _Req()
 
-    svc = GoveeAccountService(request=fake_request)
+    svc = GoveeAccountService(persist=StubPersist(), request=fake_request)
     oauth = OAuthData(accessToken="old", refreshToken="r", clientId="cid", expiresAt=int(time.time()))
     new = asyncio.run(svc.refresh(oauth))
     assert new.accessToken == "refreshed"
@@ -42,7 +53,7 @@ def test_legacy_request_wrapping_works():
     def legacy(url, headers=None, json=None, method="GET"):
         return {"data": {"client": {"accountId": "a1", "clientId": "c1", "topic": "t1", "accessToken": "x.y.z", "refreshToken": "r", "tokenExpireCycle": 10}}}
 
-    svc = GoveeAccountService(request=legacy)
+    svc = GoveeAccountService(persist=StubPersist(), request=legacy)
     acc = asyncio.run(svc.authenticate({"username": "u", "password": "p", "clientId": "c"}))
     assert acc.accountId == "a1"
 
@@ -62,6 +73,6 @@ def test_factory_style_request_object_used():
 
         return Req(url)
 
-    svc = GoveeAccountService(request=factory)
+    svc = GoveeAccountService(persist=StubPersist(), request=factory)
     acc = asyncio.run(svc.authenticate({"username": "u", "password": "p", "clientId": "c"}))
     assert acc.accountId == "ff"
