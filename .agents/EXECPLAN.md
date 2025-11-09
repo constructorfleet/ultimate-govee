@@ -247,8 +247,8 @@ Task Checklist (with checkboxes)
 - [ ] BLE Decoder: spec-driven decoding
   - [x] Task 1.0: Minimal decoder and decoder_lib implemented (basic value_from_hex_string, bcf, post-processing)
   - [x] Task 1.1a: Port device_condition and property_condition logic
-  - [ ] Task 1.1: Implement DecoderService.get_device_spec (load model specs)
-  - [ ] Task 1.2: Integrate device_condition into DecoderService to evaluate spec-driven decoders
+  - [x] Task 1.1: Implement DecoderService.get_device_spec (load model specs)
+  - [ ] Task 1.2: Integrate device_condition into DecoderService (in progress) to evaluate spec-driven decoders
   - [ ] Task 1.3: Implement IoTManager fallback path for complex models
   - [ ] Task 1.4: Add BLE fixtures and unit tests verifying decoded outputs for representative models
 
