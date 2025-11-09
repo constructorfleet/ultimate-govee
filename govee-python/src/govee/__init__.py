@@ -79,3 +79,11 @@ def _export_package_data():
 
 _data = _export_package_data()
 __all__.append("data")
+
+# Simple example helper used by some tests in the original JS repo.
+def hello(name: str | None = None) -> str:
+    if name:
+        return f"hello {name}"
+    return "hello world"
+
+__all__.append("hello")
