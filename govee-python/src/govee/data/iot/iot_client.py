@@ -266,14 +266,31 @@ class AsyncIotClient:
                 except Exception:
                     pass
 
-    def send_with_retry(self, topic: str, payload: Any, qos: int = 0, max_retries: int = 3, retained: bool = False, backoff_intervals: Optional[list] = None) -> AsyncIotMessage:
-        """Convenience method to publish and schedule retries with backoff intervals."""
-        msg = asyncio.get_event_loop().run_until_complete(self.publish(topic, payload, qos=qos, retained=retained, max_retries=max_retries))
+    async def send_with_retry(
+        self,
+        topic: str,
+        payload: Any,
+        qos: int = 0,
+        max_retries: int = 3,
+        retained: bool = False,
+        backoff_intervals: Optional[list] = None,
+    ) -> AsyncIotMessage:
+        """Async publish that optionally schedules background retries using backoff_intervals.
+
+        This method returns immediately with the published message object; retries
+        are handled by background tasks which will attempt resend after each
+        backoff interval. Background retry tasks are cancelled on disconnect.
+        """
+        msg = await self.publish(topic, payload, qos=qos, retained=retained, max_retries=max_retries)
         msg.send_attempts = 1
         msg.max_retries = max_retries
         if backoff_intervals:
             msg.backoff_intervals = list(backoff_intervals)
-            self._scheduled_retries.append((msg, list(msg.backoff_intervals)))
+            # schedule a background retry task
+            task = asyncio.create_task(self._schedule_retries(msg, list(msg.backoff_intervals)))
+            if not hasattr(self, '_retry_tasks'):
+                self._retry_tasks: List[asyncio.Task] = []
+            self._retry_tasks.append(task)
         return msg
 
     def _process_auto_ack(self, payload: Any) -> None:
@@ -391,9 +408,7 @@ class AsyncIotClient:
             self._incoming_queue.clear()
 
     def run_scheduled_retries(self, steps: int = 1) -> None:
-        for _ in range(steps):
-            # run one retry step
-            asyncio.get_event_loop().run_until_complete(self.retry_inflight())
+        raise RuntimeError("run_scheduled_retries is no longer synchronous; use await retry_inflight() or rely on background retry tasks")
 
     def metrics(self) -> dict:
         return {
