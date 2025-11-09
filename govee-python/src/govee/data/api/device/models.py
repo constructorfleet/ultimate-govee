@@ -124,8 +124,6 @@ class DeviceListResponse:
 
 
 # convenience constructors to handle nested JSON strings returned by some endpoints
-@dataclass
-class DeviceSettings:
     pass
 # NOTE: the original file already defines these classes; append helper methods below
 
