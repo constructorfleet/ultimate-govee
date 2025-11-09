@@ -61,10 +61,10 @@ sys.path.insert(0, SRC)
 
 # Ensure an event loop is available for tests that call
 # asyncio.get_event_loop().run_until_complete(...)
-try:
-    asyncio.get_event_loop()
-except RuntimeError:
-    asyncio.set_event_loop(asyncio.new_event_loop())
+# Create and set a fresh event loop for the main thread unconditionally so
+# tests that call asyncio.get_event_loop() will have a loop available.
+loop = asyncio.new_event_loop()
+asyncio.set_event_loop(loop)
 
 failures = []
 num = 0
