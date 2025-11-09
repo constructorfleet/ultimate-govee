@@ -207,3 +207,36 @@ If uv reports an error about `test` being a directory on your machine, use
 the direct invocation above. When making further changes follow the TDD loop
 in .agents/TDD.md: write a failing test, implement the minimum code to pass,
 and run uv run -s all_checks (or the equivalent locally) before committing.
+
+
+Planned Tasks (ordered priority)
+
+1) BLE Decoder: spec-driven decoding (priority)
+   - Task 1.1: Implement DecoderService.get_device_spec to load model specs from repository assets or a provided directory.
+   - Task 1.2: Integrate device_condition and property_condition into DecoderService so spec-driven decoders and conditions are evaluated.
+   - Task 1.3: Implement IoTManager fallback decoding path for complex models (initially stubbed but with tests).
+   - Task 1.4: Add realistic BLE fixture files (from ble/ directory) and unit tests verifying decoded outputs for representative models.
+
+2) Observables & Delta Maps
+   - Task 2.1: Implement a DeltaMap/MapDelta type and ensure DeltaSubject merges changes correctly.
+   - Task 2.2: Add unit tests that exercise delta publications and subscribers using realistic sequences.
+
+3) IoT / OpenAPI / MQTT clients
+   - Task 3.1: Port OpenAPI client models and a minimal HTTP client wrapper.
+   - Task 3.2: Implement IoT client parsing & handlers; provide unit tests for queueing & reconnect behavior.
+   - Task 3.3: Add MQTT wrapper and tests using persisted fixtures.
+
+4) Domain Device States & Factories
+   - Task 4.1: Port device state classes (power, brightness, color-temp, color-rgb, effect).
+   - Task 4.2: Implement device factories and version handling for model variants.
+   - Task 4.3: Add unit tests derived from TypeScript specs for state transitions and commands.
+
+5) Top-level wiring & UltimateGoveeService
+   - Task 5.1: Implement module wiring, configuration loading, and dependency composition for channels.
+   - Task 5.2: Add integration tests for service startup/shutdown and discovery.
+
+6) CI & tooling
+   - Task 6.1: Ensure uv scripts and tests run in CI using the repository .venv.
+   - Task 6.2: Enforce formatting checks and coverage gating.
+
+For every task: follow the TDD process from .agents/TDD.md. Commit after each small task with a conventional commit message. Do not mark tasks complete until feature parity with TypeScript behavior is validated by tests.
