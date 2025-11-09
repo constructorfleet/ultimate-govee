@@ -35,3 +35,35 @@ class OpenAPIService:
                 return (await req.post()).get('data') if isinstance(await req.post(), dict) else await req.post()
             return req
         return {"ok": True, "path": path, "data": data}
+
+    # Convenience helpers used by tests: provide higher-level methods that map
+    # to common OpenAPI calls expected in the original JS tests.
+    async def get_device_list(self) -> list:
+        """Return a list of simple objects with id/name extracted from the
+        OpenAPI response shape.
+        """
+        resp = await self.get("/devices")
+        devices = None
+        if isinstance(resp, dict):
+            devices = resp.get("devices") or resp.get("data") or resp.get("devices")
+        else:
+            devices = resp
+
+        if not devices:
+            return []
+
+        from types import SimpleNamespace
+
+        result = []
+        for d in devices:
+            result.append(
+                SimpleNamespace(
+                    id=d.get("deviceId") or d.get("device"),
+                    name=d.get("deviceName") or d.get("name") or d.get("model"),
+                )
+            )
+        return result
+
+    async def control_device(self, device_id: str, command: dict) -> Any:
+        path = f"/devices/{device_id}/control"
+        return await self.post(path, data=command)
