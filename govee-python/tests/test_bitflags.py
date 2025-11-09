@@ -19,3 +19,4 @@ def test_create_bitflags_and_operations():
 
     combined = flags.union([a, c])
     assert combined.value == 5
+
