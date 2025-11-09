@@ -22,7 +22,7 @@ def test_receiver_socket_bind_and_feed_message():
     async def _do_bind():
         await rs.bind()
 
-    asyncio.get_event_loop().run_until_complete(_do_bind())
+    asyncio.run(_do_bind())
 
     assert rs.socket_state.getValue() == ReceiverState.LISTENING
 
