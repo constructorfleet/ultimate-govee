@@ -20,9 +20,13 @@ class BleClient:
         self.enabled = ForwardBehaviorSubject(False)
         self.peripheral_decoded = Subject()
         self.command_queue = Subject()
+        self._canceled: set[str] = set()
         self._filter: Callable[[Any], bool] = lambda _: True
         self.decoder = decoder or DecoderService()
         self.sent: List[Any] = []
+
+        # subscribe the command queue so published commands are handled
+        self.command_queue.subscribe(lambda cmd: self._on_command(cmd))
 
     def set_filter(self, fn: Callable[[Any], bool]) -> None:
         self._filter = fn
@@ -43,3 +47,13 @@ class BleClient:
         # in real code this would be queued and handled, tests just record
         self.sent.append(cmd)
 
+
+    def _on_command(self, cmd: Any) -> None:
+        command_id = cmd.get("commandId") if isinstance(cmd, dict) else None
+        if command_id and command_id in self._canceled:
+            return
+        # forward to send_command which records
+        self.send_command(cmd)
+
+    def cancel_command(self, command_id: str) -> None:
+        self._canceled.add(command_id)
