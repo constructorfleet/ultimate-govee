@@ -6,9 +6,7 @@ way in Python as in TypeScript.
 """
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
-
-from govee.data.ble.property_condition import property_matches
+from typing import List, Any, Dict, Optional
 
 # operation constants (mirrors decoder.constants.ts)
 ServiceData = "servicedata"
@@ -150,17 +148,13 @@ class Decoder:
     @staticmethod
     def decode(device: Dict[str, Any], decoder_args: List[Any], post_proc: Optional[List[Any]] = None, calibration: Optional[int] = None) -> Optional[Any]:
         # choose decoder based on decoder_args[0]
-        decoder_name = str(decoder_args[0])
-        # decoder names in the TypeScript sources use tokens like
-        # 'value_from_hex_data' and 'bf_value_from_hex'. Match on the
-        # common substring 'value_from_hex' to select the hex parsers and
-        # prefer the 'bf' (BCF) variant when present.
-        if 'bf' in decoder_name:
-            func = bcf_value_from_hex_string
-        elif 'value_from_hex' in decoder_name:
+        decoder_name = decoder_args[0]
+        if ValueFromHex in decoder_name:
             func = value_from_hex_string
+        elif 'bf' in decoder_name:
+            func = bcf_value_from_hex_string
         else:
-            # unsupported decoder - return None for parity with TS
+            # unsupported decoder - return None
             return None
 
         data_source = decoder_args[1]
@@ -188,10 +182,7 @@ class Decoder:
         decoded: Dict[str, Any] = {}
         calibration = None
         for name, prop in properties.items():
-            # respect property conditions when present
-            conditions = prop.get('condition')
-            if conditions and not property_matches(device, conditions):
-                continue
+            # skip conditions for simplicity in this minimal port
             val = Decoder.decode(device, prop.get('decoder', []), prop.get('post_proc'), calibration)
             if val is None:
                 continue

@@ -1,4 +1,5 @@
 from govee.common.delta_map import DeltaMap
+from govee.common.delta_types import MapDelta
 
 
 def test_delta_map_add_mod_del():
