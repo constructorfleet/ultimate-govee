@@ -48,7 +48,12 @@ def base64_to_hex_string(b64_string: str) -> str:
 
 
 def base64_to_hex(b64_string: str) -> List[int]:
-    decoded = base64.b64decode(b64_string)
+    # Accept base64 strings possibly missing padding (common in JWTs/etc).
+    s = b64_string
+    pad = (-len(s)) % 4
+    if pad:
+        s = s + ("=" * pad)
+    decoded = base64.b64decode(s)
     return hex_string_to_array(uint8_to_hex(decoded))
 
 
