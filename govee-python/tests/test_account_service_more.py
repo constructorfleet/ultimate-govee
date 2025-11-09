@@ -12,8 +12,19 @@ def make_jwt(payload: dict) -> str:
     return f"hdr.{b}.sig"
 
 
+class StubPersist:
+    def __init__(self):
+        self.saved = None
+
+    def save(self, obj):
+        self.saved = obj
+
+    def load(self):
+        return None
+
+
 def test_refresh_called_and_returns_new_oauth():
-    class StubPersist:
+    
         def __init__(self):
             self.saved = None
 
