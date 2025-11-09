@@ -36,7 +36,56 @@ class GoveeAccountService:
         # default session will be used when the service performs network calls.
         from govee.data.utils.request import request as request_factory  # local import to avoid cycle
 
-        self._request = request or request_factory
+        # Support two invocation styles for tests and callers:
+        # 1) request is a factory: request(url, headers, payload) -> Request
+        # 2) request is a legacy session function: fn(url, headers=..., json=..., method=...)
+        if request is None:
+            self._request = request_factory
+        else:
+            # detect whether the provided callable looks like a factory (returns a Request)
+            try:
+                maybe = request(AUTH_URL, headers={}, payload={})
+                # If the returned object has get/post, assume factory interface
+                if hasattr(maybe, "get") and hasattr(maybe, "post"):
+                    self._request = request
+                else:
+                    # wrap legacy session function into a factory-compatible callable
+                    def _wrap(url, headers=None, payload=None):
+                        class _LegacyReq:
+                            def __init__(self, fn, url, headers, payload):
+                                self._fn = fn
+                                self._url = url
+                                self._headers = headers or {}
+                                self._payload = payload or {}
+
+                            async def get(self):
+                                return self._fn(self._url, headers=self._headers, json=self._payload, method="GET")
+
+                            async def post(self):
+                                return self._fn(self._url, headers=self._headers, json=self._payload, method="POST")
+
+                        return _LegacyReq(request, url, headers, payload)
+
+                    self._request = _wrap
+            except Exception:
+                # If calling request raised, fall back to assuming legacy signature
+                def _wrap(url, headers=None, payload=None):
+                    class _LegacyReq:
+                        def __init__(self, fn, url, headers, payload):
+                            self._fn = fn
+                            self._url = url
+                            self._headers = headers or {}
+                            self._payload = payload or {}
+
+                        async def get(self):
+                            return self._fn(self._url, headers=self._headers, json=self._payload, method="GET")
+
+                        async def post(self):
+                            return self._fn(self._url, headers=self._headers, json=self._payload, method="POST")
+
+                    return _LegacyReq(request, url, headers, payload)
+
+                self._request = _wrap
         self._parse_p12 = parse_p12
         persisted = self._persist.load() or {}
         # simple dict -> dataclass mapping
