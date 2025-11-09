@@ -119,14 +119,11 @@ class GoveeAccountService:
             logger.error("is_token_valid error: %s", e)
             return False
 
-    def refresh(self, oauth: OAuthData) -> OAuthData:
+    async def refresh(self, oauth: OAuthData) -> OAuthData:
         # call the request factory which returns a Request object; use the
         # internal default session if no explicit session was provided.
         req = self._request(REFRESH_TOKEN_URL, headers={}, payload={})
-        # call get() synchronously by running the coroutine
-        import asyncio
-
-        resp = asyncio.get_event_loop().run_until_complete(req.get())
+        resp = await req.get()
         # resp may be a parsed model or dict; normalize
         data = resp.get("data", resp) if isinstance(resp, dict) else resp
         # emulate TS behaviour
@@ -138,7 +135,7 @@ class GoveeAccountService:
         )
         return new
 
-    def authenticate(self, credentials: Dict[str, str]) -> GoveeAccount:
+    async def authenticate(self, credentials: Dict[str, str]) -> GoveeAccount:
         # authenticate with govee REST
         if self._request is None:
             raise RuntimeError("no request implementation provided")
@@ -151,10 +148,7 @@ class GoveeAccountService:
                 "password": credentials.get("password"),
                 "client": credentials.get("clientId", ""),
             })
-            # request.post() is async; await it
-            import asyncio
-
-            resp = asyncio.get_event_loop().run_until_complete(req.post())
+            resp = await req.post()
             client = resp.get("data", resp).get("client", resp.get("client") if isinstance(resp, dict) else {})
             self._account.accountId = client.get("accountId", "")
             self._account.clientId = client.get("clientId", "")
@@ -168,10 +162,8 @@ class GoveeAccountService:
             self._persist.save(self._account.__dict__)
 
             # get iot cert
-            req = self._request(IOT_CERT_URL, headers={}, payload={}, )
-            # async get
-            import asyncio
-            iot_resp = asyncio.get_event_loop().run_until_complete(req.get())
+            req = self._request(IOT_CERT_URL, headers={}, payload={})
+            iot_resp = await req.get()
             iot_data = iot_resp.get("data", iot_resp) if isinstance(iot_resp, dict) else iot_resp
             if self._parse_p12:
                 cert = self._parse_p12(iot_data.get("p12", ""), iot_data.get("p12Pass", ""))
@@ -193,9 +185,7 @@ class GoveeAccountService:
                 "email": credentials.get("username"),
                 "password": credentials.get("password"),
             })
-            # async post
-            import asyncio
-            resp = asyncio.get_event_loop().run_until_complete(req.post())
+            resp = await req.post()
             community = resp.get("data", {}).get("community", {}) if isinstance(resp, dict) else getattr(resp, "community", {})
             self._account.bffOAuth = OAuthData(
                 accessToken=community.get("token", ""),
