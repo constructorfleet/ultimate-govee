@@ -31,7 +31,12 @@ class GoveeAccountService:
         parse_p12: Optional[Callable[[str, str], Dict[str, str]]] = None,
     ) -> None:
         self._persist = persist or PersistService("govee.accountClient.json")
-        self._request = request
+        # request can be a convenience wrapper that delegates to the
+        # govee.data.utils.request.request factory. If None, the factory's
+        # default session will be used when the service performs network calls.
+        from govee.data.utils.request import request as request_factory  # local import to avoid cycle
+
+        self._request = request or request_factory
         self._parse_p12 = parse_p12
         persisted = self._persist.load() or {}
         # simple dict -> dataclass mapping
@@ -66,10 +71,15 @@ class GoveeAccountService:
             return False
 
     def refresh(self, oauth: OAuthData) -> OAuthData:
-        if not self._request:
-            raise RuntimeError("no request implementation provided")
-        resp = self._request(REFRESH_TOKEN_URL, headers={}, json={}, method="GET")
-        data = resp.get("data", {})
+        # call the request factory which returns a Request object; use the
+        # internal default session if no explicit session was provided.
+        req = self._request(REFRESH_TOKEN_URL, headers={}, payload={})
+        # call get() synchronously by running the coroutine
+        import asyncio
+
+        resp = asyncio.get_event_loop().run_until_complete(req.get())
+        # resp may be a parsed model or dict; normalize
+        data = resp.get("data", resp) if isinstance(resp, dict) else resp
         # emulate TS behaviour
         new = OAuthData(
             accessToken=data.get("token", ""),
@@ -87,12 +97,15 @@ class GoveeAccountService:
         if self._account.oauth and self.is_token_valid(self._account.oauth.accessToken):
             logger.info("Using persisted Govee API credentials")
         else:
-            resp = self._request(AUTH_URL, headers={}, json={
+            req = self._request(AUTH_URL, headers={}, payload={
                 "email": credentials.get("username"),
                 "password": credentials.get("password"),
                 "client": credentials.get("clientId", ""),
-            }, method="POST")
-            client = resp["data"]["client"]
+            })
+            import asyncio
+
+            resp = asyncio.get_event_loop().run_until_complete(req.post())
+            client = resp.get("data", resp).get("client", resp.get("client") if isinstance(resp, dict) else {})
             self._account.accountId = client.get("accountId", "")
             self._account.clientId = client.get("clientId", "")
             self._account.topic = client.get("topic", "")
@@ -105,8 +118,10 @@ class GoveeAccountService:
             self._persist.save(self._account.__dict__)
 
             # get iot cert
-            iot_resp = self._request(IOT_CERT_URL, headers={}, json={}, method="GET", auth=self._account.oauth.__dict__)
-            iot_data = iot_resp.get("data", {})
+            req = self._request(IOT_CERT_URL, headers={}, payload={}, )
+            import asyncio
+            iot_resp = asyncio.get_event_loop().run_until_complete(req.get())
+            iot_data = iot_resp.get("data", iot_resp) if isinstance(iot_resp, dict) else iot_resp
             if self._parse_p12:
                 cert = self._parse_p12(iot_data.get("p12", ""), iot_data.get("p12Pass", ""))
                 self._account.iot = IoTData(
@@ -123,11 +138,13 @@ class GoveeAccountService:
         if self._account.bffOAuth and self.is_token_valid(self._account.bffOAuth.accessToken):
             logger.info("Using persisted Govee Community credentials")
         else:
-            resp = self._request(COMMUNITY_AUTH_URL, headers={}, json={
+            req = self._request(COMMUNITY_AUTH_URL, headers={}, payload={
                 "email": credentials.get("username"),
                 "password": credentials.get("password"),
-            }, method="POST")
-            community = resp.get("data", {}).get("community", {})
+            })
+            import asyncio
+            resp = asyncio.get_event_loop().run_until_complete(req.post())
+            community = resp.get("data", {}).get("community", {}) if isinstance(resp, dict) else getattr(resp, "community", {})
             self._account.bffOAuth = OAuthData(
                 accessToken=community.get("token", ""),
                 refreshToken="",
