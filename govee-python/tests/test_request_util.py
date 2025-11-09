@@ -6,19 +6,19 @@ from pathlib import Path
 from govee.data.utils.request import ApiError, request
 
 
-def fake_session_ok_get(method, url, headers=None, params=None, json=None):
+async def fake_session_ok_get(method, url, headers=None, params=None, json=None):
     return {"status": 200, "data": {"value": 1}}
 
 
-def fake_session_ok_post(method, url, headers=None, params=None, json=None):
+async def fake_session_ok_post(method, url, headers=None, params=None, json=None):
     return {"status": 200, "data": {"status": 200, "payload": {"x": 2}}}
 
 
-def fake_session_http_error(method, url, headers=None, params=None, json=None):
+async def fake_session_http_error(method, url, headers=None, params=None, json=None):
     return {"status": 500, "statusText": "Internal Error"}
 
 
-def fake_session_data_error(method, url, headers=None, params=None, json=None):
+async def fake_session_data_error(method, url, headers=None, params=None, json=None):
     return {"status": 200, "data": {"status": 400, "message": "Bad data"}}
 
 
@@ -89,15 +89,14 @@ async def run_save_to_file(tmp_path):
 def test_request_util():
     import tempfile
 
-    loop = asyncio.new_event_loop()
     tmpd = tempfile.TemporaryDirectory()
     try:
-        loop.run_until_complete(run_get())
-        loop.run_until_complete(run_post())
-        loop.run_until_complete(run_post_model())
-        loop.run_until_complete(run_http_error())
-        loop.run_until_complete(run_data_error())
-        loop.run_until_complete(run_save_to_file(Path(tmpd.name)))
+        # use asyncio.run to execute the small set of async helper coroutines
+        asyncio.run(run_get())
+        asyncio.run(run_post())
+        asyncio.run(run_post_model())
+        asyncio.run(run_http_error())
+        asyncio.run(run_data_error())
+        asyncio.run(run_save_to_file(Path(tmpd.name)))
     finally:
-        loop.close()
         tmpd.cleanup()

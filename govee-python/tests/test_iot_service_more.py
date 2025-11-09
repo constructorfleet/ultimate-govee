@@ -239,8 +239,6 @@ def test_clearing_retained_message_with_empty_payload():
 
 
 def test_publish_records_qos_and_timestamp():
-    import time
-
     svc = IotService()
 
     # publish with explicit qos and let service stamp timestamp

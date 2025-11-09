@@ -3,8 +3,10 @@ import json
 import time
 
 from govee.data.api.account import jwt
-from govee.data.api.account.iot_certificate_response import IoTCertificateResponse
-from govee.data.api.account.login_response import CommunityLoginResponse, LoginResponse
+from govee.data.api.account.iot_certificate_response import \
+    IoTCertificateResponse
+from govee.data.api.account.login_response import (CommunityLoginResponse,
+                                                   LoginResponse)
 from govee.data.api.account.refresh_token_response import RefreshTokenResponse
 
 
