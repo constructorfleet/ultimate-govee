@@ -240,3 +240,34 @@ Planned Tasks (ordered priority)
    - Task 6.2: Enforce formatting checks and coverage gating.
 
 For every task: follow the TDD process from .agents/TDD.md. Commit after each small task with a conventional commit message. Do not mark tasks complete until feature parity with TypeScript behavior is validated by tests.
+
+
+Task Checklist (with checkboxes)
+
+- [ ] BLE Decoder: spec-driven decoding
+  - [ ] Task 1.1: Implement DecoderService.get_device_spec (load model specs)
+  - [ ] Task 1.2: Integrate device_condition and property_condition into DecoderService
+  - [ ] Task 1.3: Implement IoTManager fallback path for complex models
+  - [ ] Task 1.4: Add BLE fixtures and unit tests verifying decoded outputs
+
+- [ ] Observables & Delta Maps
+  - [ ] Task 2.1: Implement MapDelta type and DeltaSubject merging behavior
+  - [ ] Task 2.2: Add unit tests for delta publications and subscribers
+
+- [ ] IoT / OpenAPI / MQTT clients
+  - [ ] Task 3.1: Port OpenAPI client models and HTTP wrapper
+  - [ ] Task 3.2: Implement IoT client parsing & handlers
+  - [ ] Task 3.3: Add MQTT wrapper and tests
+
+- [ ] Domain Device States & Factories
+  - [ ] Task 4.1: Port device state classes (power/brightness/color/effects)
+  - [ ] Task 4.2: Implement device factories and version handling
+  - [ ] Task 4.3: Add unit tests for state transitions
+
+- [ ] Top-level wiring & UltimateGoveeService
+  - [ ] Task 5.1: Implement module wiring and configuration loading
+  - [ ] Task 5.2: Add integration tests for start/stop and discovery
+
+- [ ] CI & tooling
+  - [ ] Task 6.1: Ensure uv scripts run in CI and venv is configured
+  - [ ] Task 6.2: Enforce formatting and coverage gating
