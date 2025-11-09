@@ -8,3 +8,4 @@ def test_iot_publish_records_message():
     svc.publish(msg)
     assert len(svc.published) == 1
     assert svc.published[0].topic == "govee/device/1"
+

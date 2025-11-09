@@ -4,7 +4,6 @@ This provides a tiny async HTTP client that can perform GET/POST requests
 and record calls for assertions. The real project uses a generated OpenAPI
 client; tests only need a predictable stub.
 """
-
 from __future__ import annotations
 
 from typing import Any, Dict, Optional

@@ -1,24 +1,23 @@
 import asyncio
 import json
+from govee.data.utils.request import request, ApiError
 from dataclasses import dataclass
 from pathlib import Path
 
-from govee.data.utils.request import ApiError, request
 
-
-async def fake_session_ok_get(method, url, headers=None, params=None, json=None):
+def fake_session_ok_get(method, url, headers=None, params=None, json=None):
     return {"status": 200, "data": {"value": 1}}
 
 
-async def fake_session_ok_post(method, url, headers=None, params=None, json=None):
+def fake_session_ok_post(method, url, headers=None, params=None, json=None):
     return {"status": 200, "data": {"status": 200, "payload": {"x": 2}}}
 
 
-async def fake_session_http_error(method, url, headers=None, params=None, json=None):
+def fake_session_http_error(method, url, headers=None, params=None, json=None):
     return {"status": 500, "statusText": "Internal Error"}
 
 
-async def fake_session_data_error(method, url, headers=None, params=None, json=None):
+def fake_session_data_error(method, url, headers=None, params=None, json=None):
     return {"status": 200, "data": {"status": 400, "message": "Bad data"}}
 
 
@@ -38,17 +37,13 @@ async def run_get():
 
 
 async def run_post():
-    req = request(
-        "http://example", headers={}, payload={"a": 1}, session=fake_session_ok_post
-    )
+    req = request("http://example", headers={}, payload={"a": 1}, session=fake_session_ok_post)
     res = await req.post()
     assert res["payload"]["x"] == 2
 
 
 async def run_post_model():
-    req = request(
-        "http://example", headers={}, payload={"a": 1}, session=fake_session_ok_post
-    )
+    req = request("http://example", headers={}, payload={"a": 1}, session=fake_session_ok_post)
     res = await req.post(as_type=SimpleModel)
     assert isinstance(res, SimpleModel)
     assert res.x == 2
@@ -64,9 +59,7 @@ async def run_http_error():
 
 
 async def run_data_error():
-    req = request(
-        "http://example", headers={}, payload={"a": 1}, session=fake_session_data_error
-    )
+    req = request("http://example", headers={}, payload={"a": 1}, session=fake_session_data_error)
     try:
         await req.post()
         assert False, "expected ApiError"
@@ -85,18 +78,18 @@ async def run_save_to_file(tmp_path):
 
 # Runner for the small async tests
 
-
 def test_request_util():
     import tempfile
 
+    loop = asyncio.new_event_loop()
     tmpd = tempfile.TemporaryDirectory()
     try:
-        # use asyncio.run to execute the small set of async helper coroutines
-        asyncio.run(run_get())
-        asyncio.run(run_post())
-        asyncio.run(run_post_model())
-        asyncio.run(run_http_error())
-        asyncio.run(run_data_error())
-        asyncio.run(run_save_to_file(Path(tmpd.name)))
+        loop.run_until_complete(run_get())
+        loop.run_until_complete(run_post())
+        loop.run_until_complete(run_post_model())
+        loop.run_until_complete(run_http_error())
+        loop.run_until_complete(run_data_error())
+        loop.run_until_complete(run_save_to_file(Path(tmpd.name)))
     finally:
+        loop.close()
         tmpd.cleanup()

@@ -1,7 +1,7 @@
 """Power state parsing helpers."""
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import Optional
 
 
 def parse_power(payload: dict) -> Optional[bool]:

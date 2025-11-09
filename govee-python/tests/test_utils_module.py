@@ -16,3 +16,4 @@ def test_partition_splits():
     evens, odds = partition(data, lambda x: x % 2 == 0)
     assert evens == [0, 2, 4]
     assert odds == [1, 3, 5]
+

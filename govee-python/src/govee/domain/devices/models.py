@@ -10,7 +10,6 @@ from .states.color_rgb import parse_color_rgb
 from .states.effect import parse_effect
 from .states.temperature import parse_temperature
 from .states.connected import parse_connected
-from .states.humidity import parse_humidity
 from .states.active import parse_active
 from .states.unknown import parse_unknown
 

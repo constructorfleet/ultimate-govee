@@ -19,3 +19,4 @@ def test_login_rejects_empty_credentials():
         assert False, "expected ValueError"
     except ValueError:
         pass
+

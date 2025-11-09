@@ -1,7 +1,6 @@
 import base64
 import json
 
-import pytest
 from govee.data.api.account.jwt import decode_jwt
 
 
