@@ -187,6 +187,12 @@ def test_httpx_session_with_fake_and_fallback(monkeypatch):
         def reason(self):
             return 'OK'
 
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
     def fake_urlopen(req, data=None, timeout=None):
         return DummyResp(b'{"y":2}')
 
