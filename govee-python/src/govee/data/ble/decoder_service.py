@@ -59,8 +59,10 @@ class DecoderService:
                         pass
                     else:
                         decoded_props = DecoderLib.decode_properties({'manufacturerData': adv.get('manufacturer_data'), 'name': name, 'macAddress': peripheral.get('address')}, props)
-                        if decoded_props:
-                            res = {'model': model, 'properties': decoded_props}
+                        # Always return a result dict for the model even if no
+                        # properties decoded — the spec matched but individual
+                        # properties may have been filtered by conditions.
+                        res = {'model': model, 'properties': decoded_props or {}}
             if res is None:
                 return None
         # merge into a basic decoded device structure
