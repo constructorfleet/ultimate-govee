@@ -12,6 +12,7 @@ import json
 import logging
 from dataclasses import dataclass
 from typing import Any, Callable, Dict, Optional, Type, TypeVar
+from .async_http_session import default_async_session
 
 T = TypeVar("T")
 logger = logging.getLogger(__name__)
@@ -115,9 +116,6 @@ class Request:
                 return as_type.from_dict(content)  # type: ignore[arg-type]
             return as_type(**content)  # type: ignore[misc]
         return content
-
-
-from .async_http_session import default_async_session
 
 
 def request(

@@ -7,7 +7,6 @@ same behavior in environments where uv attempts to execute the file as a
 Python module.
 """
 import os
-import shutil
 import subprocess
 import sys
 

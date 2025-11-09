@@ -36,9 +36,6 @@ def parse_light_effect_op(op_payload: Dict[str, Any], identifier: list[int], eff
         cmd = cmds
     if not isinstance(cmd, list) or len(cmd) < (len(identifier) + 2 + 1):
         return None
-    # compute effect code from next two bytes after identifiers
-    # op command layout: [opType, id1, id2, value_hi, value_lo]
-    op_type = cmd[0]
     # verify identifiers match
     ids = cmd[1:1+len(identifier)]
     if ids != identifier:

@@ -3,7 +3,6 @@
 without running the whole suite.
 """
 import importlib.util
-import inspect
 import sys
 
 
