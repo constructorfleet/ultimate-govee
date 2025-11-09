@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import asyncio
 import time
-from typing import Any, Awaitable, Callable, Dict, List, Optional
+from typing import Any, Awaitable, Callable, Dict, List, Optional, Protocol, TypedDict, runtime_checkable
 
 
 class AsyncIotMessage:
@@ -33,7 +33,35 @@ class AsyncIotMessage:
         self.backoff_intervals: List[float] = []
 
 
-class AsyncIotClient:
+class IoTHandler(Protocol):
+    """Protocol for handler objects passed to IoTClient.create().
+
+    Methods are optional; if present they may be sync or async callables.
+    """
+
+    def onMessage(self, topic: str, payload: Any, dup: bool, qos: int, retain: bool) -> Any:  # pragma: no cover - interface
+        ...
+
+    def onError(self, data: Any) -> Any:  # pragma: no cover - interface
+        ...
+
+    def onConnectionSuccess(self, data: Any) -> Any:  # pragma: no cover - interface
+        ...
+
+    def onConnectionFailure(self, data: Any) -> Any:  # pragma: no cover - interface
+        ...
+
+
+class IoTData(TypedDict):
+    certificate: str
+    privateKey: str
+    endpoint: str
+    accountId: str
+    clientId: str
+    topic: str
+
+
+class IoTClient:
     """Richer asyncio in-memory MQTT-like client mirroring TS client shape.
 
     Supports two usage patterns:
@@ -53,9 +81,9 @@ class AsyncIotClient:
         self._inflight: List[AsyncIotMessage] = []
         self.connected = False
         # optional IoT connection info passed to create
-        self.iot_data: Optional[dict] = None
+        self.iot_data: Optional[IoTData] = None
         # optional handler object (with methods like onMessage)
-        self._handler: Optional[object] = None
+        self._handler: Optional[IoTHandler] = None
         # incoming message queue for while disconnected or interrupted
         self._incoming_queue: List[AsyncIotMessage] = []
         self._incoming_queue_max: int = 3
@@ -67,7 +95,7 @@ class AsyncIotClient:
         # scheduled retries: list of tuples (msg, remaining_intervals)
         self._scheduled_retries: List[tuple[AsyncIotMessage, List[float]]] = []
 
-    async def create(self, iot_data: dict, handler: object) -> "AsyncIotClient":
+    async def create(self, iot_data: IoTData, handler: Optional[IoTHandler] = None) -> "IoTClient":
         """Initialize client with connection details and a handler object.
 
         The handler is expected to provide onMessage(topic, payload, dup, qos, retain)
