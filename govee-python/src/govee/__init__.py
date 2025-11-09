@@ -17,6 +17,17 @@ __version__ = "0.1.0"
 def hello(name: str = "world") -> str:
     return f"hello {name}"
 
+
+# Ensure there's a default event loop available for older asyncio APIs used
+# by the test-suite. Some tests call asyncio.get_event_loop().run_until_complete
+# which will raise a RuntimeError on Python versions where no event loop has
+# been set for the current thread. Create and install a new event loop here
+# so those tests behave as expected.
+import asyncio
+try:
+    asyncio.get_event_loop()
+except RuntimeError:
+    asyncio.set_event_loop(asyncio.new_event_loop())
 # Re-export commonly used utilities used by the test-suite. Imported here so
 # they become available when `import govee` is used in tests.
 def _export_public_names():
