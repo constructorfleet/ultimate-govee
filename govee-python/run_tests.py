@@ -15,6 +15,7 @@ import importlib.util
 import traceback
 import inspect
 import logging
+import asyncio
 
 
 class _CapLog:
@@ -57,6 +58,13 @@ SRC = os.path.join(ROOT, "src")
 TESTS = os.path.join(ROOT, "tests")
 
 sys.path.insert(0, SRC)
+
+# Ensure an event loop is available for tests that call
+# asyncio.get_event_loop().run_until_complete(...)
+try:
+    asyncio.get_event_loop()
+except RuntimeError:
+    asyncio.set_event_loop(asyncio.new_event_loop())
 
 failures = []
 num = 0
