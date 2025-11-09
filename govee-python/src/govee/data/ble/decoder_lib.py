@@ -182,7 +182,17 @@ class Decoder:
         decoded: Dict[str, Any] = {}
         calibration = None
         for name, prop in properties.items():
-            # skip conditions for simplicity in this minimal port
+            # respect any property-level conditions before decoding
+            cond = prop.get('condition')
+            if cond:
+                try:
+                    # property_condition.property_matches expects device and the condition array
+                    if not property_condition.property_matches(device, cond):
+                        continue
+                except Exception:
+                    # on any failure evaluating condition, skip this property
+                    continue
+
             val = Decoder.decode(device, prop.get('decoder', []), prop.get('post_proc'), calibration)
             if val is None:
                 continue
