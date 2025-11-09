@@ -58,6 +58,18 @@ class AsyncIotClient:
         self._handler: Optional[object] = None
 
     async def create(self, iot_data: dict, handler: object) -> "AsyncIotClient":
+        # incoming message queue for while disconnected or interrupted
+        self._incoming_queue: List[AsyncIotMessage] = []
+        self._incoming_queue_max: int = 3
+        self._dropped_count: int = 0
+        # interruption flag: when True incoming messages are queued even if callbacks exist
+        self._interrupted: bool = False
+        # drop callbacks invoked when messages are dropped from queue or inflight
+        self._drop_callbacks: List[Callable[[AsyncIotMessage], None]] = []
+        # scheduled retries: list of tuples (msg, remaining_intervals)
+        self._scheduled_retries: List[tuple[AsyncIotMessage, List[float]]] = []
+
+    async def create(self, iot_data: dict, handler: object) -> "AsyncIotClient":
         """Initialize client with connection details and a handler object.
 
         The handler is expected to provide onMessage(topic, payload, dup, qos, retain)
@@ -221,3 +233,182 @@ class AsyncIotClient:
                 return False
             i += 1
         return i == len(t_levels)
+
+
+    def simulate_incoming(self, msg: AsyncIotMessage) -> None:
+        """Simulate an incoming message from the broker.
+
+        If connected and not interrupted deliver immediately; otherwise queue
+        the message (bounded by _incoming_queue_max) and call drop callbacks
+        when messages are evicted.
+        """
+        # only consider subscribing topics
+        matched = any(self._topic_matches_subscription(msg.topic, s) for s in self.subscriptions)
+        if not matched:
+            return
+
+        if self.connected and not self._interrupted and self._callbacks:
+            # deliver immediately to handler/callbacks
+            asyncio.create_task(self._deliver_message(msg.topic, msg.payload, retained=getattr(msg, 'retained', False)))
+            # also handle possible ack semantics
+            self._process_auto_ack(msg.payload)
+            return
+
+        # otherwise queue the message
+        self._incoming_queue.append(msg)
+        # trim if over max
+        while len(self._incoming_queue) > self._incoming_queue_max:
+            dropped = self._incoming_queue.pop(0)
+            self._dropped_count += 1
+            for cb in list(self._drop_callbacks):
+                try:
+                    cb(dropped)
+                except Exception:
+                    pass
+
+    def send_with_retry(self, topic: str, payload: Any, qos: int = 0, max_retries: int = 3, retained: bool = False, backoff_intervals: Optional[list] = None) -> AsyncIotMessage:
+        """Convenience method to publish and schedule retries with backoff intervals."""
+        msg = asyncio.get_event_loop().run_until_complete(self.publish(topic, payload, qos=qos, retained=retained, max_retries=max_retries))
+        msg.send_attempts = 1
+        msg.max_retries = max_retries
+        if backoff_intervals:
+            msg.backoff_intervals = list(backoff_intervals)
+            self._scheduled_retries.append((msg, list(msg.backoff_intervals)))
+        return msg
+
+    def _process_auto_ack(self, payload: Any) -> None:
+        """If payload is an ack for an inflight message, acknowledge it.
+
+        Convention: payload may contain {'ack_for': matching_payload} to
+        indicate acknowledgement.
+        """
+        if isinstance(payload, dict) and 'ack_for' in payload:
+            ack_for = payload['ack_for']
+            # find first inflight message whose payload matches
+            for msg in list(self._inflight):
+                if msg.payload == ack_for:
+                    self.acknowledge(msg)
+                    break
+
+    async def retry_inflight(self) -> None:
+        # process scheduled retries first
+        if hasattr(self, '_scheduled_retries') and self._scheduled_retries:
+            # decrease intervals and trigger retry attempts
+            new_sched = []
+            for msg, intervals in list(self._scheduled_retries):
+                if intervals:
+                    intervals.pop(0)
+                # perform an attempt now
+                msg.send_attempts = getattr(msg, 'send_attempts', 0) + 1
+                if msg.send_attempts > getattr(msg, 'max_retries', 3):
+                    # drop
+                    if msg in self._inflight:
+                        try:
+                            self._inflight.remove(msg)
+                        except ValueError:
+                            pass
+                    for cb in list(self._drop_callbacks):
+                        try:
+                            cb(msg)
+                        except Exception:
+                            pass
+                else:
+                    if intervals:
+                        new_sched.append((msg, intervals))
+            self._scheduled_retries = new_sched
+
+        # regular retry pass for messages without scheduling
+        for msg in list(self._inflight):
+            if getattr(msg, "acked", False):
+                if msg in self._inflight:
+                    self._inflight.remove(msg)
+                continue
+            # if message is scheduled then skip here
+            if any(smsg is msg for smsg, _ in getattr(self, '_scheduled_retries', [])):
+                continue
+            msg.send_attempts = getattr(msg, "send_attempts", 0) + 1
+            if msg.send_attempts > getattr(msg, "max_retries", 3):
+                if msg in self._inflight:
+                    try:
+                        self._inflight.remove(msg)
+                    except ValueError:
+                        pass
+                for cb in list(self._drop_callbacks):
+                    try:
+                        cb(msg)
+                    except Exception:
+                        pass
+
+    # --- incoming queue/metrics helpers ---
+    @property
+    def queued_count(self) -> int:
+        return len(self._incoming_queue)
+
+    @property
+    def dropped_count(self) -> int:
+        return self._dropped_count
+
+    def reset_dropped_count(self) -> None:
+        self._dropped_count = 0
+
+    def register_drop_callback(self, cb: Callable[[AsyncIotMessage], None]) -> None:
+        if cb not in self._drop_callbacks:
+            self._drop_callbacks.append(cb)
+
+    def set_incoming_queue_max(self, new_max: int) -> None:
+        self._incoming_queue_max = new_max
+        while len(self._incoming_queue) > self._incoming_queue_max:
+            dropped = self._incoming_queue.pop(0)
+            self._dropped_count += 1
+            for cb in list(self._drop_callbacks):
+                try:
+                    cb(dropped)
+                except Exception:
+                    pass
+
+    def purge_queue(self) -> None:
+        while self._incoming_queue:
+            dropped = self._incoming_queue.pop(0)
+            self._dropped_count += 1
+            for cb in list(self._drop_callbacks):
+                try:
+                    cb(dropped)
+                except Exception:
+                    pass
+
+    def interrupt(self) -> None:
+        self._interrupted = True
+
+    def resume(self) -> None:
+        self._interrupted = False
+        # deliver queued messages now
+        if self.connected:
+            for queued in list(self._incoming_queue):
+                for sub in self.subscriptions:
+                    if self._topic_matches_subscription(queued.topic, sub):
+                        asyncio.create_task(self._deliver_message(queued.topic, queued.payload, getattr(queued, 'retained', False)))
+                        break
+            self._incoming_queue.clear()
+
+    def run_scheduled_retries(self, steps: int = 1) -> None:
+        for _ in range(steps):
+            # run one retry step
+            asyncio.get_event_loop().run_until_complete(self.retry_inflight())
+
+    def metrics(self) -> dict:
+        return {
+            "queued_count": self.queued_count,
+            "dropped_count": self.dropped_count,
+            "inflight_count": self.inflight_count,
+        }
+
+    def metrics_text(self) -> str:
+        m = self.metrics()
+        lines = [
+            f"govee_iot_queued_count {m['queued_count']}",
+            f"govee_iot_dropped_count {m['dropped_count']}",
+            f"govee_iot_inflight_count {m['inflight_count']}",
+        ]
+        return "
+".join(lines) + "
+"
