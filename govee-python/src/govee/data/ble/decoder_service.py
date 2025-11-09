@@ -49,9 +49,18 @@ class DecoderService:
                 spec = await self.get_device_spec(model)
                 if spec:
                     props = spec.get('properties', {})
-                    decoded_props = DecoderLib.decode_properties({'manufacturerData': adv.get('manufacturer_data')}, props)
-                    if decoded_props:
-                        res = {'model': model, 'properties': decoded_props}
+
+                    # The TypeScript decoder may include top-level 'condition' logic
+                    # that gates whether the spec applies to this advertisement. If
+                    # present, evaluate it via device_condition.
+                    top_cond = spec.get('condition')
+                    if top_cond and not device_condition.device_matches({'manufacturerData': adv.get('manufacturer_data'), 'name': name, 'macAddress': peripheral.get('address')}, top_cond):
+                        # spec doesn't apply
+                        pass
+                    else:
+                        decoded_props = DecoderLib.decode_properties({'manufacturerData': adv.get('manufacturer_data'), 'name': name, 'macAddress': peripheral.get('address')}, props)
+                        if decoded_props:
+                            res = {'model': model, 'properties': decoded_props}
             if res is None:
                 return None
         # merge into a basic decoded device structure
