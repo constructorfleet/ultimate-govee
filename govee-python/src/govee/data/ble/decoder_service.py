@@ -69,10 +69,10 @@ class DecoderService:
         return None
 
     async def get_device_spec(self, model: str):
-        "Return a device spec dict for `model` or None.
+        """Return a device spec dict for model or None.
 
         This implementation uses _load_spec_from_dirs to look for model-specific
-        JSON files in the repo `ble/` and `assets/` directories. Tests can override
+        JSON files in the repo ble/ and assets/ directories. Tests can override
         by mocking _load_spec_from_dirs or by placing fixtures in a temporary dir.
-        "
+        """
         return self._load_spec_from_dirs(model)
