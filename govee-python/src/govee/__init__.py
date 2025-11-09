@@ -1,9 +1,3 @@
-"""govee - a minimal Python package scaffold for the ultimate-govee translation
-
-This package provides a tiny public surface so tests and tooling can import
-the package during early development.
-"""
-
 """govee package public surface.
 
 Expose lightweight utilities used by the early translated modules and tests.
@@ -20,7 +14,6 @@ __version__ = "0.1.0"
 # which will raise a RuntimeError on Python versions where no event loop has
 # been set for the current thread. Create and install a new event loop here
 # so those tests behave as expected.
-import asyncio
 
 # Provide a compatibility wrapper for asyncio.get_event_loop() used by the
 # test-suite. Some tests call asyncio.get_event_loop().run_until_complete(...) and
