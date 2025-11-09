@@ -24,10 +24,12 @@ def hello(name: str = "world") -> str:
 # been set for the current thread. Create and install a new event loop here
 # so those tests behave as expected.
 import asyncio
-try:
-    asyncio.get_event_loop()
-except RuntimeError:
-    asyncio.set_event_loop(asyncio.new_event_loop())
+# Force-install a fresh event loop for the main thread. Some test helpers
+# call asyncio.get_event_loop() and expect a loop to be present; on newer
+# Python versions that may raise RuntimeError unless a loop has been set for
+# the thread. Installing one here ensures tests using the legacy API behave
+# as expected.
+asyncio.set_event_loop(asyncio.new_event_loop())
 # Re-export commonly used utilities used by the test-suite. Imported here so
 # they become available when `import govee` is used in tests.
 def _export_public_names():
