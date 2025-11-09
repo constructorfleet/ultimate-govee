@@ -18,6 +18,11 @@ if str(src) not in sys.path:
     sys.path.insert(0, str(src))
 
 try:
-    asyncio.get_event_loop()
+    # Prefer get_running_loop() to avoid the deprecation warning emitted by
+    # asyncio.get_event_loop() when no loop is set for the current thread.
+    asyncio.get_running_loop()
 except RuntimeError:
+    # If there is no running loop, create and install a new one for the
+    # main thread so legacy tests that call
+    # asyncio.get_event_loop().run_until_complete(...) continue to work.
     asyncio.set_event_loop(asyncio.new_event_loop())
