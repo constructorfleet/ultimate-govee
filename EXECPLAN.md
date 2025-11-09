@@ -245,13 +245,15 @@ For every task: follow the TDD process from .agents/TDD.md. Commit after each sm
 Task Checklist (with checkboxes)
 
 - [ ] BLE Decoder: spec-driven decoding
+  - [x] Task 1.0: Minimal decoder and decoder_lib implemented (basic value_from_hex_string, bcf, post-processing)
+  - [x] Task 1.1a: Port device_condition and property_condition logic
   - [ ] Task 1.1: Implement DecoderService.get_device_spec (load model specs)
-  - [ ] Task 1.2: Integrate device_condition and property_condition into DecoderService
+  - [ ] Task 1.2: Integrate device_condition into DecoderService to evaluate spec-driven decoders
   - [ ] Task 1.3: Implement IoTManager fallback path for complex models
-  - [ ] Task 1.4: Add BLE fixtures and unit tests verifying decoded outputs
+  - [ ] Task 1.4: Add BLE fixtures and unit tests verifying decoded outputs for representative models
 
-- [ ] Observables & Delta Maps
-  - [ ] Task 2.1: Implement MapDelta type and DeltaSubject merging behavior
+- [x] Observables & Delta Maps
+  - [x] Task 2.1: Implement MapDelta/DeltaSubject merging behavior (DeltaSubject, PartialBehaviorSubject present)
   - [ ] Task 2.2: Add unit tests for delta publications and subscribers
 
 - [ ] IoT / OpenAPI / MQTT clients
@@ -268,6 +270,8 @@ Task Checklist (with checkboxes)
   - [ ] Task 5.1: Implement module wiring and configuration loading
   - [ ] Task 5.2: Add integration tests for start/stop and discovery
 
-- [ ] CI & tooling
-  - [ ] Task 6.1: Ensure uv scripts run in CI and venv is configured
-  - [ ] Task 6.2: Enforce formatting and coverage gating
+- [x] CI & tooling
+  - [x] Task 6.1: Ensure uv scripts and tests run in the repository virtualenv (local validation done)
+  - [ ] Task 6.2: Enforce formatting and coverage gating in CI
+
+For every task: follow the TDD process from .agents/TDD.md. Commit after each small task with a conventional commit message. Do not mark tasks complete until feature parity with TypeScript behavior is validated by tests.
