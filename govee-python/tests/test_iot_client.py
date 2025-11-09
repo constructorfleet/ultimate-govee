@@ -1,12 +1,12 @@
 import asyncio
 
 import pytest
-from govee.data.iot.iot_client import AsyncIotClient
+from govee.data.iot import IoTClient
 
 
 @pytest.mark.asyncio
 async def test_connect_subscribe_publish_and_receive():
-    client = AsyncIotClient()
+    client = IoTClient()
 
     received = []
 
@@ -27,7 +27,7 @@ async def test_connect_subscribe_publish_and_receive():
 
 @pytest.mark.asyncio
 async def test_retained_message_delivered_on_subscribe():
-    client = AsyncIotClient()
+    client = IoTClient()
     await client.connect()
 
     # publish a retained message before subscribing
@@ -49,7 +49,7 @@ async def test_retained_message_delivered_on_subscribe():
 
 @pytest.mark.asyncio
 async def test_qos_retry_mechanics():
-    client = AsyncIotClient()
+    client = IoTClient()
     await client.connect()
 
     # publish with qos=1 should be tracked in inflight and retryable
