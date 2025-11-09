@@ -23,7 +23,7 @@ class OpenAPIService:
             req = self._request(path)
             # If the factory returned a DummyReq, call its get()
             if hasattr(req, "get"):
-                return await req.get()
+                return (await req.get()).get('data') if isinstance(await req.get(), dict) else await req.get()
             return req
         return {"ok": True, "path": path, "params": params}
 
@@ -32,6 +32,6 @@ class OpenAPIService:
         if self._request is not None:
             req = self._request(path, payload=data)
             if hasattr(req, "post"):
-                return await req.post()
+                return (await req.post()).get('data') if isinstance(await req.post(), dict) else await req.post()
             return req
         return {"ok": True, "path": path, "data": data}
