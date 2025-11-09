@@ -24,17 +24,6 @@ class StubPersist:
 
 
 def test_refresh_called_and_returns_new_oauth():
-    
-        def __init__(self):
-            self.saved = None
-
-        def save(self, obj):
-            self.saved = obj
-
-        def load(self):
-            return None
-
-
     calls = {"refresh": 0}
 
     def fake_request(url, headers=None, payload=None):
