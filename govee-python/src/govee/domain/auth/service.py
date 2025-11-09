@@ -1,8 +1,9 @@
 """Auth service minimal translation for tests."""
+
 from __future__ import annotations
 
-from .types import AuthCredentials
 from .state import AuthState
+from .types import AuthCredentials
 
 
 class AuthService:
@@ -20,4 +21,3 @@ class AuthService:
 
     def logout(self) -> None:
         self.state = AuthState()
-

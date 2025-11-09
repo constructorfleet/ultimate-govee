@@ -4,10 +4,11 @@ This module provides lightweight Python equivalents for the TypeScript types
 used across the project. We intentionally keep implementations minimal to
 support unit tests and incremental translation.
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional, Callable, Protocol
+from typing import Callable, Optional, Protocol
 
 LabelFn = Callable[[], str]
 LabelType = str | LabelFn
@@ -51,4 +52,3 @@ class Duration:
 
 class Labelled(Protocol):
     label: LabelType
-

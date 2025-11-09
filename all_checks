@@ -4,8 +4,8 @@
 This file is executed by uv when running the "all_checks" script. It
 delegates to tools/all_checks.py to perform the actual checks.
 """
-import runpy
 import os
+import runpy
 
 here = os.path.dirname(os.path.abspath(__file__))
 runpy.run_path(os.path.join(here, "tools", "all_checks.py"), run_name="__main__")

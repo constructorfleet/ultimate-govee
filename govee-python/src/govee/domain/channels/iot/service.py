@@ -10,6 +10,7 @@ recording stub.
 from __future__ import annotations
 
 from typing import Callable, List, Optional
+
 from .types import IotMessage
 
 
@@ -47,7 +48,11 @@ class IotService:
         # public metric for queue length
         self._queued_count: int = 0
 
-    def connect(self, iot_data: object = None, callback: Optional[Callable[[IotMessage], None]] = None) -> None:
+    def connect(
+        self,
+        iot_data: object = None,
+        callback: Optional[Callable[[IotMessage], None]] = None,
+    ) -> None:
         """Simulate connecting to an MQTT broker.
 
         iot_data is accepted for API-compatibility with the TS implementation
@@ -100,22 +105,22 @@ class IotService:
         This implements the common MQTT rules sufficient for unit tests.
         """
         # handle full wildcard '#'
-        if subscription == '#':
+        if subscription == "#":
             return True
 
-        topic_levels = topic.split('/')
-        sub_levels = subscription.split('/')
+        topic_levels = topic.split("/")
+        sub_levels = subscription.split("/")
 
         i = 0
         while i < len(sub_levels):
             s = sub_levels[i]
             # if '#' is encountered it matches any remaining levels
-            if s == '#':
+            if s == "#":
                 return True
             if i >= len(topic_levels):
                 return False
             t = topic_levels[i]
-            if s == '+':
+            if s == "+":
                 # matches exactly one level
                 pass
             elif s != t:
@@ -125,7 +130,13 @@ class IotService:
         # all subscription levels consumed; topic must not have extra levels
         return i == len(topic_levels)
 
-    def send(self, topic: str, payload: object, retained: bool = False, qos: Optional[int] = None) -> IotMessage:
+    def send(
+        self,
+        topic: str,
+        payload: object,
+        retained: bool = False,
+        qos: Optional[int] = None,
+    ) -> IotMessage:
         """Record a published message.
 
         The payload in the TS implementation is a JSON string. To keep tests
@@ -151,6 +162,7 @@ class IotService:
         msg = IotMessage(topic=topic, payload=msg_payload, retained=retained)
         # attach metadata
         import time
+
         msg.qos = qos
         msg.timestamp = time.time()
         # ack flag initial state for qos 1
@@ -174,9 +186,9 @@ class IotService:
         # First, handle incoming ack messages that acknowledge inflight
         # messages. Process these regardless of subscription state so tests
         # can simulate ack delivery even when not subscribed.
-        if isinstance(msg.payload, dict) and 'ack_for' in msg.payload:
-            ack_for = msg.payload['ack_for']
-            if hasattr(self, '_inflight'):
+        if isinstance(msg.payload, dict) and "ack_for" in msg.payload:
+            ack_for = msg.payload["ack_for"]
+            if hasattr(self, "_inflight"):
                 remaining = []
                 for im in list(self._inflight):
                     if isinstance(im.payload, dict) and im.payload == ack_for:
@@ -200,7 +212,7 @@ class IotService:
                         dropped = self._incoming_queue.pop(0)
                         self._dropped_count += 1
                         # invoke any registered drop callbacks
-                        if hasattr(self, '_drop_callbacks'):
+                        if hasattr(self, "_drop_callbacks"):
                             for cb in list(self._drop_callbacks):
                                 try:
                                     cb(dropped)
@@ -228,10 +240,10 @@ class IotService:
                 # If the incoming message looks like an ack for inflight
                 # messages (contains an 'ack_for' key) then match and ack
                 # inflight messages instead of delivering the message.
-                if isinstance(msg.payload, dict) and 'ack_for' in msg.payload:
-                    ack_for = msg.payload['ack_for']
+                if isinstance(msg.payload, dict) and "ack_for" in msg.payload:
+                    ack_for = msg.payload["ack_for"]
                     # find matching inflight message(s)
-                    if hasattr(self, '_inflight'):
+                    if hasattr(self, "_inflight"):
                         remaining = []
                         for im in list(self._inflight):
                             if isinstance(im.payload, dict) and im.payload == ack_for:
@@ -268,7 +280,6 @@ class IotService:
         """Reset the dropped-message counter to zero."""
         self._dropped_count = 0
 
-
         # mark as interrupted; simulate temporary network interruption
         self._interrupted = False
 
@@ -297,26 +308,33 @@ class IotService:
 
     def register_drop_callback(self, cb: Callable[[IotMessage], None]) -> None:
         """Register a callback invoked when messages are dropped due to queue eviction."""
-        if not hasattr(self, '_drop_callbacks'):
+        if not hasattr(self, "_drop_callbacks"):
             self._drop_callbacks = []
         if cb not in self._drop_callbacks:
             self._drop_callbacks.append(cb)
 
     def unregister_drop_callback(self, cb: Callable[[IotMessage], None]) -> None:
-        if hasattr(self, '_drop_callbacks') and cb in self._drop_callbacks:
+        if hasattr(self, "_drop_callbacks") and cb in self._drop_callbacks:
             self._drop_callbacks.remove(cb)
 
     def acknowledge(self, msg: IotMessage) -> None:
         """Simulate acknowledging a message (QoS 1 semantics in tests)."""
         msg.acked = True
 
-
     # --- simple inflight retry simulation for QoS tests ---
-    def send_with_retry(self, topic: str, payload: object, qos: int = 0, max_retries: int = 3, retained: bool = False, backoff_intervals: Optional[list] = None) -> IotMessage:
+    def send_with_retry(
+        self,
+        topic: str,
+        payload: object,
+        qos: int = 0,
+        max_retries: int = 3,
+        retained: bool = False,
+        backoff_intervals: Optional[list] = None,
+    ) -> IotMessage:
         msg = self.send(topic, payload, retained=retained, qos=qos)
         # only track inflight for qos > 0
         if qos and qos > 0:
-            if not hasattr(self, '_inflight'):
+            if not hasattr(self, "_inflight"):
                 self._inflight: List[IotMessage] = []
             # add metadata
             msg.send_attempts = 1
@@ -326,7 +344,7 @@ class IotService:
             else:
                 msg.backoff_intervals = []
             # maintain a simple scheduled retries list: (msg, remaining_intervals)
-            if not hasattr(self, '_scheduled_retries'):
+            if not hasattr(self, "_scheduled_retries"):
                 self._scheduled_retries = []
             if msg.backoff_intervals:
                 # schedule first retry after the first interval (for tests we don't wait)
@@ -340,18 +358,18 @@ class IotService:
         If attempts exceed max_retries (embedded on msg for tests), drop the
         message and invoke any drop callbacks.
         """
-        if not hasattr(self, '_inflight'):
+        if not hasattr(self, "_inflight"):
             return
         remaining: List[IotMessage] = []
         for msg in list(self._inflight):
             # if message has been acknowledged, drop it from inflight silently
-            if getattr(msg, 'acked', False):
+            if getattr(msg, "acked", False):
                 continue
-            max_retries = getattr(msg, 'max_retries', 3)
-            msg.send_attempts = getattr(msg, 'send_attempts', 0) + 1
+            max_retries = getattr(msg, "max_retries", 3)
+            msg.send_attempts = getattr(msg, "send_attempts", 0) + 1
             if msg.send_attempts > max_retries:
                 # drop and call drop callbacks
-                if hasattr(self, '_drop_callbacks'):
+                if hasattr(self, "_drop_callbacks"):
                     for cb in list(self._drop_callbacks):
                         try:
                             cb(msg)
@@ -365,7 +383,6 @@ class IotService:
     def inflight_count(self) -> int:
         return len(getattr(self, "_inflight", []))
 
-
     def set_incoming_queue_max(self, new_max: int) -> None:
         """Adjust the incoming queue max size, dropping oldest messages if
         the queue needs to be trimmed."""
@@ -375,7 +392,7 @@ class IotService:
             dropped = self._incoming_queue.pop(0)
             self._dropped_count += 1
             # invoke callbacks
-            if hasattr(self, '_drop_callbacks'):
+            if hasattr(self, "_drop_callbacks"):
                 for cb in list(self._drop_callbacks):
                     try:
                         cb(dropped)
@@ -387,13 +404,12 @@ class IotService:
         while self._incoming_queue:
             dropped = self._incoming_queue.pop(0)
             self._dropped_count += 1
-            if hasattr(self, '_drop_callbacks'):
+            if hasattr(self, "_drop_callbacks"):
                 for cb in list(self._drop_callbacks):
                     try:
                         cb(dropped)
                     except Exception:
                         pass
-
 
     def metrics(self) -> dict:
         """Return a small snapshot of service metrics useful for tests."""
@@ -407,7 +423,7 @@ class IotService:
         """Run scheduled retry steps for testing. Each step pops one level
         from each scheduled item's intervals and triggers retry behavior.
         """
-        if not hasattr(self, '_scheduled_retries'):
+        if not hasattr(self, "_scheduled_retries"):
             return
         for _ in range(steps):
             new_sched = []
@@ -418,16 +434,16 @@ class IotService:
                 if intervals:
                     intervals.pop(0)
                 # attempt retry now
-                msg.send_attempts = getattr(msg, 'send_attempts', 0) + 1
-                if msg.send_attempts > getattr(msg, 'max_retries', 3):
+                msg.send_attempts = getattr(msg, "send_attempts", 0) + 1
+                if msg.send_attempts > getattr(msg, "max_retries", 3):
                     # drop and call drop callbacks
-                    if hasattr(self, '_drop_callbacks'):
+                    if hasattr(self, "_drop_callbacks"):
                         for cb in list(self._drop_callbacks):
                             try:
                                 cb(msg)
                             except Exception:
                                 pass
-                    if hasattr(self, '_inflight') and msg in self._inflight:
+                    if hasattr(self, "_inflight") and msg in self._inflight:
                         self._inflight.remove(msg)
                 else:
                     # if there are remaining intervals schedule next step
@@ -435,9 +451,12 @@ class IotService:
                         new_sched.append((msg, intervals))
             self._scheduled_retries = new_sched
 
-
     def metrics_text(self) -> str:
         """Return metrics in a simple Prometheus-style text format."""
         m = self.metrics()
-        lines = [f"govee_iot_queued_count {m['queued_count']}", f"govee_iot_dropped_count {m['dropped_count']}", f"govee_iot_inflight_count {m['inflight_count']}"]
+        lines = [
+            f"govee_iot_queued_count {m['queued_count']}",
+            f"govee_iot_dropped_count {m['dropped_count']}",
+            f"govee_iot_inflight_count {m['inflight_count']}",
+        ]
         return "\n".join(lines) + "\n"

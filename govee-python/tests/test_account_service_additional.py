@@ -1,10 +1,10 @@
-import time
+import asyncio
 import base64
 import json
-import asyncio
+import time
 
+from govee.data.api.account.models import GoveeAccount, IoTData, OAuthData
 from govee.data.api.account.service import GoveeAccountService
-from govee.data.api.account.models import OAuthData, IoTData, GoveeAccount
 
 
 def make_jwt_payload(payload: dict) -> str:
@@ -14,7 +14,14 @@ def make_jwt_payload(payload: dict) -> str:
 
 def test_models_dataclasses_basic():
     oauth = OAuthData(accessToken="a", refreshToken="r", clientId="c", expiresAt=123)
-    iot = IoTData(certificate="cert", privateKey="key", endpoint="ep", accountId="acct", clientId="cid", topic="t")
+    iot = IoTData(
+        certificate="cert",
+        privateKey="key",
+        endpoint="ep",
+        accountId="acct",
+        clientId="cid",
+        topic="t",
+    )
     acc = GoveeAccount(accountId="a1", clientId="c1", topic="t1", iot=iot, oauth=oauth)
     assert acc.accountId == "a1"
     assert acc.iot.clientId == "cid"
@@ -33,9 +40,26 @@ def test_service_init_loads_persisted_data():
         "accountId": "acct-load",
         "clientId": "client-load",
         "topic": "topic-load",
-        "oauth": {"accessToken": "a", "refreshToken": "r", "clientId": "client-load", "expiresAt": 9999},
-        "bffOAuth": {"accessToken": "b", "refreshToken": "", "clientId": "client-load", "expiresAt": 9999},
-        "iot": {"certificate": "c", "privateKey": "k", "endpoint": "ep", "accountId": "acct-load", "clientId": "client-load", "topic": "topic-load"},
+        "oauth": {
+            "accessToken": "a",
+            "refreshToken": "r",
+            "clientId": "client-load",
+            "expiresAt": 9999,
+        },
+        "bffOAuth": {
+            "accessToken": "b",
+            "refreshToken": "",
+            "clientId": "client-load",
+            "expiresAt": 9999,
+        },
+        "iot": {
+            "certificate": "c",
+            "privateKey": "k",
+            "endpoint": "ep",
+            "accountId": "acct-load",
+            "clientId": "client-load",
+            "topic": "topic-load",
+        },
     }
 
     class StubPersist:
@@ -62,8 +86,18 @@ def test_authenticate_uses_persisted_and_skips_requests():
         "accountId": "acct-p",
         "clientId": "client-p",
         "topic": "t-p",
-        "oauth": {"accessToken": tok, "refreshToken": "r", "clientId": "client-p", "expiresAt": 9999},
-        "bffOAuth": {"accessToken": tok, "refreshToken": "", "clientId": "client-p", "expiresAt": future},
+        "oauth": {
+            "accessToken": tok,
+            "refreshToken": "r",
+            "clientId": "client-p",
+            "expiresAt": 9999,
+        },
+        "bffOAuth": {
+            "accessToken": tok,
+            "refreshToken": "",
+            "clientId": "client-p",
+            "expiresAt": future,
+        },
     }
 
     class StubPersist:
@@ -75,10 +109,14 @@ def test_authenticate_uses_persisted_and_skips_requests():
 
         def save(self, obj):
             # should not be called because tokens are valid
-            raise AssertionError("save should not be called when using persisted valid tokens")
+            raise AssertionError(
+                "save should not be called when using persisted valid tokens"
+            )
 
     def bad_request(*a, **k):
-        raise AssertionError("request should not be called when persisted tokens are valid")
+        raise AssertionError(
+            "request should not be called when persisted tokens are valid"
+        )
 
     svc = GoveeAccountService(persist=StubPersist(), request=bad_request)
     # should not raise despite request being a bad function because authenticate
@@ -101,11 +139,41 @@ def test_authenticate_without_parse_p12_leaves_iot_none():
                 return self._resp
 
         if "login" in url:
-            return _Req({"data": {"client": {"accountId": "acct-1", "clientId": "client-x", "topic": "govee/topic/1", "accessToken": "abc.def.ghi", "refreshToken": "r1", "tokenExpireCycle": 3600}}})
+            return _Req(
+                {
+                    "data": {
+                        "client": {
+                            "accountId": "acct-1",
+                            "clientId": "client-x",
+                            "topic": "govee/topic/1",
+                            "accessToken": "abc.def.ghi",
+                            "refreshToken": "r1",
+                            "tokenExpireCycle": 3600,
+                        }
+                    }
+                }
+            )
         if "iot" in url:
-            return _Req({"data": {"p12": "p12data", "p12Pass": "pass", "endpoint": "iot.example.com"}})
+            return _Req(
+                {
+                    "data": {
+                        "p12": "p12data",
+                        "p12Pass": "pass",
+                        "endpoint": "iot.example.com",
+                    }
+                }
+            )
         if "community" in url:
-            return _Req({"data": {"community": {"token": "bff.token", "expiresAt": int(time.time() * 1000) + 5000}}})
+            return _Req(
+                {
+                    "data": {
+                        "community": {
+                            "token": "bff.token",
+                            "expiresAt": int(time.time() * 1000) + 5000,
+                        }
+                    }
+                }
+            )
         return _Req({})
 
     class StubPersist:
@@ -118,7 +186,11 @@ def test_authenticate_without_parse_p12_leaves_iot_none():
         def load(self):
             return None
 
-    svc = GoveeAccountService(persist=StubPersist(), request=fake_request, parse_p12=None)
-    acc = asyncio.run(svc.authenticate({"username": "u", "password": "p", "clientId": "c"}))
+    svc = GoveeAccountService(
+        persist=StubPersist(), request=fake_request, parse_p12=None
+    )
+    acc = asyncio.run(
+        svc.authenticate({"username": "u", "password": "p", "clientId": "c"})
+    )
     # because parse_p12 is None the service should not populate iot
     assert acc.iot is None

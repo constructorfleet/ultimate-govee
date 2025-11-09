@@ -2,6 +2,7 @@
 
 Provide a small API to create named bit flags and operate on them.
 """
+
 from __future__ import annotations
 
 from typing import List
@@ -46,4 +47,3 @@ class BitFlagEnum:
 
 def create_bitflags_enum(values: List[str]) -> BitFlagEnum:
     return BitFlagEnum(values)
-

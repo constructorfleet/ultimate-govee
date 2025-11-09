@@ -4,12 +4,14 @@ Provides a DummySocket for test simulation and a SenderSocket class with a
 send() coroutine that delegates to the underlying socket. The implementation
 is intentionally small and synchronous-friendly for unit tests.
 """
+
 from __future__ import annotations
 
 import asyncio
-from typing import Any, Optional, Dict
+from typing import Any, Dict, Optional
 
 from govee.common.observables import ForwardBehaviorSubject
+
 from .types import SenderState
 
 
@@ -28,7 +30,9 @@ class DummySocket:
 
 
 class SenderSocket:
-    def __init__(self, config: Optional[Dict[str, Any]] = None, socket: Optional[Any] = None) -> None:
+    def __init__(
+        self, config: Optional[Dict[str, Any]] = None, socket: Optional[Any] = None
+    ) -> None:
         self.config = config or {}
         self.socket = socket or DummySocket()
         self.socket_state = ForwardBehaviorSubject(SenderState.UNBOUND)
@@ -63,10 +67,16 @@ class SenderSocket:
         if hasattr(self.socket, "bind"):
             fn = getattr(self.socket, "bind")
             if asyncio.iscoroutinefunction(fn):
-                await fn(self.config.get("bindAddress", "0.0.0.0"), self.config.get("senderPort", 0))
+                await fn(
+                    self.config.get("bindAddress", "0.0.0.0"),
+                    self.config.get("senderPort", 0),
+                )
             else:
                 try:
-                    fn(self.config.get("bindAddress", "0.0.0.0"), self.config.get("senderPort", 0))
+                    fn(
+                        self.config.get("bindAddress", "0.0.0.0"),
+                        self.config.get("senderPort", 0),
+                    )
                 except TypeError:
                     pass
 
@@ -74,4 +84,3 @@ class SenderSocket:
 
     def close(self) -> None:
         self.socket_state.next(SenderState.CLOSED)
-

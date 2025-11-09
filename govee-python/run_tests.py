@@ -8,14 +8,14 @@ callable whose name starts with `test_`. It sets up PYTHONPATH to include
 It is intentionally minimal and used only to verify the small translated
 package in CI environments where installing pytest is not possible.
 """
-import os
-import sys
-import runpy
+import asyncio
 import importlib.util
-import traceback
 import inspect
 import logging
-import asyncio
+import os
+import runpy
+import sys
+import traceback
 
 
 class _CapLog:
@@ -35,7 +35,7 @@ class _CapLog:
         # store a simple record-like object with message and levelname
         # Pytest caplog exposes records that have a `.message` attribute.
         # Ensure compatibility by adding a `message` property if missing.
-        if not hasattr(record, 'message'):
+        if not hasattr(record, "message"):
             record.message = record.getMessage()
         self.records.append(record)
 
@@ -52,6 +52,7 @@ class _CapLog:
     def __del__(self):
         if self._handler is not None:
             logging.getLogger().removeHandler(self._handler)
+
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 SRC = os.path.join(ROOT, "src")
@@ -99,7 +100,7 @@ for fn in sorted(os.listdir(TESTS)):
             # lightweight _CapLog fixture so tests that were written for
             # pytest's caplog can still assert on logged messages.
             sig = inspect.signature(obj)
-            if 'caplog' in sig.parameters:
+            if "caplog" in sig.parameters:
                 obj(_CapLog())
             else:
                 obj()

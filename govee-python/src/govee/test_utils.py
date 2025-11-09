@@ -4,6 +4,7 @@ Provide small synchronous helpers to assert that device state parsing and
 command emission behave as expected in unit tests. These are simplified and
 do not depend on rxjs; they operate against small test doubles used in tests.
 """
+
 from __future__ import annotations
 
 from typing import Any, Callable, List
@@ -39,4 +40,3 @@ class DummyState:
             self.command_bus.append(cmd)
             commands.append(cmd)
         return commands
-

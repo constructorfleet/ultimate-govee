@@ -7,18 +7,19 @@ AWS IoT certificate handling via a pluggable parse_p12_certificate helper.
 Network calls are delegated to a `request` callable passed to the constructor
 so tests can inject a fake request function.
 """
+
 from __future__ import annotations
 
 import base64
 import json
-import time
 import logging
-from typing import Optional, Callable, Dict, Any
+import time
+from typing import Any, Callable, Dict, Optional
 
 from govee.persist.service import PersistService
-from .models import GoveeAccount, OAuthData, IoTData
-from .configuration import AUTH_URL, COMMUNITY_AUTH_URL, IOT_CERT_URL, REFRESH_TOKEN_URL
 
+from .configuration import AUTH_URL, COMMUNITY_AUTH_URL, IOT_CERT_URL, REFRESH_TOKEN_URL
+from .models import GoveeAccount, IoTData, OAuthData
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +35,9 @@ class GoveeAccountService:
         # request can be a convenience wrapper that delegates to the
         # govee.data.utils.request.request factory. If None, the factory's
         # default session will be used when the service performs network calls.
-        from govee.data.utils.request import request as request_factory  # local import to avoid cycle
+        from govee.data.utils.request import (
+            request as request_factory,  # local import to avoid cycle
+        )
 
         # Support two invocation styles for tests and callers:
         # 1) request is a factory: request(url, headers, payload) -> Request
@@ -59,10 +62,20 @@ class GoveeAccountService:
                                 self._payload = payload or {}
 
                             async def get(self):
-                                return self._fn(self._url, headers=self._headers, json=self._payload, method="GET")
+                                return self._fn(
+                                    self._url,
+                                    headers=self._headers,
+                                    json=self._payload,
+                                    method="GET",
+                                )
 
                             async def post(self):
-                                return self._fn(self._url, headers=self._headers, json=self._payload, method="POST")
+                                return self._fn(
+                                    self._url,
+                                    headers=self._headers,
+                                    json=self._payload,
+                                    method="POST",
+                                )
 
                         return _LegacyReq(request, url, headers, payload)
 
@@ -78,10 +91,20 @@ class GoveeAccountService:
                             self._payload = payload or {}
 
                         async def get(self):
-                            return self._fn(self._url, headers=self._headers, json=self._payload, method="GET")
+                            return self._fn(
+                                self._url,
+                                headers=self._headers,
+                                json=self._payload,
+                                method="GET",
+                            )
 
                         async def post(self):
-                            return self._fn(self._url, headers=self._headers, json=self._payload, method="POST")
+                            return self._fn(
+                                self._url,
+                                headers=self._headers,
+                                json=self._payload,
+                                method="POST",
+                            )
 
                     return _LegacyReq(request, url, headers, payload)
 
@@ -94,7 +117,11 @@ class GoveeAccountService:
             clientId=persisted.get("clientId", ""),
             topic=persisted.get("topic", ""),
             oauth=OAuthData(**persisted["oauth"]) if persisted.get("oauth") else None,
-            bffOAuth=OAuthData(**persisted["bffOAuth"]) if persisted.get("bffOAuth") else None,
+            bffOAuth=(
+                OAuthData(**persisted["bffOAuth"])
+                if persisted.get("bffOAuth")
+                else None
+            ),
             iot=IoTData(**persisted["iot"]) if persisted.get("iot") else None,
         )
 
@@ -130,7 +157,8 @@ class GoveeAccountService:
         new = OAuthData(
             accessToken=data.get("token", ""),
             refreshToken=data.get("refreshToken", ""),
-            expiresAt=int(time.time() * 1000) + int(data.get("tokenExpireCycle", 0)) * 1000,
+            expiresAt=int(time.time() * 1000)
+            + int(data.get("tokenExpireCycle", 0)) * 1000,
             clientId=oauth.clientId,
         )
         return new
@@ -143,20 +171,27 @@ class GoveeAccountService:
         if self._account.oauth and self.is_token_valid(self._account.oauth.accessToken):
             logger.info("Using persisted Govee API credentials")
         else:
-            req = self._request(AUTH_URL, headers={}, payload={
-                "email": credentials.get("username"),
-                "password": credentials.get("password"),
-                "client": credentials.get("clientId", ""),
-            })
+            req = self._request(
+                AUTH_URL,
+                headers={},
+                payload={
+                    "email": credentials.get("username"),
+                    "password": credentials.get("password"),
+                    "client": credentials.get("clientId", ""),
+                },
+            )
             resp = await req.post()
-            client = resp.get("data", resp).get("client", resp.get("client") if isinstance(resp, dict) else {})
+            client = resp.get("data", resp).get(
+                "client", resp.get("client") if isinstance(resp, dict) else {}
+            )
             self._account.accountId = client.get("accountId", "")
             self._account.clientId = client.get("clientId", "")
             self._account.topic = client.get("topic", "")
             self._account.oauth = OAuthData(
                 accessToken=client.get("accessToken", ""),
                 refreshToken=client.get("refreshToken", ""),
-                expiresAt=int(time.time() * 1000) + int(client.get("tokenExpireCycle", 0)) * 1000,
+                expiresAt=int(time.time() * 1000)
+                + int(client.get("tokenExpireCycle", 0)) * 1000,
                 clientId=client.get("clientId", ""),
             )
             self._persist.save(self._account.__dict__)
@@ -164,9 +199,15 @@ class GoveeAccountService:
             # get iot cert
             req = self._request(IOT_CERT_URL, headers={}, payload={})
             iot_resp = await req.get()
-            iot_data = iot_resp.get("data", iot_resp) if isinstance(iot_resp, dict) else iot_resp
+            iot_data = (
+                iot_resp.get("data", iot_resp)
+                if isinstance(iot_resp, dict)
+                else iot_resp
+            )
             if self._parse_p12:
-                cert = self._parse_p12(iot_data.get("p12", ""), iot_data.get("p12Pass", ""))
+                cert = self._parse_p12(
+                    iot_data.get("p12", ""), iot_data.get("p12Pass", "")
+                )
                 self._account.iot = IoTData(
                     certificate=cert.get("certificate", ""),
                     privateKey=cert.get("privateKey", ""),
@@ -178,15 +219,25 @@ class GoveeAccountService:
                 self._persist.save(self._account.__dict__)
 
         # authenticate with community API
-        if self._account.bffOAuth and self.is_token_valid(self._account.bffOAuth.accessToken):
+        if self._account.bffOAuth and self.is_token_valid(
+            self._account.bffOAuth.accessToken
+        ):
             logger.info("Using persisted Govee Community credentials")
         else:
-            req = self._request(COMMUNITY_AUTH_URL, headers={}, payload={
-                "email": credentials.get("username"),
-                "password": credentials.get("password"),
-            })
+            req = self._request(
+                COMMUNITY_AUTH_URL,
+                headers={},
+                payload={
+                    "email": credentials.get("username"),
+                    "password": credentials.get("password"),
+                },
+            )
             resp = await req.post()
-            community = resp.get("data", {}).get("community", {}) if isinstance(resp, dict) else getattr(resp, "community", {})
+            community = (
+                resp.get("data", {}).get("community", {})
+                if isinstance(resp, dict)
+                else getattr(resp, "community", {})
+            )
             self._account.bffOAuth = OAuthData(
                 accessToken=community.get("token", ""),
                 refreshToken="",

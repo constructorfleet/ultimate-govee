@@ -14,4 +14,3 @@ def test_from_lan_payload_creates_device():
     assert d.device_id == "dev123"
     assert d.model == "H6009"
     assert d.addresses["ip"] == "10.0.0.5"
-

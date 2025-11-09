@@ -1,4 +1,5 @@
 """Login response model for account API (lightweight from_dict helpers)."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -62,4 +63,6 @@ class CommunityLoginResponse:
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "CommunityLoginResponse":
-        return CommunityLoginResponse(community=CommunityAuth.from_dict(d.get("data", {})))
+        return CommunityLoginResponse(
+            community=CommunityAuth.from_dict(d.get("data", {}))
+        )

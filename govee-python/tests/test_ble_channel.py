@@ -8,4 +8,3 @@ def test_ble_send_records_command():
     svc.send(cmd)
     assert len(svc.sent) == 1
     assert svc.sent[0].device == "dev1"
-

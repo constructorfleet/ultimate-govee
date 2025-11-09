@@ -12,4 +12,3 @@ def test_subject_calls_subscribers():
     s.next(1)
     s.next(2)
     assert seen == [1, 2]
-

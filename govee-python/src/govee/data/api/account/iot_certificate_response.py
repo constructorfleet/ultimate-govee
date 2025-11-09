@@ -1,4 +1,5 @@
 """IoT certificate response model."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -26,4 +27,6 @@ class IoTCertificateResponse:
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "IoTCertificateResponse":
-        return IoTCertificateResponse(iotData=IoTCertificateData.from_dict(d.get("data", {})))
+        return IoTCertificateResponse(
+            iotData=IoTCertificateData.from_dict(d.get("data", {}))
+        )

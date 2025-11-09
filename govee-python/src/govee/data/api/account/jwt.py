@@ -1,9 +1,10 @@
 """JWT helpers for account models."""
+
 from __future__ import annotations
 
 import base64
 import json
-from typing import Any, Optional, Dict
+from typing import Any, Dict, Optional
 
 
 def decode_jwt(token: Optional[str]) -> Optional[Dict[str, Any]]:

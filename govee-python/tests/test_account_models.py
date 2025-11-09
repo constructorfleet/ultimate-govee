@@ -1,8 +1,11 @@
+import base64
+import json
+import time
+
 from govee.data.api.account import jwt
-from govee.data.api.account.login_response import LoginResponse, CommunityLoginResponse
-from govee.data.api.account.refresh_token_response import RefreshTokenResponse
 from govee.data.api.account.iot_certificate_response import IoTCertificateResponse
-import base64, json, time
+from govee.data.api.account.login_response import CommunityLoginResponse, LoginResponse
+from govee.data.api.account.refresh_token_response import RefreshTokenResponse
 
 
 def make_jwt_payload(payload: dict) -> str:
@@ -21,7 +24,16 @@ def test_decode_jwt_valid_and_invalid():
 
 
 def test_login_response_from_dict():
-    d = {"client": {"topic": "t", "token": "at", "refreshToken": "rt", "tokenExpireCycle": 100, "client": "cid", "accountId": 123}}
+    d = {
+        "client": {
+            "topic": "t",
+            "token": "at",
+            "refreshToken": "rt",
+            "tokenExpireCycle": 100,
+            "client": "cid",
+            "accountId": 123,
+        }
+    }
     lr = LoginResponse.from_dict(d)
     assert lr.client.topic == "t"
     assert lr.client.accessToken == "at"
@@ -49,4 +61,3 @@ def test_iot_certificate_response():
     ir = IoTCertificateResponse.from_dict(d)
     assert ir.iotData.brokerUrl == "b"
     assert ir.iotData.p12Certificate == "p12dat"
-

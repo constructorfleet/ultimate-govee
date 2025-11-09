@@ -4,5 +4,6 @@ It will be removed once linting and formatting are configured in the
 development loop.
 """
 
+
 def noop():
     return None

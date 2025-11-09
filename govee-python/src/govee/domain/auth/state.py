@@ -1,4 +1,5 @@
 """Auth state minimal implementation for unit tests."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -13,4 +14,3 @@ class AuthState:
     def apply_token(self, token: str) -> None:
         self.token = token
         self.logged_in = True
-

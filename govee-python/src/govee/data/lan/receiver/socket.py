@@ -4,14 +4,15 @@ This is a minimal wrapper used by unit tests to ensure the receiver service
 can create and bind a socket and parse incoming messages. We avoid real
 network IO in tests by exposing a "feed" method that simulates receiving data.
 """
+
 from __future__ import annotations
 
 import asyncio
-from typing import Callable, Optional, Any, Dict
+from typing import Any, Callable, Dict, Optional
 
 from govee.common.observables import ForwardBehaviorSubject, Subject
-from .types import ReceiverState, MessageEvent
 
+from .types import MessageEvent, ReceiverState
 
 
 class DummySocket:
@@ -30,7 +31,6 @@ class DummySocket:
             self._on_message(data, remote)
 
 
-
 class ReceiverSocket:
     """Minimal ReceiverSocket compatible with the TypeScript implementation.
 
@@ -40,7 +40,9 @@ class ReceiverSocket:
     bind() coroutine.
     """
 
-    def __init__(self, config: Optional[Dict[str, Any]] = None, socket: Optional[Any] = None) -> None:
+    def __init__(
+        self, config: Optional[Dict[str, Any]] = None, socket: Optional[Any] = None
+    ) -> None:
         self.config = config or {}
         self.socket = socket or DummySocket()
         # Behavior-like subject holding the current ReceiverState
@@ -87,11 +89,17 @@ class ReceiverSocket:
         if hasattr(self.socket, "bind"):
             fn = getattr(self.socket, "bind")
             if asyncio.iscoroutinefunction(fn):
-                bind_coro = fn(self.config.get("bindAddress", "0.0.0.0"), self.config.get("receiverPort", 38899))
+                bind_coro = fn(
+                    self.config.get("bindAddress", "0.0.0.0"),
+                    self.config.get("receiverPort", 38899),
+                )
             else:
                 # support sync bind
                 try:
-                    fn(self.config.get("bindAddress", "0.0.0.0"), self.config.get("receiverPort", 38899))
+                    fn(
+                        self.config.get("bindAddress", "0.0.0.0"),
+                        self.config.get("receiverPort", 38899),
+                    )
                 except TypeError:
                     # maybe different signature; ignore for tests
                     pass
@@ -103,7 +111,9 @@ class ReceiverSocket:
         # that use a real socket may expect addMembership(broadcast, iface).
         if hasattr(self.socket, "addMembership"):
             try:
-                self.socket.addMembership(self.config.get("broadcastAddress"), self.config.get("bindAddress"))
+                self.socket.addMembership(
+                    self.config.get("broadcastAddress"), self.config.get("bindAddress")
+                )
             except Exception:
                 # ignore if the test double does not support addMembership
                 pass
