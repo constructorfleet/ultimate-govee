@@ -8,4 +8,3 @@ def test_service_start_stop():
     assert s.started
     s.stop()
     assert not s.started
-
