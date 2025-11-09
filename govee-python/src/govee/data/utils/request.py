@@ -93,5 +93,11 @@ class Request:
         return content
 
 
+from .httpx_session import default_session
+
+
 def request(url: str, headers: Dict[str, str], payload: Optional[Dict[str, Any]] = None, session: Optional[Callable[..., Dict[str, Any]]] = None) -> Request:
+    # if no session provided, use the httpx default session wrapper
+    if session is None:
+        session = default_session
     return Request(url, headers, payload, session=session)
