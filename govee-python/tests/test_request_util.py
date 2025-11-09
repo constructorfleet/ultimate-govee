@@ -78,14 +78,18 @@ async def run_save_to_file(tmp_path):
 
 # Runner for the small async tests
 
-def test_request_util(tmp_path):
+def test_request_util():
+    import tempfile
+
     loop = asyncio.new_event_loop()
+    tmpd = tempfile.TemporaryDirectory()
     try:
         loop.run_until_complete(run_get())
         loop.run_until_complete(run_post())
         loop.run_until_complete(run_post_model())
         loop.run_until_complete(run_http_error())
         loop.run_until_complete(run_data_error())
-        loop.run_until_complete(run_save_to_file(tmp_path))
+        loop.run_until_complete(run_save_to_file(Path(tmpd.name)))
     finally:
         loop.close()
+        tmpd.cleanup()
