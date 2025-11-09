@@ -11,13 +11,9 @@ Expose lightweight utilities used by the early translated modules and tests.
 Imports are intentionally local to avoid executing package-level side-effects
 when tests manipulate sys.path. Public names are re-exported via __all__.
 """
+import asyncio
 
 __version__ = "0.1.0"
-
-
-def hello(name: str = "world") -> str:
-    return f"hello {name}"
-
 
 # Ensure there's a default event loop available for older asyncio APIs used
 # by the test-suite. Some tests call asyncio.get_event_loop().run_until_complete

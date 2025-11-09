@@ -1,5 +1,4 @@
-from govee.common.observables import (ForwardBehaviorSubject,
-                                      PartialBehaviorSubject)
+from govee.common.observables import ForwardBehaviorSubject, PartialBehaviorSubject
 
 
 def test_forward_behavior_subject_holds_value_but_does_not_emit_on_subscribe():

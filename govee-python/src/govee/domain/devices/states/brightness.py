@@ -1,7 +1,7 @@
 """Brightness parsing helpers for device payloads."""
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import Optional
 
 
 def parse_brightness(payload: dict) -> Optional[int]:

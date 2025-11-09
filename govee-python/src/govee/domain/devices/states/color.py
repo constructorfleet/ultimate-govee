@@ -7,7 +7,7 @@ Supported inputs:
 """
 from __future__ import annotations
 
-from typing import Any, Dict, Optional
+from typing import Dict, Optional
 
 
 def _parse_hex_string(s: str) -> Optional[Dict[str, int]]:

@@ -8,8 +8,6 @@ the default session is used so callers can fall back or provide their own.
 from __future__ import annotations
 
 import asyncio
-import math
-import time
 from typing import Any, Callable, Dict, Optional
 
 try:
@@ -62,7 +60,7 @@ def _make_default_async_session(
                     "statusText": resp.reason_phrase,
                     "data": body,
                 }
-            except Exception as exc:
+            except Exception:
                 if attempt >= attempts - 1:
                     raise
                 # exponential backoff

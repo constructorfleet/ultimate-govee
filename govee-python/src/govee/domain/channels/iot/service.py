@@ -161,7 +161,6 @@ class IotService:
 
         msg = IotMessage(topic=topic, payload=msg_payload, retained=retained)
         # attach metadata
-        import time
 
         msg.qos = qos
         msg.timestamp = time.time()

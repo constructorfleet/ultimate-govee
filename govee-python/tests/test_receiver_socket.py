@@ -1,13 +1,11 @@
-from govee.data.lan.receiver.socket import DummySocket, ReceiverSocket
+from govee.data.lan.receiver.socket import ReceiverSocket, DummySocket
 from govee.data.lan.receiver.types import ReceiverState
 
 
 def test_receiver_socket_bind_and_feed_message():
     # prepare a dummy socket that records on_message handler
     dummy = DummySocket()
-    rs = ReceiverSocket(
-        socket=dummy, config={"receiverPort": 38899, "bindAddress": "127.0.0.1"}
-    )
+    rs = ReceiverSocket(socket=dummy, config={"receiverPort": 38899, "bindAddress": "127.0.0.1"})
 
     seen = []
 
@@ -22,7 +20,7 @@ def test_receiver_socket_bind_and_feed_message():
     async def _do_bind():
         await rs.bind()
 
-    asyncio.run(_do_bind())
+    asyncio.get_event_loop().run_until_complete(_do_bind())
 
     assert rs.socket_state.getValue() == ReceiverState.LISTENING
 

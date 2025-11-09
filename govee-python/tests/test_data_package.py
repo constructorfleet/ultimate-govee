@@ -2,7 +2,6 @@ import asyncio
 import base64
 import json
 
-import govee.domain.channels.iot as _iot_module  # ensure coverage target is imported
 import pytest
 from govee.data.api.account import configuration
 from govee.data.api.account import jwt as jwt_mod
@@ -17,7 +16,7 @@ from govee.data.lan.receiver.socket import DummySocket, ReceiverSocket
 from govee.data.lan.sender.types import MessageEvent, SenderState
 from govee.data.openapi.channel import OpenAPIChannel
 from govee.data.openapi.openapi_service import OpenAPIService
-from govee.data.utils import async_http_session, httpx_session
+from govee.data.utils import async_http_session
 
 
 def test_ble_client_feed_and_send():

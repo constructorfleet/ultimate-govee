@@ -1,7 +1,7 @@
-from govee.domain.channels.iot.channel import IoTChannel
 from govee.domain.channels.iot.service import IotService
-from govee.domain.channels.iot.types import IotMessage
 from govee.domain.devices.service import DevicesService
+from govee.domain.channels.iot.channel import IoTChannel
+from govee.domain.channels.iot.types import IotMessage
 
 
 def test_incoming_message_updates_device_state():
@@ -13,11 +13,11 @@ def test_incoming_message_updates_device_state():
     channel.connect()
 
     # simulate an incoming message payload for device 'dev-1'
-    msg_payload = {"id": "dev-1", "power": True, "brightness": 50}
-    iot.simulate_incoming(IotMessage(topic="govee/device/dev-1", payload=msg_payload))
+    msg_payload = {'id': 'dev-1', 'power': True, 'brightness': 50}
+    iot.simulate_incoming(IotMessage(topic='govee/device/dev-1', payload=msg_payload))
 
     # the devices service should have been updated
-    state = devices.get_state("dev-1")
+    state = devices.get_state('dev-1')
     assert state.power is True
     assert state.brightness == 50
 
@@ -28,17 +28,13 @@ def test_retained_message_via_channel_updates_device():
     channel = IoTChannel(iot, devices)
 
     # publish retained message before the channel connects
-    iot.send(
-        "govee/device/dev-2",
-        {"id": "dev-2", "power": False, "brightness": 10},
-        retained=True,
-    )
+    iot.send('govee/device/dev-2', {'id': 'dev-2', 'power': False, 'brightness': 10}, retained=True)
 
     # connect the channel (which subscribes to device topics)
     channel.connect()
 
     # retained message should be delivered on subscribe and update device state
-    state = devices.get_state("dev-2")
+    state = devices.get_state('dev-2')
     assert state is not None
     assert state.power is False
     assert state.brightness == 10
@@ -51,15 +47,15 @@ def test_channel_publish_calls_iot_send():
 
     channel.connect()
 
-    payload = {"topic": "govee/device/command", "msg": {"cmd": "toggle"}}
+    payload = {'topic': 'govee/device/command', 'msg': {'cmd': 'toggle'}}
     # publish a message via the channel
-    sent = channel.publish_message("cmd-1", "govee/device/command", payload, debug=True)
+    sent = channel.publish_message('cmd-1', 'govee/device/command', payload, debug=True)
 
     # ensure the IoT service recorded the sent message
     assert len(iot.published) >= 1
     last = iot.published[-1]
     # payload recorded as dict/object and topic matches
-    assert last.topic == "govee/device/command"
+    assert last.topic == 'govee/device/command'
     assert isinstance(last.payload, dict) or isinstance(last.payload, str)
     # publish_message should return the IoT message
     assert sent.topic == last.topic
@@ -67,17 +63,14 @@ def test_channel_publish_calls_iot_send():
 
 def test_channel_publish_stringifies_payload():
     import json
-
     iot = IotService()
     devices = DevicesService()
     channel = IoTChannel(iot, devices)
 
     channel.connect()
 
-    payload = {"topic": "govee/device/command", "msg": {"cmd": "toggle"}}
-    sent = channel.publish_message(
-        "cmd-2", "govee/device/command", payload, debug=False
-    )
+    payload = {'topic': 'govee/device/command', 'msg': {'cmd': 'toggle'}}
+    sent = channel.publish_message('cmd-2', 'govee/device/command', payload, debug=False)
 
     last = iot.published[-1]
     assert isinstance(last.payload, str)
@@ -94,13 +87,11 @@ def test_channel_publish_propagates_retained_and_qos():
 
     channel.connect()
 
-    payload = {"topic": "govee/device/command", "msg": {"cmd": "set"}}
-    sent = channel.publish_message(
-        "cmd-3", "govee/device/command", payload, debug=False, retained=True, qos=1
-    )
+    payload = {'topic': 'govee/device/command', 'msg': {'cmd': 'set'}}
+    sent = channel.publish_message('cmd-3', 'govee/device/command', payload, debug=False, retained=True, qos=1)
 
     last = iot.published[-1]
-    assert last.topic == "govee/device/command"
+    assert last.topic == 'govee/device/command'
     # retained and qos should be propagated to the recorded IotMessage
     assert last.retained is True
     assert last.qos == 1
@@ -114,13 +105,13 @@ def test_channel_close_subscriptions():
 
     channel.connect()
     # subscribe to an extra topic directly
-    iot.subscribe("govee/device/extra")
+    iot.subscribe('govee/device/extra')
     # close_subscriptions should remove only subscriptions created by the channel
     channel.close_subscriptions()
     # the extra subscription created directly on the service should remain
-    assert "govee/device/extra" in iot.subscriptions
+    assert 'govee/device/extra' in iot.subscriptions
     # the channel-owned subscription should have been removed
-    assert not any(s == "govee/device/#" for s in iot.subscriptions)
+    assert not any(s == 'govee/device/#' for s in iot.subscriptions)
 
 
 def test_channel_close_subscriptions_ownership():
@@ -131,13 +122,13 @@ def test_channel_close_subscriptions_ownership():
     # channel subscribes on connect
     channel.connect()
     # another consumer subscribes to a different topic in same namespace
-    iot.subscribe("govee/device/other")
+    iot.subscribe('govee/device/other')
 
     # close_subscriptions should only remove those created by channel
     channel.close_subscriptions()
 
     # the other subscription should remain
-    assert "govee/device/other" in iot.subscriptions
+    assert 'govee/device/other' in iot.subscriptions
 
 
 def test_channel_owned_subscriptions_property():
@@ -147,7 +138,7 @@ def test_channel_owned_subscriptions_property():
 
     channel.connect()
     # owned_subscriptions should include the prefix subscription
-    assert "govee/device/#" in channel.owned_subscriptions
+    assert 'govee/device/#' in channel.owned_subscriptions
 
     channel.close_subscriptions()
     # after closing, owned_subscriptions should be empty
@@ -161,14 +152,12 @@ def test_channel_metrics_text_delegates_to_service():
 
     # queue some messages to affect metrics
     svc.connect()
-    svc.subscribe("govee/device/metrics_via_channel")
+    svc.subscribe('govee/device/metrics_via_channel')
     svc.disconnect()
-    svc.simulate_incoming(
-        IotMessage(topic="govee/device/metrics_via_channel", payload={"v": 1})
-    )
+    svc.simulate_incoming(IotMessage(topic='govee/device/metrics_via_channel', payload={'v':1}))
 
     # Channel should expose a metrics_text that delegates to the service
     txt1 = svc.metrics_text()
     txt2 = channel.metrics_text()
     assert txt1 == txt2
-    assert "govee_iot_queued_count" in txt2
+    assert 'govee_iot_queued_count' in txt2
