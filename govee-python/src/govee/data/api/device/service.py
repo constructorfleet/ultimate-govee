@@ -18,9 +18,13 @@ DEVICE_INFO_URL = "https://api.govee.com/devices/getDevice"
 
 @dataclass
 class DeviceState:
-    raw: Dict[str, Any]
+    # Keep a permissive shape compatible with the tests which construct
+    # DeviceState using several common fields.
+    id: Optional[str] = None
+    raw: Dict[str, Any] = None
     on: Optional[bool] = None
     brightness: Optional[int] = None
+    color: Optional[Any] = None
 
 
 @dataclass
