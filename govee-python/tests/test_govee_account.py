@@ -49,7 +49,8 @@ def test_authenticate_flow():
             return None
 
     svc = GoveeAccountService(persist=StubPersist(), request=fake_request, parse_p12=fake_parse_p12)
-    account = svc.authenticate({"username": "u", "password": "p", "clientId": "c"})
+    import asyncio
+    account = asyncio.run(svc.authenticate({"username": "u", "password": "p", "clientId": "c"}))
     assert account.accountId == "acct-1"
     assert account.clientId == "client-x"
     assert account.oauth is not None
@@ -59,7 +60,7 @@ def test_authenticate_flow():
 
 def test_refresh_uses_request():
     svc = GoveeAccountService(request=fake_request)
+    import asyncio
     oauth = OAuthData(accessToken="a", refreshToken="r", clientId="c", expiresAt=int(time.time()*1000))
-    new = svc.refresh(oauth)
+    new = asyncio.run(svc.refresh(oauth))
     assert new.accessToken == "newtoken"
-
