@@ -7,6 +7,15 @@ builds where no loop has been set for the thread. Installing one here (at
 collection time) makes the test-suite deterministic.
 """
 import asyncio
+import sys
+from pathlib import Path
+
+# Ensure the package `src` dir is on sys.path so tests can import the local
+# `govee` package when running under pytest from the repository root.
+root = Path(__file__).resolve().parents[1]
+src = root / "src"
+if str(src) not in sys.path:
+    sys.path.insert(0, str(src))
 
 try:
     asyncio.get_event_loop()
