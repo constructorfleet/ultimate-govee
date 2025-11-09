@@ -1,6 +1,6 @@
+import importlib.util
 import sys
 from pathlib import Path
-import importlib.util
 
 # ensure package path
 repo_root = Path(__file__).parent.resolve()

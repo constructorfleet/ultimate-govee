@@ -1,4 +1,4 @@
-from govee.data.lan.sender.socket import SenderSocket, DummySocket
+from govee.data.lan.sender.socket import DummySocket, SenderSocket
 
 
 def test_sender_socket_send_and_bind():

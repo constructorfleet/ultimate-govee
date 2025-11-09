@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from enum import Enum
 from dataclasses import dataclass
+from enum import Enum
 
 
 class SenderState(Enum):
@@ -18,4 +18,3 @@ class SenderState(Enum):
 class MessageEvent:
     message: bytes
     remote_info: tuple
-

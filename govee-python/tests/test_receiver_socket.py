@@ -1,11 +1,13 @@
-from govee.data.lan.receiver.socket import ReceiverSocket, DummySocket
+from govee.data.lan.receiver.socket import DummySocket, ReceiverSocket
 from govee.data.lan.receiver.types import ReceiverState
 
 
 def test_receiver_socket_bind_and_feed_message():
     # prepare a dummy socket that records on_message handler
     dummy = DummySocket()
-    rs = ReceiverSocket(socket=dummy, config={"receiverPort": 38899, "bindAddress": "127.0.0.1"})
+    rs = ReceiverSocket(
+        socket=dummy, config={"receiverPort": 38899, "bindAddress": "127.0.0.1"}
+    )
 
     seen = []
 

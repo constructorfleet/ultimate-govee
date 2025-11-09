@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
 
 
 @dataclass
@@ -17,4 +17,3 @@ def parse_state(payload: Dict[str, Any]) -> DeviceState:
         brightness=payload.get("brightness"),
         color=payload.get("color"),
     )
-

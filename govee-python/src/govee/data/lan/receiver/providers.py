@@ -4,14 +4,17 @@ In the TypeScript project these are Nest providers. For tests we expose a
 small factory to wire the config -> socket -> service so tests can easily
 obtain a ready-to-use ReceiverService.
 """
+
 from __future__ import annotations
 
-from .config import default_config, ReceiverConfig
-from .socket import DummySocket
+from .config import ReceiverConfig, default_config
 from .service import ReceiverService
+from .socket import DummySocket
 
 
-def create_receiver(config: ReceiverConfig | None = None, socket: DummySocket | None = None) -> ReceiverService:
+def create_receiver(
+    config: ReceiverConfig | None = None, socket: DummySocket | None = None
+) -> ReceiverService:
     """Create a ReceiverService wired with a DummySocket for tests.
 
     The real project uses DI to assemble these pieces; tests just need a

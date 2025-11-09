@@ -2,7 +2,6 @@ import base64
 import json
 
 import pytest
-
 from govee.data.api.account.jwt import decode_jwt
 
 
@@ -52,4 +51,3 @@ def test_decode_payload_with_padding_needed():
     token = make_jwt_payload(payload)
     # Ensure the implementation can handle adding padding back
     assert decode_jwt(token) == payload
-

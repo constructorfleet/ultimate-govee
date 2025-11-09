@@ -6,6 +6,7 @@ asyncio.get_event_loop().run_until_complete(...), which will raise on Python
 builds where no loop has been set for the thread. Installing one here (at
 collection time) makes the test-suite deterministic.
 """
+
 import asyncio
 import sys
 from pathlib import Path

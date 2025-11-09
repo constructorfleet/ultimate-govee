@@ -4,10 +4,11 @@ This is a minimal translation of lib/data/govee-device.ts providing a
 dataclass for device metadata and a helper to create devices from a
 LAN-discovery-like payload used in tests and fixtures.
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional, Dict, Any
+from typing import Any, Dict, Optional
 
 
 @dataclass
@@ -44,4 +45,3 @@ def from_lan_payload(payload: Dict[str, Any]) -> GoveeDevice:
         firmware=payload.get("version"),
         addresses=addresses,
     )
-

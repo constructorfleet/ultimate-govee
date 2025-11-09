@@ -7,7 +7,7 @@ model decoder.
 """
 from __future__ import annotations
 
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
 
 
 def _h6112_decoder(advertisement: Dict[str, Any]) -> Dict[str, Any]:

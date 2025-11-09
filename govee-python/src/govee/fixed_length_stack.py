@@ -2,9 +2,10 @@
 
 Simple LIFO with a maximum size. When full, the oldest elements are dropped.
 """
+
 from __future__ import annotations
 
-from typing import Generic, TypeVar, List, Optional
+from typing import Generic, List, Optional, TypeVar
 
 T = TypeVar("T")
 
@@ -35,4 +36,3 @@ class FixedLengthStack(Generic[T]):
 
     def clear(self) -> None:
         self._stack.clear()
-

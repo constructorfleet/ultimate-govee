@@ -6,7 +6,7 @@ manufacturer_data format of b"MODEL|MAC".
 """
 from __future__ import annotations
 
-from typing import Optional, Dict, Any
+from typing import Any, Dict, Optional
 
 
 class GoveeBleDecoder:

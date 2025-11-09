@@ -3,6 +3,7 @@
 Keep lightweight dataclasses suitable for the translated Python package and
 for tests that verify higher-level services that depend on these shapes.
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass

@@ -6,7 +6,8 @@ way in Python as in TypeScript.
 """
 from __future__ import annotations
 
-from typing import List, Any, Dict, Optional
+from typing import Any, Dict, List, Optional
+
 from govee.data.ble.property_condition import property_matches
 
 # operation constants (mirrors decoder.constants.ts)

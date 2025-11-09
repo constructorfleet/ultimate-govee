@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Dict, Any
+from typing import Any, Dict
+
 from .models import parse_state
 
 
@@ -14,4 +15,3 @@ class DevicesService:
 
     def get_state(self, device_id: str):
         return self._devices.get(device_id, {}).get("state")
-

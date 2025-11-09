@@ -4,11 +4,12 @@ This mirrors the TypeScript ReceiverService: bind() waits until the
 underlying socket transitions to LISTENING (or ERROR). on_message
 attempts to parse JSON payloads and handle known commands.
 """
+
 from __future__ import annotations
 
-from typing import Any, Optional
 import json
 import logging
+from typing import Any, Optional
 
 
 class ReceiverService:
@@ -19,7 +20,9 @@ class ReceiverService:
     attempts to parse JSON payloads and handle known commands.
     """
 
-    def __init__(self, socket: Optional[Any] = None, config: Optional[Any] = None) -> None:
+    def __init__(
+        self, socket: Optional[Any] = None, config: Optional[Any] = None
+    ) -> None:
         self.socket = socket
         self.config = config
         self.running = False
@@ -117,7 +120,9 @@ class ReceiverService:
             if cmd == "scan":
                 self.logger.info("Device Found %s %s", rinfo, message)
             elif cmd == "deviceStatus":
-                addr = getattr(rinfo, "address", None) or (rinfo[0] if isinstance(rinfo, (list, tuple)) else None)
+                addr = getattr(rinfo, "address", None) or (
+                    rinfo[0] if isinstance(rinfo, (list, tuple)) else None
+                )
                 self.logger.info("Device status %s %s", addr, message)
         except Exception:
             # best-effort parsing: do not raise

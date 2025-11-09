@@ -8,4 +8,3 @@ class DeviceDescriptor:
     id: str
     model: str
     name: str
-

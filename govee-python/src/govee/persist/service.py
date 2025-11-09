@@ -1,4 +1,5 @@
 """Minimal persist service used by tests to read/write JSON files."""
+
 from __future__ import annotations
 
 import json
@@ -19,4 +20,3 @@ class PersistService:
                 return json.load(f)
         except FileNotFoundError:
             return None
-

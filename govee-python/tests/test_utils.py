@@ -1,5 +1,5 @@
-from govee.utils import first, partition
 from govee.test_utils import DummyState
+from govee.utils import first, partition
 
 
 def test_first_no_predicate():

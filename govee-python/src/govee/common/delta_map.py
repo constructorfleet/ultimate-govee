@@ -5,10 +5,12 @@ entries and can publish MapDelta objects to subscribers via a simple
 DeltaSubject pattern. It is intentionally minimal to satisfy unit tests
 and device state translation.
 """
+
 from __future__ import annotations
 
-from typing import Dict, Generic, Iterable, Iterator, Optional, TypeVar
 from collections.abc import MutableMapping
+from typing import Dict, Generic, Iterable, Iterator, Optional, TypeVar
+
 from .delta_types import MapDelta
 from .observables import DeltaSubject
 
@@ -17,7 +19,12 @@ V = TypeVar("V")
 
 
 class DeltaMap(MutableMapping, Generic[K, V]):
-    def __init__(self, entries: Optional[Iterable[tuple[K, V]]] = None, *, publish_empty: bool = True):
+    def __init__(
+        self,
+        entries: Optional[Iterable[tuple[K, V]]] = None,
+        *,
+        publish_empty: bool = True,
+    ):
         self._store: Dict[K, V] = {}
         self.added: Dict[K, V] = {}
         self.modified: Dict[K, V] = {}
@@ -71,7 +78,12 @@ class DeltaMap(MutableMapping, Generic[K, V]):
         return self._observed
 
     def get_delta(self) -> MapDelta:
-        return MapDelta(all=dict(self._store), added=dict(self.added), modified=dict(self.modified), deleted=dict(self.deleted))
+        return MapDelta(
+            all=dict(self._store),
+            added=dict(self.added),
+            modified=dict(self.modified),
+            deleted=dict(self.deleted),
+        )
 
     # TypeScript-compatible alias
     def getDelta(self) -> MapDelta:
@@ -102,7 +114,6 @@ class DeltaMap(MutableMapping, Generic[K, V]):
     def resumeDelta(self) -> None:
         return self.resume()
 
-
     def clear_delta(self) -> None:
         """Clear tracked deltas without publishing (snake_case alias)."""
         self.added.clear()
@@ -123,6 +134,7 @@ class DeltaMap(MutableMapping, Generic[K, V]):
     def deleteMultiple(self, entry_ids: Iterable[K]) -> None:
         return self.delete_multiple(entry_ids)
 
+
 class DeltaSet(DeltaMap[V, K]):
     # For tests we don't need extra behavior; keep as alias-ish
     pass
@@ -132,9 +144,11 @@ class DeltaSet(DeltaMap[V, K]):
         self.resume()
         self.clear_delta()
 
+
 # Also provide a close on the DeltaMap itself for parity
 def _delta_map_close(dm: DeltaMap) -> None:
     dm.resume()
     dm.clear_delta()
+
 
 DeltaMap.close = lambda self: _delta_map_close(self)

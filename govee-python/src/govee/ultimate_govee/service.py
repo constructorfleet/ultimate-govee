@@ -1,4 +1,5 @@
 """Top-level minimal service for integration-style tests."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -13,4 +14,3 @@ class UltimateGoveeService:
 
     def stop(self) -> None:
         self.started = False
-

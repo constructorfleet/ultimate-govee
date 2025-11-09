@@ -1,4 +1,5 @@
 """IoT channel types minimal for tests."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -25,5 +26,3 @@ class IotMessage:
     timestamp: Optional[float] = None
     # QoS delivery acknowledgment flag (used by tests for qos=1)
     acked: Optional[bool] = False
-
-

@@ -1,7 +1,9 @@
 """Minimal observer pattern used in tests to avoid rxjs dependency."""
+
 from __future__ import annotations
 
-from typing import Callable, List, Any, Dict
+from typing import Any, Callable, Dict, List
+
 from .delta_types import MapDelta
 
 
@@ -11,6 +13,7 @@ class Subject:
 
     def subscribe(self, fn: Callable[[Any], None]) -> None:
         self._subs.append(fn)
+
         # return a simple unsubscribe function for convenience
         def unsubscribe():
             try:
@@ -23,7 +26,6 @@ class Subject:
     def next(self, value: Any) -> None:
         for s in list(self._subs):
             s(value)
-
 
 
 class DeltaSubject(Subject):

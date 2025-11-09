@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-from typing import Optional, List
+from typing import List, Optional
+
 from govee.domain.channels.iot.service import IotService
-from govee.domain.devices.service import DevicesService
 from govee.domain.channels.iot.types import IotMessage
+from govee.domain.devices.service import DevicesService
 
 
 class IoTChannel:
@@ -26,8 +27,8 @@ class IoTChannel:
         def on_msg(msg: IotMessage) -> None:
             # payload expected to be a dict with an 'id' and state fields
             payload = msg.payload
-            if isinstance(payload, dict) and 'id' in payload:
-                device_id = payload['id']
+            if isinstance(payload, dict) and "id" in payload:
+                device_id = payload["id"]
                 # pass full payload to devices service for parsing
                 self.devices.update_state(device_id, payload)
 
@@ -35,8 +36,8 @@ class IoTChannel:
         # subscribe to device topics by default so incoming messages are routed
         # to the registered callback. Tests use 'govee/device/<id>' topics, so
         # a simple prefix wildcard is sufficient.
-        self.iot.subscribe('govee/device/#')
-        self._owned_subscriptions.append('govee/device/#')
+        self.iot.subscribe("govee/device/#")
+        self._owned_subscriptions.append("govee/device/#")
         self._connected = True
 
     def disconnect(self) -> None:
@@ -63,7 +64,15 @@ class IoTChannel:
                 pass
         self._owned_subscriptions = []
 
-    def publish_message(self, cmd_id: str, topic: str, payload: object, debug: bool = False, retained: bool = False, qos: Optional[int] = None) -> IotMessage:
+    def publish_message(
+        self,
+        cmd_id: str,
+        topic: str,
+        payload: object,
+        debug: bool = False,
+        retained: bool = False,
+        qos: Optional[int] = None,
+    ) -> IotMessage:
         """Publish a message via the IoT service.
 
         - If debug is False the payload will be JSON-stringified so the
@@ -85,15 +94,17 @@ class IoTChannel:
         else:
             send_payload = payload
 
-        if qos is not None and qos > 0 and hasattr(self.iot, 'send_with_retry'):
-            msg = self.iot.send_with_retry(topic, send_payload, qos=qos, retained=retained)
+        if qos is not None and qos > 0 and hasattr(self.iot, "send_with_retry"):
+            msg = self.iot.send_with_retry(
+                topic, send_payload, qos=qos, retained=retained
+            )
         else:
             msg = self.iot.send(topic, send_payload, retained=retained, qos=qos)
         return msg
 
     def metrics_text(self) -> str:
         """Delegate a simple metrics/text snapshot to the underlying service."""
-        if hasattr(self.iot, 'metrics_text'):
+        if hasattr(self.iot, "metrics_text"):
             return self.iot.metrics_text()
         # fallback to a minimal representation
         return ""

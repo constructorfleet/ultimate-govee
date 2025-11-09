@@ -6,8 +6,10 @@ based decoding. It also stubs get_device_spec and get_common_properties.
 """
 from __future__ import annotations
 
-from typing import Optional, Dict, Any
+from typing import Any, Dict, Optional
+
 from govee.data.ble.decoder import GoveeBleDecoder
+
 
 class DecoderService:
     def __init__(self, config: Optional[Dict[str, Any]] = None, decoder: Optional[Any] = None):
