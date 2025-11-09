@@ -48,5 +48,31 @@ class DecoderService:
     async def get_common_properties(self):
         return None
 
-    async def get_device_spec(self, model: str):
+    def _load_spec_from_dirs(self, model: str, dirs=None):
+        """Try to find a JSON spec for the given model in a set of directories.
+
+        The function searches directories in order and returns the parsed JSON
+        object when found, or None if no spec is available. This keeps the
+        service configurable for tests by allowing a custom spec_dir.
+        """
+        import json, os
+        if dirs is None:
+            dirs = ['ble', "assets"]
+        for d in dirs:
+            path = os.path.join(d, f"{model}.json")
+            if os.path.exists(path):
+                try:
+                    with open(path, "r") as fh:
+                        return json.load(fh)
+                except Exception:
+                    continue
         return None
+
+    async def get_device_spec(self, model: str):
+        "Return a device spec dict for `model` or None.
+
+        This implementation uses _load_spec_from_dirs to look for model-specific
+        JSON files in the repo `ble/` and `assets/` directories. Tests can override
+        by mocking _load_spec_from_dirs or by placing fixtures in a temporary dir.
+        "
+        return self._load_spec_from_dirs(model)
