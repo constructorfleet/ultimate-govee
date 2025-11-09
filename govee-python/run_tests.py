@@ -65,6 +65,11 @@ sys.path.insert(0, SRC)
 # tests that call asyncio.get_event_loop() will have a loop available.
 loop = asyncio.new_event_loop()
 asyncio.set_event_loop(loop)
+# Ensure legacy code that calls asyncio.get_event_loop() receives the
+# loop we created above. Overwrite the function reference for the duration
+# of the lightweight runner to avoid RuntimeError when tests call
+# asyncio.get_event_loop().run_until_complete(...).
+asyncio.get_event_loop = lambda: loop
 
 failures = []
 num = 0
