@@ -1,5 +1,4 @@
-from govee.data.lan.sender.socket import SenderSocket, DummySocket
-from govee.data.lan.receiver.types import ReceiverState
+from govee.data.lan.sender.socket import DummySocket, SenderSocket
 
 
 def test_sender_socket_send_and_bind():
@@ -12,7 +11,7 @@ def test_sender_socket_send_and_bind():
     async def _do_bind():
         await ss.bind()
 
-    asyncio.get_event_loop().run_until_complete(_do_bind())
+    asyncio.run(_do_bind())
 
     # simulate send
     called = []
@@ -21,6 +20,6 @@ def test_sender_socket_send_and_bind():
         await ss.send(b"hello", 38899, "192.168.1.2")
         called.append(True)
 
-    asyncio.get_event_loop().run_until_complete(_do_send())
+    asyncio.run(_do_send())
 
     assert called, "send did not complete"
