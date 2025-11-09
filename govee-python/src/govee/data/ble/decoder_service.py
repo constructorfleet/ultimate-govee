@@ -8,6 +8,8 @@ from __future__ import annotations
 
 from typing import Optional, Dict, Any
 from govee.data.ble.decoder import GoveeBleDecoder
+from govee.data.ble import device_condition, property_condition
+from govee.data.ble.decoder_lib import Decoder as DecoderLib
 
 class DecoderService:
     def __init__(self, config: Optional[Dict[str, Any]] = None, decoder: Optional[Any] = None):
@@ -32,7 +34,26 @@ class DecoderService:
             adv['manufacturer_data'] = adv['manufacturer_data']
         res = self.decoder.decode({'name': name, **adv})
         if res is None:
-            return None
+            # try to load a model spec using the mac/model in adv if available
+            model = None
+            if isinstance(adv.get('manufacturer_data'), (bytes, str)):
+                try:
+                    txt = adv.get('manufacturer_data')
+                    if isinstance(txt, bytes):
+                        txt = txt.decode('utf-8', errors='ignore')
+                    if '|' in str(txt):
+                        model = str(txt).split('|')[0]
+                except Exception:
+                    model = None
+            if model:
+                spec = await self.get_device_spec(model)
+                if spec:
+                    props = spec.get('properties', {})
+                    decoded_props = DecoderLib.decode_properties({'manufacturerData': adv.get('manufacturer_data')}, props)
+                    if decoded_props:
+                        res = {'model': model, 'properties': decoded_props}
+            if res is None:
+                return None
         # merge into a basic decoded device structure
         decoded = {
             'id': peripheral.get('id') or peripheral.get('address'),
