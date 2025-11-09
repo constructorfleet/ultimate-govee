@@ -56,8 +56,6 @@ class AsyncIotClient:
         self.iot_data: Optional[dict] = None
         # optional handler object (with methods like onMessage)
         self._handler: Optional[object] = None
-
-    async def create(self, iot_data: dict, handler: object) -> "AsyncIotClient":
         # incoming message queue for while disconnected or interrupted
         self._incoming_queue: List[AsyncIotMessage] = []
         self._incoming_queue_max: int = 3
@@ -424,6 +422,4 @@ class AsyncIotClient:
             f"govee_iot_dropped_count {m['dropped_count']}",
             f"govee_iot_inflight_count {m['inflight_count']}",
         ]
-        return "
-".join(lines) + "
-"
+        return "\n".join(lines) + "\n"
