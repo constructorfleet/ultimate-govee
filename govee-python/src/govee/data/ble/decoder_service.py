@@ -39,8 +39,16 @@ class DecoderService:
             if isinstance(adv.get('manufacturer_data'), (bytes, str)):
                 try:
                     txt = adv.get('manufacturer_data')
+                    # if bytes decode directly
                     if isinstance(txt, bytes):
                         txt = txt.decode('utf-8', errors='ignore')
+                    # if it's a hex string, try to decode from hex to bytes then to utf-8
+                    elif isinstance(txt, str) and all(c in '0123456789abcdefABCDEF' for c in txt) and len(txt) % 2 == 0:
+                        try:
+                            txt_dec = bytes.fromhex(txt)
+                            txt = txt_dec.decode('utf-8', errors='ignore')
+                        except Exception:
+                            pass
                     if '|' in str(txt):
                         model = str(txt).split('|')[0]
                 except Exception:
