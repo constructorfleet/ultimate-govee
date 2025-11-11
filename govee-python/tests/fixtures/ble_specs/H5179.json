@@ -1,7 +1,7 @@
 {
   "properties": {
     "batt": {
-      "decoder": ["value_from_hex_string", "manufacturerdata", 22, 2, false, false]
+      "decoder": ["value_from_hex_string", "manufacturerdata", 32, 2, false, false]
     }
   }
 }
