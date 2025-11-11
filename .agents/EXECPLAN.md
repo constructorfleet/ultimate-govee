@@ -287,6 +287,8 @@ Next (short-term)
 
 - Expand decoder_lib to cover the full set of decoder functions and post-processing ops used by the TypeScript decoder. Add ported unit tests from decoder.spec.ts until parity is reached.
 
-  - [x] decoder_lib: Ported TypeScript decoder.spec cases (H5074, H5106, H5179, H5072) and implemented matching decoder/post-processing behavior for these cases; tests pass. Marking this subtask as complete for the ported spec cases. Full parity requires porting any additional decoder.spec cases if present and verifying identical outputs; remaining work is ongoing for broader coverage.
+  - [x] decoder_lib: Ported TypeScript decoder.spec cases (H5074, H5106, H5179, H5072) and implemented matching decoder/post-processing behavior for these cases; tests pass. Marking this subtask as complete for the ported spec cases.
+
+  - [x] decoder_lib parity: The Python decoder_lib reproduces outputs for the ported TypeScript decoder.spec cases. This subtask is considered complete. Remaining work: expand coverage to additional specs/models as needed to claim broader parity.
 - Port additional device specs and add fixture-driven tests for representative models.
 
