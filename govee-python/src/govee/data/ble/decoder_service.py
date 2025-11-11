@@ -10,11 +10,15 @@ from typing import Optional, Dict, Any
 from govee.data.ble.decoder import GoveeBleDecoder
 from govee.data.ble import device_condition, property_condition
 from govee.data.ble.decoder_lib import Decoder as DecoderLib
+from govee.data.ble.iot_manager import IoTManager
 
 class DecoderService:
     def __init__(self, config: Optional[Dict[str, Any]] = None, decoder: Optional[Any] = None):
         self.config = config or {}
         self.decoder = decoder or GoveeBleDecoder()
+        # IoTManager fallback instance used for complex decoders; tests may
+        # monkeypatch or replace this with a custom manager.
+        self.iot_manager = IoTManager()
 
     async def decode_device(self, peripheral: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """Decode a peripheral into decoded device info.
@@ -69,11 +73,20 @@ class DecoderService:
                         # spec doesn't apply
                         pass
                     else:
-                        decoded_props = DecoderLib.decode_properties({'manufacturerData': adv.get('manufacturer_data'), 'name': name, 'macAddress': peripheral.get('address')}, props)
-                        # Always return a result dict for the model even if no
-                        # properties decoded — the spec matched but individual
-                        # properties may have been filtered by conditions.
-                        res = {'model': model, 'properties': decoded_props or {}}
+                        # If the spec indicates 'iot_manager': true, delegate to
+                        # the IoTManager path which may perform more complex
+                        # decoding that requires external assets. Otherwise use
+                        # the local decoder_lib path.
+                        if spec.get('iot_manager'):
+                            ires = await self.iot_manager.decode(spec, {'manufacturerData': adv.get('manufacturer_data'), 'name': name, 'macAddress': peripheral.get('address')})
+                            if ires:
+                                res = {'model': model, 'properties': ires}
+                        else:
+                            decoded_props = DecoderLib.decode_properties({'manufacturerData': adv.get('manufacturer_data'), 'name': name, 'macAddress': peripheral.get('address')}, props)
+                            # Always return a result dict for the model even if no
+                            # properties decoded — the spec matched but individual
+                            # properties may have been filtered by conditions.
+                            res = {'model': model, 'properties': decoded_props or {}}
             if res is None:
                 return None
         # merge into a basic decoded device structure
