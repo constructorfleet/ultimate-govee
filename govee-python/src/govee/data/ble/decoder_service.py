@@ -23,13 +23,16 @@ class DecoderService:
         parse manufacturer_data. More advanced IoTManager-based decoding is
         out of scope for this minimal service.
         """
-        # emulate the TS service model matching Hxxxx patterns if local name present
+        # emulate the TS service model matching Hxxxx patterns. Some
+        # advertisements may omit a localName; allow decoding when
+        # manufacturer/service data is present so spec-driven detection
+        # can proceed even without a device name.
         name = peripheral.get('advertisement', {}).get('localName') or peripheral.get('name')
-        if not name:
+        adv = dict(peripheral.get('advertisement', {}))
+        if not (name or adv.get('manufacturer_data') or adv.get('service_data')):
             return None
         # use the simple decoder
         # translate advertisement keys to expected simple decoder keys
-        adv = dict(peripheral.get('advertisement', {}))
         if 'manufacturer_data' in adv:
             adv['manufacturer_data'] = adv['manufacturer_data']
         res = self.decoder.decode({'name': name, **adv})
