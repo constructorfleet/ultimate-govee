@@ -1,0 +1,32 @@
+{
+  "properties": {
+    "tempc": {
+      "decoder": [
+        "value_from_hex_string",
+        "manufacturerdata",
+        6,
+        4,
+        true,
+        true
+      ],
+      "post_proc": [
+        "/",
+        "1000",
+        ">",
+        "0",
+        "/",
+        "10"
+      ]
+    },
+    "batt": {
+      "decoder": [
+        "value_from_hex_string",
+        "manufacturerdata",
+        10,
+        2,
+        false,
+        false
+      ]
+    }
+  }
+}
