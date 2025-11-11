@@ -9,7 +9,7 @@ def test_decode_using_fixture_spec_file(tmp_path, monkeypatch):
     # write the fixture spec to a temp dir and patch loader to use it
     spec_dir = tmp_path / 'specs'
     spec_dir.mkdir()
-    fixture = Path('govee-python/tests/fixtures/ble_specs/HTEST.json').read_text()
+    fixture = Path('tests/fixtures/ble_specs/HTEST.json').read_text()
     (spec_dir / 'HTEST.json').write_text(fixture)
 
     def loader(model: str, dirs=None):
