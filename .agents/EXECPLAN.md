@@ -275,3 +275,16 @@ Task Checklist (with checkboxes)
   - [ ] Task 6.2: Enforce formatting and coverage gating in CI
 
 For every task: follow the TDD process from .agents/TDD.md. Commit after each small task with a conventional commit message. Do not mark tasks complete until feature parity with TypeScript behavior is validated by tests.
+
+
+Recent work (automated update)
+
+- Implemented DeltaMap/DeltaSubject and observable primitives (marked complete).
+- Implemented initial decoder_lib behaviors and unit tests for post-processing and hex decoding (in progress).
+- Implemented DecoderService spec-loader, model detection, property & spec condition evaluation, and an IoTManager fallback stub (in progress).
+
+Next (short-term)
+
+- Expand decoder_lib to cover the full set of decoder functions and post-processing ops used by the TypeScript decoder. Add ported unit tests from decoder.spec.ts until parity is reached.
+- Port additional device specs and add fixture-driven tests for representative models.
+
