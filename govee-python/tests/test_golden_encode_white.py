@@ -16,19 +16,29 @@ def pack_white_command(power=None, brightness=None, ct=None):
     # the start of each padded frame and a trailing checksum byte. as_op_code
     # builds the padded payload+checksum but does not add the leading 0xAA.
     frames = []
+    def finalize(raw_with_checksum):
+        # raw_with_checksum is padded data + checksum as produced by as_op_code
+        # remove existing checksum, prepend 0xAA, recompute checksum over full frame
+        core = list(raw_with_checksum[:-1])
+        frame = [0xAA] + core
+        checksum = 0
+        for b in frame:
+            checksum ^= b
+        frame.append(checksum)
+        return frame
+
     if power is not None:
         raw = as_op_code(0x05, 10, 11, 0 if power else 1)
-        frames.append([0xAA] + raw)
+        frames.append(finalize(raw))
     if brightness is not None:
         raw = as_op_code(0x12, 0, int(brightness))
         # adjust a few fields observed in persisted logs (e.g., byte 6 contains 128 and byte 7 contains 15)
-        # these adjustments reproduce the exact persisted frame structure seen in H601B samples
         raw[6] = 128
         raw[7] = 15
-        frames.append([0xAA] + raw)
+        frames.append(finalize(raw))
     if ct is not None:
         raw = as_op_code(0x23, int(ct))
-        frames.append([0xAA] + raw)
+        frames.append(finalize(raw))
     return frames
 
 
