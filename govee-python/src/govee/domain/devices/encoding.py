@@ -67,8 +67,9 @@ def pack_raw_frame(op_code: int, values: List[int], model: str | None = None) ->
     from govee.common.op_code import as_op_code
 
     raw = as_op_code(op_code, *values)
-    # core (without as_op_code checksum)
-    core = list(raw[:-1])
+    # drop the original opcode byte from as_op_code core and its checksum
+    # then prepend the 0xAA leading byte used in persisted frames
+    core = list(raw[1:-1])
     frame = [0xAA] + core
     # model-specific tweaks
     if model and model.upper().startswith("H601") and op_code == 0x12:
@@ -76,6 +77,12 @@ def pack_raw_frame(op_code: int, values: List[int], model: str | None = None) ->
         if len(frame) > 7:
             frame[6] = 128
             frame[7] = 15
+    # model-specific tweaks
+    if model and model.upper().startswith("H601") and op_code == 0x12:
+        if len(frame) > 7:
+            frame[6] = 128
+            frame[7] = 15
+
     # compute checksum over frame and append
     checksum = 0
     for b in frame:
