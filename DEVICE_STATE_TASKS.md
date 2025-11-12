@@ -72,17 +72,17 @@ If dist or JS code references additional device classes (RGBICLightDevice, RGBLi
   - Acceptance: factory returns implementations; tests pass.
   - Commit message: feat(devices): map models to new implementations (GREEN)
 
-- [ ] B3 — REFACTOR: merge shared encoding, add docs & examples
+- [x] B3 — REFACTOR: merge shared encoding, add docs & examples
   - Turn shared encoding utilities into helpers (e.g., encode_rgb, encode_brightness).
   - Add README snippet docs in govee-python/docs/devices.md
   - Commit message: refactor(devices): unify encoding helpers and document device implementation patterns
 
 ## C. White-temperature & simple white devices (if missing)
-- [ ] C1 — RED: failing tests for white-temperature (CT) device
+- [x] C1 — RED: failing tests for white-temperature (CT) device
   - Test file: govee-python/tests/test_white_temp_device.py
   - Tests: apply_payload with ct, brightness; encode command; get_state
   - Commit message: test(devices): add failing tests for white-temp devices (RED)
-- [ ] C2 — GREEN: implement minimal WhiteTempDevice class
+- [x] C2 — GREEN: implement minimal WhiteTempDevice class
   - File: implementations/white_temp.py
   - Commit message: feat(devices): add WhiteTempDevice (GREEN)
 - [ ] C3 — REFACTOR: integrate into factory and docs
