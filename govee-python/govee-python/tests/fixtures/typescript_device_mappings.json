@@ -1,0 +1,168 @@
+[
+  {
+    "file": "/Users/tglenn/src/ultimate-govee/lib/domain/devices/impl/home-improvement/hygrometer/hygrometer.ts",
+    "factory": "HygrometerFactory",
+    "matchers": {
+      "Home Improvement": {}
+    }
+  },
+  {
+    "file": "/Users/tglenn/src/ultimate-govee/lib/domain/devices/impl/home-improvement/meat-thermometer/meat-thermometer.ts",
+    "factory": "MeatThermometerFactory",
+    "matchers": {
+      "Home Improvement": {}
+    }
+  },
+  {
+    "file": "/Users/tglenn/src/ultimate-govee/lib/domain/devices/impl/home-improvement/air-quality/air-quality.ts",
+    "factory": "AirQualityFactory",
+    "matchers": {
+      "Home Improvement": {}
+    }
+  },
+  {
+    "file": "/Users/tglenn/src/ultimate-govee/lib/domain/devices/impl/home-improvement/presence/presence.ts",
+    "factory": "PresenceFactory",
+    "matchers": {
+      "Home Improvement": {}
+    }
+  },
+  {
+    "file": "/Users/tglenn/src/ultimate-govee/lib/domain/devices/impl/appliances/ice-maker/ice-maker.ts",
+    "factory": "IceMakerFactory",
+    "matchers": {
+      "Home Appliances": {}
+    }
+  },
+  {
+    "file": "/Users/tglenn/src/ultimate-govee/lib/domain/devices/impl/appliances/purifier/purifier.ts",
+    "factory": "PurifierFactory",
+    "matchers": {
+      "Home Appliances": {
+        "Air Treatment": [
+          {
+            "pattern": "purifier",
+            "flags": "i"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "file": "/Users/tglenn/src/ultimate-govee/lib/domain/devices/impl/appliances/humidifier/humidifier.ts",
+    "factory": "HumidifierFactory",
+    "matchers": {
+      "Home Appliances": {
+        "Air Treatment": [
+          {
+            "pattern": "humidifier",
+            "flags": "i"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "file": "/Users/tglenn/src/ultimate-govee/lib/domain/devices/impl/tv/sync-box/sync-box.ts",
+    "factory": "SyncBoxFactory",
+    "matchers": {
+      "LED Strip Light": {
+        "TV BackLights": [
+          {
+            "pattern": ".*gaming sync box.*",
+            "flags": "i"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "file": "/Users/tglenn/src/ultimate-govee/lib/domain/devices/impl/tv/dreamview/dreamview.ts",
+    "factory": "DreamViewFactory",
+    "matchers": {
+      "LED Strip Light": {
+        "TV BackLights": [
+          {
+            "pattern": ".*dreamview.*",
+            "flags": "i"
+          }
+        ]
+      },
+      "Indoor Lighting": {
+        "Table Lamps": [
+          {
+            "pattern": ".*dreamview.*",
+            "flags": "i"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "file": "/Users/tglenn/src/ultimate-govee/lib/domain/devices/impl/lights/rgb/rgb-light.ts",
+    "factory": "RGBLightFactory",
+    "matchers": {
+      "LED Strip Light": {
+        "RGB Strip Lights": true
+      },
+      "Indoor Lighting": {
+        "Table Lamps": [
+          {
+            "pattern": " RGB ",
+            "flags": ""
+          }
+        ]
+      }
+    }
+  },
+  {
+    "file": "/Users/tglenn/src/ultimate-govee/lib/domain/devices/impl/lights/rgbic/rgbic-light.ts",
+    "factory": "RGBICLightFactory",
+    "matchers": {
+      "LED Strip Light": {
+        "RGBIC Strip Lights": [
+          {
+            "pattern": ".*rgbic strip light.*",
+            "flags": "i"
+          }
+        ]
+      },
+      "Indoor Lighting": {
+        "Floor Lamps": [
+          {
+            "pattern": ".*rgbic strip light.*",
+            "flags": "i"
+          }
+        ],
+        "Wall Lamps": [
+          {
+            "pattern": ".*glide.*",
+            "flags": "i"
+          }
+        ]
+      },
+      "Outdoor Lighting": {
+        "Strip Lights": [
+          {
+            "pattern": ".*phantasy.*",
+            "flags": "i"
+          }
+        ],
+        "String Lights": [
+          {
+            "pattern": ".*rgbic.*",
+            "flags": "i"
+          }
+        ]
+      },
+      "Other Lights": {
+        "Car Lights": [
+          {
+            "pattern": ".*rgbic.*",
+            "flags": "i"
+          }
+        ]
+      }
+    }
+  }
+]
