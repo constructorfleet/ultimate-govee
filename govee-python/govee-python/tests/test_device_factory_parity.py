@@ -10,6 +10,39 @@ def load_json(fn):
         return json.load(f)
 
 
+def load_ts_matchers():
+    # loads the parsed typescript matchers fixture (produced by tools)
+    path = os.path.join(FIX, 'typescript_device_mappings.json')
+    mappings = load_json('typescript_device_mappings.json')
+    # if mappings entries contain 'mapping_text' (raw string), try to parse into 'matchers'
+    parsed = []
+    for m in mappings:
+        if 'matchers' in m and m['matchers']:
+            parsed.append(m)
+            continue
+        text = m.get('mapping_text')
+        if not text:
+            parsed.append(m)
+            continue
+        # attempt to convert JS-like object text into JSON by quoting bare keys and replacing single quotes
+        t = text
+        # replace single quotes with double quotes
+        t = t.replace("'", '"')
+        # quote bare keys like { Temp: -> { "Temp":
+        t = re.sub(r'([\{,\s])(\w[\w \/-]*?)\s*:', lambda mo: f"{mo.group(1)}\"{mo.group(2)}\":", t)
+        # now load as JSON
+        try:
+            j = json.loads(t)
+        except Exception:
+            # fallback: leave mapping_text
+            m['matchers'] = None
+            parsed.append(m)
+            continue
+        m['matchers'] = j
+        parsed.append(m)
+    return parsed
+
+
 def ts_expected_matches(product, ts_mappings):
     """Given a product entry and extracted TS mappings, return list of factory names that match."""
     matches = []
@@ -28,16 +61,29 @@ def ts_expected_matches(product, ts_mappings):
             matches.append(m['factory'])
             continue
         if isinstance(grp_val, list):
-            # list of regex dicts
+            # list of regex dicts or pre-parsed items
             for reg in grp_val:
-                pat = reg.get('pattern')
-                flags = reg.get('flags','')
-                if 'i' in flags.lower():
-                    if re.search(pat, model, re.IGNORECASE):
-                        matches.append(m['factory'])
-                        break
+                if isinstance(reg, dict):
+                    pat = reg.get('pattern')
+                    flags = reg.get('flags','')
                 else:
-                    if re.search(pat, model):
+                    # might be a plain string
+                    pat = str(reg)
+                    flags = ''
+                if not pat:
+                    continue
+                try:
+                    if 'i' in flags.lower():
+                        if re.search(pat, model, re.IGNORECASE):
+                            matches.append(m['factory'])
+                            break
+                    else:
+                        if re.search(pat, model):
+                            matches.append(m['factory'])
+                            break
+                except re.error:
+                    # fallback to substring
+                    if pat.lower() in model.lower():
                         matches.append(m['factory'])
                         break
         elif isinstance(grp_val, dict) or isinstance(grp_val, str):
@@ -45,15 +91,19 @@ def ts_expected_matches(product, ts_mappings):
             if isinstance(grp_val, dict):
                 pat = grp_val.get('pattern')
                 flags = grp_val.get('flags','')
-                if 'i' in flags.lower():
-                    if re.search(pat, model, re.IGNORECASE):
-                        matches.append(m['factory'])
-                else:
-                    if re.search(pat, model):
+                try:
+                    if 'i' in flags.lower():
+                        if re.search(pat, model, re.IGNORECASE):
+                            matches.append(m['factory'])
+                    else:
+                        if re.search(pat, model):
+                            matches.append(m['factory'])
+                except re.error:
+                    if pat and pat.lower() in model.lower():
                         matches.append(m['factory'])
             else:
                 # raw val - attempt case-insensitive substring
-                if grp_val.strip().lower() in model.lower():
+                if grp_val and grp_val.strip().lower() in model.lower():
                     matches.append(m['factory'])
     return matches
 
@@ -61,7 +111,7 @@ def ts_expected_matches(product, ts_mappings):
 def test_parity_basic():
     products = load_json('govee.products.json')
     devices = load_json('govee.devices.json')
-    ts_mappings = load_json('typescript_device_mappings.json')
+    ts_mappings = load_ts_matchers()
     # pick a handful of products and assert our TS-based matcher returns something sensible
     # choose first 50 products
     count = 0
