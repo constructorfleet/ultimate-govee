@@ -44,7 +44,7 @@ def test_retry_on_500_then_success(monkeypatch):
 
     # call the default_session wrapper to ensure it handles status codes; here
     # we directly invoke fake_session to validate the intended behavior
-    resp1 = fake_session("GET", "http://example")
-    resp2 = fake_session("GET", "http://example")
+    _ = fake_session("GET", "http://example")
+    _ = fake_session("GET", "http://example")
     resp3 = fake_session("GET", "http://example")
     assert resp3["status"] == 200
