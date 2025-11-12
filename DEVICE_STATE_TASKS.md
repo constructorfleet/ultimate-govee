@@ -9,7 +9,7 @@ Note: run all commands from the repository root. Use the project venv and uv as 
 # Device classes parity — TDD task list
 
 ## Inventory / prep
-- [ ] RED: add a small audit test showing what device implementations are currently present/used by tests
+- [x] RED: add a small audit test showing what device implementations are currently present/used by tests
   - Test file: govee-python/tests/test_device_implementations_inventory.py
   - Behavior: import domain factory & implementations and assert a mapping/list of implemented classes (e.g., RGBDevice) and assert expected missing names (RGBICDevice, StripDevice)
   - Command: uv --directory govee-python run -s test -- tests/test_device_implementations_inventory.py
@@ -19,7 +19,7 @@ Note: run all commands from the repository root. Use the project venv and uv as 
 ## A. RGBIC / Addressable LED device (high priority)
 Many parity projects lack addressable-LED (IC) variant. Implement an RGBIC device class similar api to RGBDevice.
 
-- [ ] A1 — RED: failing unit tests for RGBIC behavior
+- [x] A1 — RED: failing unit tests for RGBIC behavior
   - Test file: govee-python/tests/test_rgbic_device.py
   - Tests:
     - test_rgbic_apply_payload_and_get_state
@@ -32,7 +32,7 @@ Many parity projects lack addressable-LED (IC) variant. Implement an RGBIC devic
     - uv --directory govee-python run -s test -- tests/test_rgbic_device.py
   - Commit message: test(devices): add failing tests for RGBICDevice (RED)
 
-- [ ] A2 — GREEN: minimal class implementation to satisfy tests
+- [x] A2 — GREEN: minimal class implementation to satisfy tests
   - File to add: govee-python/src/govee/domain/devices/implementations/rgbic.py
   - Implement:
     - class RGBICDevice(DeviceBase) or stand-alone class with:
