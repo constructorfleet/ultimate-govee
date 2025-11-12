@@ -13,6 +13,8 @@ except Exception as e:  # pragma: no cover - optional dependency
     mqtt = None  # type: ignore
 
 from typing import Any, Optional
+import threading
+from typing import Sequence
 
 
 class PahoAdapter:
@@ -35,3 +37,60 @@ class PahoAdapter:
 
     # real-world code would include callbacks and loop handling
 
+
+class PahoBackend:
+    """Backend that attaches a paho client to an IoTClient instance.
+
+    This wrapper is intentionally small: it connects to a broker, subscribes
+    to a set of topics, and forwards inbound messages to the provided
+    IoTClient.simulate_incoming as AsyncIotMessage objects. It runs the
+    paho network loop in a background thread.
+    """
+
+    def __init__(self, host: str, port: int = 1883, topics: Optional[Sequence[str]] = None):
+        if mqtt is None:
+            raise ImportError("paho-mqtt is required for PahoBackend")
+        self.host = host
+        self.port = port
+        self.topics = list(topics or ["#"])
+        self._client = mqtt.Client()
+        self._thread: Optional[threading.Thread] = None
+
+    def attach(self, iot_client):
+        def on_connect(client, userdata, flags, rc):
+            for t in self.topics:
+                client.subscribe(t)
+
+        def on_message(client, userdata, msg):
+            try:
+                import json
+
+                payload = None
+                if msg.payload:
+                    try:
+                        payload = json.loads(msg.payload.decode('utf-8'))
+                    except Exception:
+                        payload = msg.payload.decode('utf-8')
+                a = AsyncIotMessage(topic=msg.topic, payload=payload, qos=msg.qos, retained=bool(msg.retain))
+                # forward into IoT client
+                iot_client.simulate_incoming(a)
+            except Exception:
+                pass
+
+        self._client.on_connect = on_connect
+        self._client.on_message = on_message
+        self._client.connect(self.host, self.port)
+
+        # run loop in background thread
+        def _loop():
+            self._client.loop_forever()
+
+        self._thread = threading.Thread(target=_loop, daemon=True)
+        self._thread.start()
+
+    def stop(self):
+        try:
+            self._client.disconnect()
+        except Exception:
+            pass
+        self._thread = None
