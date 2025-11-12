@@ -57,6 +57,9 @@ class PahoBackend:
         self._thread: Optional[threading.Thread] = None
 
     def attach(self, iot_client):
+        # Configure callbacks to forward messages into the provided iot_client.
+        # Do not perform network connect here — creation/attachment should be
+        # side-effect free to allow test-time attachment without a broker.
         def on_connect(client, userdata, flags, rc):
             for t in self.topics:
                 client.subscribe(t)
@@ -79,14 +82,12 @@ class PahoBackend:
 
         self._client.on_connect = on_connect
         self._client.on_message = on_message
-        self._client.connect(self.host, self.port)
 
-        # run loop in background thread
-        def _loop():
-            self._client.loop_forever()
-
-        self._thread = threading.Thread(target=_loop, daemon=True)
-        self._thread.start()
+        # Note: do not call connect() here so tests may attach a PahoBackend
+        # without requiring an actual broker. To perform a real connection,
+        # call the connect() method on this PahoBackend instance which will
+        # start the background network loop.
+        self._attached = True
 
     def stop(self):
         try:
