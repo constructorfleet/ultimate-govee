@@ -236,8 +236,35 @@ Planned Tasks (ordered priority)
 
 4) Domain Device States & Factories
    - Task 4.1: Port device state classes (power, brightness, color-temp, color-rgb, effect).
+     - STATUS: PARTIAL PARITY — Core DeviceState and parsing helpers have been
+       ported. The Python package includes parse_state, individual state
+       parsers (power, brightness, color, color_rgb, color_temp, temperature,
+       battery, humidity, effect) and a DeviceState dataclass. These cover the
+       common fields exercised by existing tests and reproduce the observable
+       behaviors used by higher-level code.
+     - REMAINING: Edge-cases, additional parsing rules and full post-processing
+       parity with the TypeScript decoder (all model-specific quirks) remain to
+       be expanded by adding fixture-driven tests from TypeScript specs.
+
    - Task 4.2: Implement device factories and version handling for model variants.
+     - STATUS: PARTIAL PARITY — A lightweight factory exists and maps common
+       model name heuristics to concrete implementations (RGBICDevice,
+       WhiteTempDevice, SensorDevice, generic Device). The mapping is
+       sufficient for domain tests and basic device construction.
+     - REMAINING: More precise model-version handling and richer mappings to
+       exact implementations (including RGB vs RGBLight vs RGBIC variants and
+       firmware-specific behavior) should be added as more model specs are
+       ported.
+
    - Task 4.3: Add unit tests derived from TypeScript specs for state transitions and commands.
+     - STATUS: PARTIAL PARITY — Unit tests have been added for several device
+       classes (RGBDevice, RGBICDevice, WhiteTempDevice, SensorDevice) that
+       exercise parse/encode semantics. Integration tests exercise the
+       device->adapter->IoT pipeline with persisted fixtures. These tests
+       match the TypeScript examples used most frequently in the codebase.
+     - REMAINING: Broader parity requires porting more TS fixture/spec cases
+       into tests (BLE decoder specs, model-specific state frames) and
+       grounding expected encoded command frames against TypeScript outputs.
 
 5) Top-level wiring & UltimateGoveeService
    - Task 5.1: Implement module wiring, configuration loading, and dependency composition for channels.
