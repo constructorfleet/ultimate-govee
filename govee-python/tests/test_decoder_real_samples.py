@@ -23,7 +23,7 @@ def test_decode_real_h5179_sample(tmp_path, monkeypatch):
     # write spec fixture
     spec_dir=tmp_path/'specs'
     spec_dir.mkdir()
-    fixture = Path('govee-python/tests/fixtures/ble_specs/H5179_v2.json').read_text()
+    fixture = Path('tests/fixtures/ble_specs/H5179_v2.json').read_text()
     (spec_dir/'H5179_v2.json').write_text(fixture)
 
     def loader(model: str, dirs=None):

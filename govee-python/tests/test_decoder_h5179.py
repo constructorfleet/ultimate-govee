@@ -8,7 +8,7 @@ def test_decode_h5179_fixture(tmp_path, monkeypatch):
     svc = DecoderService()
     spec_dir = tmp_path / 'specs'
     spec_dir.mkdir()
-    fixture = Path('govee-python/tests/fixtures/ble_specs/H5179.json').read_text()
+    fixture = Path('tests/fixtures/ble_specs/H5179.json').read_text()
     (spec_dir / 'H5179.json').write_text(fixture)
 
     def loader(model: str, dirs=None):

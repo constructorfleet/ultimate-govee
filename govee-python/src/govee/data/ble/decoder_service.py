@@ -12,6 +12,7 @@ from govee.data.ble import device_condition, property_condition
 from govee.data.ble.decoder_lib import Decoder as DecoderLib
 from govee.data.ble.iot_manager import IoTManager
 
+
 class DecoderService:
     def __init__(self, config: Optional[Dict[str, Any]] = None, decoder: Optional[Any] = None):
         self.config = config or {}
@@ -33,14 +34,16 @@ class DecoderService:
         # can proceed even without a device name.
         name = peripheral.get('advertisement', {}).get('localName') or peripheral.get('name')
         adv = dict(peripheral.get('advertisement', {}))
-        if not (name or adv.get('manufacturer_data') or adv.get('service_data')):
+        if not (name or adv.get('manufacturer_data')):
             return None
         # use the simple decoder
         # translate advertisement keys to expected simple decoder keys
-        if 'manufacturer_data' in adv:
-            adv['manufacturer_data'] = adv['manufacturer_data']
         res = self.decoder.decode({'name': name, **adv})
-        if res is None:
+        # If the simple decoder returned no model information, attempt to
+        # fall back to spec-driven decoding. The simple decoder may return
+        # a partial dict (e.g. just the name) which should not prevent
+        # attempting to resolve a model from manufacturer/local name.
+        if res is None or not isinstance(res, dict) or 'model' not in res:
             # try to load a model spec using the mac/model in adv if available
             model = None
             if isinstance(adv.get('manufacturer_data'), (bytes, str)):
@@ -58,6 +61,17 @@ class DecoderService:
                             pass
                     if '|' in str(txt):
                         model = str(txt).split('|')[0]
+                except Exception:
+                    model = None
+            # if we didn't find a model in manufacturer data, try to extract
+            # a model token from the local name (e.g. 'Govee_H6604_B5A1' -> 'H6604')
+            if model is None and name:
+                try:
+                    import re
+
+                    m = re.search(r"H[0-9A-Za-z]+", str(name))
+                    if m:
+                        model = m.group(0)
                 except Exception:
                     model = None
             if model:
