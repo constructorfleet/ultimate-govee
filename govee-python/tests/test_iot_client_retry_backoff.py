@@ -19,7 +19,7 @@ async def test_send_with_retry_performs_retries_and_drop_callback():
     client.register_drop_callback(on_drop)
 
     # publish with backoff intervals; set max_retries small to trigger drop
-    msg = await client.send_with_retry(
+    await client.send_with_retry(
         "govee/device/9/state",
         {"z": 9},
         qos=1,

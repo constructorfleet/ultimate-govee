@@ -6,7 +6,7 @@ integration and are RED until DeviceBase parsing behavior is implemented.
 
 from __future__ import annotations
 
-from typing import Dict
+
 
 
 def test_devicebase_default_state_and_get_state():
