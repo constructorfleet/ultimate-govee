@@ -35,25 +35,12 @@ Implementing a device
    needed. Use parse_state to normalize incoming payloads and rely on
    DeviceBase.get_state() for test assertions.
 
-Example: WhiteTempDevice
-
-- Handles power, brightness and color temperature.
-- encode_command should emit frames like:
-  - {'op': 'power', 'v': 1}
-  - {'op': 'bright', 'v': 50}
-  - {'op': 'ct', 'v': 3000}
-
 Example: RGBICDevice (addressable strip)
 
 - Stores a segments list and encodes segment-level frames:
   - {'op': 'seg', 'index': 0, 'r': 255, 'g': 0, 'b': 0}
 - apply_payload should normalize incoming 'segments' shapes into a
   predictable list on the instance.
-
-Example: SensorDevice
-
-- Reads battery, temperature and humidity from payload; typically does
-  not encode commands (returns an empty list).
 
 Factory integration
 

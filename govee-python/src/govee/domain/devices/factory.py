@@ -42,37 +42,7 @@ def make_device_from_advert(model: str, payload: dict) -> Optional[Device]:
             )
     except Exception:
         pass
-    if "WT" in m.upper() or "WHITE" in m.upper() or "CT" in m.upper():
-        # map simple white-temp model patterns to WhiteTempDevice
-        from .implementations.whitetemp import WhiteTempDevice
 
-        return WhiteTempDevice(
-            id=payload.get("id") or payload.get("device"),
-            model=model,
-            name=payload.get("name"),
-        )
-    if "WT" in m.upper() or "WHITE" in m.upper() or "CT" in m.upper():
-        # map simple white-temp model patterns to WhiteTempDevice
-        from .implementations.whitetemp import WhiteTempDevice
-
-        return WhiteTempDevice(
-            id=payload.get("id") or payload.get("device"),
-            model=model,
-            name=payload.get("name"),
-        )
-    if "S-" in m.upper() or "SENSOR" in m.upper():
-        from .implementations.sensor import SensorDevice
-
-        return SensorDevice(
-            id=payload.get("id") or payload.get("device"),
-            model=model,
-            name=payload.get("name"),
-        )
-    # simple night-light heuristics (explicit match only)
-    if "NIGHT" in m.upper() or "NIGHTLIGHT" in m.upper() or "NIGHT" in str(payload.get("name", "")).upper():
-        from .implementations.night import NightDevice
-
-        return NightDevice(id=payload.get("id") or payload.get("device"), model=model, name=payload.get("name"))
     if m.startswith(("H", "M")):
         return Device(
             id=payload.get("id") or payload.get("device"),

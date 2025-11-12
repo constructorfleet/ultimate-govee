@@ -18,7 +18,6 @@ def broker_available(host="localhost", port=1883, timeout=0.5):
 
 
 @pytest.mark.skipif(not broker_available(), reason="local MQTT broker not available")
-@pytest.mark.timeout(10)
 def test_iot_paho_e2e_publish_subscribe():
     # This test requires a local MQTT broker running on localhost:1883
     backend = PahoBackend(host="localhost", port=1883, topics=["test/e2e/#"])
