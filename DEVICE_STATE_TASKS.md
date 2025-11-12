@@ -10,6 +10,7 @@ How we will work
   - uv --directory govee-python run -s format_check
   - uv --directory govee-python run -s all_checks
 - Commit after every GREEN task with conventional commit format.
+- Implement the Typescript functionality as Python!
 
 Task list (markdown)
 
@@ -118,7 +119,7 @@ Task list (markdown)
   - Document special modes in docs/devices.md
   - Commit: docs(devices): document night-mode behavior (REFACTOR)
 
-- [ ] F. Sensor family (battery, temperature, humidity) — already added but expand
+- [x] F. Sensor family (battery, temperature, humidity) — already added but expand
 - RED
   - Add tests for multi-probe temperature payloads and calibration:
     - govee-python/tests/test_sensor_multi_probe.py
@@ -132,7 +133,7 @@ Task list (markdown)
   - Add docs examples and factory mapping for typical sensor model IDs.
   - Commit: docs(devices): sensor examples (REFACTOR)
 
-- [ ] G. Device factory & model mapping (central)
+- [x] G. Device factory & model mapping (central)
 - RED
   - Add failing tests: govee-python/tests/test_device_factory_models.py
     - Provide a list of model strings from persisted/govee.devices.json and assert make_device_from_advert returns expected implementation classes (by model name heuristics).
@@ -141,12 +142,8 @@ Task list (markdown)
   - Commit: test(devices): add failing factory mapping tests (RED)
 - GREEN
   - Implement mappings in govee-python/src/govee/domain/devices/factory.py:
-    - e.g., if model contains 'RGBIC' → RGBICDevice; contains 'H604' (ic>0) → RGBICDevice; contains 'H601'→ WhiteTempDevice etc.
-  - Use persisted/govee.devices.json to derive mapping rules and add tests verifying them.
+    - Follow the logic in the Typescript library.
   - Commit: feat(devices): extend factory mappings for common models (GREEN)
-- REFACTOR
-  - Make factory data-driven: load model-to-impl map from a YAML/JSON file under persisted/ or assets/ and add a small script to regenerate mapping from persisted devices list.
-  - Commit: refactor(devices): make factory data-driven & add mapping asset (REFACTOR)
 
 - [ ] H. Encoding parity and IoT adapter integration
 - RED
