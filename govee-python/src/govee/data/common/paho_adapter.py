@@ -98,9 +98,41 @@ class PahoBackend:
         # start the background network loop.
         self._attached = True
 
+    def connect(self, max_attempts: int = 3, initial_backoff: float = 0.1):
+        """Connect to the configured broker, retrying on failure.
+
+        This method starts the paho network loop in a background thread on
+        success. It retries up to max_attempts with exponential backoff.
+        """
+        attempt = 0
+        backoff = initial_backoff
+        last_exc = None
+        while attempt < max_attempts:
+            attempt += 1
+            try:
+                self._client.connect(self.host, self.port, 60)
+                # start loop thread
+                try:
+                    self._client.loop_start()
+                except Exception:
+                    pass
+                self._connected = True
+                return
+            except Exception as exc:
+                last_exc = exc
+                time.sleep(backoff)
+                backoff = min(backoff * 2, 60)
+        if last_exc:
+            raise last_exc
+
     def stop(self):
         try:
+            try:
+                self._client.loop_stop()
+            except Exception:
+                pass
             self._client.disconnect()
         except Exception:
             pass
         self._thread = None
+        self._connected = False
