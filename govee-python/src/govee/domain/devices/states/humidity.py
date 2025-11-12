@@ -3,6 +3,7 @@
 This is a minimal port of lib/domain/devices/states/humidity.state.ts focusing
 on parsing humidity from payloads for unit tests in this repository.
 """
+
 from __future__ import annotations
 
 from typing import Any, Dict, Optional

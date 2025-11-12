@@ -3,6 +3,7 @@
 Provides parse_state and state_to_command parity with the TypeScript
 ColorTempState behavior used in unit tests.
 """
+
 from __future__ import annotations
 
 from typing import Any, Dict, Optional
@@ -66,8 +67,13 @@ class ColorTempState(DeviceOpState):
                 return None
 
         return {
-            "status": {"state": {"colorTemperature": {"current": next_state.get("current")}}},
-            "command": {"command": "colorTem", "data": {"colorTemInKelvin": next_state.get("current")}},
+            "status": {
+                "state": {"colorTemperature": {"current": next_state.get("current")}}
+            },
+            "command": {
+                "command": "colorTem",
+                "data": {"colorTemInKelvin": next_state.get("current")},
+            },
         }
 
 

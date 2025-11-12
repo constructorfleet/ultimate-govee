@@ -9,4 +9,3 @@ def test_parse_rgb_dict_and_hex_string():
 def test_parse_numeric_color():
     # 0x0A141E -> r=10,g=20,b=30
     assert parse_color({"color": 0x0A141E}) == {"r": 10, "g": 20, "b": 30}
-

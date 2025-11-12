@@ -1,10 +1,11 @@
 """MQTT adapter: fake backend for offline tests and a thin adapter API."""
+
 from __future__ import annotations
 
 import json
-from typing import Any, Callable, List, Optional
+from typing import Any, Optional
 
-from govee.data.iot.iot_client import IoTClient, AsyncIotMessage
+from govee.data.iot.iot_client import AsyncIotMessage, IoTClient
 
 
 class FakeMQTTBackend:
@@ -27,12 +28,12 @@ class FakeMQTTBackend:
         self._load()
 
     def _load(self):
-        with open(self.fixture_path, 'r') as fh:
+        with open(self.fixture_path, "r") as fh:
             for ln in fh:
-                ln=ln.strip()
+                ln = ln.strip()
                 if not ln:
                     continue
-                obj=json.loads(ln)
+                obj = json.loads(ln)
                 self._messages.append(obj)
 
     def replay(self, client: IoTClient):
@@ -41,10 +42,10 @@ class FakeMQTTBackend:
         # method. The client is expected to implement simulate_incoming(AysncIotMessage).
         for m in self._messages:
             msg = AsyncIotMessage(
-                topic=m.get('topic'),
-                payload=m.get('payload'),
-                qos=m.get('qos', 0),
-                retained=m.get('retained', False),
+                topic=m.get("topic"),
+                payload=m.get("payload"),
+                qos=m.get("qos", 0),
+                retained=m.get("retained", False),
             )
             # Deliver as if broker pushed the message
             client.simulate_incoming(msg)
@@ -53,12 +54,12 @@ class FakeMQTTBackend:
 class MQTTAdapter:
     """Adapter that exposes the IoTClient-like API using a pluggable backend."""
 
-    def __init__(self, backend: Optional[FakeMQTTBackend]=None):
-        self.backend=backend
-        self.client: Optional[IoTClient]=None
+    def __init__(self, backend: Optional[FakeMQTTBackend] = None):
+        self.backend = backend
+        self.client: Optional[IoTClient] = None
 
-    async def create(self, iot_data: dict, handler: Optional[Any]=None):
-        self.client=IoTClient()
+    async def create(self, iot_data: dict, handler: Optional[Any] = None):
+        self.client = IoTClient()
         await self.client.create(iot_data, handler)
         return self.client
 
@@ -70,17 +71,31 @@ class MQTTAdapter:
         if self.client:
             await self.client.disconnect()
 
-    async def publish(self, topic: str, payload: Any, qos: int=0, retained: bool=False):
+    async def publish(
+        self, topic: str, payload: Any, qos: int = 0, retained: bool = False
+    ):
         if not self.client:
-            raise RuntimeError('client not created')
+            raise RuntimeError("client not created")
         return await self.client.publish(topic, payload, qos=qos, retained=retained)
 
     async def subscribe(self, topic: str):
         if not self.client:
-            raise RuntimeError('client not created')
+            raise RuntimeError("client not created")
         return await self.client.subscribe(topic)
 
     def replay_fixture(self):
         if not self.backend or not self.client:
             return
-        self.backend.replay(self.client)
+        # Support backends that implement either a replay(client) method
+        # (FakeMQTTBackend) used for fixtures, or an attach(client) method
+        # (PahoBackend) used for real brokers. This makes the backend
+        # swap-able for tests and production.
+        if hasattr(self.backend, "replay"):
+            self.backend.replay(self.client)
+        elif hasattr(self.backend, "attach"):
+            # attach will subscribe and arrange for messages to be
+            # forwarded into the IoTClient; return the attached client
+            self.backend.attach(self.client)
+        else:
+            # no-op for unknown backend
+            return

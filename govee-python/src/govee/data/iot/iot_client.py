@@ -29,6 +29,8 @@ class AsyncIotMessage:
         self.retained = retained
         self.timestamp = time.time()
         self.acked: bool = False
+        # optional message id assigned by the client when publishing
+        self.message_id: Optional[int] = None
         # retry bookkeeping
         self.send_attempts: int = 0
         self.max_retries: int = max_retries
@@ -84,6 +86,8 @@ class IoTClient:
         self._callbacks: List[Callable[..., Awaitable[None]]] = []
         self._inflight: List[AsyncIotMessage] = []
         self.connected = False
+        # simple increasing message id counter for qos=1 messages
+        self._next_message_id: int = 1
         # optional IoT connection info passed to create
         self.iot_data: Optional[IoTData] = None
         # optional handler object (with methods like onMessage)
@@ -187,6 +191,15 @@ class IoTClient:
             max_retries=max_retries,
         )
         msg.send_attempts = 1
+        # assign a client-side message id for qos messages so acks can
+        # reference the id rather than payload matching
+        if qos and qos > 0:
+            try:
+                msg.message_id = int(self._next_message_id)
+            except Exception:
+                msg.message_id = None
+            else:
+                self._next_message_id += 1
         self.published.append(msg)
 
         # retained semantics

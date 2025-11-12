@@ -1,10 +1,13 @@
 """Temperature parsing helpers: current temperature, probes and calibration."""
+
 from __future__ import annotations
 
 from typing import Any, Dict, Optional
 
 
-def parse_temperature(payload: Dict[str, Any]) -> (Optional[float], Optional[int], Optional[Dict[int, float]]):
+def parse_temperature(
+    payload: Dict[str, Any],
+) -> (Optional[float], Optional[int], Optional[Dict[int, float]]):
     """Extract temperature information from a device payload.
 
     Returns a tuple: (current_temp, calibration, temp_probes)
@@ -37,7 +40,12 @@ def parse_temperature(payload: Dict[str, Any]) -> (Optional[float], Optional[int
     # temp probes: keys starting with 'tempc' followed by digit(s)
     probes: Dict[int, float] = {}
     for k, v in payload.items():
-        if isinstance(k, str) and k.startswith("tempc") and len(k) > 5 and k[5:].isdigit():
+        if (
+            isinstance(k, str)
+            and k.startswith("tempc")
+            and len(k) > 5
+            and k[5:].isdigit()
+        ):
             try:
                 idx = int(k[5:])
                 probes[idx] = float(v)
@@ -48,4 +56,3 @@ def parse_temperature(payload: Dict[str, Any]) -> (Optional[float], Optional[int
 
 
 __all__ = ["parse_temperature"]
-

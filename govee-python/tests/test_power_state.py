@@ -10,4 +10,3 @@ def test_parse_power_boolean_and_numeric():
 
 def test_parse_power_missing_returns_none():
     assert parse_power({}) is None
-

@@ -9,4 +9,3 @@ def test_parse_brightness_numeric_and_string():
 def test_parse_brightness_clamps():
     assert parse_brightness({"brightness": 300}) == 100
     assert parse_brightness({"brightness": -5}) == 0
-

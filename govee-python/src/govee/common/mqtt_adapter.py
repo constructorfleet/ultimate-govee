@@ -1,10 +1,11 @@
 """MQTT adapter: fake backend for offline tests and a thin adapter API."""
+
 from __future__ import annotations
 
 import json
-from typing import Any, Callable, List, Optional
+from typing import Any, Optional
 
-from govee.data.iot.iot_client import IoTClient, AsyncIotMessage
+from govee.data.iot.iot_client import AsyncIotMessage, IoTClient
 
 
 class FakeMQTTBackend:
@@ -16,29 +17,34 @@ class FakeMQTTBackend:
         self._load()
 
     def _load(self):
-        with open(self.fixture_path, 'r') as fh:
+        with open(self.fixture_path, "r") as fh:
             for ln in fh:
-                ln=ln.strip()
+                ln = ln.strip()
                 if not ln:
                     continue
-                obj=json.loads(ln)
+                obj = json.loads(ln)
                 self._messages.append(obj)
 
     def replay(self, client: IoTClient):
         for m in self._messages:
-            msg=AsyncIotMessage(topic=m.get('topic'), payload=m.get('payload'), qos=m.get('qos',0), retained=m.get('retained', False))
+            msg = AsyncIotMessage(
+                topic=m.get("topic"),
+                payload=m.get("payload"),
+                qos=m.get("qos", 0),
+                retained=m.get("retained", False),
+            )
             client.simulate_incoming(msg)
 
 
 class MQTTAdapter:
     """Adapter that exposes the IoTClient-like API using a pluggable backend."""
 
-    def __init__(self, backend: Optional[FakeMQTTBackend]=None):
-        self.backend=backend
-        self.client: Optional[IoTClient]=None
+    def __init__(self, backend: Optional[FakeMQTTBackend] = None):
+        self.backend = backend
+        self.client: Optional[IoTClient] = None
 
-    async def create(self, iot_data: dict, handler: Optional[Any]=None):
-        self.client=IoTClient()
+    async def create(self, iot_data: dict, handler: Optional[Any] = None):
+        self.client = IoTClient()
         await self.client.create(iot_data, handler)
         return self.client
 
@@ -50,14 +56,16 @@ class MQTTAdapter:
         if self.client:
             await self.client.disconnect()
 
-    async def publish(self, topic: str, payload: Any, qos: int=0, retained: bool=False):
+    async def publish(
+        self, topic: str, payload: Any, qos: int = 0, retained: bool = False
+    ):
         if not self.client:
-            raise RuntimeError('client not created')
+            raise RuntimeError("client not created")
         return await self.client.publish(topic, payload, qos=qos, retained=retained)
 
     async def subscribe(self, topic: str):
         if not self.client:
-            raise RuntimeError('client not created')
+            raise RuntimeError("client not created")
         return await self.client.subscribe(topic)
 
     def replay_fixture(self):

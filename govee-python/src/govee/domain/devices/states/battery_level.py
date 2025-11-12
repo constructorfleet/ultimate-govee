@@ -3,6 +3,7 @@
 Minimal port of lib/domain/devices/states/battery-level.state.ts: extract
 battery as integer 0-100 from top-level or state.battery.
 """
+
 from __future__ import annotations
 
 from typing import Any, Dict, Optional
@@ -14,11 +15,11 @@ def parse_battery(payload: Optional[Dict[str, Any]]) -> Optional[int]:
     # prefer direct battery key
     battery = None
     if isinstance(payload, dict):
-        battery = payload.get('battery')
+        battery = payload.get("battery")
         if battery is None:
-            st = payload.get('state')
+            st = payload.get("state")
             if isinstance(st, dict):
-                battery = st.get('battery')
+                battery = st.get("battery")
     try:
         if battery is None:
             return None
@@ -30,4 +31,4 @@ def parse_battery(payload: Optional[Dict[str, Any]]) -> Optional[int]:
     return b
 
 
-__all__ = ['parse_battery']
+__all__ = ["parse_battery"]

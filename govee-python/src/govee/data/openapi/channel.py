@@ -1,4 +1,5 @@
 """OpenAPI channel adapter: publish and control via OpenAPIService."""
+
 from __future__ import annotations
 
 from typing import Any
@@ -15,4 +16,4 @@ class OpenAPIChannel:
         return await self.openapi.post(path, data=command)
 
     async def get_devices(self) -> Any:
-        return await self.openapi.get('/devices')
+        return await self.openapi.get("/devices")

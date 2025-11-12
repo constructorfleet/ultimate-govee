@@ -4,6 +4,7 @@ Parses color state payloads with keys state.color.{red,green,blue} and
 simple op-code arrays [op, identifier, subid, r, g, b]. This is a small
 subset to match unit tests ported from the TypeScript suite.
 """
+
 from __future__ import annotations
 
 from typing import Any, Dict, Optional

@@ -24,8 +24,15 @@ def rebuild_light_op_code(effect_id: Optional[int], op_str_base64: Optional[str]
             result.append(as_op_code(0xA1, idx, *line))
         if identifier is None:
             identifier = []
-        result.append(as_op_code(OpType.COMMAND, *(identifier + [effect_id & 0xFF, (effect_id >> 8) & 0xFF])))
-        result.append(as_op_code(OpType.REPORT, *(identifier[:1] if identifier else [0x00]), 1))
+        result.append(
+            as_op_code(
+                OpType.COMMAND,
+                *(identifier + [effect_id & 0xFF, (effect_id >> 8) & 0xFF]),
+            )
+        )
+        result.append(
+            as_op_code(OpType.REPORT, *(identifier[:1] if identifier else [0x00]), 1)
+        )
         return result
 
     return builder

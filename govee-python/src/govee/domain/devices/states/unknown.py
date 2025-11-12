@@ -3,6 +3,7 @@
 This port implements a minimal UnknownState parser that accepts op.command
 arrays and produces a dict with 'codes' set to the received bytes.
 """
+
 from __future__ import annotations
 
 from typing import Any, Dict, Optional

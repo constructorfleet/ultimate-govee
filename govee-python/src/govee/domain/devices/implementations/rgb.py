@@ -4,6 +4,7 @@ This provides a small RGBDevice class used by domain tests to model RGB
 lights. It knows how to apply incoming state payloads and encode simple
 commands for power, brightness and RGB color.
 """
+
 from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
@@ -13,7 +14,9 @@ from ..models import DeviceState
 
 
 class RGBDevice(Device):
-    def __init__(self, id: str, model: Optional[str] = None, name: Optional[str] = None):
+    def __init__(
+        self, id: str, model: Optional[str] = None, name: Optional[str] = None
+    ):
         super().__init__(id=id, model=model, name=name)
         self._state: DeviceState = DeviceState()
 
@@ -47,7 +50,14 @@ class RGBDevice(Device):
             frames.append({"op": "bright", "v": max(0, min(100, v))})
         if "color" in command and isinstance(command.get("color"), dict):
             c = command.get("color")
-            frames.append({"op": "rgb", "r": int(c.get("r", 0)), "g": int(c.get("g", 0)), "b": int(c.get("b", 0))})
+            frames.append(
+                {
+                    "op": "rgb",
+                    "r": int(c.get("r", 0)),
+                    "g": int(c.get("g", 0)),
+                    "b": int(c.get("b", 0)),
+                }
+            )
         return frames
 
 

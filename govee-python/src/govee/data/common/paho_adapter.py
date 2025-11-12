@@ -5,16 +5,18 @@ optional runtime dependency; if paho is not installed the adapter will raise
 ImportError when attempting to create a real client. For our offline tests we
 use the FakeMQTTBackend implemented in mqtt_adapter.py.
 """
+
 from __future__ import annotations
 
 try:
     import paho.mqtt.client as mqtt  # type: ignore
-except Exception as e:  # pragma: no cover - optional dependency
+except Exception:  # pragma: no cover - optional dependency
     mqtt = None  # type: ignore
 
-from typing import Any, Optional
 import threading
-from typing import Sequence
+from typing import Any, Optional, Sequence
+
+from govee.data.iot.iot_client import AsyncIotMessage
 
 
 class PahoAdapter:
@@ -47,7 +49,9 @@ class PahoBackend:
     paho network loop in a background thread.
     """
 
-    def __init__(self, host: str, port: int = 1883, topics: Optional[Sequence[str]] = None):
+    def __init__(
+        self, host: str, port: int = 1883, topics: Optional[Sequence[str]] = None
+    ):
         if mqtt is None:
             raise ImportError("paho-mqtt is required for PahoBackend")
         self.host = host
@@ -71,10 +75,15 @@ class PahoBackend:
                 payload = None
                 if msg.payload:
                     try:
-                        payload = json.loads(msg.payload.decode('utf-8'))
+                        payload = json.loads(msg.payload.decode("utf-8"))
                     except Exception:
-                        payload = msg.payload.decode('utf-8')
-                a = AsyncIotMessage(topic=msg.topic, payload=payload, qos=msg.qos, retained=bool(msg.retain))
+                        payload = msg.payload.decode("utf-8")
+                a = AsyncIotMessage(
+                    topic=msg.topic,
+                    payload=payload,
+                    qos=msg.qos,
+                    retained=bool(msg.retain),
+                )
                 # forward into IoT client
                 iot_client.simulate_incoming(a)
             except Exception:

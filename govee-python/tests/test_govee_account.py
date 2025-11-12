@@ -7,13 +7,39 @@ from govee.data.api.account.service import GoveeAccountService
 def fake_request(url, headers=None, json=None, method="GET", auth=None):
     # Provide canned responses for the URLs the service calls.
     if "login" in url:
-        return {"data": {"client": {"accountId": "acct-1", "clientId": "client-x", "topic": "govee/topic/1", "accessToken": "abc.def.ghi", "refreshToken": "r1", "tokenExpireCycle": 3600}}}
+        return {
+            "data": {
+                "client": {
+                    "accountId": "acct-1",
+                    "clientId": "client-x",
+                    "topic": "govee/topic/1",
+                    "accessToken": "abc.def.ghi",
+                    "refreshToken": "r1",
+                    "tokenExpireCycle": 3600,
+                }
+            }
+        }
     if "iot" in url:
-        return {"data": {"p12": "p12data", "p12Pass": "pass", "endpoint": "iot.example.com"}}
+        return {
+            "data": {"p12": "p12data", "p12Pass": "pass", "endpoint": "iot.example.com"}
+        }
     if "refresh-tokens" in url:
-        return {"data": {"token": "newtoken", "refreshToken": "newref", "tokenExpireCycle": 3600}}
+        return {
+            "data": {
+                "token": "newtoken",
+                "refreshToken": "newref",
+                "tokenExpireCycle": 3600,
+            }
+        }
     if "community-api" in url or "community" in url:
-        return {"data": {"community": {"token": "bff.token", "expiresAt": int(time.time() * 1000) + 5000}}}
+        return {
+            "data": {
+                "community": {
+                    "token": "bff.token",
+                    "expiresAt": int(time.time() * 1000) + 5000,
+                }
+            }
+        }
     return {}
 
 
@@ -32,6 +58,7 @@ def test_is_token_valid():
     # construct a fake JWT with exp in future
     import base64
     import json
+
     payload = {"iat": int(time.time()), "exp": int(time.time()) + 1000}
     b64 = base64.urlsafe_b64encode(json.dumps(payload).encode()).decode().strip("=")
     token = f"hdr.{b64}.sig"
@@ -50,9 +77,14 @@ def test_authenticate_flow():
         def load(self):
             return None
 
-    svc = GoveeAccountService(persist=StubPersist(), request=fake_request, parse_p12=fake_parse_p12)
+    svc = GoveeAccountService(
+        persist=StubPersist(), request=fake_request, parse_p12=fake_parse_p12
+    )
     import asyncio
-    account = asyncio.run(svc.authenticate({"username": "u", "password": "p", "clientId": "c"}))
+
+    account = asyncio.run(
+        svc.authenticate({"username": "u", "password": "p", "clientId": "c"})
+    )
     assert account.accountId == "acct-1"
     assert account.clientId == "client-x"
     assert account.oauth is not None
@@ -63,6 +95,12 @@ def test_authenticate_flow():
 def test_refresh_uses_request():
     svc = GoveeAccountService(request=fake_request)
     import asyncio
-    oauth = OAuthData(accessToken="a", refreshToken="r", clientId="c", expiresAt=int(time.time()*1000))
+
+    oauth = OAuthData(
+        accessToken="a",
+        refreshToken="r",
+        clientId="c",
+        expiresAt=int(time.time() * 1000),
+    )
     new = asyncio.run(svc.refresh(oauth))
     assert new.accessToken == "newtoken"

@@ -17,4 +17,3 @@ def test_stack_basic():
 
     assert s.destack() == 4
     assert s.size() == 2
-

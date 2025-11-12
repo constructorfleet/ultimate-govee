@@ -22,4 +22,3 @@ def test_ble_channel_forwards_peripheral_to_devices_service():
     st = devices.get_state("dev-1")
     assert st is not None
     assert st.power is True
-

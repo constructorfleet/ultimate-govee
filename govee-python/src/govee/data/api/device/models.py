@@ -27,7 +27,6 @@ def _parse_bool(v: Any) -> Optional[bool]:
     return None
 
 
-
 @dataclass
 class DeviceSettings:
     wifiName: Optional[str] = None
@@ -121,12 +120,14 @@ class DeviceListResponse:
     status: Optional[int] = None
     devices: Optional[List[GoveeAPIDevice]] = None
 
-
-# convenience constructors to handle nested JSON strings returned by some endpoints
+    # convenience constructors to handle nested JSON strings returned by some endpoints
     pass
+
+
 # NOTE: the original file already defines these classes; append helper methods below
 
 # BEGIN parsing helpers
+
 
 def _ensure_dict(x: Any) -> dict:
     if x is None:
@@ -140,8 +141,10 @@ def _ensure_dict(x: Any) -> dict:
             return {}
     return dict(x)
 
+
 # Add from_dict implementations after class definitions by monkey patching for simplicity
 # (keeps the original dataclass definitions intact above)
+
 
 def device_settings_from_dict(data: Any) -> DeviceSettings:
     d = _ensure_dict(data)
@@ -153,9 +156,15 @@ def device_settings_from_dict(data: Any) -> DeviceSettings:
         bleAddress=d.get("address") or d.get("bleAddress"),
         pactType=d.get("pactType"),
         pactCode=d.get("pactCode"),
-        notifyWaterBoiling=_parse_bool(d.get("boilWaterCompletedNotiOnOff") or d.get("notifyWaterBoiling")),
-        notifyComplete=_parse_bool(d.get("completionNotiOnOff") or d.get("notifyComplete")),
-        automaticShutDown=_parse_bool(d.get("autoShutDownOnOff") or d.get("automaticShutDown")),
+        notifyWaterBoiling=_parse_bool(
+            d.get("boilWaterCompletedNotiOnOff") or d.get("notifyWaterBoiling")
+        ),
+        notifyComplete=_parse_bool(
+            d.get("completionNotiOnOff") or d.get("notifyComplete")
+        ),
+        automaticShutDown=_parse_bool(
+            d.get("autoShutDownOnOff") or d.get("automaticShutDown")
+        ),
         filterExpired=_parse_bool(d.get("filterExpireOnOff") or d.get("filterExpired")),
         playState=_parse_bool(d.get("playState")),
         wifiSoftVersion=d.get("wifiSoftVersion"),
@@ -167,7 +176,11 @@ def device_settings_from_dict(data: Any) -> DeviceSettings:
         deviceId=d.get("device"),
         deviceName=d.get("deviceName"),
         model=d.get("sku") or d.get("model"),
-        waterShortage=_parse_bool(d.get("waterShortageOnOff")) if d.get("waterShortageOnOff") is not None else None,
+        waterShortage=(
+            _parse_bool(d.get("waterShortageOnOff"))
+            if d.get("waterShortageOnOff") is not None
+            else None
+        ),
         batteryLevel=d.get("battery"),
         maxHumidity=d.get("humMax"),
         minHumidity=d.get("humMin"),
@@ -176,13 +189,16 @@ def device_settings_from_dict(data: Any) -> DeviceSettings:
         maxTemperature=d.get("temMax"),
         minTemperature=d.get("temMin"),
         temperatureCalibration=d.get("temCali"),
-        temperatureWarning=_parse_bool(d.get("temWarning") or d.get("temperatureWarning")),
+        temperatureWarning=_parse_bool(
+            d.get("temWarning") or d.get("temperatureWarning")
+        ),
         uploadRate=d.get("uploadRate"),
         bdType=d.get("bdType"),
         mcuSoftwareVersion=d.get("mcuSoftVersion"),
         mcuHardwareVersion=d.get("mcuHardVersion"),
         time=d.get("time"),
     )
+
 
 DeviceSettings.from_dict = staticmethod(device_settings_from_dict)
 
@@ -198,6 +214,7 @@ def device_data_from_dict(data: Any) -> DeviceData:
         lastReportTimestamp=d.get("lastTime"),
     )
 
+
 DeviceData.from_dict = staticmethod(device_data_from_dict)
 
 
@@ -211,17 +228,27 @@ def device_ext_resources_from_dict(data: Any) -> DeviceExternalResources:
         ic=d.get("ic"),
     )
 
+
 DeviceExternalResources.from_dict = staticmethod(device_ext_resources_from_dict)
 
 
 def device_extension_from_dict(data: Any) -> DeviceExtensionProperties:
     d = _ensure_dict(data)
     return DeviceExtensionProperties(
-        deviceSettings=DeviceSettings.from_dict(d.get("deviceSettings") or d.get("deviceSettings")),
-        deviceData=DeviceData.from_dict(d.get("lastDeviceData") or d.get("lastDeviceData") or d.get("lastDeviceData")),
-        externalResources=DeviceExternalResources.from_dict(d.get("extResources") or d.get("extResources")),
+        deviceSettings=DeviceSettings.from_dict(
+            d.get("deviceSettings") or d.get("deviceSettings")
+        ),
+        deviceData=DeviceData.from_dict(
+            d.get("lastDeviceData")
+            or d.get("lastDeviceData")
+            or d.get("lastDeviceData")
+        ),
+        externalResources=DeviceExternalResources.from_dict(
+            d.get("extResources") or d.get("extResources")
+        ),
         subDevice=d.get("subDevice"),
     )
+
 
 DeviceExtensionProperties.from_dict = staticmethod(device_extension_from_dict)
 
@@ -242,6 +269,7 @@ def govee_api_device_from_dict(data: Any) -> GoveeAPIDevice:
         deviceExt=DeviceExtensionProperties.from_dict(d.get("deviceExt")),
     )
 
+
 GoveeAPIDevice.from_dict = staticmethod(govee_api_device_from_dict)
 
 
@@ -249,7 +277,10 @@ def device_list_response_from_dict(data: Any) -> DeviceListResponse:
     d = _ensure_dict(data)
     devices_raw = d.get("devices") or d.get("data") or []
     devices = [GoveeAPIDevice.from_dict(x) for x in devices_raw]
-    return DeviceListResponse(message=d.get("message"), status=d.get("status"), devices=devices)
+    return DeviceListResponse(
+        message=d.get("message"), status=d.get("status"), devices=devices
+    )
+
 
 DeviceListResponse.from_dict = staticmethod(device_list_response_from_dict)
 # END parsing helpers

@@ -15,4 +15,3 @@ def test_parse_missing_values():
     assert cur is None
     assert cal is None
     assert probes is None
-

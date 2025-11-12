@@ -8,7 +8,7 @@ def test_channel_publish_with_qos_creates_inflight_and_acks():
     # publish via channel using qos>0 should create an inflight entry
     payload = {"topic": "govee/device/qos", "msg": {"cmd": "ping"}}
     # publish_message doesn't accept max_retries; use iot.send_with_retry directly
-    iot.send_with_retry('govee/device/qos', payload, qos=1, max_retries=3)
+    iot.send_with_retry("govee/device/qos", payload, qos=1, max_retries=3)
 
     assert iot.inflight_count == 1
 

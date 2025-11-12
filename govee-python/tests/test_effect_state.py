@@ -12,4 +12,3 @@ def test_parse_effect_from_basic_payload():
 
 def test_parse_effect_none_for_empty():
     assert parse_effect({}) is None
-

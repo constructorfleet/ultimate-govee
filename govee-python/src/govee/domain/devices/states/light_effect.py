@@ -4,6 +4,7 @@ This is a minimal port of the TypeScript LightEffectState behavior used by
 unit tests: track effects in a simple dict and update the active effect
 when an op command with matching identifier is received.
 """
+
 from __future__ import annotations
 
 from typing import Any, Dict, Optional
@@ -20,11 +21,13 @@ class EffectStore:
         return self._store.get(key)
 
 
-def parse_light_effect_op(op_payload: Dict[str, Any], identifier: list[int], effects: EffectStore) -> Optional[Dict[str, Any]]:
+def parse_light_effect_op(
+    op_payload: Dict[str, Any], identifier: list[int], effects: EffectStore
+) -> Optional[Dict[str, Any]]:
     # expect op_payload like { 'command': [[opType, id1, id2, value_high, value_low]] }
     if not isinstance(op_payload, dict):
         return None
-    cmds = op_payload.get('command')
+    cmds = op_payload.get("command")
     if not isinstance(cmds, list) or not cmds:
         return None
     # support either a list-of-commands ([[...], ...]) or a single flattened
@@ -37,11 +40,11 @@ def parse_light_effect_op(op_payload: Dict[str, Any], identifier: list[int], eff
     if not isinstance(cmd, list) or len(cmd) < (len(identifier) + 2 + 1):
         return None
     # verify identifiers match
-    ids = cmd[1:1+len(identifier)]
+    ids = cmd[1 : 1 + len(identifier)]
     if ids != identifier:
         return None
-    hi = cmd[1+len(identifier)]
-    lo = cmd[2+len(identifier)]
+    hi = cmd[1 + len(identifier)]
+    lo = cmd[2 + len(identifier)]
     effect_code = (hi << 8) + lo
     return effects.get(effect_code)
 

@@ -4,6 +4,7 @@ This module normalizes effect-related fields commonly present in API
 responses or decoded payloads: 'effect', 'effectId', 'effectStr' (base64)
 and 'opStr' (openapi). We normalize into a small dict used by DeviceState.
 """
+
 from __future__ import annotations
 
 import base64
@@ -34,4 +35,3 @@ def parse_effect(payload: dict) -> Optional[Dict[str, Any]]:
 
 
 __all__ = ["parse_effect"]
-

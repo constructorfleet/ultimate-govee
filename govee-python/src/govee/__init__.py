@@ -5,6 +5,7 @@ Expose lightweight utilities used by the early translated modules and tests.
 Imports are intentionally local to avoid executing package-level side-effects
 when tests manipulate sys.path. Public names are re-exported via __all__.
 """
+
 import asyncio
 
 __version__ = "0.1.0"
@@ -80,10 +81,12 @@ def _export_package_data():
 _data = _export_package_data()
 __all__.append("data")
 
+
 # Simple example helper used by some tests in the original JS repo.
 def hello(name: str | None = None) -> str:
     if name:
         return f"hello {name}"
     return "hello world"
+
 
 __all__.append("hello")

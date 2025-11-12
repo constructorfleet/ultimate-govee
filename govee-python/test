@@ -1,0 +1,13 @@
+#!/usr/bin/env python3
+"""Compatibility shim: allow `uv run -s test` to execute project tests.
+
+This small script runs pytest in the project venv context. It's a shim used
+by the uv script entrypoint which may invoke `python test` on some hosts.
+"""
+import sys
+
+import pytest
+
+if __name__ == '__main__':
+    # mirror uv's configured test args
+    sys.exit(pytest.main(['--maxfail=1', '-q']))

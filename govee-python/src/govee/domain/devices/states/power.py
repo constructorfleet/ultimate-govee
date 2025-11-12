@@ -1,4 +1,5 @@
 """Power state parsing helpers."""
+
 from __future__ import annotations
 
 from typing import Optional
@@ -36,4 +37,3 @@ def parse_power(payload: dict) -> Optional[bool]:
 
 
 __all__ = ["parse_power"]
-

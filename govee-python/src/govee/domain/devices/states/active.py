@@ -3,6 +3,7 @@
 Minimal port of lib/domain/devices/states/active.state.ts focusing on
 parsing boolean active/on state from payloads and simple op arrays.
 """
+
 from __future__ import annotations
 
 from typing import Any, Dict, Optional

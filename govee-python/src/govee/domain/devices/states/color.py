@@ -5,6 +5,7 @@ Supported inputs:
 - hex string like '#RRGGBB' or 'RRGGBB' -> parsed into r/g/b
 - integer or numeric string interpreted as hex integer -> parsed into r/g/b
 """
+
 from __future__ import annotations
 
 from typing import Dict, Optional
@@ -63,4 +64,3 @@ def parse_color(payload: dict) -> Optional[Dict[str, int]]:
 
 
 __all__ = ["parse_color"]
-

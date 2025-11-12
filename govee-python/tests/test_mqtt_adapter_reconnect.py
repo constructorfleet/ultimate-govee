@@ -4,7 +4,7 @@ from govee.data.common.mqtt_adapter import FakeMQTTBackend, MQTTAdapter
 
 
 def test_mqtt_adapter_reconnect_and_resume_subscriptions():
-    backend = FakeMQTTBackend('persisted/mqtt_fixtures/replay_1.jsonl')
+    backend = FakeMQTTBackend("persisted/mqtt_fixtures/replay_1.jsonl")
     adapter = MQTTAdapter(backend=backend)
 
     calls = []
@@ -14,7 +14,7 @@ def test_mqtt_adapter_reconnect_and_resume_subscriptions():
             calls.append((topic, payload))
 
     async def run():
-        client = await adapter.create({'topic': 'govee/device/#'}, Handler())
+        await adapter.create({"topic": "govee/device/#"}, Handler())
         # initial connect
         await adapter.connect()
         adapter.replay_fixture()
@@ -29,4 +29,3 @@ def test_mqtt_adapter_reconnect_and_resume_subscriptions():
     asyncio.get_event_loop().run_until_complete(run())
 
     assert len(calls) >= 1
-

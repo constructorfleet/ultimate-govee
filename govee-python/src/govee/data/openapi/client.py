@@ -5,10 +5,10 @@ session callable (compatible with govee.data.utils.httpx_session.default_session
 and runs it in a thread to provide an async API. Retries and timeouts are
 implemented for idempotent (GET) calls.
 """
+
 from __future__ import annotations
 
 import asyncio
-import time
 from typing import Any, Callable, Dict, Optional
 
 from govee.data.utils.httpx_session import default_session
@@ -47,7 +47,9 @@ class AsyncOpenApiClient:
 
         # run sync session in a thread to avoid blocking the loop
         try:
-            resp = await asyncio.wait_for(asyncio.to_thread(sync_call), timeout=self.timeout)
+            resp = await asyncio.wait_for(
+                asyncio.to_thread(sync_call), timeout=self.timeout
+            )
         except asyncio.TimeoutError:
             raise OpenApiTimeout("request timed out")
 
@@ -67,7 +69,7 @@ class AsyncOpenApiClient:
                 if status >= 500:
                     # transient server error -> retry
                     attempt += 1
-                    await asyncio.sleep(0.05 * (2 ** attempt))
+                    await asyncio.sleep(0.05 * (2**attempt))
                     continue
                 data = resp.get("data") or {}
                 # some fixtures embed payload under 'data'
@@ -76,18 +78,17 @@ class AsyncOpenApiClient:
                 return data
             except OpenApiNotFound:
                 raise
-            except OpenApiTimeout as e:
+            except OpenApiTimeout:
                 # Treat timeouts as terminal errors: do not retry indefinitely
                 # as the caller likely needs to react to connectivity/timeouts.
                 raise
             except Exception as e:
                 last_exc = e
                 attempt += 1
-                await asyncio.sleep(0.05 * (2 ** attempt))
+                await asyncio.sleep(0.05 * (2**attempt))
                 continue
 
         raise OpenApiError(f"failed to get iot credentials: {last_exc}")
-
 
     __doc__ = """AsyncOpenApiClient provides a minimal async-compatible wrapper
     around a synchronous HTTP session callable. Example usage:

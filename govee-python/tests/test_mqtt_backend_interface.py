@@ -1,4 +1,5 @@
 import asyncio
+
 import pytest
 
 from govee.data.common.mqtt_adapter import MQTTAdapter
@@ -24,7 +25,7 @@ async def test_adapter_accepts_any_backend_with_replay_method():
         def onMessage(self, topic, payload, dup, qos, retain):
             pass
 
-    client = await adapter.create({'topic': 'govee/device/#'}, Handler())
+    await adapter.create({"topic": "govee/device/#"}, Handler())
     await adapter.connect()
 
     adapter.replay_fixture()
@@ -32,5 +33,4 @@ async def test_adapter_accepts_any_backend_with_replay_method():
     await asyncio.sleep(0.01)
 
     assert backend.replayed is True
-    assert backend.client_passed is client
-
+    assert backend.client_passed is adapter.client

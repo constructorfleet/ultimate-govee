@@ -6,6 +6,7 @@ state implementations (brightness, color temp, etc.). It provides a
 stateValue container, a command_bus list to simulate emission, and
 helpers for subclasses.
 """
+
 from __future__ import annotations
 
 from typing import Any, Callable, Dict, List, Optional

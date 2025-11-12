@@ -1,11 +1,10 @@
 import asyncio
 
 from govee.data.common.mqtt_adapter import FakeMQTTBackend, MQTTAdapter
-from govee.data.iot.iot_client import AsyncIotMessage
 
 
 def test_mqtt_adapter_qos_and_ack():
-    backend = FakeMQTTBackend('persisted/mqtt_fixtures/replay_1.jsonl')
+    backend = FakeMQTTBackend("persisted/mqtt_fixtures/replay_1.jsonl")
     adapter = MQTTAdapter(backend=backend)
 
     acked = []
@@ -13,11 +12,11 @@ def test_mqtt_adapter_qos_and_ack():
     class Handler:
         def onMessage(self, topic, payload, dup, qos, retain):
             # if payload contains ack_for, record it
-            if isinstance(payload, dict) and 'ack_for' in payload:
-                acked.append(payload['ack_for'])
+            if isinstance(payload, dict) and "ack_for" in payload:
+                acked.append(payload["ack_for"])
 
     async def run():
-        client = await adapter.create({'topic': 'govee/device/#'}, Handler())
+        await adapter.create({"topic": "govee/device/#"}, Handler())
         await adapter.connect()
         adapter.replay_fixture()
         await asyncio.sleep(0.01)
@@ -26,4 +25,3 @@ def test_mqtt_adapter_qos_and_ack():
 
     # acked may be empty depending on fixture; ensure no exceptions and flow works
     assert isinstance(acked, list)
-

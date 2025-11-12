@@ -38,13 +38,17 @@ async def run_get():
 
 
 async def run_post():
-    req = request("http://example", headers={}, payload={"a": 1}, session=fake_session_ok_post)
+    req = request(
+        "http://example", headers={}, payload={"a": 1}, session=fake_session_ok_post
+    )
     res = await req.post()
     assert res["payload"]["x"] == 2
 
 
 async def run_post_model():
-    req = request("http://example", headers={}, payload={"a": 1}, session=fake_session_ok_post)
+    req = request(
+        "http://example", headers={}, payload={"a": 1}, session=fake_session_ok_post
+    )
     res = await req.post(as_type=SimpleModel)
     assert isinstance(res, SimpleModel)
     assert res.x == 2
@@ -60,7 +64,9 @@ async def run_http_error():
 
 
 async def run_data_error():
-    req = request("http://example", headers={}, payload={"a": 1}, session=fake_session_data_error)
+    req = request(
+        "http://example", headers={}, payload={"a": 1}, session=fake_session_data_error
+    )
     try:
         await req.post()
         assert False, "expected ApiError"
@@ -78,6 +84,7 @@ async def run_save_to_file(tmp_path):
 
 
 # Runner for the small async tests
+
 
 def test_request_util():
     import tempfile

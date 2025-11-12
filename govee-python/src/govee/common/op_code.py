@@ -76,7 +76,10 @@ def total(codes: List[int], reverse: bool = False) -> int:
 
 
 def chunk(codes: List[int], chunk_size: int):
-    return [codes[i * chunk_size : i * chunk_size + chunk_size] for i in range((len(codes) + chunk_size - 1) // chunk_size)]
+    return [
+        codes[i * chunk_size : i * chunk_size + chunk_size]
+        for i in range((len(codes) + chunk_size - 1) // chunk_size)
+    ]
 
 
 def as_op_code(op_code: int, *values: Optional[int]) -> List[int]:

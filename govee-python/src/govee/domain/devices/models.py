@@ -32,12 +32,17 @@ class DeviceState:
     temperature_calibration: Optional[int] = None
     temp_probes: Optional[Dict[int, float]] = None
 
+
 def parse_state(payload: Dict[str, Any]) -> DeviceState:
     return DeviceState(
         power=parse_power(payload),
         brightness=parse_brightness(payload),
         # support both nested rgb dicts and comma/colon-separated strings
-        color=(parse_color(payload) if parse_color(payload) is not None else parse_color_rgb(payload)),
+        color=(
+            parse_color(payload)
+            if parse_color(payload) is not None
+            else parse_color_rgb(payload)
+        ),
         # colorRGB/op-code color
         # note: parse_color handles hex/numeric color; parse_color_rgb handles state.color and op arrays
         color_temp=payload.get("color_temp") or payload.get("ct"),

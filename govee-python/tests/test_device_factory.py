@@ -11,4 +11,3 @@ def test_make_device_from_advert_known_model():
 
 def test_make_device_from_advert_unknown_model():
     assert make_device_from_advert("X999", {"id": "d"}) is None
-

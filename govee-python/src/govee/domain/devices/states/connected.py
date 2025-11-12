@@ -6,6 +6,7 @@ This state inspects incoming device status payloads and extracts common
 connected/online boolean keys: state.isConnected, state.isOnline,
 state.connected, state.online.
 """
+
 from __future__ import annotations
 
 from typing import Any, Dict, Optional

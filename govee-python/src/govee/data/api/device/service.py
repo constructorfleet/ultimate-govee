@@ -45,12 +45,16 @@ class DevicesApiService:
         else:
             self._request = request
 
-    async def get_device_info(self, device_id: str, client_id: Optional[str] = None) -> Device:
+    async def get_device_info(
+        self, device_id: str, client_id: Optional[str] = None
+    ) -> Device:
         headers: Dict[str, str] = {}
         if client_id:
             headers["x-govee-client-id"] = client_id
 
-        req = self._request(DEVICE_INFO_URL, headers=headers, payload={"deviceId": device_id})
+        req = self._request(
+            DEVICE_INFO_URL, headers=headers, payload={"deviceId": device_id}
+        )
         resp = await req.get()
 
         # normalize payload: some request helpers return {"data": {...}}

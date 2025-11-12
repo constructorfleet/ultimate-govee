@@ -7,4 +7,3 @@ def test_hello_default():
 
 def test_hello_name():
     assert hello("alice") == "hello alice"
-

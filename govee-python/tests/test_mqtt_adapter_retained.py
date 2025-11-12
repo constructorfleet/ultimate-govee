@@ -5,7 +5,7 @@ from govee.data.common.mqtt_adapter import FakeMQTTBackend, MQTTAdapter
 
 def test_mqtt_adapter_retained_and_clear():
     # fixture with a retained message then a retained-clear (payload==None)
-    fixture_path = 'persisted/mqtt_fixtures/replay_1.jsonl'
+    fixture_path = "persisted/mqtt_fixtures/replay_1.jsonl"
     backend = FakeMQTTBackend(fixture_path)
     adapter = MQTTAdapter(backend=backend)
 
@@ -16,7 +16,7 @@ def test_mqtt_adapter_retained_and_clear():
             calls.append((topic, payload, retain))
 
     async def run():
-        client = await adapter.create({'topic': 'govee/device/#'}, Handler())
+        await adapter.create({"topic": "govee/device/#"}, Handler())
         await adapter.connect()
         # replay twice to ensure retained clear is processed
         adapter.replay_fixture()
@@ -25,4 +25,3 @@ def test_mqtt_adapter_retained_and_clear():
     asyncio.get_event_loop().run_until_complete(run())
 
     assert any(c[2] for c in calls)
-

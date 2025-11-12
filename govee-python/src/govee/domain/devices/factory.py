@@ -4,6 +4,7 @@ This is a minimal factory used by domain tests: it maps known model
 prefixes to lightweight DeviceDescriptor shapes and can be extended with
 model-specific logic.
 """
+
 from __future__ import annotations
 
 from typing import Optional
@@ -28,4 +29,3 @@ def make_device_from_advert(model: str, payload: dict) -> Optional[Device]:
 
 
 __all__ = ["make_device_from_advert"]
-

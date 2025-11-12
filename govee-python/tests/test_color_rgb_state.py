@@ -14,4 +14,3 @@ def test_parse_color_rgb_from_op_command():
 def test_parse_color_rgb_invalid_values():
     assert parse_color_rgb({}) is None
     assert parse_color_rgb({"state": {"color": {"red": 999}}}) is None
-
