@@ -1,0 +1,65 @@
+{
+  "device": "RGBICLightDevice",
+  "factory": "RGBICLightFactory",
+  "state_factories": [
+    "PowerState",
+    "ConnectedState",
+    "ActiveState",
+    "BrightnessState",
+    "ColorTempState",
+    "ColorModeState",
+    "SceneModeState",
+    "MicModeState",
+    "DiyModeState",
+    "SegmentColorModeState"
+  ],
+  "constructor_adds": [
+    "\n      new RGBICActiveState(device, [\n        this.state(WholeColorModeStateName"
+  ],
+  "getters": [
+    [
+      "PowerStateName",
+      "PowerState"
+    ],
+    [
+      "ConnectedStateName",
+      "ConnectedState"
+    ],
+    [
+      "ActiveStateName",
+      "ActiveState"
+    ],
+    [
+      "BrightnessStateName",
+      "BrightnessState"
+    ],
+    [
+      "ColorTempStateName",
+      "ColorTempState"
+    ],
+    [
+      "WholeColorModeStateName",
+      "ColorModeState"
+    ],
+    [
+      "LightEffectStateName",
+      "LightEffectState"
+    ],
+    [
+      "MicModeStateName",
+      "MicModeState"
+    ],
+    [
+      "DiyModeStateName",
+      "DiyModeState"
+    ],
+    [
+      "ModeStateName",
+      "RGBICActiveState"
+    ],
+    [
+      "SegmentColorModeStateName",
+      "SegmentColorModeState"
+    ]
+  ]
+}
