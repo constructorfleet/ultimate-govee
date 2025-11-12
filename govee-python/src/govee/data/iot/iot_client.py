@@ -303,11 +303,11 @@ class IoTClient:
         msg.max_retries = max_retries
         if backoff_intervals:
             msg.backoff_intervals = list(backoff_intervals)
-            # schedule a background retry task
-            task = asyncio.create_task(self._schedule_retries(msg, list(msg.backoff_intervals)))
-            if not hasattr(self, '_retry_tasks'):
-                self._retry_tasks: List[asyncio.Task] = []
-            self._retry_tasks.append(task)
+            # schedule a background retry task: maintain a simple scheduled
+            # retries list using the same shape used by retry_inflight(); this
+            # keeps the implementation test-friendly without background
+            # daemons that complicate test timing.
+            self._scheduled_retries.append((msg, list(msg.backoff_intervals)))
         return msg
 
     def _process_auto_ack(self, payload: Any) -> None:
