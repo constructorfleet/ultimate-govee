@@ -194,3 +194,118 @@ Estimated ordering and effort
 - Highest priority: RGB family, factory mapping, device->IoT integration (these unlock many higher-level tests).
 - Medium priority: Night-light and special modes, expand RGBIC parity.
 - Low priority: Data-driven factory mapping asset, full model-version fidelity.
+
+---
+# Detailed parity plan for A/B/C (actionable RED→GREEN→REFACTOR steps)
+
+Note: mark each family complete in this document ONLY after the final GREEN step
+achieves 100% feature parity with the TypeScript counterpart and all tests
+(including golden-frame comparisons) pass.
+
+A. RGB (non-addressable) light family
+
+Goals
+- Parse all color input formats used by TypeScript (dict rgb, hex string, numeric)
+- Populate DeviceState fields identically for same inputs
+- Encode commands into frames exactly matching TypeScript (op names, keys, numeric types)
+- Integration: device.encode_command -> MQTTAdapter.publish -> IoTClient delivery works
+
+Steps
+1) RED — add failing parity tests
+   - Files to add: govee-python/tests/test_rgb_light_device_parity.py
+   - Tests:
+     - test_parse_hex_and_numeric_colors — payloads: {"color":"#0A1438"}, {"color":0xFF8000}
+     - test_encode_command_golden — compare encode_command to TypeScript golden frame for a canonical sample
+     - test_brightness_clamp_and_types — out-of-range clamping
+   - Command: uv --directory govee-python run -s test -- tests/test_rgb_light_device_parity.py
+   - Commit: test(devices): add RGB parity tests (RED)
+
+2) GREEN — implement/adjust RGBDevice
+   - Files: govee-python/src/govee/domain/devices/implementations/rgb.py
+   - Implement:
+     - Ensure parse_state uses parse_color and parse_color_rgb to cover formats
+     - Ensure encode_command outputs int values and op names identical to TS
+     - Add golden fixture file (tests/fixtures/rgb_golden.json) from TS (see extraction step below)
+   - Commands:
+     - uv --directory govee-python run -s test -- tests/test_rgb_light_device_parity.py
+     - uv --directory govee-python run -s format_check
+   - Commit: feat(devices): make RGBDevice parity with TypeScript (GREEN)
+
+3) REFACTOR — extract helpers & docs
+   - Move helpers to encoding.py (already present); ensure documentation in docs/devices.md
+   - Add a golden-frame test harness comparing Python-encoded frames to TS golden JSON
+   - Commit: refactor(devices): docs and golden tests for RGB (REFACTOR)
+
+
+B. RGBIC (addressable) — confirm parity & expand
+
+Goals
+- Full parity for segments, pixel-array payloads, per-segment encoding, and effect commands.
+- Exact op names and payload shapes must match TypeScript for representative models.
+
+Steps
+1) RED — parity and golden tests
+   - Files: govee-python/tests/test_rgbic_parity.py (use realistic persisted vectors)
+   - Tests:
+     - test_segments_parse_and_state
+     - test_pixel_array_parse_and_encode
+     - test_effects_golden_match (compare to TS golden frames)
+   - Command: uv --directory govee-python run -s test -- tests/test_rgbic_parity.py
+   - Commit: test(devices): add RGBIC parity tests (RED)
+
+2) GREEN — implement RGBICDevice behavior
+   - Files: govee-python/src/govee/domain/devices/implementations/rgbic.py
+   - Implement:
+     - Normalize segment/pixel inputs into dev.segments/dev.pixels
+     - encode_command produces seg/pixels/effect frames matching TS exact shapes
+   - Commands: run tests and format_check
+   - Commit: feat(devices): implement RGBIC parity for segments/pixels/effects (GREEN)
+
+3) REFACTOR — helpers & docs
+   - Extract any repeated logic into encoding helpers and document op contracts
+   - Add golden fixtures for multiple representative RGBIC models
+   - Commit: refactor(devices): rgbic helpers & docs (REFACTOR)
+
+
+C. White-temperature (CT) family
+
+Goals
+- Full parity for parsing, set_state semantics, range handling, and encode frames (ct op)
+
+Steps
+1) RED — parity tests
+   - Files: govee-python/tests/test_whitetemp_parity.py
+   - Tests:
+     - test_ct_parse_and_state
+     - test_set_state_range_and_command (mirror test_color_temp_state.py expectations)
+     - test_ct_golden_frame (compare to TS golden)
+   - Command: uv --directory govee-python run -s test -- tests/test_whitetemp_parity.py
+   - Commit: test(devices): add CT parity tests (RED)
+
+2) GREEN — ensure WhiteTempDevice matches TS
+   - Files: govee-python/src/govee/domain/devices/implementations/whitetemp.py
+   - Implement:
+     - parse_state covers nested CT inputs
+     - encode_command uses 'ct' op with correct numeric types and any extra fields TS expects
+     - set_state(range) behavior matches TS
+   - Commands: tests + format_check
+   - Commit: feat(devices): align WhiteTempDevice with TypeScript (GREEN)
+
+3) REFACTOR — docs + golden tests
+   - Document CT behaviors and add golden fixtures
+   - Commit: refactor(devices): CT docs & golden tests (REFACTOR)
+
+
+Common tasks for all families
+- Extract golden frames from TypeScript dist for representative models where possible:
+  - Search dist for implementations under dist/domain/devices/impl/lights/* and extract example encoded frames or test fixtures.
+  - Place golden fixture JSON under govee-python/tests/fixtures/golden/<family>/<model>.json
+- Use persisted/govee.devices.json and persisted/mqtt_fixtures for realistic vectors.
+- Use uv to run tests and format_check. Commit after every GREEN step with conventional commit messages.
+
+Acceptance: mark family complete in DEVICE_STATE_TASKS.md only when
+  - All tests (unit + golden + integration) pass
+  - Format/lint checks pass
+  - Device factory maps persisted model strings for that family to the correct implementation
+
+---
