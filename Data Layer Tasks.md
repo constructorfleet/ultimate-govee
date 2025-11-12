@@ -114,9 +114,12 @@
 ### Implementation (GREEN)
 - [x] Implement adapter compatible with IoTClient
   - verified: adapter compatibility test in govee-python/tests/test_iot_adapter_compat.py passes
-- [ ] Backend abstraction (FakeBackend for tests)
-- [ ] Optional paho-mqtt backend
-- [ ] Use JSONL fixtures for simulated messages
+- [x] Backend abstraction (FakeBackend for tests)
+  - verified: FakeMQTTBackend implements replay(client) and tests assert backends can be injected
+- [x] Optional paho-mqtt backend
+  - verified: PahoBackend and PahoAdapter classes implemented in govee-python/src/govee/data/common/paho_adapter.py
+- [x] Use JSONL fixtures for simulated messages
+  - verified: persisted/mqtt_fixtures/replay_1.jsonl present and used by tests
 
 ### Acceptance
 <<<<<<< HEAD
