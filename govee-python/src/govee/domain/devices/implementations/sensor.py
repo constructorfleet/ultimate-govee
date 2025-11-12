@@ -17,6 +17,12 @@ class SensorDevice(DeviceBase):
     def apply_payload(self, payload: Dict[str, Any]) -> None:
         st = parse_state(payload or {})
         self._state = st
+        # parse any temp probes and calibration into state if present
+        # parse_state already populates temperature, temperature_calibration and temp_probes
+        # ensure temp_probes is a dict of int->float
+        if self._state.temp_probes and isinstance(self._state.temp_probes, dict):
+            # ensure numeric keys
+            self._state.temp_probes = {int(k): float(v) for k, v in self._state.temp_probes.items()}
 
     def get_state(self) -> DeviceState:
         return self._state
