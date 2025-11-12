@@ -10,6 +10,7 @@ from typing import Any, Dict, List, Optional
 
 from ..device_base import DeviceBase
 from ..models import DeviceState, parse_state
+from ..encoding import encode_power, encode_brightness, encode_ct
 
 
 class WhiteTempDevice(DeviceBase):
@@ -27,20 +28,9 @@ class WhiteTempDevice(DeviceBase):
 
     def encode_command(self, command: Dict[str, Any]) -> List[Dict[str, Any]]:
         frames: List[Dict[str, Any]] = []
-        if "power" in command:
-            frames.append({"op": "power", "v": 1 if bool(command.get("power")) else 0})
-        if "brightness" in command:
-            try:
-                v = int(command.get("brightness"))
-            except Exception:
-                v = 0
-            frames.append({"op": "bright", "v": max(0, min(100, v))})
-        if "color_temp" in command:
-            try:
-                v = int(command.get("color_temp"))
-            except Exception:
-                v = 0
-            frames.append({"op": "ct", "v": v})
+        frames.extend(encode_power(command))
+        frames.extend(encode_brightness(command))
+        frames.extend(encode_ct(command))
         return frames
 
 
