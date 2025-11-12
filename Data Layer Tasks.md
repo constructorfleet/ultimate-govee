@@ -122,11 +122,11 @@
 
 ## 🧩 Cross-Cutting Tasks
 - [x] Add fixtures in `/tests/fixtures/{openapi,iot,mqtt}`
-- [x] Add integration test `test_iot_manager_integration.py` (TODO: implement)
+- [x] Add integration test `test_iot_manager_integration.py` (implemented offline as test_iot_openapi_integration.py)
 - [x] Validate OpenAPI → IoTAdapter flow
 - [ ] Update `pyproject.toml` if deps change
 - [ ] Ensure `uv run -s test` passes all checks
-- [ ] Add `README.md` in `/src/govee/data/iot/` with API usage examples
+- [x] Add `README.md` in `/src/govee/data/iot/` with API usage examples
 
 ---
 
