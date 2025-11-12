@@ -15,7 +15,8 @@
   - verified: ran pytest in venv (python -m pytest -q govee-python/tests) -> 272 passed
 - [x] Use `uv`: `cd govee-python && uv run -s test`
   - verified: uv --directory govee-python run -s test executed pytest successfully in venv
-- [ ] Install dependencies with `uv tool pip install <dep>`
+- [x] Install dependencies with `uv tool pip install <dep>`
+  - verified: uv --directory govee-python tool install paho-mqtt installed paho-mqtt into venv
 
 ---
 
@@ -49,7 +50,8 @@
 **Commit flow**
 - [x] RED: `test(openapi): add tests for iot credentials parsing and error handling`
 - [x] GREEN: `feat(openapi): add minimal async OpenAPI client and iot credentials model`
-- [ ] REFACTOR: `refactor(openapi): cleanup and add docstring`
+- [x] REFACTOR: `refactor(openapi): cleanup and add docstring`
+  - verified: AsyncOpenApiClient docstring added and client cleaned
 
 ---
 
@@ -85,7 +87,8 @@
 - [x] `metrics_text()` and count methods work
 
 **Commit flow**
-- [ ] RED: `test(iot-client): add queueing and retained message tests`
+- [x] RED: `test(iot-client): add queueing and retained message tests`
+  - verified: tests added under govee-python/tests/test_iot_client_queueing.py and test_iot_client_retained.py and pass
 - [ ] GREEN: `feat(iot-client): implement retry/backoff scheduling`
 - [ ] REFACTOR: `fix(iot-client): ensure retained delivery consistency`
 
