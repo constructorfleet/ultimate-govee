@@ -1,0 +1,3181 @@
+{
+  "status": 200,
+  "message": "",
+  "categories": [
+    {
+      "name": "LED Strip Light",
+      "rootId": 543,
+      "supportGroups": [
+        {
+          "groupName": "RGB Strip Lights",
+          "groupId": 549,
+          "categoryId": 1,
+          "supportSkuList": [
+            {
+              "productId": 578,
+              "hintContent": "",
+              "online": true,
+              "modelName": "5m MultiColor for Home",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/b9489c600c3dc43145c1e192f0fd2192-add_list_type_device_6107.png",
+              "showingSku": "H6107",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6107",
+                  "defaultName": "Strip Light",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/b9489c600c3dc43145c1e192f0fd2192-add_list_type_device_6107.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 561,
+              "hintContent": "",
+              "online": true,
+              "modelName": "2*5m MultiColor with Alexa",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/2d11c4eef6a1d58205b2f205f8f9c039-add_list_type_device_6109.png",
+              "showingSku": "H6109",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6109",
+                  "defaultName": "Strip Light",
+                  "goodsType": 0,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/2d11c4eef6a1d58205b2f205f8f9c039-add_list_type_device_6109.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 553,
+              "hintContent": "",
+              "online": true,
+              "modelName": "2*5m MultiColor with Alexa",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/9e173ef64fe7eeafd3cb2c84d8c52974-add_list_type_device_6110.png",
+              "showingSku": "H6110",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6110",
+                  "defaultName": "Strip Light",
+                  "goodsType": 0,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/9e173ef64fe7eeafd3cb2c84d8c52974-add_list_type_device_6110.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 710,
+              "hintContent": "",
+              "online": true,
+              "modelName": "10m RGB Strip Light with Alexa",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/caed6335bbefcb52f974072b68c39194-add_list_type_device_6121.png",
+              "showingSku": "H6121",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6121",
+                  "defaultName": "RGB Strip Lights",
+                  "goodsType": 1,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/caed6335bbefcb52f974072b68c39194-add_list_type_device_6121.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 565,
+              "hintContent": "",
+              "online": true,
+              "modelName": "5m MultiColor for Home",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/32c6ea17990e3292bceaa62ba069b276-add_list_type_device_6138.png",
+              "showingSku": "H6138",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6138",
+                  "defaultName": "Strip Light",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/32c6ea17990e3292bceaa62ba069b276-add_list_type_device_6138.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 566,
+              "hintContent": "",
+              "online": true,
+              "modelName": "2*5m MultiColor for Home",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/29a36530692a23b1c12378de9e2d72e0-add_list_type_device_6139.png",
+              "showingSku": "H6139",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6139",
+                  "defaultName": "Strip Light",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/29a36530692a23b1c12378de9e2d72e0-add_list_type_device_6139.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 737,
+              "hintContent": "",
+              "online": true,
+              "modelName": "5m RGB Strip Light",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/b6edf57d9c0782c59a4b6bf8b00d9d8d-add_list_type_device_613abcf.png",
+              "showingSku": "H613A",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H613A",
+                  "defaultName": "RGB Strip Lights",
+                  "goodsType": 39,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/b6edf57d9c0782c59a4b6bf8b00d9d8d-add_list_type_device_613abcf.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 717,
+              "hintContent": "",
+              "online": true,
+              "modelName": "10m RGB Strip Light",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/bbfa1b98a970733c443e142b86535af1-add_list_type_device_613bc.png",
+              "showingSku": "H613B",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H613B",
+                  "defaultName": "RGB Strip Lights",
+                  "goodsType": 39,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/bbfa1b98a970733c443e142b86535af1-add_list_type_device_613bc.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 718,
+              "hintContent": "",
+              "online": true,
+              "modelName": "15m RGB Strip Light",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/bbfa1b98a970733c443e142b86535af1-add_list_type_device_613bc.png",
+              "showingSku": "H613C",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H613C",
+                  "defaultName": "RGB Strip Lights",
+                  "goodsType": 39,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/bbfa1b98a970733c443e142b86535af1-add_list_type_device_613bc.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 719,
+              "hintContent": "",
+              "online": true,
+              "modelName": "20m RGB Strip Light",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/b6edf57d9c0782c59a4b6bf8b00d9d8d-add_list_type_device_613abcf.png",
+              "showingSku": "H613D",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H613D",
+                  "defaultName": "RGB Strip Lights",
+                  "goodsType": 39,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/b6edf57d9c0782c59a4b6bf8b00d9d8d-add_list_type_device_613abcf.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 720,
+              "hintContent": "",
+              "online": true,
+              "modelName": "30m RGB Strip Light",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/b6edf57d9c0782c59a4b6bf8b00d9d8d-add_list_type_device_613abcf.png",
+              "showingSku": "H613E",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H613E",
+                  "defaultName": "RGB Strip Lights",
+                  "goodsType": 39,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/b6edf57d9c0782c59a4b6bf8b00d9d8d-add_list_type_device_613abcf.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 738,
+              "hintContent": "",
+              "online": true,
+              "modelName": "7.5m RGB Strip Light",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/b6edf57d9c0782c59a4b6bf8b00d9d8d-add_list_type_device_613abcf.png",
+              "showingSku": "H613F",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H613F",
+                  "defaultName": "RGB Strip Lights",
+                  "goodsType": 39,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/b6edf57d9c0782c59a4b6bf8b00d9d8d-add_list_type_device_613abcf.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 626,
+              "hintContent": "",
+              "online": true,
+              "modelName": "5m Smart MultiColor  Strip Light",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/fca2bb9954f0983c3a71a9747f37299e-add_list_type_device_6141.png",
+              "showingSku": "H6141",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6141",
+                  "defaultName": "Strip Light",
+                  "goodsType": 1,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/fca2bb9954f0983c3a71a9747f37299e-add_list_type_device_6141.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 632,
+              "hintContent": "",
+              "online": true,
+              "modelName": "2*5m Smart MultiColor  Strip Light",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/10e9b186b920a4080ce5767a845c4431-add_list_type_device_6142.png",
+              "showingSku": "H6142",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6142",
+                  "defaultName": "Strip Light",
+                  "goodsType": 1,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/10e9b186b920a4080ce5767a845c4431-add_list_type_device_6142.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 646,
+              "hintContent": "",
+              "online": true,
+              "modelName": "3m Color & White Ambiance with Alexa",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/5ffe0a66c7458db5478b62254260702f-add_list_type_device_6148.png",
+              "showingSku": "H6148",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6148",
+                  "defaultName": "RGBWW Strip Lights",
+                  "goodsType": 16,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/5ffe0a66c7458db5478b62254260702f-add_list_type_device_6148.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 706,
+              "hintContent": "H6154",
+              "online": true,
+              "modelName": "2*7.5m RGB Strip Light",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/1a358240956c0e9efb089dea65207199-add_list_type_device_6154.png",
+              "showingSku": "H6154",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6154",
+                  "defaultName": "RGB Strip Lights",
+                  "goodsType": 1,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/1a358240956c0e9efb089dea65207199-add_list_type_device_6154.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 550,
+              "hintContent": "",
+              "online": true,
+              "modelName": "5m MultiColor with Alexa",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/78e03221416cd93f51a3da091b720a1c-add_list_type_device_6159.png",
+              "showingSku": "H6159",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6159",
+                  "defaultName": "Strip Light",
+                  "goodsType": 0,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/78e03221416cd93f51a3da091b720a1c-add_list_type_device_6159.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 748,
+              "hintContent": "",
+              "online": true,
+              "modelName": "5m RGB Strip Light with Alexa",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/18a0b59a4cbbb3f7cbcdb43ef94123bc-add_list_type_device_615abc.png",
+              "showingSku": "H615A",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H615A",
+                  "defaultName": "RGB Strip Lights",
+                  "goodsType": 40,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/18a0b59a4cbbb3f7cbcdb43ef94123bc-add_list_type_device_615abc.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 749,
+              "hintContent": "",
+              "online": true,
+              "modelName": "10m RGB Strip Light with Alexa",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/18a0b59a4cbbb3f7cbcdb43ef94123bc-add_list_type_device_615abc.png",
+              "showingSku": "H615B",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H615B",
+                  "defaultName": "RGB Strip Lights",
+                  "goodsType": 40,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/18a0b59a4cbbb3f7cbcdb43ef94123bc-add_list_type_device_615abc.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 750,
+              "hintContent": "",
+              "online": true,
+              "modelName": "15m RGB Strip Light with Alexa",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/18a0b59a4cbbb3f7cbcdb43ef94123bc-add_list_type_device_615abc.png",
+              "showingSku": "H615C",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H615C",
+                  "defaultName": "RGB Strip Lights",
+                  "goodsType": 40,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/18a0b59a4cbbb3f7cbcdb43ef94123bc-add_list_type_device_615abc.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 751,
+              "hintContent": "",
+              "online": true,
+              "modelName": "20m RGB Strip Light with Alexa",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/7b2f63de7d4bc4c049f27e2e0a107e19-add_list_type_device_615abc.png",
+              "showingSku": "H615D",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H615D",
+                  "defaultName": "RGB Strip Lights",
+                  "goodsType": 40,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/7b2f63de7d4bc4c049f27e2e0a107e19-add_list_type_device_615abc.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 552,
+              "hintContent": "",
+              "online": true,
+              "modelName": "5m MultiColor with Alexa",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/f29611304c3f8fd6cce7cc515e043abc-add_list_type_device_6160.png",
+              "showingSku": "H6160",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6160",
+                  "defaultName": "Smart Light",
+                  "goodsType": 0,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/f29611304c3f8fd6cce7cc515e043abc-add_list_type_device_6160.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 629,
+              "hintContent": "",
+              "online": true,
+              "modelName": "2*10m Smart MultiColor  Strip Light",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/d491e95ab3e15a5d62fff68907a8bd8a-add_list_type_device_6195.png",
+              "showingSku": "H6195",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6195",
+                  "defaultName": "Strip Light",
+                  "goodsType": 1,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/d491e95ab3e15a5d62fff68907a8bd8a-add_list_type_device_6195.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 630,
+              "hintContent": "",
+              "online": true,
+              "modelName": "2*10m MultiColor  Strip Light",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/5d4f1833d7fc1ca180c67cadfabfcf28-add_list_type_device_6196.png",
+              "showingSku": "H6196",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6196",
+                  "defaultName": "Strip Light",
+                  "goodsType": 2,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/5d4f1833d7fc1ca180c67cadfabfcf28-add_list_type_device_6196.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "groupName": "RGBIC Strip Lights",
+          "groupId": 655,
+          "categoryId": 1,
+          "supportSkuList": [
+            {
+              "productId": 560,
+              "hintContent": "",
+              "online": true,
+              "modelName": "2*5m RGBIC for Home",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/27f55f244e2f1accfef093523b860de9-add_list_type_device_6116.png",
+              "showingSku": "H6116",
+              "categoryId": 2,
+              "products": [
+                {
+                  "sku": "H6116",
+                  "defaultName": "Strip Light",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/27f55f244e2f1accfef093523b860de9-add_list_type_device_6116.png",
+                  "extInfo": "",
+                  "ic": 50,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 555,
+              "hintContent": "",
+              "online": true,
+              "modelName": "2*5m RGBIC with Alexa",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/1eb90e9dd991bcee3d8d8e295cc12de9-add_list_type_device_6117.png",
+              "showingSku": "H6117",
+              "categoryId": 2,
+              "products": [
+                {
+                  "sku": "H6117",
+                  "defaultName": "Strip Light",
+                  "goodsType": 0,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/1eb90e9dd991bcee3d8d8e295cc12de9-add_list_type_device_6117.png",
+                  "extInfo": "",
+                  "ic": 50,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 711,
+              "hintContent": "",
+              "online": true,
+              "modelName": "2*10m RGBIC Strip Light with Alexa",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/3f0bb929aeffb14d18666b9f697d076c-add_list_type_device_611a.png",
+              "showingSku": "H611A",
+              "categoryId": 2,
+              "products": [
+                {
+                  "sku": "H611A",
+                  "defaultName": "RGBIC Strip Lights",
+                  "goodsType": 21,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/3f0bb929aeffb14d18666b9f697d076c-add_list_type_device_611a.png",
+                  "extInfo": "",
+                  "ic": 60,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 568,
+              "hintContent": "",
+              "online": true,
+              "modelName": "5m RGBIC for Home",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/ab2ba14d3241d6894fe45a0b77c7a48b-add_list_type_device_6125.png",
+              "showingSku": "H6125",
+              "categoryId": 2,
+              "products": [
+                {
+                  "sku": "H6125",
+                  "defaultName": "Strip Light",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/ab2ba14d3241d6894fe45a0b77c7a48b-add_list_type_device_6125.png",
+                  "extInfo": "",
+                  "ic": 50,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 569,
+              "hintContent": "",
+              "online": true,
+              "modelName": "2*5m RGBIC for Home",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/8be48141556af4096aafcf28c68f873d-add_list_type_device_6126.png",
+              "showingSku": "H6126",
+              "categoryId": 2,
+              "products": [
+                {
+                  "sku": "H6126",
+                  "defaultName": "Strip Light",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/8be48141556af4096aafcf28c68f873d-add_list_type_device_6126.png",
+                  "extInfo": "",
+                  "ic": 50,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 551,
+              "hintContent": "",
+              "online": true,
+              "modelName": "5m RGBIC for Home",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/f5f0e9e4aeb7330121b2d69eb7bcf028-add_list_type_device_6127.png",
+              "showingSku": "H6127",
+              "categoryId": 2,
+              "products": [
+                {
+                  "sku": "H6127",
+                  "defaultName": "Strip Light",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/f5f0e9e4aeb7330121b2d69eb7bcf028-add_list_type_device_6127.png",
+                  "extInfo": "",
+                  "ic": 50,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 666,
+              "hintContent": "",
+              "online": true,
+              "modelName": "5m RGBIC Strip Light",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/241e6cb894a8f294595a60a7dab8f8a0-add_list_type_device_6143.png",
+              "showingSku": "H6143",
+              "categoryId": 2,
+              "products": [
+                {
+                  "sku": "H6143",
+                  "defaultName": "RGBIC Strip Lights",
+                  "goodsType": 21,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/241e6cb894a8f294595a60a7dab8f8a0-add_list_type_device_6143.png",
+                  "extInfo": "",
+                  "ic": 50,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 667,
+              "hintContent": "",
+              "online": true,
+              "modelName": "2*5m RGBIC Strip Light",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/3ec577385e14441d5ce42db66ee28a7e-add_list_type_device_6144.png",
+              "showingSku": "H6144",
+              "categoryId": 2,
+              "products": [
+                {
+                  "sku": "H6144",
+                  "defaultName": "RGBIC Strip Lights",
+                  "goodsType": 21,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/3ec577385e14441d5ce42db66ee28a7e-add_list_type_device_6144.png",
+                  "extInfo": "",
+                  "ic": 50,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 636,
+              "hintContent": "",
+              "online": true,
+              "modelName": "5m RGBIC Strip Light",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/8f75a7048cd698702d65436b368eec6b-add_list_type_device_6145.png",
+              "showingSku": "H6145",
+              "categoryId": 2,
+              "products": [
+                {
+                  "sku": "H6145",
+                  "defaultName": "RGBIC Strip Lights",
+                  "goodsType": 13,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/8f75a7048cd698702d65436b368eec6b-add_list_type_device_6145.png",
+                  "extInfo": "",
+                  "ic": 50,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 637,
+              "hintContent": "",
+              "online": true,
+              "modelName": "2*5m RGBIC Strip Light",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/1cd6b9eedc25dd8b1e43b6273cbc0f0c-add_list_type_device_6146.png",
+              "showingSku": "H6146",
+              "categoryId": 2,
+              "products": [
+                {
+                  "sku": "H6146",
+                  "defaultName": "RGBIC Strip Lights",
+                  "goodsType": 13,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/1cd6b9eedc25dd8b1e43b6273cbc0f0c-add_list_type_device_6146.png",
+                  "extInfo": "",
+                  "ic": 50,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 665,
+              "hintContent": "",
+              "online": true,
+              "modelName": "2*10m RGBIC Strip Light",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/c9f204ccc5a54ff52abd7c648d365f73-add_list_type_device_6147.png",
+              "showingSku": "H6147",
+              "categoryId": 2,
+              "products": [
+                {
+                  "sku": "H6147",
+                  "defaultName": "RGBIC Strip Lights",
+                  "goodsType": 13,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/c9f204ccc5a54ff52abd7c648d365f73-add_list_type_device_6147.png",
+                  "extInfo": "",
+                  "ic": 60,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 554,
+              "hintContent": "",
+              "online": true,
+              "modelName": "5m RGBIC with Alexa",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/ad4992ddf9556bd729543fe6b7d4351a-add_list_type_device_6163.png",
+              "showingSku": "H6163",
+              "categoryId": 2,
+              "products": [
+                {
+                  "sku": "H6163",
+                  "defaultName": "Smart Light",
+                  "goodsType": 0,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/ad4992ddf9556bd729543fe6b7d4351a-add_list_type_device_6163.png",
+                  "extInfo": "",
+                  "ic": 50,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 785,
+              "hintContent": "",
+              "online": true,
+              "modelName": "10m RGBIC Basic Strip Lights with Alexa",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/1888088d25fbf1fedd34316acccf9ee3-add_list_type_device_618ac.png.png",
+              "showingSku": "H618C",
+              "categoryId": 2,
+              "products": [
+                {
+                  "sku": "H618C",
+                  "defaultName": "RGBIC Strip Lights",
+                  "goodsType": 71,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/1888088d25fbf1fedd34316acccf9ee3-add_list_type_device_618ac.png.png",
+                  "extInfo": "",
+                  "ic": 30,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 795,
+              "hintContent": "",
+              "online": true,
+              "modelName": "3m RGBIC LED Neon Rope Lights",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/6127755b2799b2bebd89997e375c5287-add_list_type_device_61a0.png",
+              "showingSku": "H61A0",
+              "categoryId": 2,
+              "products": [
+                {
+                  "sku": "H61A0",
+                  "defaultName": "RGBIC Neon Rope Lights",
+                  "goodsType": 71,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/6127755b2799b2bebd89997e375c5287-add_list_type_device_61a0.png",
+                  "extInfo": "",
+                  "ic": 42,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "groupName": "TV BackLights",
+          "groupId": 657,
+          "categoryId": 1,
+          "supportSkuList": [
+            {
+              "productId": 559,
+              "hintContent": "",
+              "online": true,
+              "modelName": "2m RGBIC for TV",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/2b7f84f21e5afbfa9ba4bf0ea300cc05-add_list_type_device_6102.png",
+              "showingSku": "H6102",
+              "categoryId": 3,
+              "products": [
+                {
+                  "sku": "H6102",
+                  "defaultName": "Strip Light",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/2b7f84f21e5afbfa9ba4bf0ea300cc05-add_list_type_device_6102.png",
+                  "extInfo": "",
+                  "ic": 60,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 643,
+              "hintContent": "",
+              "online": true,
+              "modelName": " MultiColor TV Strip Light",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/ec0495177e63ea67adb5f07b62b89220-add_list_type_device_6179.png",
+              "showingSku": "H6179",
+              "categoryId": 3,
+              "products": [
+                {
+                  "sku": "H6179",
+                  "defaultName": "TV Backlights",
+                  "goodsType": 12,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/ec0495177e63ea67adb5f07b62b89220-add_list_type_device_6179.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 563,
+              "hintContent": "",
+              "online": true,
+              "modelName": "4*50cm MultiColor for TV",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/9dc092201b362002f414b92c89395aa5-add_list_type_device_6181.png",
+              "showingSku": "H6181",
+              "categoryId": 3,
+              "products": [
+                {
+                  "sku": "H6181",
+                  "defaultName": "TV Backlight",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/9dc092201b362002f414b92c89395aa5-add_list_type_device_6181.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 564,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Wi-Fi MultiColor TV Strip Light",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/4f1e10b2d85805e71bdfa881be9db622-add_list_type_device_6182.png",
+              "showingSku": "H6182",
+              "categoryId": 3,
+              "products": [
+                {
+                  "sku": "H6182",
+                  "defaultName": "TV Strip Light",
+                  "goodsType": 0,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/4f1e10b2d85805e71bdfa881be9db622-add_list_type_device_6182.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 668,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Govee DreamView T1 TV Backlight",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/77af67823455a4cd4a65c9d490a8fec9-add_list_type_device_6199.png",
+              "showingSku": "H6199",
+              "categoryId": 3,
+              "products": [
+                {
+                  "sku": "H6199",
+                  "defaultName": "DreamView T1",
+                  "goodsType": 24,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/77af67823455a4cd4a65c9d490a8fec9-add_list_type_device_6199.png",
+                  "extInfo": "",
+                  "ic": 50,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Indoor Lighting",
+      "rootId": 673,
+      "supportGroups": [
+        {
+          "groupName": "LED Bulbs",
+          "groupId": 674,
+          "categoryId": 6,
+          "supportSkuList": [
+            {
+              "productId": 545,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Bluetooth MultiColor LED Bulb",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/c7dfdbe79f7f97eb6641c74d6f8d8990-add_list_type_device_6001.png",
+              "showingSku": "H6001",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6001",
+                  "defaultName": "LED Bulb",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/c7dfdbe79f7f97eb6641c74d6f8d8990-add_list_type_device_6001.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 709,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Wi-Fi+BLE LED Bulb",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/d494b635f85add753dbdfc1cc5a2f97c-add_list_type_device_6002.png",
+              "showingSku": "H6002",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6002",
+                  "defaultName": "Dimmable LED Bulb",
+                  "goodsType": 31,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/d494b635f85add753dbdfc1cc5a2f97c-add_list_type_device_6002.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 662,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Wi-Fi RGBWW LED Bulb",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/a3eb8662ff59bdeb32ef1cfb9ca555af-add_list_type_device_6003.png",
+              "showingSku": "H6003",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6003",
+                  "defaultName": "LED Bulb",
+                  "goodsType": 9,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/a3eb8662ff59bdeb32ef1cfb9ca555af-add_list_type_device_6003.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 663,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Bluetooth RGBWW LED Bulb",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/06d293e612d12367eed6f7ad6777362e-add_list_type_device_6005.png",
+              "showingSku": "H6005",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6005",
+                  "defaultName": "LED Bulb",
+                  "goodsType": 20,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/06d293e612d12367eed6f7ad6777362e-add_list_type_device_6005.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "groupName": "Table Lamps",
+          "groupId": 675,
+          "categoryId": 6,
+          "supportSkuList": [
+            {
+              "productId": 699,
+              "hintContent": "H6050",
+              "online": true,
+              "modelName": "Govee RGB Table lamp",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/3e84716b4129abe89a9c55b4943b81b9-add_list_type_device_6050.png",
+              "showingSku": "H6050",
+              "categoryId": 2,
+              "products": [
+                {
+                  "sku": "H6050",
+                  "defaultName": "RGB Table Lamp",
+                  "goodsType": 27,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/3e84716b4129abe89a9c55b4943b81b9-add_list_type_device_6050.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 811,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Govee Table Lamp Lite",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/f35ad07a0c043dec3c03d127161d0a44-add_list_type_device_6051.png",
+              "showingSku": "H6051",
+              "categoryId": 2,
+              "products": [
+                {
+                  "sku": "H6051",
+                  "defaultName": "Table Lamp Lite",
+                  "goodsType": 37,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/f35ad07a0c043dec3c03d127161d0a44-add_list_type_device_6051.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 687,
+              "hintContent": "H6052",
+              "online": true,
+              "modelName": "Govee RGBICWW Table Lamp",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/15b1e1780e091ab45a45d4ad09fe7cc9-add_list_type_device_6052.png",
+              "showingSku": "H6052",
+              "categoryId": 2,
+              "products": [
+                {
+                  "sku": "H6052",
+                  "defaultName": "Aura Table Lamp",
+                  "goodsType": 22,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/15b1e1780e091ab45a45d4ad09fe7cc9-add_list_type_device_6052.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "groupName": "Floor Lamps",
+          "groupId": 676,
+          "categoryId": 6,
+          "supportSkuList": [
+            {
+              "productId": 777,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Govee RGBICWW Floor Lamp",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/814c890088f34da331e1eecf8ea46fc2-add_list_type_device_6072.png",
+              "showingSku": "H6072",
+              "categoryId": 3,
+              "products": [
+                {
+                  "sku": "H6072",
+                  "defaultName": "RGBICWW Floor Lamp",
+                  "goodsType": 30,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/814c890088f34da331e1eecf8ea46fc2-add_list_type_device_6072.png",
+                  "extInfo": "",
+                  "ic": 66,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "groupName": "Wall Lights",
+          "groupId": 677,
+          "categoryId": 6,
+          "supportSkuList": [
+            {
+              "productId": 746,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Govee Glide wall light",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/dc162e577b51f37d09208c642747d239-add_list_type_device_6062.png",
+              "showingSku": "H6062",
+              "categoryId": 4,
+              "products": [
+                {
+                  "sku": "H6062",
+                  "defaultName": "Govee Glide wall light",
+                  "goodsType": 41,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/dc162e577b51f37d09208c642747d239-add_list_type_device_6062.png",
+                  "extInfo": "",
+                  "ic": 57,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Outdoor Lighting",
+      "rootId": 679,
+      "supportGroups": [
+        {
+          "groupName": "Strip Lights",
+          "groupId": 585,
+          "categoryId": 7,
+          "supportSkuList": [
+            {
+              "productId": 688,
+              "hintContent": "",
+              "online": true,
+              "modelName": "2*5m Outdoor RGB LED Strip Lights",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/5323ebc5a2a80e8328c9b994fa2d63e3-add_list_type_device_6170.png",
+              "showingSku": "H6170",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6170",
+                  "defaultName": "Outdoor Strip Lights",
+                  "goodsType": 2,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/5323ebc5a2a80e8328c9b994fa2d63e3-add_list_type_device_6170.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 703,
+              "hintContent": "H6171",
+              "online": true,
+              "modelName": "10m Outdoor RGBIC LED Strip Lights",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/03139f2d7f7485795456cf0912179a6c-add_list_type_device_6171.png",
+              "showingSku": "H6171",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6171",
+                  "defaultName": "Outdoor Strip Lights",
+                  "goodsType": 13,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/03139f2d7f7485795456cf0912179a6c-add_list_type_device_6171.png",
+                  "extInfo": "",
+                  "ic": 60,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "groupName": "String Lights",
+          "groupId": 682,
+          "categoryId": 7,
+          "supportSkuList": [
+            {
+              "productId": 690,
+              "hintContent": "",
+              "online": true,
+              "modelName": "LED Bulb String Light",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/8732b24b8faac7103f61e67d43e63b59-add_list_type_device_7002.png",
+              "showingSku": "H7002",
+              "categoryId": 3,
+              "products": [
+                {
+                  "sku": "H7002",
+                  "defaultName": "String Light",
+                  "goodsType": 3,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/8732b24b8faac7103f61e67d43e63b59-add_list_type_device_7002.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 714,
+              "hintContent": "",
+              "online": true,
+              "modelName": "LED Bulb String Lights",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/5e0e0a721bc06e629f1827b7bbf7054b-add_list_type_device_7010.png",
+              "showingSku": "H7010",
+              "categoryId": 3,
+              "products": [
+                {
+                  "sku": "H7010",
+                  "defaultName": "LED Bulb String Lights",
+                  "goodsType": 35,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/5e0e0a721bc06e629f1827b7bbf7054b-add_list_type_device_7010.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 715,
+              "hintContent": "",
+              "online": true,
+              "modelName": "LED Bulb String Lights",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/5e0e0a721bc06e629f1827b7bbf7054b-add_list_type_device_7010.png",
+              "showingSku": "H7011",
+              "categoryId": 3,
+              "products": [
+                {
+                  "sku": "H7011",
+                  "defaultName": "LED Bulb String Lights",
+                  "goodsType": 35,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/5e0e0a721bc06e629f1827b7bbf7054b-add_list_type_device_7010.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 730,
+              "hintContent": "",
+              "online": true,
+              "modelName": "LED Bulb String Lights",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/73663dcc2242ba43be4da30d1e936b3f-add_list_type_device_7012.png",
+              "showingSku": "H7012",
+              "categoryId": 3,
+              "products": [
+                {
+                  "sku": "H7012",
+                  "defaultName": "LED Bulb String Lights",
+                  "goodsType": 49,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/73663dcc2242ba43be4da30d1e936b3f-add_list_type_device_7012.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 731,
+              "hintContent": "",
+              "online": true,
+              "modelName": "LED Bulb String Lights",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/73663dcc2242ba43be4da30d1e936b3f-add_list_type_device_7012.png",
+              "showingSku": "H7013",
+              "categoryId": 3,
+              "products": [
+                {
+                  "sku": "H7013",
+                  "defaultName": "LED Bulb String Lights",
+                  "goodsType": 49,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/73663dcc2242ba43be4da30d1e936b3f-add_list_type_device_7012.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Other Lights",
+      "rootId": 683,
+      "supportGroups": [
+        {
+          "groupName": "Car Lights",
+          "groupId": 623,
+          "categoryId": 8,
+          "supportSkuList": [
+            {
+              "productId": 558,
+              "hintContent": "",
+              "online": true,
+              "modelName": "MultiColor for Car",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/7203a9b661a764528486873f4bdd8fdb-add_list_type_device_6113.png",
+              "showingSku": "H6113",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6113",
+                  "defaultName": "Car Light",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/7203a9b661a764528486873f4bdd8fdb-add_list_type_device_6113.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 557,
+              "hintContent": "",
+              "online": true,
+              "modelName": "4*22cm MultiColor for Car",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/467bd65ce93ec9d044e256d6bb7eb5ee-add_list_type_device_6114.png",
+              "showingSku": "H6114",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6114",
+                  "defaultName": "Car Light",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/467bd65ce93ec9d044e256d6bb7eb5ee-add_list_type_device_6114.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 635,
+              "hintContent": "",
+              "online": true,
+              "modelName": "4*22cm MultiColor for Car",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/6d83f95085a778c3ae971dc25b17b846-add_list_type_device_6118.png",
+              "showingSku": "H6118",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6118",
+                  "defaultName": "Car Led Lights",
+                  "goodsType": 6,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/6d83f95085a778c3ae971dc25b17b846-add_list_type_device_6118.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 570,
+              "hintContent": "",
+              "online": true,
+              "modelName": "RGBIC lights for Car",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/02dc584bb90c68510e7fbc0b4dcc9530-add_list_type_device_6119.png",
+              "showingSku": "H6119",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6119",
+                  "defaultName": "Car Led Lights",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/02dc584bb90c68510e7fbc0b4dcc9530-add_list_type_device_6119.png",
+                  "extInfo": "",
+                  "ic": 12,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 642,
+              "hintContent": "",
+              "online": true,
+              "modelName": "RGBIC Car Underglow Light",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/9ca25ba59d62e5263a833ce748a783e6-add_list_type_device_6184.png",
+              "showingSku": "H6184",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6184",
+                  "defaultName": "Car Underglow Lights",
+                  "goodsType": 11,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/9ca25ba59d62e5263a833ce748a783e6-add_list_type_device_6184.png",
+                  "extInfo": "",
+                  "ic": 21,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 573,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Car Underglow Light",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/16cf66e017a95d455823c92ab6d6b6c7-add_list_type_device_6185.png",
+              "showingSku": "H6185",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6185",
+                  "defaultName": "Car Underglow Lights",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/16cf66e017a95d455823c92ab6d6b6c7-add_list_type_device_6185.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 700,
+              "hintContent": "H6194",
+              "online": true,
+              "modelName": "12 Motorcycle LED Lights",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/ca7d310262c5ce750a91bed8b48b05af-add_list_type_device_6194.png",
+              "showingSku": "H6194",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6194",
+                  "defaultName": "Motorcycle LED Lights",
+                  "goodsType": 6,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/ca7d310262c5ce750a91bed8b48b05af-add_list_type_device_6194.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 733,
+              "hintContent": "",
+              "online": true,
+              "modelName": "RGBIC  lights for Car",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/e4f6c44b538f5ddc9be84109f156f695-add_list_type_device_7090.png",
+              "showingSku": "H7090",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H7090",
+                  "defaultName": "Car Light",
+                  "goodsType": 44,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/e4f6c44b538f5ddc9be84109f156f695-add_list_type_device_7090.png",
+                  "extInfo": "",
+                  "ic": 12,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "groupName": "Camping Lanterns",
+          "groupId": 752,
+          "categoryId": 8,
+          "supportSkuList": [
+            {
+              "productId": 753,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Camping lantern",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/22884debe4e311323cb9f8cb00d9e3a5-add_list_type_device_7040%403x.png",
+              "showingSku": "H7040",
+              "categoryId": 2,
+              "products": [
+                {
+                  "sku": "H7040",
+                  "defaultName": "Camping lantern",
+                  "goodsType": 36,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/22884debe4e311323cb9f8cb00d9e3a5-add_list_type_device_7040%403x.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "groupName": "Accessories",
+          "groupId": 712,
+          "categoryId": 8,
+          "supportSkuList": [
+            {
+              "productId": 713,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Govee Sync",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/34daf03d5bd289ba73ca055a4fb50c7e-add_list_type_device_1161.png",
+              "showingSku": "H1161",
+              "categoryId": 4,
+              "products": [
+                {
+                  "sku": "H1161",
+                  "defaultName": "Govee Sync",
+                  "goodsType": 32,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/34daf03d5bd289ba73ca055a4fb50c7e-add_list_type_device_1161.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Home Improvement",
+      "rootId": 608,
+      "supportGroups": [
+        {
+          "groupName": "Electrical",
+          "groupId": 616,
+          "categoryId": 3,
+          "supportSkuList": [
+            {
+              "productId": 725,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Smart Plug",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/03d88244e59a0384f30be00ab6258657-add_list_type_device_5080.png",
+              "showingSku": "H5080",
+              "categoryId": 3,
+              "products": [
+                {
+                  "sku": "H5080",
+                  "defaultName": "Smart Plug",
+                  "goodsType": 43,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/03d88244e59a0384f30be00ab6258657-add_list_type_device_5080.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 640,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Wi-Fi Plug",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/eacd3f17c8cff598641bd97b530a047c-add_list_type_device_5081_us.png",
+              "showingSku": "H5081",
+              "categoryId": 3,
+              "products": [
+                {
+                  "sku": "H5081",
+                  "defaultName": "Smart Wi-Fi Plug",
+                  "goodsType": 4,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/eacd3f17c8cff598641bd97b530a047c-add_list_type_device_5081_us.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "groupName": "Temp",
+          "groupId": 598,
+          "categoryId": 3,
+          "supportSkuList": [
+            {
+              "productId": 615,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Wi-Fi Smart Gateway",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/5e1cb4d2afebc92193659413cc741d0d-add_list_type_device_5040.png",
+              "showingSku": "H5041",
+              "categoryId": 4,
+              "products": [
+                {
+                  "sku": "H5041",
+                  "defaultName": "",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/5e1cb4d2afebc92193659413cc741d0d-add_list_type_device_5040.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 601,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Wi-Fi Thermo-Hygrometer",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/4bdfbf84880c7f2b23620e1a5709972a-add_list_type_device_5051.png",
+              "showingSku": "H5051",
+              "categoryId": 4,
+              "products": [
+                {
+                  "sku": "H5051",
+                  "defaultName": "",
+                  "goodsType": 0,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/4bdfbf84880c7f2b23620e1a5709972a-add_list_type_device_5051.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 604,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Wireless Thermo-Hygrometer",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/9e8931489a2634766de38c5396f099ee-add_list_type_device_5053.png",
+              "showingSku": "H5053",
+              "categoryId": 4,
+              "products": [
+                {
+                  "sku": "H5053",
+                  "defaultName": "Wireless Thermometer",
+                  "goodsType": 0,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/9e8931489a2634766de38c5396f099ee-add_list_type_device_5053.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 602,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Wi-Fi Thermo-Hygrometer Pro",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/4bdfbf84880c7f2b23620e1a5709972a-add_list_type_device_5051.png",
+              "showingSku": "H5071",
+              "categoryId": 4,
+              "products": [
+                {
+                  "sku": "H5071",
+                  "defaultName": "Wifi thermometer",
+                  "goodsType": 0,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/4bdfbf84880c7f2b23620e1a5709972a-add_list_type_device_5051.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 600,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Bluetooth Thermo-Hygrometer Pro",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/79e2719dbec78c44aaa41d3c7373417f-add_list_type_device_5052.png",
+              "showingSku": "H5072",
+              "categoryId": 4,
+              "products": [
+                {
+                  "sku": "H5072",
+                  "defaultName": "Bluetooth thermometer",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/79e2719dbec78c44aaa41d3c7373417f-add_list_type_device_5052.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 603,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Bluetooth Thermo-Hygrometer Lite",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/071a8aa22a0ea5f986ddb9bef61398d7-add_list_type_device_5074.png",
+              "showingSku": "H5074",
+              "categoryId": 4,
+              "products": [
+                {
+                  "sku": "H5074",
+                  "defaultName": "",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/071a8aa22a0ea5f986ddb9bef61398d7-add_list_type_device_5074.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 599,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Smart Thermo-Hygrometer",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/a49245c145c41e1bb2162ab1aed90af7-add_list_type_device_5075.png",
+              "showingSku": "H5075",
+              "categoryId": 4,
+              "products": [
+                {
+                  "sku": "H5075",
+                  "defaultName": "Indoor thermometer",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/a49245c145c41e1bb2162ab1aed90af7-add_list_type_device_5075.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 647,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Smart Thermo-Hygrometer",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/8323e495f4d414fb3d113fac0df0bb4a-add_list_type_device_h5101.png",
+              "showingSku": "H5101",
+              "categoryId": 4,
+              "products": [
+                {
+                  "sku": "H5101",
+                  "defaultName": "Smart Thermometer",
+                  "goodsType": 8,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/8323e495f4d414fb3d113fac0df0bb4a-add_list_type_device_h5101.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 648,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Smart Thermo-Hygrometer",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/56e8e46c92ff1eea18771cd09a77dcd0-add_list_type_device_h5102.png",
+              "showingSku": "H5102",
+              "categoryId": 4,
+              "products": [
+                {
+                  "sku": "H5102",
+                  "defaultName": "Smart Thermometer",
+                  "goodsType": 8,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/56e8e46c92ff1eea18771cd09a77dcd0-add_list_type_device_h5102.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 638,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Wi-Fi Thermo-Hygrometer",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/68052f2674beb4eb688316949da606be-add_list_type_device_h5179.png",
+              "showingSku": "H5179",
+              "categoryId": 4,
+              "products": [
+                {
+                  "sku": "H5179",
+                  "defaultName": "Wifi Thermometer",
+                  "goodsType": 7,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/68052f2674beb4eb688316949da606be-add_list_type_device_h5179.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 669,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Smart Thermo-Hygrometer",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/51892cfa7af72d45ff8ced6f49d620c2-add_list_type_device_h5174.png",
+              "showingSku": "H5174",
+              "categoryId": 4,
+              "products": [
+                {
+                  "sku": "H5174",
+                  "defaultName": "Smart Thermometer",
+                  "goodsType": 8,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/51892cfa7af72d45ff8ced6f49d620c2-add_list_type_device_h5174.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 639,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Smart Thermo-Hygrometer",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/5c748df4caa367e1b77fd430f9ee6f66-add_list_type_device_h5177.png",
+              "showingSku": "H5177",
+              "categoryId": 4,
+              "products": [
+                {
+                  "sku": "H5177",
+                  "defaultName": "Smart Thermometer",
+                  "goodsType": 8,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/5c748df4caa367e1b77fd430f9ee6f66-add_list_type_device_h5177.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 661,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Smart Thermo-Hygrometer",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/28a38dc4493d8b57e9b32af93f38879a-add_list_type_device_b5178_group.png",
+              "showingSku": "B5178",
+              "categoryId": 4,
+              "products": [
+                {
+                  "sku": "B5178",
+                  "defaultName": "Indoor Thermometer",
+                  "goodsType": 14,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/28a38dc4493d8b57e9b32af93f38879a-add_list_type_device_b5178_group.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "groupName": "Kitchen",
+          "groupId": 652,
+          "categoryId": 3,
+          "supportSkuList": [
+            {
+              "productId": 607,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Bluetooth Meat Thermometer",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/5119bdc8cb4eee13bbbc3632de9e9e4a-add_list_type_device_5055.png",
+              "showingSku": "H5055",
+              "categoryId": 5,
+              "products": [
+                {
+                  "sku": "H5055",
+                  "defaultName": "",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/5119bdc8cb4eee13bbbc3632de9e9e4a-add_list_type_device_5055.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 704,
+              "hintContent": "H5181",
+              "online": true,
+              "modelName": "Smart Meat Thermometer",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/3c9c1851642860de9798e9f6492b62b2-add_list_type_device_5181.png",
+              "showingSku": "H5181",
+              "categoryId": 5,
+              "products": [
+                {
+                  "sku": "H5181",
+                  "defaultName": "Meat Thermometer",
+                  "goodsType": 28,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/3c9c1851642860de9798e9f6492b62b2-add_list_type_device_5181.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 708,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Smart Meat Thermometer",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/461b0090ca9c37e01888ea1907e8436d-add_list_type_device_5182.png",
+              "showingSku": "H5182",
+              "categoryId": 5,
+              "products": [
+                {
+                  "sku": "H5182",
+                  "defaultName": "Meat Thermometer",
+                  "goodsType": 33,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/461b0090ca9c37e01888ea1907e8436d-add_list_type_device_5182.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 705,
+              "hintContent": "H5183",
+              "online": true,
+              "modelName": "Smart Meat Thermometer",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/c8d1d53cd356bc6214a8abf13e788597-add_list_type_device_5183.png",
+              "showingSku": "H5183",
+              "categoryId": 5,
+              "products": [
+                {
+                  "sku": "H5183",
+                  "defaultName": "Meat Thermometer",
+                  "goodsType": 29,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/c8d1d53cd356bc6214a8abf13e788597-add_list_type_device_5183.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 716,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Smart Meat Thermometer",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/3b6605932b64a13817768996e486ab35-add_list_type_device_5184.png",
+              "showingSku": "H5184",
+              "categoryId": 5,
+              "products": [
+                {
+                  "sku": "H5184",
+                  "defaultName": "Meat Thermometer",
+                  "goodsType": 34,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/3b6605932b64a13817768996e486ab35-add_list_type_device_5184.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "groupName": "Fitness",
+          "groupId": 609,
+          "categoryId": 3,
+          "supportSkuList": [
+            {
+              "productId": 701,
+              "hintContent": "H5010",
+              "online": true,
+              "modelName": "Smart Body Fat Scale B1",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/1c628eaaafa49c3a78bca986926c8924-add_list_type_device_5010.png",
+              "showingSku": "H5010",
+              "categoryId": 6,
+              "products": [
+                {
+                  "sku": "H5010",
+                  "defaultName": "Smart Body Fat Scale ",
+                  "goodsType": 0,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/1c628eaaafa49c3a78bca986926c8924-add_list_type_device_5010.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "groupName": "Security",
+          "groupId": 618,
+          "categoryId": 3,
+          "supportSkuList": [
+            {
+              "productId": 612,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Contact sensor",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/e102c89d509cf8425a789b6d0bf51667-add_list_type_device_5023.png",
+              "showingSku": "H5023",
+              "categoryId": 7,
+              "products": [
+                {
+                  "sku": "H5023",
+                  "defaultName": "Contact sensor",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/e102c89d509cf8425a789b6d0bf51667-add_list_type_device_5023.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 614,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Wi-Fi Smart Gateway",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/5e1cb4d2afebc92193659413cc741d0d-add_list_type_device_5040.png",
+              "showingSku": "H5040",
+              "categoryId": 7,
+              "products": [
+                {
+                  "sku": "H5040",
+                  "defaultName": "Wi-Fi Smart Gateway",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/5e1cb4d2afebc92193659413cc741d0d-add_list_type_device_5040.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 610,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Water Leak Detector",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/80426b0181425613a7ec58ba58080021-add_list_type_device_5054.png",
+              "showingSku": "H5054",
+              "categoryId": 7,
+              "products": [
+                {
+                  "sku": "H5054",
+                  "defaultName": "",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/80426b0181425613a7ec58ba58080021-add_list_type_device_5054.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Discontinued",
+      "rootId": 868,
+      "supportGroups": [
+        {
+          "groupName": "Discontinued",
+          "groupId": 869,
+          "categoryId": 10,
+          "supportSkuList": [
+            {
+              "productId": 664,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Smart Light Switch",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/3f452661effdcaa95c14e9e17138b4a0-add_list_type_device_5001.png",
+              "showingSku": "H5001",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H5001",
+                  "defaultName": "Smart Switch",
+                  "goodsType": 26,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/3f452661effdcaa95c14e9e17138b4a0-add_list_type_device_5001.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 702,
+              "hintContent": "H5020",
+              "online": true,
+              "modelName": "Smart Jump Rope",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/8ec6ee0996c7808a5b4b9d2e3ce6bc2d-add_list_type_device_5020.png",
+              "showingSku": "H5020",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H5020",
+                  "defaultName": "Smart Jump Rope",
+                  "goodsType": 0,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/8ec6ee0996c7808a5b4b9d2e3ce6bc2d-add_list_type_device_5020.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 611,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Motion sensor",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/87748d898560158d11f11f17f8b16e3e-add_list_type_device_5024.png",
+              "showingSku": "H5024",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H5024",
+                  "defaultName": "Motion sensor",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/87748d898560158d11f11f17f8b16e3e-add_list_type_device_5024.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 613,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Smart motion sensor",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/6839d95586251a6c05f5c2ed2abcc121-add_list_type_device_5026.png",
+              "showingSku": "H5026",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H5026",
+                  "defaultName": "Smart motion sensor",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/6839d95586251a6c05f5c2ed2abcc121-add_list_type_device_5026.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 605,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Bluetooth Thermo-Hygrometer",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/79e2719dbec78c44aaa41d3c7373417f-add_list_type_device_5052.png",
+              "showingSku": "H5052",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H5052",
+                  "defaultName": "",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/79e2719dbec78c44aaa41d3c7373417f-add_list_type_device_5052.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 671,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Govee RGBICWW Light Bars",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/9e47ec098d87e1356621b0cbcd703428-add_list_type_device_6053.png",
+              "showingSku": "H6053",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6053",
+                  "defaultName": "RGBIC TV Light Bars",
+                  "goodsType": 23,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/9e47ec098d87e1356621b0cbcd703428-add_list_type_device_6053.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 670,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Govee DreamView P1 Light Bars",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/3344902a7e7aed17bd0538ba81531ae9-add_list_type_device_6054.png",
+              "showingSku": "H6054",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6054",
+                  "defaultName": "DreamView P1",
+                  "goodsType": 25,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/3344902a7e7aed17bd0538ba81531ae9-add_list_type_device_6054.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 548,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Wi-Fi Warm White LED Bulb",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/d46b836bf3f5586b90042846dbe7b744-add_list_type_device_6085.png",
+              "showingSku": "H6085",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6085",
+                  "defaultName": "Warm White LED Bulb",
+                  "goodsType": 0,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/d46b836bf3f5586b90042846dbe7b744-add_list_type_device_6085.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 547,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Wi-Fi RGB LED Bulb",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/15cf180e3bf9be1481e4fb8953f3a2b6-add_list_type_device_6086.png",
+              "showingSku": "H6086",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6086",
+                  "defaultName": "RGB LED Bulb",
+                  "goodsType": 0,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/15cf180e3bf9be1481e4fb8953f3a2b6-add_list_type_device_6086.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 546,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Wi-Fi RGB LED Bulb",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/1502b14792177acc768c0d7951faef61-add_list_type_device_6089.png",
+              "showingSku": "H6089",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6089",
+                  "defaultName": "RGB LED Bulb",
+                  "goodsType": 0,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/1502b14792177acc768c0d7951faef61-add_list_type_device_6089.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 576,
+              "hintContent": "",
+              "online": true,
+              "modelName": "RGBIC for TV",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/84376f7bff8a18072645ef7f018dd7c6-add_list_type_device_6101.png",
+              "showingSku": "H6101",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6101",
+                  "defaultName": "TV Backlight",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/84376f7bff8a18072645ef7f018dd7c6-add_list_type_device_6101.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 556,
+              "hintContent": "",
+              "online": true,
+              "modelName": "RGBIC for TV with Alexa",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/f97a9a1af41c16ed730740d82141aca5-add_list_type_device_6104.png.png",
+              "showingSku": "H6104",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6104",
+                  "defaultName": "TV Backlight",
+                  "goodsType": 0,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/f97a9a1af41c16ed730740d82141aca5-add_list_type_device_6104.png.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 577,
+              "hintContent": "",
+              "online": true,
+              "modelName": "2m MultiColor for TV",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/e2c15b8d20543be520e04d8aaac7eed6-add_list_type_device_6105.png",
+              "showingSku": "H6105",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6105",
+                  "defaultName": "TV Backlight",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/e2c15b8d20543be520e04d8aaac7eed6-add_list_type_device_6105.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 579,
+              "hintContent": "",
+              "online": true,
+              "modelName": "MultiColor for Bed",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/f28bfa9bd30d4892732c7c0b38cb560f-add_list_type_device_6129.png",
+              "showingSku": "H6129",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6129",
+                  "defaultName": "Strip Light",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/f28bfa9bd30d4892732c7c0b38cb560f-add_list_type_device_6129.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 562,
+              "hintContent": "",
+              "online": true,
+              "modelName": "3m RGBIC for Home",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/be2559833161f82c410b9f296048fa8a-add_list_type_device_6161.png",
+              "showingSku": "H6161",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6161",
+                  "defaultName": "Strip Light",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/be2559833161f82c410b9f296048fa8a-add_list_type_device_6161.png",
+                  "extInfo": "",
+                  "ic": 30,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 571,
+              "hintContent": "",
+              "online": true,
+              "modelName": "4 LED rock lights",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/f196dd3b36b1265dbeafe0924488b7bc-add_list_type_device_6165.png",
+              "showingSku": "H6165",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6165",
+                  "defaultName": "Rock Light",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/f196dd3b36b1265dbeafe0924488b7bc-add_list_type_device_6165.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 572,
+              "hintContent": "",
+              "online": true,
+              "modelName": "8 LED rock lights",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/609db819bfa2b069b0bb2b0a3407b757-add_list_type_device_6166.png",
+              "showingSku": "H6166",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6166",
+                  "defaultName": "Rock Light",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/609db819bfa2b069b0bb2b0a3407b757-add_list_type_device_6166.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 736,
+              "hintContent": "",
+              "online": true,
+              "modelName": "10m RGB Strip Light",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/04924527a509f6a37f220602ab4982c5-add_list_type_device_616b.png",
+              "showingSku": "H616B",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H616B",
+                  "defaultName": "RGB Strip Lights",
+                  "goodsType": 68,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/04924527a509f6a37f220602ab4982c5-add_list_type_device_616b.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 567,
+              "hintContent": "",
+              "online": true,
+              "modelName": "2m Color & White Ambiance with Alexa",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/49adc83e7fd8e82b4d54027b4187fb99-add_list_type_device_6188.png",
+              "showingSku": "H6188",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H6188",
+                  "defaultName": "Strip Light",
+                  "goodsType": 0,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/49adc83e7fd8e82b4d54027b4187fb99-add_list_type_device_6188.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 689,
+              "hintContent": "",
+              "online": true,
+              "modelName": "MultiColor String Light",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/6a06e0ae9c294f8c5edc24661d4824ea-add_list_type_device_7001.png",
+              "showingSku": "H7001",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H7001",
+                  "defaultName": "String Light",
+                  "goodsType": 0,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/6a06e0ae9c294f8c5edc24661d4824ea-add_list_type_device_7001.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 595,
+              "hintContent": "",
+              "online": true,
+              "modelName": "LED Plant Grow Light",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/9fdf0df72b7989ec3f05cf75412a6709-add_list_type_device_7004.png",
+              "showingSku": "H7004",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H7004",
+                  "defaultName": "Plant Grow Lights",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/9fdf0df72b7989ec3f05cf75412a6709-add_list_type_device_7004.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 617,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Smart plug",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/1c5bf38263f716d25e1fc2a94572981d-add_list_type_device_7014.png",
+              "showingSku": "H7014",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H7014",
+                  "defaultName": "Smart plug",
+                  "goodsType": 0,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/1c5bf38263f716d25e1fc2a94572981d-add_list_type_device_7014.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 596,
+              "hintContent": "",
+              "online": true,
+              "modelName": "LED Plant Grow Light",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/30a3dec7d83e130dc9df3970266a62b3-add_list_type_device_7017.png",
+              "showingSku": "H7017",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H7017",
+                  "defaultName": "Plant Grow Lights",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/30a3dec7d83e130dc9df3970266a62b3-add_list_type_device_7017.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 691,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Wi-Fi MultiColor String Light",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/72aa53ba8f2dadf33a43c9d19ee32311-add_list_type_device_7022.png",
+              "showingSku": "H7022",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H7022",
+                  "defaultName": "String Light",
+                  "goodsType": 0,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/72aa53ba8f2dadf33a43c9d19ee32311-add_list_type_device_7022.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 693,
+              "hintContent": "",
+              "online": true,
+              "modelName": "MultiColor String Light",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/6a06e0ae9c294f8c5edc24661d4824ea-add_list_type_device_7001.png",
+              "showingSku": "H7023",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H7023",
+                  "defaultName": "String Light",
+                  "goodsType": 0,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/6a06e0ae9c294f8c5edc24661d4824ea-add_list_type_device_7001.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 692,
+              "hintContent": "",
+              "online": true,
+              "modelName": "MultiColor String Light",
+              "iconUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/51cca0e22d6d030222732ac1583b44e8-add_list_type_device_7024.png",
+              "showingSku": "H7024",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H7024",
+                  "defaultName": "String Light",
+                  "goodsType": 0,
+                  "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/51cca0e22d6d030222732ac1583b44e8-add_list_type_device_7024.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 619,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Wireless Voice Intercom Doorbell",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/b25ff00f831482da86c46c9aef667b62-add_list_type_device_7205.png",
+              "showingSku": "H7205",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H7205",
+                  "defaultName": "Doorbell",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/b25ff00f831482da86c46c9aef667b62-add_list_type_device_7205.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 621,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Baby monitor",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/7bbb07d6d636bbc206adbf347fdf5e48-add_list_type_device_7212.png",
+              "showingSku": "H7212",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H7212",
+                  "defaultName": "Baby monitor",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/7bbb07d6d636bbc206adbf347fdf5e48-add_list_type_device_7212.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 622,
+              "hintContent": "",
+              "online": true,
+              "modelName": "Baby monitor with multi-sensor",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/6bf803656115b62d3737341034bf9d82-add_list_type_device_7214.png",
+              "showingSku": "H7214",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H7214",
+                  "defaultName": "Baby monitor",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/6bf803656115b62d3737341034bf9d82-add_list_type_device_7214.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 589,
+              "hintContent": "",
+              "online": true,
+              "modelName": "5m Warm White Copper Wire lights",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/cb62109c65faee8b89f98ef1c2eb1298-add_list_type_device_7308.png",
+              "showingSku": "H7308",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H7308",
+                  "defaultName": "Copper Wire Light",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/cb62109c65faee8b89f98ef1c2eb1298-add_list_type_device_7308.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 590,
+              "hintContent": "",
+              "online": true,
+              "modelName": "5m White Copper Wire lights",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/767ff2c243df2bbc3c1e66c36a9a8f72-add_list_type_device_7309.png",
+              "showingSku": "H7309",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H7309",
+                  "defaultName": "Copper Wire Light",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/767ff2c243df2bbc3c1e66c36a9a8f72-add_list_type_device_7309.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 591,
+              "hintContent": "",
+              "online": true,
+              "modelName": "5m RGB Copper Wire lights",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/60d56f29f4e0b4627076546d2de67944-add_list_type_device_7310.png",
+              "showingSku": "H7310",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H7310",
+                  "defaultName": "Copper Wire Light",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/60d56f29f4e0b4627076546d2de67944-add_list_type_device_7310.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 592,
+              "hintContent": "",
+              "online": true,
+              "modelName": "10m Warm White Copper Wire lights",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/9d776a35334ab592a37a5ca1397c5817-add_list_type_device_7311.png",
+              "showingSku": "H7311",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H7311",
+                  "defaultName": "Copper Wire Light",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/9d776a35334ab592a37a5ca1397c5817-add_list_type_device_7311.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 593,
+              "hintContent": "",
+              "online": true,
+              "modelName": "10m RGB Copper Wire lights",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/c5ab9a5c9be0c113d5987ee322002f93-add_list_type_device_7312.png",
+              "showingSku": "H7312",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H7312",
+                  "defaultName": "Copper Wire Light",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/c5ab9a5c9be0c113d5987ee322002f93-add_list_type_device_7312.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 594,
+              "hintContent": "",
+              "online": true,
+              "modelName": "20m Warm White Copper Wire lights",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/cd5bbd49251780c9e445ff5b9d704437-add_list_type_device_7313.png",
+              "showingSku": "H7313",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H7313",
+                  "defaultName": "Copper Wire Light",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/cd5bbd49251780c9e445ff5b9d704437-add_list_type_device_7313.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 588,
+              "hintContent": "",
+              "online": true,
+              "modelName": "3*2m 300LED Curtain Lights",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/910089615a979df0b0e8c5a7aa6b1762-add_list_type_device_7315.png",
+              "showingSku": "H7315",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H7315",
+                  "defaultName": "LED Curtain Lights",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/910089615a979df0b0e8c5a7aa6b1762-add_list_type_device_7315.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 586,
+              "hintContent": "",
+              "online": true,
+              "modelName": "5m RGB Copper Wire lights",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/4efbeeb0967a3eed9f9f12f42ee9ccac-add_list_type_device_7317.png",
+              "showingSku": "H7317",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H7317",
+                  "defaultName": "RGB Copper Wire Lights",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/4efbeeb0967a3eed9f9f12f42ee9ccac-add_list_type_device_7317.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            },
+            {
+              "productId": 587,
+              "hintContent": "",
+              "online": true,
+              "modelName": "10m RGB Copper Wire lights",
+              "iconUrl": "https://s3.amazonaws.com/govee-public/sku-img/81d4881fbf0e631ab3b7bc62ca0e2ab5-add_list_type_device_7318.png",
+              "showingSku": "H7318",
+              "categoryId": 1,
+              "products": [
+                {
+                  "sku": "H7318",
+                  "defaultName": "RGB Copper Wire Lights",
+                  "goodsType": 0,
+                  "skuUrl": "https://s3.amazonaws.com/govee-public/sku-img/81d4881fbf0e631ab3b7bc62ca0e2ab5-add_list_type_device_7318.png",
+                  "extInfo": "",
+                  "ic": 0,
+                  "pairUrl": {
+                    "light": "",
+                    "dark": ""
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

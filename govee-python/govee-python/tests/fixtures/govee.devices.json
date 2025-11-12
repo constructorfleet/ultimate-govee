@@ -1,0 +1,2092 @@
+{
+  "devices": [
+    {
+      "groupId": 23721902,
+      "device": "6D:5F:D0:C9:07:C2:86:40",
+      "sku": "H601B",
+      "spec": "",
+      "verionHard": "1.02.00",
+      "versionSoft": "1.00.09",
+      "deviceName": "Movie Room Ceiling RL",
+      "deviceExt": {
+        "deviceSettings": {
+          "bleAddress": "D0:C9:07:C2:86:41",
+          "bleName": "ihoment_H601B_8641",
+          "topic": "GD/c454c0240371d4d7a3ce1b3e99db4546",
+          "wifiMacAddress": "D0:C9:07:C2:86:40",
+          "pactType": 1,
+          "pactCode": 1,
+          "wifiSoftVersion": "",
+          "wifiHardwareVersion": "",
+          "ic": 0,
+          "notifyWaterBoiling": true,
+          "notifyComplete": true,
+          "automaticShutDown": true,
+          "model": "H601B",
+          "deviceId": "6D:5F:D0:C9:07:C2:86:40",
+          "deviceName": "Movie Room Ceiling RL",
+          "hardwareVersion": "1.02.00",
+          "softwareVersion": "1.00.09",
+          "playState": false
+        },
+        "deviceData": {
+          "isOnline": false
+        },
+        "externalResources": {
+          "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/ebb32b4d1a5412299cfd99ee2a517993-add_list_type_device_601b.png",
+          "headOnImg": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/87b948e0f6d6da6a03dce2e8262fb288-new_light_title_601a_on.png",
+          "headOnImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/dfbfab171f1f0360079e4daac5a62559-light_pics_601a_on.png",
+          "headOffImg": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/0ffd6e8b02c9a3756d1d57929773573b-new_light_title_601a_off.png",
+          "headOffImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/c753cd470d821aa1456a63c2ff3843fb-light_pics_601a_off.png",
+          "ext": "",
+          "ic": 0
+        }
+      },
+      "pactType": 1,
+      "pactCode": 1,
+      "share": 0,
+      "deviceId": 27475318,
+      "gidConfirmed": false,
+      "goodsType": 111,
+      "attributesId": 38,
+      "supportScene": 0
+    },
+    {
+      "groupId": 23721902,
+      "device": "CD:01:D0:C9:07:C5:4B:8A",
+      "sku": "H601B",
+      "spec": "",
+      "verionHard": "1.02.00",
+      "versionSoft": "1.00.09",
+      "deviceName": "Movie Room Ceiling RR",
+      "deviceExt": {
+        "deviceSettings": {
+          "bleAddress": "D0:C9:07:C5:4B:8B",
+          "bleName": "ihoment_H601B_4B8B",
+          "topic": "GD/6e7b8b46517c7763bc8a92a0c7ee7fe8",
+          "wifiMacAddress": "D0:C9:07:C5:4B:8A",
+          "pactType": 1,
+          "pactCode": 1,
+          "wifiSoftVersion": "",
+          "wifiHardwareVersion": "",
+          "ic": 0,
+          "notifyWaterBoiling": true,
+          "notifyComplete": true,
+          "automaticShutDown": true,
+          "model": "H601B",
+          "deviceId": "CD:01:D0:C9:07:C5:4B:8A",
+          "deviceName": "Movie Room Ceiling RR",
+          "hardwareVersion": "1.02.00",
+          "softwareVersion": "1.00.09",
+          "playState": false
+        },
+        "deviceData": {
+          "isOnline": false
+        },
+        "externalResources": {
+          "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/ebb32b4d1a5412299cfd99ee2a517993-add_list_type_device_601b.png",
+          "headOnImg": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/87b948e0f6d6da6a03dce2e8262fb288-new_light_title_601a_on.png",
+          "headOnImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/dfbfab171f1f0360079e4daac5a62559-light_pics_601a_on.png",
+          "headOffImg": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/0ffd6e8b02c9a3756d1d57929773573b-new_light_title_601a_off.png",
+          "headOffImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/c753cd470d821aa1456a63c2ff3843fb-light_pics_601a_off.png",
+          "ext": "",
+          "ic": 0
+        }
+      },
+      "pactType": 1,
+      "pactCode": 1,
+      "share": 0,
+      "deviceId": 27475286,
+      "gidConfirmed": false,
+      "goodsType": 111,
+      "attributesId": 38,
+      "supportScene": 0
+    },
+    {
+      "groupId": 23721902,
+      "device": "33:59:C5:32:34:39:61:1C",
+      "sku": "H6042",
+      "spec": "",
+      "verionHard": "3.05.01",
+      "versionSoft": "1.00.06",
+      "deviceName": "Movie Room Light Bar R",
+      "deviceExt": {
+        "deviceSettings": {
+          "wifiName": "Magrathea",
+          "bleAddress": "C5:32:34:39:61:1C",
+          "bleName": "Govee_H6042_611C",
+          "topic": "GD/6c07bbe30ec579670ff57b254118e145",
+          "wifiMacAddress": "D0:C9:07:06:EE:EC",
+          "pactType": 1,
+          "pactCode": 1,
+          "wifiSoftVersion": "1.03.01",
+          "wifiHardwareVersion": "1.04.01",
+          "ic": 14,
+          "secretCode": "ye5yhYOO1qs=",
+          "notifyWaterBoiling": true,
+          "notifyComplete": true,
+          "automaticShutDown": true,
+          "model": "H6042",
+          "deviceId": "33:59:C5:32:34:39:61:1C",
+          "deviceName": "Movie Room Light Bar R",
+          "hardwareVersion": "3.05.01",
+          "softwareVersion": "1.00.06",
+          "playState": false
+        },
+        "deviceData": {
+          "isOnline": false
+        },
+        "externalResources": {
+          "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/ac47d381ef7c8a11792b70fe56ff60ab-add_list_type_device_6042.png",
+          "headOnImg": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/7d42b72a94bed73b7746cb9f0d30cb90-new_light_title_6042_on.png",
+          "headOnImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/4f9f94962ecee7fa5d7a329424bc7fc7-light_title_6601_on.png",
+          "headOffImg": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/f48f4c4f89dbe2648adc4bf2d92e1f01-new_light_title_6042_off.png",
+          "headOffImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/3645c55fde57f01b607114189b6e49e1-light_title_6601_off.png",
+          "ext": "",
+          "ic": 15
+        }
+      },
+      "pactType": 1,
+      "pactCode": 1,
+      "share": 0,
+      "deviceId": 26462601,
+      "gidConfirmed": false,
+      "goodsType": 197,
+      "attributesId": 80,
+      "supportScene": 0
+    },
+    {
+      "groupId": 23721902,
+      "device": "37:02:C5:32:34:39:1D:17",
+      "sku": "H6042",
+      "spec": "",
+      "verionHard": "3.05.01",
+      "versionSoft": "1.00.06",
+      "deviceName": "Movie Room Light Bar L",
+      "deviceExt": {
+        "deviceSettings": {
+          "wifiName": "Magrathea",
+          "bleAddress": "C5:32:34:39:1D:17",
+          "bleName": "Govee_H6042_1D17",
+          "topic": "GD/66278b0764752d05c22054c2f70f21ba",
+          "wifiMacAddress": "D0:C9:07:07:8E:A6",
+          "pactType": 1,
+          "pactCode": 1,
+          "wifiSoftVersion": "1.03.01",
+          "wifiHardwareVersion": "1.04.01",
+          "ic": 14,
+          "secretCode": "9+cg19Hc+PI=",
+          "notifyWaterBoiling": true,
+          "notifyComplete": true,
+          "automaticShutDown": true,
+          "model": "H6042",
+          "deviceId": "37:02:C5:32:34:39:1D:17",
+          "deviceName": "Movie Room Light Bar L",
+          "hardwareVersion": "3.05.01",
+          "softwareVersion": "1.00.06",
+          "playState": false
+        },
+        "deviceData": {
+          "isOnline": false
+        },
+        "externalResources": {
+          "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/ac47d381ef7c8a11792b70fe56ff60ab-add_list_type_device_6042.png",
+          "headOnImg": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/7d42b72a94bed73b7746cb9f0d30cb90-new_light_title_6042_on.png",
+          "headOnImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/4f9f94962ecee7fa5d7a329424bc7fc7-light_title_6601_on.png",
+          "headOffImg": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/f48f4c4f89dbe2648adc4bf2d92e1f01-new_light_title_6042_off.png",
+          "headOffImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/3645c55fde57f01b607114189b6e49e1-light_title_6601_off.png",
+          "ext": "",
+          "ic": 15
+        }
+      },
+      "pactType": 1,
+      "pactCode": 1,
+      "share": 0,
+      "deviceId": 26462471,
+      "gidConfirmed": false,
+      "goodsType": 197,
+      "attributesId": 80,
+      "supportScene": 0
+    },
+    {
+      "groupId": 23721902,
+      "device": "5A:B1:D0:C9:07:C2:83:CA",
+      "sku": "H601B",
+      "spec": "",
+      "verionHard": "1.02.00",
+      "versionSoft": "1.00.14",
+      "deviceName": "Movie Room Ceiling FR",
+      "deviceExt": {
+        "deviceSettings": {
+          "wifiName": "Magrathea",
+          "bleAddress": "D0:C9:07:C2:83:CB",
+          "bleName": "ihoment_H601B_83CB",
+          "topic": "GD/3ba9e89232be69feb1b248f12873620e",
+          "wifiMacAddress": "D0:C9:07:C2:83:CA",
+          "pactType": 1,
+          "pactCode": 1,
+          "wifiSoftVersion": "1.00.14",
+          "wifiHardwareVersion": "1.02.00",
+          "ic": 0,
+          "notifyWaterBoiling": true,
+          "notifyComplete": true,
+          "automaticShutDown": true,
+          "model": "H601B",
+          "deviceId": "5A:B1:D0:C9:07:C2:83:CA",
+          "deviceName": "Movie Room Ceiling FR",
+          "hardwareVersion": "1.02.00",
+          "softwareVersion": "1.00.14",
+          "playState": false
+        },
+        "deviceData": {
+          "isOnline": false
+        },
+        "externalResources": {
+          "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/ebb32b4d1a5412299cfd99ee2a517993-add_list_type_device_601b.png",
+          "headOnImg": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/87b948e0f6d6da6a03dce2e8262fb288-new_light_title_601a_on.png",
+          "headOnImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/dfbfab171f1f0360079e4daac5a62559-light_pics_601a_on.png",
+          "headOffImg": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/0ffd6e8b02c9a3756d1d57929773573b-new_light_title_601a_off.png",
+          "headOffImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/c753cd470d821aa1456a63c2ff3843fb-light_pics_601a_off.png",
+          "ext": "",
+          "ic": 0
+        }
+      },
+      "pactType": 1,
+      "pactCode": 1,
+      "share": 0,
+      "deviceId": 26462406,
+      "gidConfirmed": true,
+      "goodsType": 111,
+      "attributesId": 38,
+      "supportScene": 0
+    },
+    {
+      "groupId": 23721902,
+      "device": "5C:47:D0:C9:07:C4:E7:9E",
+      "sku": "H601B",
+      "spec": "",
+      "verionHard": "1.02.00",
+      "versionSoft": "1.00.14",
+      "deviceName": "Movie Room Ceiling FL",
+      "deviceExt": {
+        "deviceSettings": {
+          "wifiName": "Magrathea",
+          "bleAddress": "D0:C9:07:C4:E7:9F",
+          "bleName": "ihoment_H601B_E79F",
+          "topic": "GD/512ac555ad7fbf0ed53a35cdaa1af643",
+          "wifiMacAddress": "D0:C9:07:C4:E7:9E",
+          "pactType": 1,
+          "pactCode": 1,
+          "wifiSoftVersion": "1.00.14",
+          "wifiHardwareVersion": "1.02.00",
+          "ic": 0,
+          "notifyWaterBoiling": true,
+          "notifyComplete": true,
+          "automaticShutDown": true,
+          "model": "H601B",
+          "deviceId": "5C:47:D0:C9:07:C4:E7:9E",
+          "deviceName": "Movie Room Ceiling FL",
+          "hardwareVersion": "1.02.00",
+          "softwareVersion": "1.00.14",
+          "playState": false
+        },
+        "deviceData": {
+          "isOnline": false
+        },
+        "externalResources": {
+          "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/ebb32b4d1a5412299cfd99ee2a517993-add_list_type_device_601b.png",
+          "headOnImg": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/87b948e0f6d6da6a03dce2e8262fb288-new_light_title_601a_on.png",
+          "headOnImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/dfbfab171f1f0360079e4daac5a62559-light_pics_601a_on.png",
+          "headOffImg": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/0ffd6e8b02c9a3756d1d57929773573b-new_light_title_601a_off.png",
+          "headOffImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/c753cd470d821aa1456a63c2ff3843fb-light_pics_601a_off.png",
+          "ext": "",
+          "ic": 0
+        }
+      },
+      "pactType": 1,
+      "pactCode": 1,
+      "share": 0,
+      "deviceId": 26455383,
+      "gidConfirmed": true,
+      "goodsType": 111,
+      "attributesId": 38,
+      "supportScene": 0
+    },
+    {
+      "groupId": 23721902,
+      "device": "71:8D:C2:A2:F7:F7:B5:A1",
+      "sku": "H6604",
+      "spec": "",
+      "verionHard": "3.04.13",
+      "versionSoft": "1.00.06",
+      "deviceName": "Movie Room SyncBox2",
+      "deviceExt": {
+        "deviceSettings": {
+          "wifiName": "Magrathea",
+          "bleAddress": "C2:A2:F7:F7:B5:A1",
+          "bleName": "Govee_H6604_B5A1",
+          "topic": "GD/0222d237e120bd9408c2394eeda0c209",
+          "wifiMacAddress": "0C:C1:19:48:DA:B9",
+          "pactType": 1,
+          "pactCode": 1,
+          "wifiSoftVersion": "2.02.09",
+          "wifiHardwareVersion": "2.01.11",
+          "ic": 90,
+          "secretCode": "e5jCovf3taE=",
+          "notifyWaterBoiling": true,
+          "notifyComplete": true,
+          "automaticShutDown": true,
+          "dspVersionSoft": "13",
+          "model": "H6604",
+          "deviceId": "71:8D:C2:A2:F7:F7:B5:A1",
+          "deviceName": "Movie Room SyncBox2",
+          "hardwareVersion": "3.04.13",
+          "softwareVersion": "1.00.06",
+          "playState": false
+        },
+        "deviceData": {
+          "isOnline": false
+        },
+        "externalResources": {
+          "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/c381854e46a58cc8e89bd51e8a015aa9-add_list_type_device_6604.png",
+          "headOnImg": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/81c2b941168afdd4d9fbc8557b22916c-new_light_title_6602_on.png",
+          "headOnImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/975e206f29a9e6237526303b36276059-light_title_tv_on.png",
+          "headOffImg": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/88511aa03e5f779981cdee3b2b6b00d3-new_light_title_6602_off.png",
+          "headOffImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/b725058cac26cebb629c2c86bd28a6f2-light_title_tv_off.png",
+          "ext": "",
+          "ic": 100
+        }
+      },
+      "pactType": 1,
+      "pactCode": 1,
+      "share": 0,
+      "deviceId": 25076874,
+      "gidConfirmed": true,
+      "goodsType": 243,
+      "attributesId": 1,
+      "supportScene": 1
+    },
+    {
+      "groupId": 0,
+      "device": "53:77:CA:38:33:33:19:37",
+      "sku": "H5106",
+      "spec": "",
+      "verionHard": "3.01.01",
+      "versionSoft": "1.00.16",
+      "deviceName": "Entry Room Air Quality",
+      "deviceExt": {
+        "deviceData": {},
+        "deviceSettings": {
+          "minHumidity": 0,
+          "humidityWarning": true,
+          "airQualityOnOff": 1,
+          "pactCode": 1,
+          "temperatureCalibration": 0,
+          "pm25Max": 1000,
+          "wifiMacAddress": "D4:AD:FC:E6:80:6E",
+          "Calibration": 0,
+          "bleName": "GVH5106_1937",
+          "pm25Warning": true,
+          "maxHumidity": 10000,
+          "secretCode": "NxkzMzjKAAA=",
+          "temperatureWarning": true,
+          "minTemperature": -1000,
+          "pm25Min": 0,
+          "pactType": 1,
+          "bleAddress": "CA:38:33:33:19:37",
+          "maxTemperature": 5000,
+          "uploadRate": 10,
+          "deviceName": "Entry Room Air Quality",
+          "topic": "GD/aedd09fe553cf8e81539c84f30757e52"
+        },
+        "externalResources": {
+          "skuUrl": "",
+          "headOnImg": "",
+          "headOnImgNew": "",
+          "headOffImg": "",
+          "headOffImgNew": "",
+          "ext": "",
+          "ic": 0
+        }
+      },
+      "share": 0,
+      "deviceId": 23922755,
+      "gidConfirmed": false,
+      "goodsType": 124,
+      "attributesId": 0,
+      "supportScene": 0
+    },
+    {
+      "groupId": 0,
+      "device": "79:89:D2:38:33:33:2F:47",
+      "sku": "H5106",
+      "spec": "",
+      "verionHard": "3.01.01",
+      "versionSoft": "1.00.16",
+      "deviceName": "Game Room Air Quality",
+      "deviceExt": {
+        "deviceData": {},
+        "deviceSettings": {
+          "minHumidity": 0,
+          "humidityWarning": true,
+          "airQualityOnOff": 1,
+          "pactCode": 1,
+          "temperatureCalibration": 0,
+          "pm25Max": 1000,
+          "wifiMacAddress": "D4:AD:FC:E7:6E:4E",
+          "Calibration": 0,
+          "bleName": "GVH5106_2F47",
+          "pm25Warning": true,
+          "maxHumidity": 10000,
+          "secretCode": "Ry8zMzjSAAA=",
+          "temperatureWarning": true,
+          "minTemperature": -1000,
+          "pm25Min": 0,
+          "pactType": 1,
+          "bleAddress": "D2:38:33:33:2F:47",
+          "maxTemperature": 5000,
+          "uploadRate": 10,
+          "deviceName": "Game Room Air Quality",
+          "topic": "GD/8c2e5a78db748d46267d23643e4adfde"
+        },
+        "externalResources": {
+          "skuUrl": "",
+          "headOnImg": "",
+          "headOnImgNew": "",
+          "headOffImg": "",
+          "headOffImgNew": "",
+          "ext": "",
+          "ic": 0
+        }
+      },
+      "share": 0,
+      "deviceId": 23922634,
+      "gidConfirmed": false,
+      "goodsType": 124,
+      "attributesId": 0,
+      "supportScene": 0
+    },
+    {
+      "groupId": 0,
+      "device": "22:46:D0:C9:07:00:FC:38",
+      "sku": "H7105",
+      "spec": "",
+      "verionHard": "1.04.01",
+      "versionSoft": "1.00.21",
+      "deviceName": "Entry Room Fan",
+      "deviceExt": {
+        "deviceSettings": {
+          "wifiName": "Constructor Fleet",
+          "bleAddress": "D0:C9:07:00:FC:39",
+          "bleName": "GVH7105FC39",
+          "topic": "GD/2af19c3ac934fe790ff5b9792fce4875",
+          "wifiMacAddress": "D0:C9:07:00:FC:38",
+          "pactType": 1,
+          "pactCode": 1,
+          "wifiSoftVersion": "1.00.21",
+          "wifiHardwareVersion": "1.04.01",
+          "ic": 0,
+          "secretCode": "Ohw9Lmz7vjU=",
+          "mcuSoftwareVersion": "1.00.05",
+          "mcuHardwareVersion": "1.02.00",
+          "notifyWaterBoiling": true,
+          "notifyComplete": true,
+          "automaticShutDown": true,
+          "model": "H7105",
+          "deviceId": "22:46:D0:C9:07:00:FC:38",
+          "deviceName": "Entry Room Fan",
+          "hardwareVersion": "1.04.01",
+          "softwareVersion": "1.00.21",
+          "playState": false
+        },
+        "deviceData": {
+          "isOnline": false
+        },
+        "externalResources": {
+          "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/f4e2b2c7e63c13c0a1a5306d6a5fcc50-add_list_type_device_7105.png",
+          "headOnImg": "",
+          "headOnImgNew": "",
+          "headOffImg": "",
+          "headOffImgNew": "",
+          "ext": "",
+          "ic": 0
+        }
+      },
+      "pactType": 1,
+      "pactCode": 1,
+      "share": 0,
+      "deviceId": 21357101,
+      "gidConfirmed": false,
+      "goodsType": 201,
+      "attributesId": 0,
+      "supportScene": 0
+    },
+    {
+      "groupId": 23721902,
+      "device": "39:C4:D4:AD:FC:67:F7:21",
+      "sku": "H61A0",
+      "spec": "",
+      "verionHard": "2.01.02",
+      "versionSoft": "2.07.01",
+      "deviceName": "RGBIC Neon Rope Lights",
+      "deviceExt": {
+        "deviceSettings": {
+          "wifiName": "Magrathea",
+          "bleAddress": "D4:AD:FC:67:F7:21",
+          "bleName": "GBK_H61A0_F721",
+          "topic": "GD/9f551840f21c7abe696d1a5eefa1d95f",
+          "wifiMacAddress": "60:74:F4:6B:79:F0",
+          "pactType": 2,
+          "pactCode": 1,
+          "wifiSoftVersion": "2.05.08",
+          "wifiHardwareVersion": "1.02.00",
+          "ic": 42,
+          "secretCode": "ETkpUAGaCtw=",
+          "notifyWaterBoiling": true,
+          "notifyComplete": true,
+          "automaticShutDown": true,
+          "model": "H61A0",
+          "deviceId": "39:C4:D4:AD:FC:67:F7:21",
+          "deviceName": "RGBIC Neon Rope Lights",
+          "hardwareVersion": "2.01.02",
+          "softwareVersion": "2.07.01",
+          "playState": false
+        },
+        "deviceData": {
+          "isOnline": false
+        },
+        "externalResources": {
+          "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/6127755b2799b2bebd89997e375c5287-add_list_type_device_61a0.png",
+          "headOnImg": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/8ff325193c130aa2b232bbc65f391b48-new_light_title_61a0_on.png",
+          "headOnImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/2ee989b7f089fe0ed3b6cc452febb177-light_title_61a0_on.png",
+          "headOffImg": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/22e9bd69bc85f3a271ed997bc9fbb699-new_light_title_61a0_off.png",
+          "headOffImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/4a81e256a918d7e98aa694c60f876fa1-light_title_61a0_off.png",
+          "ext": "",
+          "ic": 42
+        }
+      },
+      "pactType": 2,
+      "pactCode": 1,
+      "share": 0,
+      "deviceId": 20125977,
+      "gidConfirmed": false,
+      "goodsType": 71,
+      "attributesId": 1,
+      "supportScene": 1
+    },
+    {
+      "groupId": 23721902,
+      "device": "0B:04:CD:39:32:35:31:08",
+      "sku": "H6641",
+      "spec": "",
+      "verionHard": "3.05.00",
+      "versionSoft": "1.01.13",
+      "deviceName": "Wall Lining Light",
+      "deviceExt": {
+        "deviceSettings": {
+          "wifiName": "Magrathea",
+          "bleAddress": "CD:39:32:35:31:08",
+          "bleName": "Govee_H6641_3108",
+          "topic": "GD/5625fdff3ef7aa3851b1c69dc461ad85",
+          "wifiMacAddress": "60:74:F4:F3:66:BA",
+          "pactType": 1,
+          "pactCode": 1,
+          "wifiSoftVersion": "1.01.17",
+          "wifiHardwareVersion": "1.04.01",
+          "ic": 70,
+          "secretCode": "obN6joWChr8=",
+          "notifyWaterBoiling": true,
+          "notifyComplete": true,
+          "automaticShutDown": true,
+          "model": "H6641",
+          "deviceId": "0B:04:CD:39:32:35:31:08",
+          "deviceName": "Wall Lining Light",
+          "hardwareVersion": "3.05.00",
+          "softwareVersion": "1.01.13",
+          "playState": false
+        },
+        "deviceData": {
+          "isOnline": false
+        },
+        "externalResources": {
+          "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/9cdee2111cfec739a5def963b77cbecb-add_list_type_device_6641.png",
+          "headOnImg": "",
+          "headOnImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/cdf24f3d146f68aa896807d20c35eb44-light_pics_6640_41_on.png",
+          "headOffImg": "",
+          "headOffImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/a933b65508fe433a4325a6e6ba373fc6-light_pics_6640_41_off.png",
+          "ext": "",
+          "ic": 70
+        }
+      },
+      "pactType": 1,
+      "pactCode": 1,
+      "share": 0,
+      "deviceId": 20650560,
+      "gidConfirmed": true,
+      "goodsType": 247,
+      "attributesId": 1,
+      "supportScene": 1
+    },
+    {
+      "groupId": 1735481,
+      "device": "1B:70:D7:E3:9F:58:5C:F2",
+      "sku": "H6602",
+      "spec": "",
+      "verionHard": "3.04.12",
+      "versionSoft": "1.00.28",
+      "deviceName": "Bedroom Sync Box",
+      "deviceExt": {
+        "deviceSettings": {
+          "wifiName": "Magrathea",
+          "bleAddress": "D7:E3:9F:58:5C:F2",
+          "bleName": "Govee_H6602_5CF2",
+          "topic": "GD/18695cafff18b2af956fbd8870dc9f80",
+          "wifiMacAddress": "BC:FD:0C:57:3D:16",
+          "pactType": 1,
+          "pactCode": 1,
+          "wifiSoftVersion": "1.00.36",
+          "wifiHardwareVersion": "2.01.01",
+          "ic": 36,
+          "secretCode": "nFvX459YXPI=",
+          "notifyWaterBoiling": true,
+          "notifyComplete": true,
+          "automaticShutDown": true,
+          "dspVersionSoft": "12",
+          "model": "H6602",
+          "deviceId": "1B:70:D7:E3:9F:58:5C:F2",
+          "deviceName": "Bedroom Sync Box",
+          "hardwareVersion": "3.04.12",
+          "softwareVersion": "1.00.28",
+          "playState": false
+        },
+        "deviceData": {
+          "isOnline": false
+        },
+        "externalResources": {
+          "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/2b113db7511f0ccce00a26c6a22a338a-add_list_type_device_6602.png",
+          "headOnImg": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/81c2b941168afdd4d9fbc8557b22916c-new_light_title_6602_on.png",
+          "headOnImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/975e206f29a9e6237526303b36276059-light_title_tv_on.png",
+          "headOffImg": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/88511aa03e5f779981cdee3b2b6b00d3-new_light_title_6602_off.png",
+          "headOffImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/b725058cac26cebb629c2c86bd28a6f2-light_title_tv_off.png",
+          "ext": "",
+          "ic": 72
+        }
+      },
+      "pactType": 1,
+      "pactCode": 1,
+      "share": 0,
+      "deviceId": 20126157,
+      "gidConfirmed": false,
+      "goodsType": 142,
+      "attributesId": 1,
+      "supportScene": 1
+    },
+    {
+      "groupId": 0,
+      "device": "B0:03:D4:35:34:31:18:47",
+      "sku": "H5198",
+      "spec": "",
+      "verionHard": "3.02.02",
+      "versionSoft": "1.00.11",
+      "deviceName": "WiFi meat thermometer",
+      "deviceExt": {
+        "deviceSettings": {
+          "wifiName": "Magrathea",
+          "bleAddress": "D4:35:34:31:18:47",
+          "bleName": "GVH5198_311847",
+          "topic": "GD/e2e36d884871a4ede3041b15b3a2b8d5",
+          "wifiMacAddress": "60:74:F4:60:B5:78",
+          "pactType": 1,
+          "pactCode": 1,
+          "wifiSoftVersion": "",
+          "wifiHardwareVersion": "",
+          "ic": 0,
+          "secretCode": "BkcYMTQ11AA=",
+          "notifyWaterBoiling": true,
+          "notifyComplete": true,
+          "automaticShutDown": true,
+          "model": "H5198",
+          "deviceId": "B0:03:D4:35:34:31:18:47",
+          "deviceName": "WiFi meat thermometer",
+          "hardwareVersion": "3.02.02",
+          "softwareVersion": "1.00.11",
+          "playState": false
+        },
+        "deviceData": {
+          "isOnline": false
+        },
+        "externalResources": {
+          "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/86609e7abca785e37937f654675b881a-add_list_type_device_5198.png",
+          "headOnImg": "",
+          "headOnImgNew": "",
+          "headOffImg": "",
+          "headOffImgNew": "",
+          "ext": "",
+          "ic": 0
+        }
+      },
+      "pactType": 1,
+      "pactCode": 1,
+      "share": 0,
+      "deviceId": 20045013,
+      "gidConfirmed": false,
+      "goodsType": 85,
+      "attributesId": 0,
+      "supportScene": 0
+    },
+    {
+      "groupId": 0,
+      "device": "07:C3:60:74:F4:CB:B0:4A",
+      "sku": "H5127",
+      "spec": "",
+      "verionHard": "1.02.00",
+      "versionSoft": "1.00.10",
+      "deviceName": "Presence Sensor",
+      "deviceExt": {
+        "deviceSettings": {
+          "wifiName": "Magrathea",
+          "bleAddress": "60:74:F4:CB:B0:4B",
+          "bleName": "GVH5127B04B",
+          "topic": "GD/6f50828e54f3f085dc213579362538bc",
+          "wifiMacAddress": "60:74:F4:CB:B0:4A",
+          "pactType": 1,
+          "pactCode": 1,
+          "wifiSoftVersion": "1.00.10",
+          "wifiHardwareVersion": "1.02.00",
+          "ic": 0,
+          "secretCode": "2cUEKFNOBEM=",
+          "mcuSoftwareVersion": "1.00.08",
+          "mcuHardwareVersion": "1.00.01",
+          "notifyWaterBoiling": true,
+          "notifyComplete": true,
+          "automaticShutDown": true,
+          "installWay": 1,
+          "model": "H5127",
+          "deviceId": "07:C3:60:74:F4:CB:B0:4A",
+          "deviceName": "Presence Sensor",
+          "hardwareVersion": "1.02.00",
+          "softwareVersion": "1.00.10",
+          "playState": false
+        },
+        "deviceData": {
+          "isOnline": false
+        },
+        "externalResources": {
+          "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/0bde7873a5ba1ac0e141c9303e9bacab-add_list_type_device_5127.png",
+          "headOnImg": "",
+          "headOnImgNew": "",
+          "headOffImg": "",
+          "headOffImgNew": "",
+          "ext": "",
+          "ic": 0
+        }
+      },
+      "pactType": 1,
+      "pactCode": 1,
+      "share": 0,
+      "deviceId": 19896793,
+      "gidConfirmed": false,
+      "goodsType": 183,
+      "attributesId": 0,
+      "supportScene": 0
+    },
+    {
+      "groupId": 2672966,
+      "device": "29:C9:60:74:F4:B9:1F:54",
+      "sku": "H7126",
+      "spec": "",
+      "verionHard": "1.02.00",
+      "versionSoft": "1.00.12",
+      "deviceName": "Game Room Purifier",
+      "deviceExt": {
+        "deviceSettings": {
+          "wifiName": "Magrathea",
+          "bleAddress": "60:74:F4:B9:1F:55",
+          "bleName": "ihoment_H7126_1F55",
+          "topic": "GD/b745303d38c231706a1c7ce86c9da1cf",
+          "wifiMacAddress": "60:74:F4:B9:1F:54",
+          "pactType": 1,
+          "pactCode": 1,
+          "wifiSoftVersion": "1.00.12",
+          "wifiHardwareVersion": "1.02.00",
+          "ic": 0,
+          "secretCode": "JUXuE9BSYzI=",
+          "filterExpired": true,
+          "mcuSoftwareVersion": "1.00.10\u0000",
+          "mcuHardwareVersion": "1.00.01\u0000",
+          "notifyWaterBoiling": true,
+          "notifyComplete": true,
+          "automaticShutDown": true,
+          "model": "H7126",
+          "deviceId": "29:C9:60:74:F4:B9:1F:54",
+          "deviceName": "Game Room Purifier",
+          "hardwareVersion": "1.02.00",
+          "softwareVersion": "1.00.12",
+          "playState": false
+        },
+        "deviceData": {
+          "isOnline": false
+        },
+        "externalResources": {
+          "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/f00f331ec00fe2f7d2f8c3ac83e7f89a-add_list_type_device_7126.png",
+          "headOnImg": "",
+          "headOnImgNew": "",
+          "headOffImg": "",
+          "headOffImgNew": "",
+          "ext": "",
+          "ic": 0
+        }
+      },
+      "pactType": 1,
+      "pactCode": 1,
+      "share": 0,
+      "deviceId": 19247835,
+      "gidConfirmed": false,
+      "goodsType": 160,
+      "attributesId": 0,
+      "supportScene": 0
+    },
+    {
+      "groupId": 23721902,
+      "device": "41:87:CD:36:34:39:1B:89",
+      "sku": "H6072",
+      "spec": "",
+      "verionHard": "3.02.00",
+      "versionSoft": "2.04.10",
+      "deviceName": "RGBICWW Floor Lamp",
+      "deviceExt": {
+        "deviceSettings": {
+          "wifiName": "Magrathea",
+          "bleAddress": "CD:36:34:39:1B:89",
+          "bleName": "Govee_H6072_1B89",
+          "topic": "GD/968c8dcc2c2fca52c4517ccfe205546d",
+          "wifiMacAddress": "BD:C5:EA:FC:AD:D4",
+          "pactType": 2,
+          "pactCode": 1,
+          "wifiSoftVersion": "2.05.16",
+          "wifiHardwareVersion": "1.02.00",
+          "ic": 66,
+          "notifyWaterBoiling": true,
+          "notifyComplete": true,
+          "automaticShutDown": true,
+          "model": "H6072",
+          "deviceId": "41:87:CD:36:34:39:1B:89",
+          "deviceName": "RGBICWW Floor Lamp",
+          "hardwareVersion": "3.02.00",
+          "softwareVersion": "2.04.10",
+          "playState": false
+        },
+        "deviceData": {
+          "isOnline": false
+        },
+        "externalResources": {
+          "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/814c890088f34da331e1eecf8ea46fc2-add_list_type_device_6072.png",
+          "headOnImg": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/7136846363c3c97ce15fe516fd176366-new_light_title_6072_on%403x.png",
+          "headOnImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/ff0b0fb997262fc46f0bd608ad66c782-light_pics_6072_on%403x.png",
+          "headOffImg": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/7704c288c48f0b39033a5a28aedf473c-new_light_title_6072_off%403x.png",
+          "headOffImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/8df5f01ec86364ed679bce0b723d0f4e-light_pics_6072_off%403x.png",
+          "ext": "",
+          "ic": 66
+        }
+      },
+      "pactType": 2,
+      "pactCode": 1,
+      "share": 0,
+      "deviceId": 19245393,
+      "gidConfirmed": true,
+      "goodsType": 30,
+      "attributesId": 4,
+      "supportScene": 0
+    },
+    {
+      "groupId": 7016110,
+      "device": "C4:F0:60:74:F4:8D:5A:68",
+      "sku": "H7172",
+      "spec": "",
+      "verionHard": "1.02.00",
+      "versionSoft": "1.00.12",
+      "deviceName": "Smart Ice Maker",
+      "deviceExt": {
+        "deviceSettings": {
+          "wifiName": "Constructor Fleet",
+          "bleAddress": "60:74:F4:8D:5A:69",
+          "bleName": "ihoment_H7172_5A69",
+          "topic": "GD/d3904c1d622a109f717485bb99def37d",
+          "wifiMacAddress": "60:74:F4:8D:5A:68",
+          "pactType": 1,
+          "pactCode": 1,
+          "wifiSoftVersion": "1.00.12",
+          "wifiHardwareVersion": "1.02.00",
+          "ic": 0,
+          "secretCode": "WJyUNoy5Gk8=",
+          "mcuSoftwareVersion": "1.00.28",
+          "mcuHardwareVersion": "2.00.04",
+          "notifyWaterBoiling": true,
+          "notifyComplete": true,
+          "automaticShutDown": true,
+          "model": "H7172",
+          "deviceId": "C4:F0:60:74:F4:8D:5A:68",
+          "deviceName": "Smart Ice Maker",
+          "hardwareVersion": "1.02.00",
+          "softwareVersion": "1.00.12",
+          "playState": false
+        },
+        "deviceData": {
+          "isOnline": false
+        },
+        "externalResources": {
+          "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/672d01889f23dee95259f43cd53bf43d-add_list_type_device_7172.png",
+          "headOnImg": "",
+          "headOnImgNew": "",
+          "headOffImg": "",
+          "headOffImgNew": "",
+          "ext": "",
+          "ic": 0
+        }
+      },
+      "pactType": 1,
+      "pactCode": 1,
+      "share": 0,
+      "deviceId": 19244819,
+      "gidConfirmed": false,
+      "goodsType": 117,
+      "attributesId": 0,
+      "supportScene": 0
+    },
+    {
+      "groupId": 0,
+      "device": "5C:F0:D4:AD:FC:A3:E9:26",
+      "sku": "H7090",
+      "spec": "",
+      "verionHard": "2.01.02",
+      "versionSoft": "2.06.19",
+      "deviceName": "H7090_E926",
+      "deviceExt": {
+        "deviceSettings": {
+          "bleName": "GBK_H7090_E926",
+          "pactType": 10,
+          "pactCode": 1,
+          "ic": 12,
+          "model": "H7090",
+          "deviceId": "5C:F0:D4:AD:FC:A3:E9:26",
+          "deviceName": "H7090_E926",
+          "hardwareVersion": "2.01.02",
+          "softwareVersion": "2.06.19"
+        },
+        "deviceData": {
+          "isOnline": false
+        },
+        "externalResources": {
+          "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/e4f6c44b538f5ddc9be84109f156f695-add_list_type_device_7090.png",
+          "headOnImg": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/2d3f45685089d2e76927a6345b61ade1-new_light_title_car_on.png",
+          "headOnImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/b1232cc4a75c46f96c371afb523b2a11-light_pics_car_on.png",
+          "headOffImg": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/7200c733005cb1be318b3c630af1d0c9-new_light_title_car_off.png",
+          "headOffImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/eb4ae4f5540c7060b8baa6fbf3e56d0b-light_pics_car_off.png",
+          "ext": "",
+          "ic": 12
+        }
+      },
+      "pactType": 10,
+      "pactCode": 1,
+      "share": 0,
+      "deviceId": 18863519,
+      "gidConfirmed": false,
+      "goodsType": 44,
+      "attributesId": 8,
+      "supportScene": 0
+    },
+    {
+      "groupId": 7016107,
+      "device": "65:27:C2:38:33:33:28:11",
+      "sku": "H5106",
+      "spec": "",
+      "verionHard": "3.01.01",
+      "versionSoft": "1.00.16",
+      "deviceName": "Office Air Quality",
+      "deviceExt": {
+        "deviceData": {},
+        "deviceSettings": {
+          "minHumidity": 0,
+          "humidityWarning": true,
+          "airQualityOnOff": 1,
+          "pactCode": 1,
+          "temperatureCalibration": 0,
+          "pm25Max": 999,
+          "wifiMacAddress": "D4:AD:FC:E7:6E:AA",
+          "Calibration": 0,
+          "bleName": "GVH5106_2811",
+          "pm25Warning": true,
+          "maxHumidity": 10000,
+          "secretCode": "ESgzMzjCAAA=",
+          "temperatureWarning": true,
+          "minTemperature": -1000,
+          "pm25Min": 0,
+          "pactType": 1,
+          "bleAddress": "C2:38:33:33:28:11",
+          "maxTemperature": 5000,
+          "uploadRate": 10,
+          "deviceName": "Office Air Quality",
+          "topic": "GD/24b4150f4119eb21c30b3ffb65b6696a"
+        },
+        "externalResources": {
+          "skuUrl": "",
+          "headOnImg": "",
+          "headOnImgNew": "",
+          "headOffImg": "",
+          "headOffImgNew": "",
+          "ext": "",
+          "ic": 0
+        }
+      },
+      "share": 0,
+      "deviceId": 18836180,
+      "gidConfirmed": false,
+      "goodsType": 124,
+      "attributesId": 0,
+      "supportScene": 0
+    },
+    {
+      "groupId": 1735481,
+      "device": "C4:7A:C5:38:33:33:46:70",
+      "sku": "H5106",
+      "spec": "",
+      "verionHard": "3.01.01",
+      "versionSoft": "1.00.16",
+      "deviceName": "Bedroom Air Quality",
+      "deviceExt": {
+        "deviceData": {},
+        "deviceSettings": {
+          "minHumidity": 0,
+          "humidityWarning": true,
+          "airQualityOnOff": 1,
+          "pactCode": 1,
+          "temperatureCalibration": 0,
+          "pm25Max": 1000,
+          "wifiMacAddress": "D4:AD:FC:E6:80:90",
+          "Calibration": 0,
+          "bleName": "GVH5106_4670",
+          "pm25Warning": true,
+          "maxHumidity": 10000,
+          "secretCode": "cEYzMzjFAAA=",
+          "temperatureWarning": true,
+          "minTemperature": -1000,
+          "pm25Min": 0,
+          "pactType": 1,
+          "bleAddress": "C5:38:33:33:46:70",
+          "maxTemperature": 5000,
+          "uploadRate": 10,
+          "deviceName": "Bedroom Air Quality",
+          "topic": "GD/fe8e1e73ea762db1b78c48a2e0ed9cd7"
+        },
+        "externalResources": {
+          "skuUrl": "",
+          "headOnImg": "",
+          "headOnImgNew": "",
+          "headOffImg": "",
+          "headOffImgNew": "",
+          "ext": "",
+          "ic": 0
+        }
+      },
+      "share": 0,
+      "deviceId": 18833817,
+      "gidConfirmed": false,
+      "goodsType": 124,
+      "attributesId": 0,
+      "supportScene": 0
+    },
+    {
+      "groupId": 0,
+      "device": "08:47:D6:37:37:32:61:61",
+      "sku": "H5121",
+      "spec": "",
+      "verionHard": "1",
+      "versionSoft": "4",
+      "deviceName": "Motion Sensor",
+      "deviceExt": {
+        "deviceSettings": {
+          "bleAddress": "D6:37:37:32:61:61",
+          "bleName": "GV51216161",
+          "ic": 0,
+          "model": "H5121",
+          "deviceId": "08:47:D6:37:37:32:61:61",
+          "deviceName": "Motion Sensor",
+          "hardwareVersion": "1",
+          "softwareVersion": "4",
+          "batteryLevel": 80,
+          "time": 1711185079029
+        },
+        "deviceData": {
+          "isOnline": true,
+          "bind": true
+        },
+        "externalResources": {
+          "skuUrl": "",
+          "headOnImg": "",
+          "headOnImgNew": "",
+          "headOffImg": "",
+          "headOffImgNew": "",
+          "ext": "",
+          "ic": 0
+        }
+      },
+      "share": 0,
+      "deviceId": 17604346,
+      "gidConfirmed": false,
+      "goodsType": 130,
+      "attributesId": 0,
+      "supportScene": 0
+    },
+    {
+      "groupId": 17919928,
+      "device": "7C:00:19:3D:31:41:7C:83",
+      "sku": "H5179",
+      "spec": "",
+      "verionHard": "1.00.02",
+      "versionSoft": "1.03.05",
+      "deviceName": "Entry Room Hygrometer",
+      "deviceExt": {
+        "deviceData": {
+          "isOnline": true,
+          "currentTemperature": 2150,
+          "currentHumditity": 2610,
+          "lastReportTimestamp": 1733857432755
+        },
+        "deviceSettings": {
+          "batteryLevel": 39,
+          "maxHumidity": 10000,
+          "temperatureCalibration": -222,
+          "minHumidity": 0,
+          "bleAddress": "19:3D:31:41:7C:83",
+          "maxTemperature": 6000,
+          "Calibration": 0,
+          "temperatureWarning": false,
+          "bleName": "Govee_H5179_7C83",
+          "minTemperature": -2000,
+          "humidityWarning": false,
+          "uploadRate": 10,
+          "bdType": 0,
+          "deviceName": "Entry Room Hygrometer"
+        },
+        "externalResources": {
+          "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/68052f2674beb4eb688316949da606be-add_list_type_device_h5179.png",
+          "headOnImg": "",
+          "headOnImgNew": "",
+          "headOffImg": "",
+          "headOffImgNew": "",
+          "ext": "",
+          "ic": 0
+        }
+      },
+      "share": 0,
+      "deviceId": 15512783,
+      "gidConfirmed": false,
+      "goodsType": 7,
+      "attributesId": 0,
+      "supportScene": 0
+    },
+    {
+      "groupId": 1735482,
+      "device": "29:E0:D4:AD:FC:04:34:96",
+      "sku": "H7121",
+      "spec": "",
+      "verionHard": "1.02.00",
+      "versionSoft": "1.00.35",
+      "deviceName": "Living Room Purifier",
+      "deviceExt": {
+        "deviceSettings": {
+          "wifiName": "Magrathea",
+          "bleAddress": "D4:AD:FC:04:34:97",
+          "bleName": "ihoment_H7121_3497",
+          "topic": "GD/7f4957152a19668a1ba737d9ecf8d47a",
+          "wifiMacAddress": "D4:AD:FC:04:34:96",
+          "pactType": 1,
+          "pactCode": 1,
+          "wifiSoftVersion": "1.00.35",
+          "wifiHardwareVersion": "1.02.00",
+          "ic": 0,
+          "secretCode": "OVYAWQYDClY=",
+          "filterExpired": true,
+          "mcuSoftwareVersion": "01.01.01",
+          "mcuHardwareVersion": "01.00.01",
+          "notifyWaterBoiling": true,
+          "notifyComplete": true,
+          "automaticShutDown": true,
+          "model": "H7121",
+          "deviceId": "29:E0:D4:AD:FC:04:34:96",
+          "deviceName": "Living Room Purifier",
+          "hardwareVersion": "1.02.00",
+          "softwareVersion": "1.00.35",
+          "playState": false
+        },
+        "deviceData": {
+          "isOnline": false
+        },
+        "externalResources": {
+          "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/96e6e357d8b360781c9c4564469c4c4a-add_list_type_device_7121.png",
+          "headOnImg": "",
+          "headOnImgNew": "",
+          "headOffImg": "",
+          "headOffImgNew": "",
+          "ext": "",
+          "ic": 0
+        }
+      },
+      "pactType": 1,
+      "pactCode": 1,
+      "share": 0,
+      "deviceId": 5509567,
+      "gidConfirmed": true,
+      "goodsType": 72,
+      "attributesId": 0,
+      "supportScene": 0
+    },
+    {
+      "groupId": 7016107,
+      "device": "1E:A8:60:74:F4:3A:F9:44",
+      "sku": "H7126",
+      "spec": "",
+      "verionHard": "1.02.00",
+      "versionSoft": "1.00.12",
+      "deviceName": "Office Air Purifier",
+      "deviceExt": {
+        "deviceSettings": {
+          "wifiName": "Magrathea",
+          "bleAddress": "60:74:F4:3A:F9:45",
+          "bleName": "ihoment_H7126_F945",
+          "topic": "GD/e5c9d6f2f8312afe7d4767f338d7293c",
+          "wifiMacAddress": "60:74:F4:3A:F9:44",
+          "pactType": 1,
+          "pactCode": 1,
+          "wifiSoftVersion": "1.00.12",
+          "wifiHardwareVersion": "1.02.00",
+          "ic": 0,
+          "secretCode": "EUXiHuRIYjk=",
+          "filterExpired": true,
+          "mcuSoftwareVersion": "1.00.10\u0000",
+          "mcuHardwareVersion": "1.00.01\u0000",
+          "notifyWaterBoiling": true,
+          "notifyComplete": true,
+          "automaticShutDown": true,
+          "model": "H7126",
+          "deviceId": "1E:A8:60:74:F4:3A:F9:44",
+          "deviceName": "Office Air Purifier",
+          "hardwareVersion": "1.02.00",
+          "softwareVersion": "1.00.12",
+          "playState": false
+        },
+        "deviceData": {
+          "isOnline": false
+        },
+        "externalResources": {
+          "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/f00f331ec00fe2f7d2f8c3ac83e7f89a-add_list_type_device_7126.png",
+          "headOnImg": "",
+          "headOnImgNew": "",
+          "headOffImg": "",
+          "headOffImgNew": "",
+          "ext": "",
+          "ic": 0
+        }
+      },
+      "pactType": 1,
+      "pactCode": 1,
+      "share": 0,
+      "deviceId": 15438149,
+      "gidConfirmed": false,
+      "goodsType": 160,
+      "attributesId": 0,
+      "supportScene": 0
+    },
+    {
+      "groupId": 7016107,
+      "device": "0B:00:19:3D:31:51:34:F7",
+      "sku": "H5179",
+      "spec": "",
+      "verionHard": "1.00.02",
+      "versionSoft": "1.03.05",
+      "deviceName": "Office Hygrometer",
+      "deviceExt": {
+        "deviceData": {
+          "isOnline": true,
+          "currentTemperature": 3040,
+          "currentHumditity": 2250,
+          "lastReportTimestamp": 1733857601562
+        },
+        "deviceSettings": {
+          "batteryLevel": 59,
+          "maxHumidity": 10000,
+          "temperatureCalibration": 0,
+          "minHumidity": 0,
+          "bleAddress": "19:3D:31:51:34:F7",
+          "maxTemperature": 6000,
+          "Calibration": 0,
+          "temperatureWarning": false,
+          "bleName": "Govee_H5179_34F7",
+          "minTemperature": -2000,
+          "humidityWarning": false,
+          "uploadRate": 10,
+          "bdType": 0,
+          "deviceName": "Office Hygrometer"
+        },
+        "externalResources": {
+          "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/68052f2674beb4eb688316949da606be-add_list_type_device_h5179.png",
+          "headOnImg": "",
+          "headOnImgNew": "",
+          "headOffImg": "",
+          "headOffImgNew": "",
+          "ext": "",
+          "ic": 0
+        }
+      },
+      "share": 0,
+      "deviceId": 15433052,
+      "gidConfirmed": false,
+      "goodsType": 7,
+      "attributesId": 0,
+      "supportScene": 0
+    },
+    {
+      "groupId": 1735481,
+      "device": "C8:11:C8:39:37:39:36:46",
+      "sku": "H6054",
+      "spec": "",
+      "verionHard": "3.02.01",
+      "versionSoft": "1.09.13",
+      "deviceName": "DreamView P1",
+      "deviceExt": {
+        "deviceSettings": {
+          "wifiName": "Magrathea",
+          "bleAddress": "C8:39:37:39:36:46",
+          "bleName": "Govee_H6054_3646",
+          "topic": "GD/38c6e5933f66c02d37bc19e5c7fd95cf",
+          "wifiMacAddress": "D4:AD:FC:1D:92:BB",
+          "pactType": 2,
+          "pactCode": 1,
+          "wifiSoftVersion": "1.00.29",
+          "wifiHardwareVersion": "1.03.00",
+          "ic": 0,
+          "notifyWaterBoiling": true,
+          "notifyComplete": true,
+          "automaticShutDown": true,
+          "model": "H6054",
+          "deviceId": "C8:11:C8:39:37:39:36:46",
+          "deviceName": "DreamView P1",
+          "hardwareVersion": "3.02.01",
+          "softwareVersion": "1.09.13",
+          "playState": false
+        },
+        "deviceData": {
+          "isOnline": false
+        },
+        "externalResources": {
+          "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/3344902a7e7aed17bd0538ba81531ae9-add_list_type_device_6054.png",
+          "headOnImg": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/b572d921de6b7453647cecd033cfa579-new_light_title_6054_on.png",
+          "headOnImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/4f9f94962ecee7fa5d7a329424bc7fc7-light_title_6601_on.png",
+          "headOffImg": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/b572d921de6b7453647cecd033cfa579-new_light_title_6054_off.png",
+          "headOffImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/3645c55fde57f01b607114189b6e49e1-light_title_6601_off.png",
+          "ext": "",
+          "ic": 0
+        }
+      },
+      "pactType": 2,
+      "pactCode": 1,
+      "share": 0,
+      "deviceId": 15327947,
+      "gidConfirmed": false,
+      "goodsType": 25,
+      "attributesId": 22,
+      "supportScene": 0
+    },
+    {
+      "groupId": 0,
+      "device": "0F:D4:38:32:31:7D:60:FF",
+      "sku": "H61A8",
+      "spec": "",
+      "verionHard": "3.01.10",
+      "versionSoft": "3.03.18",
+      "deviceName": "RGBIC Outdoor Neon Rope Light",
+      "deviceExt": {
+        "deviceSettings": {
+          "wifiName": "Magrathea",
+          "bleAddress": "D4:38:32:31:7D:60",
+          "bleName": "Govee_H61A8_7D60",
+          "topic": "GD/906fe031963dabc4af8075df13356406",
+          "wifiMacAddress": "D4:AD:FC:CB:EF:A0",
+          "pactType": 2,
+          "pactCode": 2,
+          "wifiSoftVersion": "2.05.08",
+          "wifiHardwareVersion": "1.02.00",
+          "ic": 140,
+          "notifyWaterBoiling": true,
+          "notifyComplete": true,
+          "automaticShutDown": true,
+          "model": "H61A8",
+          "deviceId": "0F:D4:38:32:31:7D:60:FF",
+          "deviceName": "RGBIC Outdoor Neon Rope Light",
+          "hardwareVersion": "3.01.10",
+          "softwareVersion": "3.03.18",
+          "playState": false
+        },
+        "deviceData": {
+          "isOnline": false
+        },
+        "externalResources": {
+          "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/7a243fd141e39c8b1901d2923fe7b681-add_list_type_device_61a8.png",
+          "headOnImg": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/796087c91c92959001b845c458865896-new_light_title_61a8_on.png",
+          "headOnImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/0ff6cf9f063cf12201a99249cdfe9a18-light_title_61a8_on.png",
+          "headOffImg": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/078642a9b24be32aabff934d267384b9-new_light_title_61a8_off.png",
+          "headOffImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/4c10ebbca5e3827d65d1b02ed3302b67-light_title_61a8_off.png",
+          "ext": "",
+          "ic": 140
+        }
+      },
+      "pactType": 2,
+      "pactCode": 2,
+      "share": 0,
+      "deviceId": 15327879,
+      "gidConfirmed": false,
+      "goodsType": 19,
+      "attributesId": 1,
+      "supportScene": 1
+    },
+    {
+      "groupId": 0,
+      "device": "6C:54:D7:38:33:33:46:7C",
+      "sku": "H7055",
+      "spec": "",
+      "verionHard": "3.01.01",
+      "versionSoft": "1.00.17",
+      "deviceName": "Path Lights",
+      "deviceExt": {
+        "deviceSettings": {
+          "wifiName": "Magrathea",
+          "bleAddress": "D7:38:33:33:46:7C",
+          "bleName": "Govee_H7055_467C",
+          "topic": "GD/e9eba0edcce39e08db8df4037e678535",
+          "wifiMacAddress": "D4:AD:FC:EB:9A:E8",
+          "pactType": 1,
+          "pactCode": 1,
+          "wifiSoftVersion": "",
+          "wifiHardwareVersion": "",
+          "ic": 8,
+          "secretCode": "fEYzMzjXcFU=",
+          "notifyWaterBoiling": true,
+          "notifyComplete": true,
+          "automaticShutDown": true,
+          "model": "H7055",
+          "deviceId": "6C:54:D7:38:33:33:46:7C",
+          "deviceName": "Path Lights",
+          "hardwareVersion": "3.01.01",
+          "softwareVersion": "1.00.17",
+          "playState": false
+        },
+        "deviceData": {
+          "isOnline": false
+        },
+        "externalResources": {
+          "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/81731522f405e0368a8fbcc11a321e65-add_list_type_device_7055.png",
+          "headOnImg": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/c03b83d753a964098b74c9e1e8db622c-new_light_title_7055_on.png",
+          "headOnImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/f6d4fd15fd3176e490fc34b82dd26643-light_title_7055_on.png",
+          "headOffImg": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/667c81ecfa7bdb4273d3f5e465eb7b72-new_light_title_7055_off.png",
+          "headOffImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/03c1212de86ed81435af0a773441e292-light_title_7055_off.png",
+          "ext": "",
+          "ic": 8
+        }
+      },
+      "pactType": 1,
+      "pactCode": 1,
+      "share": 0,
+      "deviceId": 15327827,
+      "gidConfirmed": false,
+      "goodsType": 116,
+      "attributesId": 51,
+      "supportScene": 0
+    },
+    {
+      "groupId": 0,
+      "device": "8B:A7:A4:C1:38:E2:0D:FC",
+      "sku": "H6141",
+      "spec": "",
+      "verionHard": "1.00.01",
+      "versionSoft": "1.07.01",
+      "deviceName": "H6141_0DFC",
+      "deviceExt": {
+        "deviceSettings": {
+          "wifiName": "Magrathea",
+          "bleAddress": "A4:C1:38:E2:0D:FC",
+          "bleName": "ihoment_H6141_0DFC",
+          "topic": "GD/e22452e2dd3a6ff1792c3e9b73d3947c",
+          "wifiMacAddress": "34:20:03:4B:7C:08",
+          "pactType": 1,
+          "pactCode": 1,
+          "wifiSoftVersion": "1.00.10",
+          "wifiHardwareVersion": "1.00.01",
+          "ic": 0,
+          "notifyWaterBoiling": true,
+          "notifyComplete": true,
+          "automaticShutDown": true,
+          "model": "H6141",
+          "deviceId": "8B:A7:A4:C1:38:E2:0D:FC",
+          "deviceName": "H6141_0DFC",
+          "hardwareVersion": "1.00.01",
+          "softwareVersion": "1.07.01",
+          "playState": false
+        },
+        "deviceData": {
+          "isOnline": false
+        },
+        "externalResources": {
+          "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/fca2bb9954f0983c3a71a9747f37299e-add_list_type_device_6141.png",
+          "headOnImg": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/eed1b442fc5d3aaa28563ded4284e057-new_light_title_6160_on.png",
+          "headOnImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/7c284a4b86e0c969e7da21b3612b434a-light_pics_strip_rgb_on.png",
+          "headOffImg": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/cb48afdb8618c2ddfd8fe16673336af0-new_light_title_6160_off.png",
+          "headOffImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/389fefbde9b746458ecaea1520c2dcd1-light_pics_strip_rgb_off.png",
+          "ext": "",
+          "ic": 0
+        }
+      },
+      "pactType": 1,
+      "pactCode": 1,
+      "share": 0,
+      "deviceId": 5314655,
+      "gidConfirmed": false,
+      "goodsType": 1,
+      "attributesId": 2,
+      "supportScene": 1
+    },
+    {
+      "groupId": 0,
+      "device": "23:66:D4:AD:FC:6B:57:E8",
+      "sku": "H7142",
+      "spec": "",
+      "verionHard": "1.02.00",
+      "versionSoft": "1.00.29",
+      "deviceName": "Office Humidifier",
+      "deviceExt": {
+        "deviceSettings": {
+          "wifiName": "Magrathea",
+          "bleAddress": "D4:AD:FC:6B:57:E9",
+          "bleName": "ihoment_H7142_57E9",
+          "topic": "GD/8c00cb12d0464c150624fe842a100a97",
+          "wifiMacAddress": "D4:AD:FC:6B:57:E8",
+          "pactType": 1,
+          "pactCode": 1,
+          "wifiSoftVersion": "1.00.29",
+          "wifiHardwareVersion": "1.02.00",
+          "ic": 0,
+          "secretCode": "YgF9CQcDD3Q=",
+          "waterShortage": true,
+          "mcuSoftwareVersion": "01.00.02",
+          "mcuHardwareVersion": "02.00.02",
+          "notifyWaterBoiling": true,
+          "notifyComplete": true,
+          "automaticShutDown": true,
+          "model": "H7142",
+          "deviceId": "23:66:D4:AD:FC:6B:57:E8",
+          "deviceName": "Office Humidifier",
+          "hardwareVersion": "1.02.00",
+          "softwareVersion": "1.00.29",
+          "playState": false
+        },
+        "deviceData": {
+          "isOnline": false
+        },
+        "externalResources": {
+          "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/941169a338f18abbca90f86966626e14-add_list_type_device_7142.png",
+          "headOnImg": "",
+          "headOnImgNew": "",
+          "headOffImg": "",
+          "headOffImgNew": "",
+          "ext": "",
+          "ic": 0
+        }
+      },
+      "pactType": 1,
+      "pactCode": 1,
+      "share": 0,
+      "deviceId": 7750020,
+      "gidConfirmed": false,
+      "goodsType": 81,
+      "attributesId": 0,
+      "supportScene": 0
+    },
+    {
+      "groupId": 2672997,
+      "device": "5F:D3:7C:A6:B0:4A:17:8C",
+      "sku": "H611A",
+      "spec": "",
+      "verionHard": "2.01.01",
+      "versionSoft": "2.02.09",
+      "deviceName": "Soffit Lights",
+      "deviceExt": {
+        "deviceSettings": {
+          "wifiName": "Magrathea",
+          "bleAddress": "7C:A6:B0:4A:17:8C",
+          "bleName": "GBK_H611A_178C",
+          "topic": "GD/71c42734956f56f1e0ad571119ecc266",
+          "wifiMacAddress": "7C:A6:B0:1C:CA:8C",
+          "pactType": 2,
+          "pactCode": 1,
+          "wifiSoftVersion": "1.00.18",
+          "wifiHardwareVersion": "1.00.01",
+          "ic": 60,
+          "notifyWaterBoiling": true,
+          "notifyComplete": true,
+          "automaticShutDown": true,
+          "model": "H611A",
+          "deviceId": "5F:D3:7C:A6:B0:4A:17:8C",
+          "deviceName": "Soffit Lights",
+          "hardwareVersion": "2.01.01",
+          "softwareVersion": "2.02.09",
+          "playState": false
+        },
+        "deviceData": {
+          "isOnline": false
+        },
+        "externalResources": {
+          "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/3f0bb929aeffb14d18666b9f697d076c-add_list_type_device_611a.png",
+          "headOnImg": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/eed1b442fc5d3aaa28563ded4284e057-new_light_title_6160_on.png",
+          "headOnImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/58ba482e82b1de7c6afd1fe15a25e155-light_pics_strip_on.png",
+          "headOffImg": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/cb48afdb8618c2ddfd8fe16673336af0-new_light_title_6160_off.png",
+          "headOffImgNew": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/f0e2d5bfd69e3d0261466d6e585b889f-light_pics_strip_off.png",
+          "ext": "",
+          "ic": 60
+        }
+      },
+      "pactType": 2,
+      "pactCode": 1,
+      "share": 0,
+      "deviceId": 3927383,
+      "gidConfirmed": false,
+      "goodsType": 21,
+      "attributesId": 1,
+      "supportScene": 1
+    },
+    {
+      "groupId": 2672966,
+      "device": "14:F9:D4:AD:FC:6D:BF:D4",
+      "sku": "H7142",
+      "spec": "",
+      "verionHard": "1.02.00",
+      "versionSoft": "1.00.37",
+      "deviceName": "Game Room Diffuser",
+      "deviceExt": {
+        "deviceSettings": {
+          "wifiName": "Magrathea",
+          "bleAddress": "D4:AD:FC:6D:BF:D5",
+          "bleName": "ihoment_H7142_BFD5",
+          "topic": "GD/739c62b0ef615cd501e65d2a7b91d616",
+          "wifiMacAddress": "D4:AD:FC:6D:BF:D4",
+          "pactType": 1,
+          "pactCode": 1,
+          "wifiSoftVersion": "1.00.37",
+          "wifiHardwareVersion": "1.02.00",
+          "ic": 0,
+          "secretCode": "MVNxCSN1AiU=",
+          "waterShortage": true,
+          "mcuSoftwareVersion": "01.00.02",
+          "mcuHardwareVersion": "02.00.02",
+          "notifyWaterBoiling": true,
+          "notifyComplete": true,
+          "automaticShutDown": true,
+          "model": "H7142",
+          "deviceId": "14:F9:D4:AD:FC:6D:BF:D4",
+          "deviceName": "Game Room Diffuser",
+          "hardwareVersion": "1.02.00",
+          "softwareVersion": "1.00.37",
+          "playState": false
+        },
+        "deviceData": {
+          "isOnline": false
+        },
+        "externalResources": {
+          "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/941169a338f18abbca90f86966626e14-add_list_type_device_7142.png",
+          "headOnImg": "",
+          "headOnImgNew": "",
+          "headOffImg": "",
+          "headOffImgNew": "",
+          "ext": "",
+          "ic": 0
+        }
+      },
+      "pactType": 1,
+      "pactCode": 1,
+      "share": 0,
+      "deviceId": 7723217,
+      "gidConfirmed": true,
+      "goodsType": 81,
+      "attributesId": 0,
+      "supportScene": 0
+    },
+    {
+      "groupId": 1735482,
+      "device": "1D:C5:D4:AD:FC:53:61:80",
+      "sku": "H7141",
+      "spec": "",
+      "verionHard": "1.02.00",
+      "versionSoft": "1.00.34",
+      "deviceName": "Living Room Diffuser",
+      "deviceExt": {
+        "deviceSettings": {
+          "wifiName": "Constructor Fleet",
+          "bleAddress": "D4:AD:FC:53:61:81",
+          "bleName": "ihoment_H7141_6181",
+          "topic": "GD/cb35c0c1b458db49ed255e0189b1cce9",
+          "wifiMacAddress": "D4:AD:FC:53:61:80",
+          "pactType": 1,
+          "pactCode": 1,
+          "wifiSoftVersion": "1.00.34",
+          "wifiHardwareVersion": "1.02.00",
+          "ic": 0,
+          "secretCode": "9HW/LDMMMSE=",
+          "waterShortage": true,
+          "mcuSoftwareVersion": "01.00.04",
+          "mcuHardwareVersion": "01.00.02",
+          "notifyWaterBoiling": true,
+          "notifyComplete": true,
+          "automaticShutDown": true,
+          "model": "H7141",
+          "deviceId": "1D:C5:D4:AD:FC:53:61:80",
+          "deviceName": "Living Room Diffuser",
+          "hardwareVersion": "1.02.00",
+          "softwareVersion": "1.00.34",
+          "playState": false
+        },
+        "deviceData": {
+          "isOnline": false
+        },
+        "externalResources": {
+          "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/9665fd8703926801c0b62ff03bd25f6e-add_list_type_device_7141.png",
+          "headOnImg": "",
+          "headOnImgNew": "",
+          "headOffImg": "",
+          "headOffImgNew": "",
+          "ext": "",
+          "ic": 0
+        }
+      },
+      "pactType": 1,
+      "pactCode": 1,
+      "share": 0,
+      "deviceId": 8131019,
+      "gidConfirmed": true,
+      "goodsType": 61,
+      "attributesId": 0,
+      "supportScene": 0
+    },
+    {
+      "groupId": 17919928,
+      "device": "2A:7E:9C:04:A0:9B:A6:33",
+      "sku": "H7141",
+      "spec": "",
+      "verionHard": "1.02.00",
+      "versionSoft": "1.00.34",
+      "deviceName": "Entry Room Diffuser",
+      "deviceExt": {
+        "deviceSettings": {
+          "wifiName": "Magrathea",
+          "bleAddress": "9C:04:A0:9B:A6:34",
+          "bleName": "ihoment_H7141_A634",
+          "topic": "GD/6ca316ae6339d7ffad0c0fa105ce6053",
+          "wifiMacAddress": "9C:04:A0:9B:A6:33",
+          "pactType": 1,
+          "pactCode": 1,
+          "wifiSoftVersion": "1.00.34",
+          "wifiHardwareVersion": "1.02.00",
+          "ic": 0,
+          "secretCode": "YVFWW1d4CnI=",
+          "waterShortage": true,
+          "mcuSoftwareVersion": "01.00.04",
+          "mcuHardwareVersion": "01.00.02",
+          "notifyWaterBoiling": true,
+          "notifyComplete": true,
+          "automaticShutDown": true,
+          "model": "H7141",
+          "deviceId": "2A:7E:9C:04:A0:9B:A6:33",
+          "deviceName": "Entry Room Diffuser",
+          "hardwareVersion": "1.02.00",
+          "softwareVersion": "1.00.34",
+          "playState": false
+        },
+        "deviceData": {
+          "isOnline": false
+        },
+        "externalResources": {
+          "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/9665fd8703926801c0b62ff03bd25f6e-add_list_type_device_7141.png",
+          "headOnImg": "",
+          "headOnImgNew": "",
+          "headOffImg": "",
+          "headOffImgNew": "",
+          "ext": "",
+          "ic": 0
+        }
+      },
+      "pactType": 1,
+      "pactCode": 1,
+      "share": 0,
+      "deviceId": 5468339,
+      "gidConfirmed": true,
+      "goodsType": 61,
+      "attributesId": 0,
+      "supportScene": 0
+    },
+    {
+      "groupId": 1735481,
+      "device": "3C:30:D4:AD:FC:52:E2:CC",
+      "sku": "H7141",
+      "spec": "",
+      "verionHard": "1.02.00",
+      "versionSoft": "1.00.28",
+      "deviceName": "MasterBedroom Diffuser",
+      "deviceExt": {
+        "deviceSettings": {
+          "wifiName": "Constructor Fleet",
+          "bleAddress": "D4:AD:FC:52:E2:CD",
+          "bleName": "ihoment_H7141_E2CD",
+          "topic": "GD/bbfe9a58c9fe8756e6e4e6c39782e60b",
+          "wifiMacAddress": "D4:AD:FC:52:E2:CC",
+          "pactType": 1,
+          "pactCode": 1,
+          "wifiSoftVersion": "1.00.28",
+          "wifiHardwareVersion": "1.02.00",
+          "ic": 0,
+          "secretCode": "CuXlkB9CHII=",
+          "waterShortage": true,
+          "mcuSoftwareVersion": "01.00.04",
+          "mcuHardwareVersion": "01.00.02",
+          "notifyWaterBoiling": true,
+          "notifyComplete": true,
+          "automaticShutDown": true,
+          "model": "H7141",
+          "deviceId": "3C:30:D4:AD:FC:52:E2:CC",
+          "deviceName": "MasterBedroom Diffuser",
+          "hardwareVersion": "1.02.00",
+          "softwareVersion": "1.00.28",
+          "playState": false
+        },
+        "deviceData": {
+          "isOnline": false
+        },
+        "externalResources": {
+          "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/9665fd8703926801c0b62ff03bd25f6e-add_list_type_device_7141.png",
+          "headOnImg": "",
+          "headOnImgNew": "",
+          "headOffImg": "",
+          "headOffImgNew": "",
+          "ext": "",
+          "ic": 0
+        }
+      },
+      "pactType": 1,
+      "pactCode": 1,
+      "share": 0,
+      "deviceId": 8217522,
+      "gidConfirmed": false,
+      "goodsType": 61,
+      "attributesId": 0,
+      "supportScene": 0
+    },
+    {
+      "groupId": 1735481,
+      "device": "3E:6E:D4:AD:FC:05:36:60",
+      "sku": "H7121",
+      "spec": "",
+      "verionHard": "1.02.00",
+      "versionSoft": "1.00.35",
+      "deviceName": "Bedroom Purifier",
+      "deviceExt": {
+        "deviceSettings": {
+          "wifiName": "Magrathea",
+          "bleAddress": "D4:AD:FC:05:36:61",
+          "bleName": "ihoment_H7121_3661",
+          "topic": "GD/903d5bf4dfd9d691a3ed5b5311928830",
+          "wifiMacAddress": "D4:AD:FC:05:36:60",
+          "pactType": 1,
+          "pactCode": 1,
+          "wifiSoftVersion": "1.00.35",
+          "wifiHardwareVersion": "1.02.00",
+          "ic": 0,
+          "secretCode": "OAUDA1ADDgE=",
+          "filterExpired": true,
+          "mcuSoftwareVersion": "01.01.01",
+          "mcuHardwareVersion": "01.00.01",
+          "notifyWaterBoiling": true,
+          "notifyComplete": true,
+          "automaticShutDown": true,
+          "model": "H7121",
+          "deviceId": "3E:6E:D4:AD:FC:05:36:60",
+          "deviceName": "Bedroom Purifier",
+          "hardwareVersion": "1.02.00",
+          "softwareVersion": "1.00.35",
+          "playState": false
+        },
+        "deviceData": {
+          "isOnline": false
+        },
+        "externalResources": {
+          "skuUrl": "https://d1f2504ijhdyjw.cloudfront.net/sku-img/96e6e357d8b360781c9c4564469c4c4a-add_list_type_device_7121.png",
+          "headOnImg": "",
+          "headOnImgNew": "",
+          "headOffImg": "",
+          "headOffImgNew": "",
+          "ext": "",
+          "ic": 0
+        }
+      },
+      "pactType": 1,
+      "pactCode": 1,
+      "share": 0,
+      "deviceId": 5513230,
+      "gidConfirmed": true,
+      "goodsType": 72,
+      "attributesId": 0,
+      "supportScene": 0
+    }
+  ],
+  "groups": [
+    {
+      "groupId": 1735481,
+      "groupName": "Bedroom"
+    },
+    {
+      "groupId": 1735482,
+      "groupName": "Living Room"
+    },
+    {
+      "groupId": 2672966,
+      "groupName": "Game Room"
+    },
+    {
+      "groupId": 2672997,
+      "groupName": "Front Yard"
+    },
+    {
+      "groupId": 7016107,
+      "groupName": "Office"
+    },
+    {
+      "groupId": 7016110,
+      "groupName": "Dining Room"
+    },
+    {
+      "groupId": 7016127,
+      "groupName": "Persia’s Room"
+    },
+    {
+      "groupId": 17919928,
+      "groupName": "Entry Room"
+    },
+    {
+      "groupId": 23721902,
+      "groupName": "Movie Room"
+    }
+  ],
+  "sort": [
+    {
+      "columnId": 0,
+      "deviceIdStr": [
+        25769681,
+        25076874,
+        23922755,
+        23922634,
+        21357101,
+        20126157,
+        20650560,
+        20125977,
+        20045013,
+        19896793,
+        19247835,
+        19245393,
+        19244819,
+        18863519,
+        18836180,
+        18833817,
+        17604346,
+        15512783,
+        5509567,
+        15438149,
+        15433052,
+        15327947,
+        15327879,
+        15327827,
+        5314655,
+        7750020,
+        3927383,
+        7723217,
+        8131019,
+        5468339,
+        8217522,
+        5513230
+      ]
+    },
+    {
+      "columnId": 1735481,
+      "deviceIdStr": [
+        8217522,
+        5513230,
+        18833817,
+        15327947,
+        20126157
+      ]
+    },
+    {
+      "columnId": 1735482,
+      "deviceIdStr": [
+        5509567,
+        8131019
+      ]
+    },
+    {
+      "columnId": 2672966,
+      "deviceIdStr": [
+        19247835,
+        7723217
+      ]
+    },
+    {
+      "columnId": 2672997,
+      "deviceIdStr": [
+        3927383
+      ]
+    },
+    {
+      "columnId": 7016107,
+      "deviceIdStr": [
+        18836180,
+        15438149,
+        15433052
+      ]
+    },
+    {
+      "columnId": 7016110,
+      "deviceIdStr": [
+        19244819
+      ]
+    },
+    {
+      "columnId": 17919928,
+      "deviceIdStr": [
+        5468339,
+        15512783
+      ]
+    },
+    {
+      "columnId": 23721902,
+      "deviceIdStr": [
+        25076874,
+        20650560,
+        20125977,
+        19245393,
+        26455383,
+        26462601,
+        26462471,
+        26462406,
+        27475318,
+        27475286
+      ]
+    }
+  ],
+  "sortTime": 1733856576708,
+  "message": "",
+  "status": 200
+}
