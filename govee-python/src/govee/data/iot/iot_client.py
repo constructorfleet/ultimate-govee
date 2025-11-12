@@ -184,6 +184,36 @@ class IoTClient:
         if cb in self._callbacks:
             self._callbacks.remove(cb)
 
+    async def connect_with_backoff(
+        self,
+        initial_backoff: float = 0.1,
+        max_attempts: int = 5,
+        jitter: float = 0.1,
+    ) -> None:
+        """Attempt to connect with exponential backoff and optional jitter.
+
+        This helper calls the instance's connect() until it succeeds or
+        max_attempts is exhausted. On failure the last exception is raised.
+        """
+        attempt = 0
+        backoff = initial_backoff
+        last_exc: Optional[BaseException] = None
+        while attempt < max_attempts:
+            attempt += 1
+            try:
+                await self.connect()
+                return
+            except Exception as exc:  # pragma: no cover - exercised by tests
+                last_exc = exc
+                # apply jitter
+                delay = backoff
+                if jitter and jitter > 0:
+                    delay = backoff * (1 + (jitter * (0.5 - (time.time() % 1))))
+                await asyncio.sleep(delay)
+                backoff = min(backoff * 2, 60)
+        if last_exc:
+            raise last_exc
+
     async def publish(
         self,
         topic: str,
