@@ -33,7 +33,9 @@ def pack_white_command(power=None, brightness=None, ct=None):
 
 
 def test_h601b_golden_encode():
-    golden = json.loads(Path('govee-python/tests/fixtures/golden/raw/H601B.json').read_text())
+    repo_root = Path(__file__).resolve().parents[2]
+    golden_path = repo_root / 'govee-python' / 'tests' / 'fixtures' / 'golden' / 'raw' / 'H601B.json'
+    golden = json.loads(golden_path.read_text())
     # create a device and ask it to encode a sample command
     d = WhiteTempDevice('g-1', model='H601B')
     # encode a sample: power on, brightness 100
