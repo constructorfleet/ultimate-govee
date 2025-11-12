@@ -8,9 +8,52 @@ This implements the same logic as the TypeScript DeviceFactory matcher:
 """
 
 import re
+import os
+import json
 from typing import Dict, List, Any
 
 from .mapping import FACTORY_MATCHERS
+
+
+def _load_ts_fixture():
+    # attempt to load the extracted TypeScript matchers fixture (if present)
+    # path relative to repository root when tests run from govee-python/
+    cand = os.path.join(os.getcwd(), 'govee-python', 'tests', 'fixtures', 'typescript_device_mappings.json')
+    if not os.path.exists(cand):
+        # also try tests/fixtures in package root
+        cand = os.path.join(os.getcwd(), 'tests', 'fixtures', 'typescript_device_mappings.json')
+        if not os.path.exists(cand):
+            return None
+    try:
+        with open(cand) as f:
+            data = json.load(f)
+    except Exception:
+        return None
+    parsed = []
+    for entry in data:
+        m = {'factory': entry.get('factory')}
+        matchers = entry.get('matchers')
+        if not matchers:
+            text = entry.get('mapping_text')
+            if not text:
+                m['matchers'] = None
+                parsed.append(m)
+                continue
+            t = text.replace("'", '"')
+            # remove trailing commas before closing braces/brackets
+            t = re.sub(r',\s*([}\]])', r'\1', t)
+            try:
+                j = json.loads(t)
+                m['matchers'] = j
+            except Exception:
+                m['matchers'] = None
+        else:
+            m['matchers'] = matchers
+        parsed.append(m)
+    return parsed
+
+
+_TS_MATCHERS = _load_ts_fixture()
 
 
 def match_product(product: Dict[str, Any]) -> List[str]:
@@ -21,8 +64,12 @@ def match_product(product: Dict[str, Any]) -> List[str]:
     if not category or not group:
         return []
     matches: List[str] = []
-    for f in FACTORY_MATCHERS:
+    # Prefer TS-extracted matchers if available (ensures parity).
+    source = _TS_MATCHERS if _TS_MATCHERS else FACTORY_MATCHERS
+    for f in source:
         matchers = f.get('matchers', {})
+        if not matchers:
+            continue
         cat_map = matchers.get(category)
         if not cat_map:
             continue
@@ -68,4 +115,3 @@ def match_product(product: Dict[str, Any]) -> List[str]:
 
 
 __all__ = ["match_product"]
-

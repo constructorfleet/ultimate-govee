@@ -2,56 +2,168 @@
   {
     "file": "../lib/domain/devices/impl/home-improvement/hygrometer/hygrometer.ts",
     "factory": "HygrometerFactory",
-    "mapping_text": "{\n      'Home Improvement': {\n        Temp: {\"pattern\":\".*hygrometer.*\",\"flags\":\"i\"},\n      },\n    }"
+    "mapping_text": "{\n      'Home Improvement': {\n        Temp: {\"pattern\":\".*hygrometer.*\",\"flags\":\"i\"},\n      },\n    }",
+    "matchers": null
   },
   {
     "file": "../lib/domain/devices/impl/home-improvement/meat-thermometer/meat-thermometer.ts",
     "factory": "MeatThermometerFactory",
-    "mapping_text": "{\n      'Home Improvement': {\n        Kitchen: {\"pattern\":\".*wifi meat thermometer.*\",\"flags\":\"i\"},\n      },\n    }"
+    "mapping_text": "{\n      'Home Improvement': {\n        Kitchen: {\"pattern\":\".*wifi meat thermometer.*\",\"flags\":\"i\"},\n      },\n    }",
+    "matchers": null
   },
   {
     "file": "../lib/domain/devices/impl/home-improvement/air-quality/air-quality.ts",
     "factory": "AirQualityFactory",
-    "mapping_text": "{\n      'Home Improvement': {\n        Temp: {\"pattern\":\".*air quality.*\",\"flags\":\"i\"},\n      },\n    }"
+    "mapping_text": "{\n      'Home Improvement': {\n        Temp: {\"pattern\":\".*air quality.*\",\"flags\":\"i\"},\n      },\n    }",
+    "matchers": null
   },
   {
     "file": "../lib/domain/devices/impl/home-improvement/presence/presence.ts",
     "factory": "PresenceFactory",
-    "mapping_text": "{\n      'Home Improvement': {\n        Sensors: {\"pattern\":\".*presence.*\",\"flags\":\"i\"},\n      },\n    }"
+    "mapping_text": "{\n      'Home Improvement': {\n        Sensors: {\"pattern\":\".*presence.*\",\"flags\":\"i\"},\n      },\n    }",
+    "matchers": null
   },
   {
     "file": "../lib/domain/devices/impl/appliances/ice-maker/ice-maker.ts",
     "factory": "IceMakerFactory",
-    "mapping_text": "{\n      'Home Appliances': {\n        Kitchen: {\"pattern\":\"ice maker\",\"flags\":\"i\"},\n      },\n    }"
+    "mapping_text": "{\n      'Home Appliances': {\n        Kitchen: {\"pattern\":\"ice maker\",\"flags\":\"i\"},\n      },\n    }",
+    "matchers": null
   },
   {
     "file": "../lib/domain/devices/impl/appliances/purifier/purifier.ts",
     "factory": "PurifierFactory",
-    "mapping_text": "{\n      'Home Appliances': {\n        'Air Treatment': {\"pattern\":\"purifier\",\"flags\":\"i\"},\n      },\n    }"
+    "mapping_text": "{\n      'Home Appliances': {\n        'Air Treatment': {\"pattern\":\"purifier\",\"flags\":\"i\"},\n      },\n    }",
+    "matchers": {
+      "Home Appliances": {
+        "Air Treatment": {
+          "pattern": "purifier",
+          "flags": "i"
+        }
+      }
+    }
   },
   {
     "file": "../lib/domain/devices/impl/appliances/humidifier/humidifier.ts",
     "factory": "HumidifierFactory",
-    "mapping_text": "{\n      'Home Appliances': {\n        'Air Treatment': {\"pattern\":\"humidifier\",\"flags\":\"i\"},\n      },\n    }"
+    "mapping_text": "{\n      'Home Appliances': {\n        'Air Treatment': {\"pattern\":\"humidifier\",\"flags\":\"i\"},\n      },\n    }",
+    "matchers": {
+      "Home Appliances": {
+        "Air Treatment": {
+          "pattern": "humidifier",
+          "flags": "i"
+        }
+      }
+    }
   },
   {
     "file": "../lib/domain/devices/impl/tv/sync-box/sync-box.ts",
     "factory": "SyncBoxFactory",
-    "mapping_text": "{\n      'LED Strip Light': {\n        'TV BackLights': {\"pattern\":\".*gaming sync box.*\",\"flags\":\"i\"},\n      },\n    }"
+    "mapping_text": "{\n      'LED Strip Light': {\n        'TV BackLights': {\"pattern\":\".*gaming sync box.*\",\"flags\":\"i\"},\n      },\n    }",
+    "matchers": {
+      "LED Strip Light": {
+        "TV BackLights": {
+          "pattern": ".*gaming sync box.*",
+          "flags": "i"
+        }
+      }
+    }
   },
   {
     "file": "../lib/domain/devices/impl/tv/dreamview/dreamview.ts",
     "factory": "DreamViewFactory",
-    "mapping_text": "{\n      'LED Strip Light': {\n        'TV BackLights': {\"pattern\":\".*dreamview.*\",\"flags\":\"i\"},\n      },\n      'Indoor Lighting': {\n        'Table Lamps': {\"pattern\":\".*dreamview.*\",\"flags\":\"i\"},\n      },\n    }"
+    "mapping_text": "{\n      'LED Strip Light': {\n        'TV BackLights': {\"pattern\":\".*dreamview.*\",\"flags\":\"i\"},\n      },\n      'Indoor Lighting': {\n        'Table Lamps': {\"pattern\":\".*dreamview.*\",\"flags\":\"i\"},\n      },\n    }",
+    "matchers": {
+      "LED Strip Light": {
+        "TV BackLights": {
+          "pattern": ".*dreamview.*",
+          "flags": "i"
+        }
+      },
+      "Indoor Lighting": {
+        "Table Lamps": {
+          "pattern": ".*dreamview.*",
+          "flags": "i"
+        }
+      }
+    }
   },
   {
     "file": "../lib/domain/devices/impl/lights/rgb/rgb-light.ts",
     "factory": "RGBLightFactory",
-    "mapping_text": "{\n      'LED Strip Light': {\n        'RGB Strip Lights': true,\n      },\n      'Indoor Lighting': {\n        'Table Lamps': {\"pattern\":\" RGB \",\"flags\":\"\"},\n      },\n    }"
+    "mapping_text": "{\n      'LED Strip Light': {\n        'RGB Strip Lights': true,\n      },\n      'Indoor Lighting': {\n        'Table Lamps': {\"pattern\":\" RGB \",\"flags\":\"\"},\n      },\n    }",
+    "matchers": {
+      "LED Strip Light": {
+        "RGB Strip Lights": true
+      },
+      "Indoor Lighting": {
+        "Table Lamps": {
+          "pattern": " RGB ",
+          "flags": ""
+        }
+      }
+    }
   },
   {
     "file": "../lib/domain/devices/impl/lights/rgbic/rgbic-light.ts",
     "factory": "RGBICLightFactory",
-    "mapping_text": "{\n      'LED Strip Light': {\n        'RGBIC Strip Lights': [{\"pattern\":\".*rgbic strip light.*\",\"flags\":\"i\"}, {\"pattern\":\".*rgbic.*\",\"flags\":\"i\"}],\n      },\n      'Indoor Lighting': {\n        'Floor Lamps': [{\"pattern\":\".*rgbic strip light.*\",\"flags\":\"i\"}, {\"pattern\":\".*rgbic.*\",\"flags\":\"i\"}],\n        'Wall Lamps': [{\"pattern\":\".*glide.*\",\"flags\":\"i\"}],\n      },\n      'Outdoor Lighting': {\n        'Strip Lights': [{\"pattern\":\".*phantasy.*\",\"flags\":\"i\"}, {\"pattern\":\".*rgbic.*\",\"flags\":\"i\"}],\n        'String Lights': [{\"pattern\":\".*rgbic.*\",\"flags\":\"i\"}],\n      },\n      'Other Lights': {\n        'Car Lights': [{\"pattern\":\".*rgbic.*\",\"flags\":\"i\"}],\n      },\n    }"
+    "mapping_text": "{\n      'LED Strip Light': {\n        'RGBIC Strip Lights': [{\"pattern\":\".*rgbic strip light.*\",\"flags\":\"i\"}, {\"pattern\":\".*rgbic.*\",\"flags\":\"i\"}],\n      },\n      'Indoor Lighting': {\n        'Floor Lamps': [{\"pattern\":\".*rgbic strip light.*\",\"flags\":\"i\"}, {\"pattern\":\".*rgbic.*\",\"flags\":\"i\"}],\n        'Wall Lamps': [{\"pattern\":\".*glide.*\",\"flags\":\"i\"}],\n      },\n      'Outdoor Lighting': {\n        'Strip Lights': [{\"pattern\":\".*phantasy.*\",\"flags\":\"i\"}, {\"pattern\":\".*rgbic.*\",\"flags\":\"i\"}],\n        'String Lights': [{\"pattern\":\".*rgbic.*\",\"flags\":\"i\"}],\n      },\n      'Other Lights': {\n        'Car Lights': [{\"pattern\":\".*rgbic.*\",\"flags\":\"i\"}],\n      },\n    }",
+    "matchers": {
+      "LED Strip Light": {
+        "RGBIC Strip Lights": [
+          {
+            "pattern": ".*rgbic strip light.*",
+            "flags": "i"
+          },
+          {
+            "pattern": ".*rgbic.*",
+            "flags": "i"
+          }
+        ]
+      },
+      "Indoor Lighting": {
+        "Floor Lamps": [
+          {
+            "pattern": ".*rgbic strip light.*",
+            "flags": "i"
+          },
+          {
+            "pattern": ".*rgbic.*",
+            "flags": "i"
+          }
+        ],
+        "Wall Lamps": [
+          {
+            "pattern": ".*glide.*",
+            "flags": "i"
+          }
+        ]
+      },
+      "Outdoor Lighting": {
+        "Strip Lights": [
+          {
+            "pattern": ".*phantasy.*",
+            "flags": "i"
+          },
+          {
+            "pattern": ".*rgbic.*",
+            "flags": "i"
+          }
+        ],
+        "String Lights": [
+          {
+            "pattern": ".*rgbic.*",
+            "flags": "i"
+          }
+        ]
+      },
+      "Other Lights": {
+        "Car Lights": [
+          {
+            "pattern": ".*rgbic.*",
+            "flags": "i"
+          }
+        ]
+      }
+    }
   }
 ]
