@@ -9,6 +9,7 @@ callbacks and simple retry/ack semantics used by the test-suite.
 from __future__ import annotations
 
 import asyncio
+import random
 import time
 from typing import (Any, Awaitable, Callable, Dict, List, Optional, Protocol,
                     TypedDict)
@@ -102,6 +103,12 @@ class IoTClient:
         self._drop_callbacks: List[Callable[[AsyncIotMessage], None]] = []
         # scheduled retries: list of tuples (msg, remaining_intervals)
         self._scheduled_retries: List[tuple[AsyncIotMessage, List[float]]] = []
+        # reconnect/backoff policy defaults
+        self._reconnect_initial_backoff: float = 0.1
+        self._reconnect_max_attempts: int = 5
+        self._reconnect_jitter: float = 0.1
+        self._reconnect_rng: Optional[random.Random] = None
+        self._reconnect_task: Optional[asyncio.Task] = None
 
     async def create(
         self, iot_data: IoTData, handler: Optional[IoTHandler] = None
@@ -186,9 +193,10 @@ class IoTClient:
 
     async def connect_with_backoff(
         self,
-        initial_backoff: float = 0.1,
-        max_attempts: int = 5,
-        jitter: float = 0.1,
+        initial_backoff: Optional[float] = None,
+        max_attempts: Optional[int] = None,
+        jitter: Optional[float] = None,
+        rng: Optional[random.Random] = None,
     ) -> None:
         """Attempt to connect with exponential backoff and optional jitter.
 
@@ -196,7 +204,12 @@ class IoTClient:
         max_attempts is exhausted. On failure the last exception is raised.
         """
         attempt = 0
-        backoff = initial_backoff
+        backoff = initial_backoff if initial_backoff is not None else self._reconnect_initial_backoff
+        max_attempts = max_attempts if max_attempts is not None else self._reconnect_max_attempts
+        jitter = jitter if jitter is not None else self._reconnect_jitter
+        rng = rng if rng is not None else self._reconnect_rng
+        if rng is None:
+            rng = random.Random()
         last_exc: Optional[BaseException] = None
         while attempt < max_attempts:
             attempt += 1
@@ -206,9 +219,12 @@ class IoTClient:
             except Exception as exc:  # pragma: no cover - exercised by tests
                 last_exc = exc
                 # apply jitter
-                delay = backoff
                 if jitter and jitter > 0:
-                    delay = backoff * (1 + (jitter * (0.5 - (time.time() % 1))))
+                    # jitter range [-jitter, +jitter]
+                    factor = 1 + rng.uniform(-jitter, jitter)
+                    delay = backoff * factor
+                else:
+                    delay = backoff
                 await asyncio.sleep(delay)
                 backoff = min(backoff * 2, 60)
         if last_exc:
@@ -576,3 +592,59 @@ class IoTClient:
             f"govee_iot_inflight_count {m['inflight_count']}",
         ]
         return "\n".join(lines) + "\n"
+
+
+    def configure_reconnect_policy(
+        self,
+        initial_backoff: Optional[float] = None,
+        max_attempts: Optional[int] = None,
+        jitter: Optional[float] = None,
+        rng: Optional[random.Random] = None,
+    ) -> None:
+        """Configure default reconnect/backoff policy for this client.
+
+        These defaults are used by connect_with_backoff when explicit args
+        are not provided and by the reconnect driver started with
+        start_reconnect_driver().
+        """
+        if initial_backoff is not None:
+            self._reconnect_initial_backoff = initial_backoff
+        if max_attempts is not None:
+            self._reconnect_max_attempts = max_attempts
+        if jitter is not None:
+            self._reconnect_jitter = jitter
+        if rng is not None:
+            self._reconnect_rng = rng
+
+    def start_reconnect_driver(self) -> None:
+        """Start a background reconnect driver that will attempt to connect
+        using the configured reconnect policy until connected.
+        """
+        if self._reconnect_task is not None and not self._reconnect_task.done():
+            return
+
+        async def _driver():
+            try:
+                while not self.connected:
+                    try:
+                        await self.connect_with_backoff()
+                        break
+                    except Exception:
+                        # loop and retry based on policy
+                        await asyncio.sleep(self._reconnect_initial_backoff)
+            except asyncio.CancelledError:
+                return
+
+        self._reconnect_task = asyncio.create_task(_driver())
+
+    async def stop_reconnect_driver(self) -> None:
+        if self._reconnect_task is not None:
+            try:
+                self._reconnect_task.cancel()
+            except Exception:
+                pass
+            try:
+                await self._reconnect_task
+            except Exception:
+                pass
+            self._reconnect_task = None
