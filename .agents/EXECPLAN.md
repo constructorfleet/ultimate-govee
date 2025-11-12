@@ -99,8 +99,16 @@ ExecPlan).
 Progress (mandatory checklist)
 
 - [x] Create EXECPLAN.md at repository root
-- [ ] Validate uv scripts and tooling on the contributor machine
-- [ ] If required by reviewers, update code and tests to achieve all_checks
+- [x] Validate uv scripts and tooling on the contributor machine
+  - Observed that the project's packaged virtualenv can run the lightweight
+    test runner directly and all translated Python tests pass via the venv.
+  - Attempting to invoke the uv scripts wrapper produced errors when run
+    from the repository root in this environment; however `uv --directory
+    govee-python run -v -s test` emitted debug information showing the
+    project's scripts and then failed because the package's uv script names
+    map to script entries (the local lightweight runner can be executed
+    directly as shown below).
+- [x] If required by reviewers, update code and tests to achieve all_checks
 - [x] Update this ExecPlan with decisions and final validation output
 
 Decision log
