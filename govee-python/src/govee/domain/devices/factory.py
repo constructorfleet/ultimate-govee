@@ -68,16 +68,11 @@ def make_device_from_advert(model: str, payload: dict) -> Optional[Device]:
             model=model,
             name=payload.get("name"),
         )
-    # simple white / night-light heuristics
+    # simple night-light heuristics (explicit match only)
     if "NIGHT" in m.upper() or "NIGHTLIGHT" in m.upper() or "NIGHT" in str(payload.get("name", "")).upper():
         from .implementations.night import NightDevice
 
         return NightDevice(id=payload.get("id") or payload.get("device"), model=model, name=payload.get("name"))
-    if "WHITE" in m.upper() or m.startswith("H6") or "CT" in m.upper() or "RGB" not in m.upper():
-        # fallback: treat many H6xx models as white-type if not RGB
-        from .implementations.white import WhiteDevice
-
-        return WhiteDevice(id=payload.get("id") or payload.get("device"), model=model, name=payload.get("name"))
     if m.startswith(("H", "M")):
         return Device(
             id=payload.get("id") or payload.get("device"),
