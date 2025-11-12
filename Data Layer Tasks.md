@@ -93,12 +93,12 @@
 **Goal:** MQTT adapter mirroring IoTClient API; testable with persisted fixtures.
 
 ### Files
-- [ ] `src/govee/common/mqtt_adapter.py`
-- [ ] `tests/test_mqtt_adapter.py`
-- [ ] `persisted/mqtt_fixtures/`
+- [x] `src/govee/common/mqtt_adapter.py`
+- [x] `tests/test_mqtt_adapter.py`
+- [x] `persisted/mqtt_fixtures/`
 
 ### Tests (RED)
-- [ ] `test_mqtt_adapter_delivers_persisted_fixture_messages`
+- [x] `test_mqtt_adapter_delivers_persisted_fixture_messages`
 - [ ] `test_mqtt_adapter_retained_and_clear`
 - [ ] `test_mqtt_adapter_qos_and_ack`
 - [ ] `test_mqtt_adapter_reconnect_and_resume_subscriptions`
