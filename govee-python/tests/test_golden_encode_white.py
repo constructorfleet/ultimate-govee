@@ -9,6 +9,7 @@ from pathlib import Path
 
 from govee.domain.devices.implementations.whitetemp import WhiteTempDevice
 from govee.common.op_code import as_op_code
+from govee.domain.devices.encoding import pack_raw_frame
 
 
 def pack_white_command(power=None, brightness=None, ct=None):
@@ -30,17 +31,11 @@ def pack_white_command(power=None, brightness=None, ct=None):
         return frame
 
     if power is not None:
-        raw = as_op_code(0x05, 10, 11, 0 if power else 1)
-        frames.append(finalize(raw))
+        frames.append(pack_raw_frame(0x05, [10, 11, 0 if power else 1], model='H601B'))
     if brightness is not None:
-        raw = as_op_code(0x12, 0, int(brightness))
-        # adjust a few fields observed in persisted logs (e.g., byte 6 contains 128 and byte 7 contains 15)
-        raw[6] = 128
-        raw[7] = 15
-        frames.append(finalize(raw))
+        frames.append(pack_raw_frame(0x12, [0, int(brightness)], model='H601B'))
     if ct is not None:
-        raw = as_op_code(0x23, int(ct))
-        frames.append(finalize(raw))
+        frames.append(pack_raw_frame(0x23, [int(ct)], model='H601B'))
     return frames
 
 
