@@ -113,6 +113,10 @@ def test_parity_basic():
     devices = load_json('govee.devices.json')
     ts_mappings = load_ts_matchers()
     # import Python matcher
+    # ensure src is on path for test discovery
+    import sys
+    if 'src' not in sys.path:
+        sys.path.insert(0, os.path.join(os.getcwd(), 'src'))
     from govee.domain.devices.matcher import match_product as py_match
     # pick a handful of products and assert our TS-based matcher returns something sensible
     # choose first 50 products
