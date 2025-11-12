@@ -41,11 +41,11 @@
 ### Acceptance
  - [x] All tests pass (targeted OpenAPI tests pass)
  - [x] No network IO in tests
- - [x] Docstring + usage example
+ - [ ] Docstring + usage example
 
 **Commit flow**
-- [x] RED: `test(openapi): add tests for iot credentials parsing and error handling`
-- [x] GREEN: `feat(openapi): add minimal async OpenAPI client and iot credentials model`
+- [ ] RED: `test(openapi): add tests for iot credentials parsing and error handling`
+- [ ] GREEN: `feat(openapi): add minimal async OpenAPI client and iot credentials model`
 - [ ] REFACTOR: `refactor(openapi): cleanup and add docstring`
 
 ---
