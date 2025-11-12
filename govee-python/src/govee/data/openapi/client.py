@@ -77,10 +77,9 @@ class AsyncOpenApiClient:
             except OpenApiNotFound:
                 raise
             except OpenApiTimeout as e:
-                last_exc = e
-                attempt += 1
-                await asyncio.sleep(0.05 * (2 ** attempt))
-                continue
+                # Treat timeouts as terminal errors: do not retry indefinitely
+                # as the caller likely needs to react to connectivity/timeouts.
+                raise
             except Exception as e:
                 last_exc = e
                 attempt += 1
