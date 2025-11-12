@@ -132,6 +132,16 @@ class PahoBackend:
                 self._client.loop_stop()
             except Exception:
                 pass
+            # attempt to unsubscribe from topics if backend tracked them
+            try:
+                for t in list(self.topics):
+                    try:
+                        if hasattr(self._client, 'unsubscribe'):
+                            self._client.unsubscribe(t)
+                    except Exception:
+                        pass
+            except Exception:
+                pass
             self._client.disconnect()
         except Exception:
             pass
