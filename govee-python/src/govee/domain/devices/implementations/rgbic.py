@@ -9,7 +9,6 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
 
-from ..device import Device
 from ..device_base import DeviceBase
 from ..models import DeviceState, parse_state
 
