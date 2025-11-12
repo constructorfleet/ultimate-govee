@@ -1,7 +1,7 @@
-from govee.domain.channels.iot.service import IotService
-from govee.domain.devices.service import DevicesService
 from govee.domain.channels.iot.channel import IoTChannel
+from govee.domain.channels.iot.service import IotService
 from govee.domain.channels.iot.types import IotMessage
+from govee.domain.devices.service import DevicesService
 
 
 def test_incoming_message_updates_device_state():

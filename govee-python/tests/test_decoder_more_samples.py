@@ -1,8 +1,9 @@
 import asyncio
-from pathlib import Path
 import json
-from govee.data.ble.decoder_service import DecoderService
 import logging
+
+from govee.data.ble.decoder_service import DecoderService
+
 _LOGGER = logging.getLogger(__name__)
 
 

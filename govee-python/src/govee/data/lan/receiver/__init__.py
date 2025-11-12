@@ -17,7 +17,6 @@ import importlib.util
 import pathlib
 
 from .service import ReceiverService
-
 # import implementations from the package files
 from .socket import DummySocket, ReceiverSocket
 

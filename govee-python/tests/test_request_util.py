@@ -1,8 +1,9 @@
 import asyncio
 import json
-from govee.data.utils.request import request, ApiError
 from dataclasses import dataclass
 from pathlib import Path
+
+from govee.data.utils.request import ApiError, request
 
 
 def fake_session_ok_get(method, url, headers=None, params=None, json=None):

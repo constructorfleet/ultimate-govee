@@ -3,8 +3,8 @@ import base64
 import json
 import time
 
-from govee.data.api.account.service import GoveeAccountService
 from govee.data.api.account.models import OAuthData
+from govee.data.api.account.service import GoveeAccountService
 
 
 def make_jwt(payload: dict) -> str:

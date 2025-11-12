@@ -1,6 +1,7 @@
-from govee.data.api.account.service import GoveeAccountService
-from govee.data.api.account.models import OAuthData
 import time
+
+from govee.data.api.account.models import OAuthData
+from govee.data.api.account.service import GoveeAccountService
 
 
 def fake_request(url, headers=None, json=None, method="GET", auth=None):

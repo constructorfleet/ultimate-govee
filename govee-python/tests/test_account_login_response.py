@@ -1,9 +1,6 @@
-from govee.data.api.account.login_response import (
-    ClientData,
-    CommunityAuth,
-    CommunityLoginResponse,
-    LoginResponse,
-)
+from govee.data.api.account.login_response import (ClientData, CommunityAuth,
+                                                   CommunityLoginResponse,
+                                                   LoginResponse)
 
 
 def test_clientdata_from_dict_with_alternate_keys_and_types():

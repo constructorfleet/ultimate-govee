@@ -1,5 +1,6 @@
-from govee.data.ble import decoder_lib
 import math
+
+from govee.data.ble import decoder_lib
 
 
 def test_value_from_hex_string_h5074():

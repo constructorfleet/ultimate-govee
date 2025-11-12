@@ -12,6 +12,7 @@ import json
 import logging
 from dataclasses import dataclass
 from typing import Any, Callable, Dict, Optional, Type, TypeVar
+
 from .async_http_session import default_async_session
 
 T = TypeVar("T")

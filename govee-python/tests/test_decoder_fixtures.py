@@ -1,6 +1,7 @@
 import asyncio
-from pathlib import Path
 import json
+from pathlib import Path
+
 from govee.data.ble.decoder_service import DecoderService
 
 
@@ -13,7 +14,6 @@ def test_decode_using_fixture_spec_file(tmp_path, monkeypatch):
     (spec_dir / 'HTEST.json').write_text(fixture)
 
     def loader(model: str, dirs=None):
-        import json
         return json.loads((spec_dir / 'HTEST.json').read_text())
 
     monkeypatch.setattr(svc, '_load_spec_from_dirs', loader)

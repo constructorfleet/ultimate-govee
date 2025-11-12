@@ -1,4 +1,4 @@
-from govee.data.lan.receiver.socket import ReceiverSocket, DummySocket
+from govee.data.lan.receiver.socket import DummySocket, ReceiverSocket
 from govee.data.lan.receiver.types import ReceiverState
 
 

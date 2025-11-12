@@ -1,4 +1,4 @@
-from govee.types import resolve_label, Credentials, DeviceCommandAddresses
+from govee.types import Credentials, DeviceCommandAddresses, resolve_label
 
 
 def test_resolve_label_with_string():

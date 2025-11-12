@@ -6,8 +6,8 @@ and 'opStr' (openapi). We normalize into a small dict used by DeviceState.
 """
 from __future__ import annotations
 
-from typing import Any, Dict, Optional
 import base64
+from typing import Any, Dict, Optional
 
 
 def parse_effect(payload: dict) -> Optional[Dict[str, Any]]:

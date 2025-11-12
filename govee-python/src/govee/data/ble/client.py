@@ -10,8 +10,9 @@ complex async/observable behavior can be added when needed.
 """
 from __future__ import annotations
 
-from typing import Callable, Optional, Any, List
-from govee.common.observables import Subject, ForwardBehaviorSubject
+from typing import Any, Callable, List, Optional
+
+from govee.common.observables import ForwardBehaviorSubject, Subject
 from govee.data.ble.decoder_service import DecoderService
 
 

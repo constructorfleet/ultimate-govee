@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import List, Optional
 
-from govee.common.op_code import base64_to_hex, chunk, as_op_code, OpType
+from govee.common.op_code import OpType, as_op_code, base64_to_hex, chunk
 
 
 @dataclass

@@ -5,9 +5,7 @@ behave as expected.
 """
 
 from govee.data.api.account.refresh_token_response import (
-    RefreshTokenData,
-    RefreshTokenResponse,
-)
+    RefreshTokenData, RefreshTokenResponse)
 
 
 def test_refresh_token_data_from_dict_with_string_numeric_expiration():

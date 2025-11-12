@@ -6,9 +6,10 @@ based decoding. It also stubs get_device_spec and get_common_properties.
 """
 from __future__ import annotations
 
-from typing import Optional, Dict, Any
-from govee.data.ble.decoder import GoveeBleDecoder
+from typing import Any, Dict, Optional
+
 from govee.data.ble import device_condition, property_condition
+from govee.data.ble.decoder import GoveeBleDecoder
 from govee.data.ble.decoder_lib import Decoder as DecoderLib
 from govee.data.ble.iot_manager import IoTManager
 
@@ -128,7 +129,8 @@ class DecoderService:
         object when found, or None if no spec is available. This keeps the
         service configurable for tests by allowing a custom spec_dir.
         """
-        import json, os
+        import json
+        import os
         if dirs is None:
             dirs = ['ble', "assets"]
         for d in dirs:

@@ -1,5 +1,5 @@
-from govee.common.observables import DeltaSubject
 from govee.common.delta_types import MapDelta
+from govee.common.observables import DeltaSubject
 
 
 def test_delta_subject_forwards_delta():

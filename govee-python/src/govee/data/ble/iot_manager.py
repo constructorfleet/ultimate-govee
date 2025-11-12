@@ -6,7 +6,7 @@ class with an async `decode` method that can be monkeypatched by tests.
 """
 from __future__ import annotations
 
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
 
 
 class IoTManager:

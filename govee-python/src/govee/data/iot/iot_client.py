@@ -9,7 +9,8 @@ from __future__ import annotations
 
 import asyncio
 import time
-from typing import Any, Awaitable, Callable, Dict, List, Optional, Protocol, TypedDict, runtime_checkable
+from typing import (Any, Awaitable, Callable, Dict, List, Optional, Protocol,
+                    TypedDict)
 
 
 class AsyncIotMessage:
@@ -222,20 +223,6 @@ class IoTClient:
                 self._inflight.remove(msg)
             except ValueError:
                 pass
-
-    async def retry_inflight(self) -> None:
-        for msg in list(self._inflight):
-            if getattr(msg, "acked", False):
-                if msg in self._inflight:
-                    self._inflight.remove(msg)
-                continue
-            msg.send_attempts = getattr(msg, "send_attempts", 0) + 1
-            if msg.send_attempts > getattr(msg, "max_retries", 3):
-                # drop and optionally inform handler via onError/drop callback
-                try:
-                    self._inflight.remove(msg)
-                except ValueError:
-                    pass
 
     @property
     def inflight_count(self) -> int:

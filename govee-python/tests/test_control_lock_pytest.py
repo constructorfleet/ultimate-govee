@@ -1,4 +1,5 @@
-from govee.domain.devices.states.control_lock import parse_control_lock, state_to_command_control_lock
+from govee.domain.devices.states.control_lock import (
+    parse_control_lock, state_to_command_control_lock)
 
 
 def test_parse_control_lock_from_op_and_state():

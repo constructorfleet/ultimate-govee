@@ -1,4 +1,3 @@
-import math
 from govee.data.ble.decoder_lib import Decoder
 
 

@@ -1,4 +1,5 @@
 import pytest
+
 from govee.data.api.product import Product, ProductsApiService
 
 

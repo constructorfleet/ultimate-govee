@@ -9,10 +9,9 @@ as_type(**data).
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
-
 import json
+from dataclasses import dataclass
+from typing import Any, List, Optional
 
 
 def _parse_bool(v: Any) -> Optional[bool]:

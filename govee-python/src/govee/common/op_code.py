@@ -6,8 +6,8 @@ blobs and building framed opcode arrays used by device models/tests.
 
 from __future__ import annotations
 
-from enum import IntEnum
 import base64
+from enum import IntEnum
 from typing import List, Optional, Sequence
 
 

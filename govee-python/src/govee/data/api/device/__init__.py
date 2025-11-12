@@ -5,6 +5,6 @@ domain code.
 """
 
 from .models import *  # noqa: F401,F403
-from .service import DevicesApiService, Device, DeviceState
+from .service import Device, DevicesApiService, DeviceState
 
 __all__ = ["DevicesApiService", "Device", "DeviceState"]

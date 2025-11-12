@@ -1,4 +1,5 @@
 import asyncio
+
 from govee.data.ble.decoder_service import DecoderService
 
 
@@ -18,7 +19,7 @@ def test_detect_model_from_local_name():
     res = asyncio.get_event_loop().run_until_complete(svc.decode_device(peripheral))
     # decode_device will return None because no decoder matches, but we want to ensure it attempted to detect model
     # We can't directly see detection result; instead we test the helper function if exposed. For now, assert no crash.
-    assert True
+    assert res is not None
     svc._load_spec_from_dirs = original_loader
 
 

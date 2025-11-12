@@ -1,10 +1,13 @@
-from govee.data.api.account import jwt
-from govee.data.api.account.login_response import LoginResponse, CommunityLoginResponse
-from govee.data.api.account.refresh_token_response import RefreshTokenResponse
-from govee.data.api.account.iot_certificate_response import IoTCertificateResponse
 import base64
 import json
 import time
+
+from govee.data.api.account import jwt
+from govee.data.api.account.iot_certificate_response import \
+    IoTCertificateResponse
+from govee.data.api.account.login_response import (CommunityLoginResponse,
+                                                   LoginResponse)
+from govee.data.api.account.refresh_token_response import RefreshTokenResponse
 
 
 def make_jwt_payload(payload: dict) -> str:
