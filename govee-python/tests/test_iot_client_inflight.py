@@ -28,7 +28,7 @@ async def test_send_with_retry_schedules_backoff():
     client = IoTClient()
     await client.subscribe("govee/device/#")
     # schedule with backoff intervals
-    msg = await client.send_with_retry(
+    await client.send_with_retry(
         "govee/device/1/state", {"y": 2}, qos=1, backoff_intervals=[0.001, 0.001]
     )
     # scheduled retries should have been registered (private attribute)
