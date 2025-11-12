@@ -69,7 +69,10 @@ class DecoderService:
                 try:
                     import re
 
-                    m = re.search(r"H[0-9A-Za-z]+", str(name))
+                    # Match either GVH... or H... model tokens so models like
+                    # GVH5106 are detected correctly from names like
+                    # 'GVH5106_2811'. Prefer the longer GVH match when present.
+                    m = re.search(r"(?:GVH|H)[0-9A-Za-z]+", str(name))
                     if m:
                         model = m.group(0)
                 except Exception:
