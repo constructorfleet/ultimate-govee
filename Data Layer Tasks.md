@@ -114,9 +114,9 @@
 - [x] Swappable backend for real MQTT broker
 
 **Commit flow**
-- [x] RED: `test(mqtt): add persisted-fixture replay tests`
-- [x] GREEN: `feat(mqtt): add mqtt adapter with fixture backend`
-- [x] REFACTOR: `refactor(mqtt): tidy API surface`
+- [ ] RED: `test(mqtt): add persisted-fixture replay tests`
+- [ ] GREEN: `feat(mqtt): add mqtt adapter with fixture backend`
+- [ ] REFACTOR: `refactor(mqtt): tidy API surface`
 
 ---
 
@@ -124,7 +124,7 @@
 - [x] Add fixtures in `/tests/fixtures/{openapi,iot,mqtt}`
 - [x] Add integration test `test_iot_manager_integration.py` (implemented offline as test_iot_openapi_integration.py)
 - [x] Validate OpenAPI → IoTAdapter flow
-- [x] Update `pyproject.toml` if deps change
+- [ ] Update `pyproject.toml` if deps change
 - [ ] Ensure `uv run -s test` passes all checks
 - [x] Add `README.md` in `/src/govee/data/iot/` with API usage examples
 
