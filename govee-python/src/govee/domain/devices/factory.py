@@ -10,6 +10,7 @@ from __future__ import annotations
 from typing import Optional
 
 from .device import Device
+from .implementations.rgbic import RGBICDevice
 
 
 def make_device_from_advert(model: str, payload: dict) -> Optional[Device]:
@@ -17,7 +18,11 @@ def make_device_from_advert(model: str, payload: dict) -> Optional[Device]:
     # known Govee device; otherwise unknown.
     if not model:
         return None
-    if str(model).startswith(("H", "M")):
+    m = str(model)
+    # simple mapping: treat models containing 'RGBIC' as addressable strips
+    if "RGBIC" in m.upper():
+        return RGBICDevice(id=payload.get("id") or payload.get("device"), model=model, name=payload.get("name"))
+    if m.startswith(("H", "M")):
         return Device(
             id=payload.get("id") or payload.get("device"),
             model=model,
