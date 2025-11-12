@@ -260,8 +260,12 @@ class IoTClient:
         if not matched:
             return
 
-        if self.connected and not self._interrupted and self._callbacks:
-            # deliver immediately to handler/callbacks
+        if self.connected and not self._interrupted:
+            # deliver immediately to handler and callbacks. Previously this
+            # branch only delivered when async callbacks were registered
+            # (self._callbacks), which meant handler-only consumers would not
+            # receive messages delivered by simulate_incoming. Ensure we
+            # always deliver to the handler when connected.
             asyncio.create_task(self._deliver_message(msg.topic, msg.payload, retained=getattr(msg, 'retained', False)))
             # also handle possible ack semantics
             self._process_auto_ack(msg.payload)
