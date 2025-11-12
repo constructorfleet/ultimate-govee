@@ -28,4 +28,6 @@ def test_device_implementations_inventory():
 
     # For parity we expect an rgbic implementation; this test is RED until
     # that implementation is added.
-    assert "rgbic" in names, f"Expected 'rgbic' in implementations, found: {sorted(names)}"
+    assert (
+        "rgbic" in names
+    ), f"Expected 'rgbic' in implementations, found: {sorted(names)}"

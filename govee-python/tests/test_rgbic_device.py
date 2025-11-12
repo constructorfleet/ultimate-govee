@@ -42,11 +42,13 @@ def test_rgbic_encode_command():
     from govee.domain.devices.implementations.rgbic import RGBICDevice
 
     dev = RGBICDevice("dev-2")
-    frames = dev.encode_command({
-        "power": False,
-        "brightness": 50,
-        "segments": [{"index": 0, "color": {"r": 1, "g": 2, "b": 3}}],
-    })
+    frames = dev.encode_command(
+        {
+            "power": False,
+            "brightness": 50,
+            "segments": [{"index": 0, "color": {"r": 1, "g": 2, "b": 3}}],
+        }
+    )
 
     # Expect frames for power and brightness
     assert any(f.get("op") == "power" and f.get("v") == 0 for f in frames)
@@ -55,7 +57,9 @@ def test_rgbic_encode_command():
     # Expect at least one segment frame with RGB values
     seg_frames = [f for f in frames if f.get("op") == "seg"]
     assert seg_frames, f"No segment frames encoded: {frames}"
-    assert seg_frames[0]["r"] == 1 and seg_frames[0]["g"] == 2 and seg_frames[0]["b"] == 3
+    assert (
+        seg_frames[0]["r"] == 1 and seg_frames[0]["g"] == 2 and seg_frames[0]["b"] == 3
+    )
 
 
 def test_rgbic_effects():
