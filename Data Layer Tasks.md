@@ -151,14 +151,17 @@
 - [x] Validate OpenAPI → IoTAdapter flow
 >>>>>>> parent of 2230fb3 (chore(tasks): mark mqtt adapter backend and fixtures implemented; tests pass offline)
 - [x] Update `pyproject.toml` if deps change
-- [ ] Ensure `uv run -s test` passes all checks
+- [x] Ensure `uv run -s test` passes all checks
+  - verified: uv --directory govee-python run -s test executed and pytest succeeded in venv
 - [x] Add `README.md` in `/src/govee/data/iot/` with API usage examples
 
 ---
 
 ## 🧪 TDD Loop (Apply to All Subtasks)
-- [ ] **RED:** write failing test  
-- [ ] **GREEN:** implement minimal code to pass  
+- [x] **RED:** write failing test
+  - verified: multiple RED tests were added that initially failed during development (e.g., retry/backoff)  
+- [x] **GREEN:** implement minimal code to pass
+  - verified: implementations added for IoT retry/backoff, retained delivery, mqtt adapter; tests pass  
 - [ ] **REFACTOR:** clean & commit  
 - [ ] Run:
   - [ ] `uv run -s test`
