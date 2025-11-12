@@ -11,6 +11,7 @@ from typing import Any, Dict, List, Optional
 
 from ..device_base import DeviceBase
 from ..models import DeviceState, parse_state
+from ..encoding import encode_power, encode_brightness, encode_segment
 
 
 class RGBICDevice(DeviceBase):
@@ -42,35 +43,17 @@ class RGBICDevice(DeviceBase):
 
     def encode_command(self, command: Dict[str, Any]) -> List[Dict[str, Any]]:
         frames: List[Dict[str, Any]] = []
-        if "power" in command:
-            frames.append({"op": "power", "v": 1 if bool(command.get("power")) else 0})
-        if "brightness" in command:
-            try:
-                v = int(command.get("brightness"))
-            except Exception:
-                v = 0
-            frames.append({"op": "bright", "v": max(0, min(100, v))})
+        frames.extend(encode_power(command))
+        frames.extend(encode_brightness(command))
 
-        # segments — encode a simple 'seg' frame for each provided segment
         for s in command.get("segments", []):
             idx = int(s.get("index", 0))
             c = s.get("color") or {}
-            frames.append(
-                {
-                    "op": "seg",
-                    "index": idx,
-                    "r": int(c.get("r", 0)),
-                    "g": int(c.get("g", 0)),
-                    "b": int(c.get("b", 0)),
-                }
-            )
+            frames.append(encode_segment(idx, {"r": int(c.get("r", 0)), "g": int(c.get("g", 0)), "b": int(c.get("b", 0))}))
 
-        # effects
         if "effect" in command and isinstance(command.get("effect"), dict):
             e = command.get("effect")
-            frames.append(
-                {"op": "effect", "name": e.get("name"), "speed": e.get("speed")}
-            )
+            frames.append({"op": "effect", "name": e.get("name"), "speed": e.get("speed")})
 
         return frames
 
