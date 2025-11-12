@@ -85,16 +85,16 @@ If dist or JS code references additional device classes (RGBICLightDevice, RGBLi
 - [x] C2 — GREEN: implement minimal WhiteTempDevice class
   - File: implementations/white_temp.py
   - Commit message: feat(devices): add WhiteTempDevice (GREEN)
-- [ ] C3 — REFACTOR: integrate into factory and docs
+- [x] C3 — REFACTOR: integrate into factory and docs
   - Update factory mapping, add tests for IoT adapter path.
   - Commit message: refactor(devices): add WhiteTempDevice to factory and docs
 
 ## D. Generic Sensor / Probe devices (temperature/humidity)
-- [ ] D1 — RED: failing tests for sensor device (battery, temperature, humidity)
+- [x] D1 — RED: failing tests for sensor device (battery, temperature, humidity)
   - Test file: govee-python/tests/test_sensor_device.py
   - Tests: apply sensor payload, get_state, boundary values
   - Commit message: test(devices): add failing tests for sensor device (RED)
-- [ ] D2 — GREEN: implement sensor device
+- [x] D2 — GREEN: implement sensor device
   - File: implementations/sensor.py
   - Commit message: feat(devices): add SensorDevice (GREEN)
 - [ ] D3 — REFACTOR: unify parsing with DeviceState, add calibration handling
