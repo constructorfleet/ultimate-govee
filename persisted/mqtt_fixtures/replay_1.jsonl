@@ -1,2 +1,3 @@
 {"topic": "govee/device/123/state", "payload": {"temp": 30}, "qos": 1, "retained": false}
 {"topic": "govee/device/123/state", "payload": null, "qos": 0, "retained": true}
+{"topic":"govee/device/1/ack","payload":{"ack_for":{"y":2}},"qos":1,"retained":false}
