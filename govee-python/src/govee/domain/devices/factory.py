@@ -22,6 +22,11 @@ def make_device_from_advert(model: str, payload: dict) -> Optional[Device]:
     # simple mapping: treat models containing 'RGBIC' as addressable strips
     if "RGBIC" in m.upper():
         return RGBICDevice(id=payload.get("id") or payload.get("device"), model=model, name=payload.get("name"))
+    if "WT" in m.upper() or "WHITE" in m.upper() or "CT" in m.upper():
+        # map simple white-temp model patterns to WhiteTempDevice
+        from .implementations.whitetemp import WhiteTempDevice
+
+        return WhiteTempDevice(id=payload.get("id") or payload.get("device"), model=model, name=payload.get("name"))
     if m.startswith(("H", "M")):
         return Device(
             id=payload.get("id") or payload.get("device"),
