@@ -390,13 +390,22 @@ class IoTClient:
         Convention: payload may contain {'ack_for': matching_payload} to
         indicate acknowledgement.
         """
-        if isinstance(payload, dict) and "ack_for" in payload:
-            ack_for = payload["ack_for"]
-            # find first inflight message whose payload matches
-            for msg in list(self._inflight):
-                if msg.payload == ack_for:
-                    self.acknowledge(msg)
-                    break
+        if isinstance(payload, dict):
+            # ack by payload matching (legacy)
+            if "ack_for" in payload:
+                ack_for = payload["ack_for"]
+                # find first inflight message whose payload matches
+                for msg in list(self._inflight):
+                    if msg.payload == ack_for:
+                        self.acknowledge(msg)
+                        return
+            # ack by message id (newer convention)
+            if "ack_for_id" in payload:
+                ack_id = payload["ack_for_id"]
+                for msg in list(self._inflight):
+                    if getattr(msg, "message_id", None) == ack_id:
+                        self.acknowledge(msg)
+                        return
 
     async def retry_inflight(self) -> None:
         # process scheduled retries first
