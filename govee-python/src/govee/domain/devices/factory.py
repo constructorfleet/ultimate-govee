@@ -12,6 +12,11 @@ from typing import Optional
 from .device import Device
 from .implementations.rgbic import RGBICDevice
 from .implementations.hygrometer import HygrometerDevice
+from .implementations.ice_maker import IceMakerDevice
+from .implementations.purifier import PurifierDevice
+from .implementations.humidifier import HumidifierDevice
+from .implementations.air_quality import AirQualityDevice
+from .implementations.presence import PresenceDevice
 
 
 def make_device_from_advert(model: str, payload: dict) -> Optional[Device]:
@@ -46,10 +51,21 @@ def make_device_from_advert(model: str, payload: dict) -> Optional[Device]:
 
     if m.startswith(("H", "M")):
         # Basic mapping heuristics: instantiate specific sensor/device classes
-        # for known categories found in product JSON. For hygrometers, if
-        # the model or name contains 'hygrometer' return HygrometerDevice.
-        if 'hygrometer' in (str(model or '') + ' ' + str(payload.get('productName') or '')).lower():
+        # for known categories found in the product JSON. Prefer explicit
+        # detection by modelName or productName where possible.
+        name_key = (str(model or '') + ' ' + str(payload.get('productName') or '')).lower()
+        if 'hygrometer' in name_key:
             return HygrometerDevice(id=payload.get('id') or payload.get('device'), model=model, name=payload.get('name'))
+        if 'ice' in name_key and 'maker' in name_key:
+            return IceMakerDevice(id=payload.get('id') or payload.get('device'), model=model, name=payload.get('name'))
+        if 'purifier' in name_key:
+            return PurifierDevice(id=payload.get('id') or payload.get('device'), model=model, name=payload.get('name'))
+        if 'humidifier' in name_key:
+            return HumidifierDevice(id=payload.get('id') or payload.get('device'), model=model, name=payload.get('name'))
+        if 'air' in name_key and 'quality' in name_key:
+            return AirQualityDevice(id=payload.get('id') or payload.get('device'), model=model, name=payload.get('name'))
+        if 'presence' in name_key:
+            return PresenceDevice(id=payload.get('id') or payload.get('device'), model=model, name=payload.get('name'))
 
         return Device(
             id=payload.get("id") or payload.get("device"),
