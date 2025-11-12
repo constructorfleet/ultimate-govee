@@ -1,6 +1,7 @@
 import base64
 
 import pytest
+
 from govee.data.api.diy.models import DiyEffect, rebuild_diy_op_code
 from govee.data.api.diy.service import GoveeDiyService
 

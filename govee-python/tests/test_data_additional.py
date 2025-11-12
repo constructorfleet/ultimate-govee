@@ -4,6 +4,7 @@ import logging
 import types
 
 import pytest
+
 from govee.data.api.account import configuration
 from govee.data.api.account import jwt as jwt_mod
 from govee.data.ble import devices as devices_mod

@@ -7,8 +7,6 @@ integration and are RED until DeviceBase parsing behavior is implemented.
 from __future__ import annotations
 
 
-
-
 def test_devicebase_default_state_and_get_state():
     from govee.domain.devices.device_base import DeviceBase
 

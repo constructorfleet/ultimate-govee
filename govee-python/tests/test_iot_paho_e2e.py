@@ -3,6 +3,7 @@ import socket
 import time
 
 import pytest
+
 from govee.data.common.paho_adapter import PahoBackend
 from govee.data.iot.iot_client import IoTClient
 

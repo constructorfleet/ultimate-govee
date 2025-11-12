@@ -2,6 +2,7 @@ import asyncio
 import time
 
 import pytest
+
 from govee.data.openapi.client import (
     AsyncOpenApiClient,
     OpenApiNotFound,

@@ -1,6 +1,7 @@
 import asyncio
 
 import pytest
+
 from govee.data.common.mqtt_adapter import MQTTAdapter
 
 
