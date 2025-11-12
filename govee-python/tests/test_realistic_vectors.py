@@ -26,7 +26,8 @@ def _sample_payload_for_impl(impl: str):
 
 
 def test_realistic_vectors_sample():
-    p = Path("persisted/govee.devices.json")
+    repo_root = Path(__file__).resolve().parents[2]
+    p = repo_root / 'persisted' / 'govee.devices.json'
     obj = json.loads(p.read_text())
     devices = obj.get("devices", [])
     # sample up to 6 devices across families
