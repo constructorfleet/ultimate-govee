@@ -121,7 +121,7 @@ Below is a detailed, executable Markdown checklist you can use to drive the rema
     - .venv/bin/ruff check src tests
   - Acceptance: format_check passes locally.
   - Commit: chore(format): apply black/isort/ruff fixes
-- [ ] Run uv all_checks
+- [x] Run uv all_checks
   - Command: uv --directory govee-python run -s all_checks
   - Acceptance: all_checks returns success
 
@@ -291,7 +291,7 @@ Below is a detailed, executable Markdown checklist you can use to drive the rema
     - .venv/bin/ruff check src tests
   - Acceptance: format_check passes locally.
   - Commit: chore(format): apply black/isort/ruff fixes
-- [ ] Run uv all_checks
+- [x] Run uv all_checks
   - Command: uv --directory govee-python run -s all_checks
   - Acceptance: all_checks returns success
 
