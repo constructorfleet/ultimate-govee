@@ -45,7 +45,7 @@ Many parity projects lack addressable-LED (IC) variant. Implement an RGBIC devic
     - uv --directory govee-python run -s test -- tests/test_rgbic_device.py
   - Commit message: feat(devices): add minimal RGBICDevice implementation (GREEN)
 
-- [ ] A3 — REFACTOR: finalize and extend
+- [x] A3 — REFACTOR: finalize and extend
   - Goals:
     - Move shared logic to a common base (DeviceBase) if not existing.
     - Add type hints and docstrings.
@@ -59,13 +59,13 @@ Many parity projects lack addressable-LED (IC) variant. Implement an RGBIC devic
 ## B. RGBIC -> RGB parity improvements & other light variants
 If dist or JS code references additional device classes (RGBICLightDevice, RGBLightDevice, etc.), implement them.
 
-- [ ] B1 — RED: add failing tests that expect parity device names to be constructible via factory
+- [x] B1 — RED: add failing tests that expect parity device names to be constructible via factory
   - Test file: govee-python/tests/test_device_factory_names.py
   - Behavior:
     - request factory to construct devices for model names used in dist (e.g., 'RGBLight', 'RGBICLight') and assert Device subclass returned.
   - Commit message: test(devices): add failing tests for device constructors (RED)
 
-- [ ] B2 — GREEN: implement small mapping & constructors
+- [x] B2 — GREEN: implement small mapping & constructors
   - Files:
     - govee-python/src/govee/domain/devices/factory.py (extend mapping/model heuristics)
     - govee-python/src/govee/domain/devices/implementations/<rgbic.py,rgb_light.py>
