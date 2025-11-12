@@ -18,13 +18,15 @@ def pack_white_command(power=None, brightness=None, ct=None):
     frames = []
     def finalize(raw_with_checksum):
         # raw_with_checksum is padded data + checksum as produced by as_op_code
-        # remove existing checksum, prepend 0xAA, recompute checksum over full frame
+        # Remove existing checksum, prepend 0xAA, compute checksum over frame
+        # and place it into the last byte (matching persisted frames).
         core = list(raw_with_checksum[:-1])
         frame = [0xAA] + core
         checksum = 0
         for b in frame:
             checksum ^= b
-        frame.append(checksum)
+        # set last byte to checksum to match persisted frame layout
+        frame[-1] = checksum
         return frame
 
     if power is not None:
