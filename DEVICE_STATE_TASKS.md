@@ -116,17 +116,17 @@ If dist or JS code references additional device classes (RGBICLightDevice, RGBLi
     - encode_command(command) abstract (raise NotImplementedError)
   - Make RGBDevice and new classes inherit from DeviceBase
   - Commit message: feat(devices): add DeviceBase and refactor implementations (GREEN)
-- [ ] E3 — REFACTOR: strong typing, docs, examples
+- [x] E3 — REFACTOR: strong typing, docs, examples
   - Add type stubs, docstrings, examples in docs/devices.md
   - Commit message: refactor(devices): type-hint DeviceBase & document API
 
 ## F. Integration tests (IoT path)
-- [ ] F1 — RED: failing integration tests that ensure device encodes commands & IoT pipeline sends expected payloads
+- [x] F1 — RED: failing integration tests that ensure device encodes commands & IoT pipeline sends expected payloads
   - Test file: govee-python/tests/test_device_iot_integration.py
   - Behavior:
     - Create device instance, call encode_command, feed frames to IoTAdapter/FakeMQTTBackend, assert targeted topic and payload are produced/forwarded.
   - Commit message: test(devices): add iot-integration tests (RED)
-- [ ] F2 — GREEN: ensure adapter compatibility
+- [x] F2 — GREEN: ensure adapter compatibility
   - Fix any adapter wiring needed (topic formats, payload shapes)
   - Acceptance: tests pass and no regressions in existing iot tests
   - Commit message: feat(devices): ensure device command frames integrate with IoTAdapter (GREEN)
