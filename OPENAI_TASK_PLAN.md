@@ -37,13 +37,13 @@ Below is a detailed, executable Markdown checklist you can use to drive the rema
   - Commit: refactor(iot-client): tidy ack-by-id implementation
 
 ## 2. Robust reconnect & backoff driver (IoT client)
-- [ ] RED: add failing test for reconnect/backoff
+- [x] RED: add failing test for reconnect/backoff
   - Test file: govee-python/tests/test_iot_client_reconnect_backoff.py
   - Behavior:
     - Simulate intermittent connection failures (mock connection.connect to throw twice then succeed).
     - Expect IoTClient to attempt retries with exponential backoff and eventually become connected.
   - Commit: test(iot-client): add reconnect/backoff failing test
-- [ ] GREEN: implement minimal reconnect/backoff
+- [x] GREEN: implement minimal reconnect/backoff
   - Files:
     - govee-python/src/govee/data/iot/iot_client.py
       - Add a reconnect loop with configurable backoff/jitter, max attempts, and an async driver task that runs while not connected.
@@ -54,7 +54,7 @@ Below is a detailed, executable Markdown checklist you can use to drive the rema
     - The test passes deterministically.
     - No pending asyncio tasks after test exit (use pytest checks / explicit cleanup).
   - Commit: feat(iot-client): add reconnect/backoff driver
-- [ ] REFACTOR: refine policy and config
+- [x] REFACTOR: refine policy and config
   - Add config knobs (initial_backoff, max_backoff, jitter).
   - Add unit test for jitter boundaries.
   - Run full test suite.
@@ -207,13 +207,13 @@ Below is a detailed, executable Markdown checklist you can use to drive the rema
   - Commit: refactor(iot-client): tidy ack-by-id implementation
 
 ## 2. Robust reconnect & backoff driver (IoT client)
-- [ ] RED: add failing test for reconnect/backoff
+- [x] RED: add failing test for reconnect/backoff
   - Test file: govee-python/tests/test_iot_client_reconnect_backoff.py
   - Behavior:
     - Simulate intermittent connection failures (mock connection.connect to throw twice then succeed).
     - Expect IoTClient to attempt retries with exponential backoff and eventually become connected.
   - Commit: test(iot-client): add reconnect/backoff failing test
-- [ ] GREEN: implement minimal reconnect/backoff
+- [x] GREEN: implement minimal reconnect/backoff
   - Files:
     - govee-python/src/govee/data/iot/iot_client.py
       - Add a reconnect loop with configurable backoff/jitter, max attempts, and an async driver task that runs while not connected.
@@ -224,7 +224,7 @@ Below is a detailed, executable Markdown checklist you can use to drive the rema
     - The test passes deterministically.
     - No pending asyncio tasks after test exit (use pytest checks / explicit cleanup).
   - Commit: feat(iot-client): add reconnect/backoff driver
-- [ ] REFACTOR: refine policy and config
+- [x] REFACTOR: refine policy and config
   - Add config knobs (initial_backoff, max_backoff, jitter).
   - Add unit test for jitter boundaries.
   - Run full test suite.
