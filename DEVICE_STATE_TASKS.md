@@ -37,7 +37,7 @@ Task list (markdown)
   - REFACTOR: extract shared helpers, update docs, update factory.
   - Commit after each GREEN.
 
-- [ ] A. RGB (non-addressable) light family
+- [x] A. RGB (non-addressable) light family
 - RED
   - Add tests: govee-python/tests/test_rgb_light_device.py
   - Tests:
@@ -57,7 +57,7 @@ Task list (markdown)
   - Update docs & examples.
   - Commit: refactor(devices): extract encoding helpers & update docs (REFACTOR)
 
-- [ ] B. RGBIC (addressable) — confirm parity & expand
+- [x] B. RGBIC (addressable) — confirm parity & expand
 - RED (if additional behaviors missing)
   - Add test(s) for segment array payloads and full-pixel-array payloads:
     - govee-python/tests/test_rgbic_more.py
@@ -76,7 +76,7 @@ Task list (markdown)
   - Document in docs/devices.md specifics for segments / op codes.
   - Commit: refactor(devices): unify rgbic encoding helpers & docs (REFACTOR)
 
-- [ ] C. White-temperature (CT) family (complete checklist)
+- [x] C. White-temperature (CT) family (complete checklist)
 - RED (if additional behaviors needed)
   - Add tests for CT limits and transitions:
     - govee-python/tests/test_whitetemp_edgecases.py
