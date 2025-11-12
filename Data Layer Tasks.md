@@ -1,10 +1,10 @@
 # ✅ IoT / OpenAPI / MQTT Clients Implementation Checklist
 
 ## 🏁 High-Level Goal
-- [ ] Implement production-capable OpenAPI HTTP client (models + wrapper)
-- [ ] Implement robust IoT client (parsing, reconnect, queueing, inflight/QoS)
-- [ ] Implement real MQTT adapter (wrapper)
-- [ ] Ensure tests are deterministic, fast, and offline (fixtures only)
+- [x] Implement production-capable OpenAPI HTTP client (models + wrapper)
+- [x] Implement robust IoT client (parsing, reconnect, queueing, inflight/QoS)
+- [x] Implement real MQTT adapter (wrapper)
+- [x] Ensure tests are deterministic, fast, and offline (fixtures only)
 
 ---
 
@@ -41,11 +41,11 @@
 ### Acceptance
  - [x] All tests pass (targeted OpenAPI tests pass)
  - [x] No network IO in tests
- - [ ] Docstring + usage example
+ - [x] Docstring + usage example
 
 **Commit flow**
-- [ ] RED: `test(openapi): add tests for iot credentials parsing and error handling`
-- [ ] GREEN: `feat(openapi): add minimal async OpenAPI client and iot credentials model`
+- [x] RED: `test(openapi): add tests for iot credentials parsing and error handling`
+- [x] GREEN: `feat(openapi): add minimal async OpenAPI client and iot credentials model`
 - [ ] REFACTOR: `refactor(openapi): cleanup and add docstring`
 
 ---
@@ -61,8 +61,8 @@
 - [x] `tests/fixtures/iot/`
 
 ### Tests (RED)
-- [ ] `test_publish_and_deliver_with_connected_handler`
-- [ ] `test_retained_delivered_on_subscribe`
+- [x] `test_publish_and_deliver_with_connected_handler`
+- [x] `test_retained_delivered_on_subscribe`
 - [x] `test_queueing_while_disconnected`
 - [x] `test_queue_bound_and_drop_callbacks`
 - [x] `test_qos_inflight_ack_and_retry`
@@ -71,15 +71,15 @@
 - [x] `test_register_callback_and_unregister`
 
 ### Implementation (GREEN)
-- [ ] Extend/fix IoTClient logic
-- [ ] Ensure deterministic async behavior
-- [ ] Add metrics & inspection methods
-- [ ] Use fake handlers for stable tests
+- [x] Extend/fix IoTClient logic
+- [x] Ensure deterministic async behavior
+- [x] Add metrics & inspection methods
+- [x] Use fake handlers for stable tests
 
 ### Acceptance
-- [ ] All IoT tests pass
-- [ ] Deterministic behavior
-- [ ] `metrics_text()` and count methods work
+- [x] All IoT tests pass
+- [x] Deterministic behavior
+- [x] `metrics_text()` and count methods work
 
 **Commit flow**
 - [ ] RED: `test(iot-client): add queueing and retained message tests`
@@ -104,27 +104,38 @@
 - [x] `test_mqtt_adapter_reconnect_and_resume_subscriptions`
 
 ### Implementation (GREEN)
-- [x] Implement adapter compatible with IoTClient
-- [x] Backend abstraction (FakeBackend for tests)
-- [x] Optional paho-mqtt backend
-- [x] Use JSONL fixtures for simulated messages
+- [ ] Implement adapter compatible with IoTClient
+- [ ] Backend abstraction (FakeBackend for tests)
+- [ ] Optional paho-mqtt backend
+- [ ] Use JSONL fixtures for simulated messages
 
 ### Acceptance
+<<<<<<< HEAD
 - [x] Tests pass offline
 - [x] Swappable backend for real MQTT broker
+=======
+- [ ] Tests pass offline
+- [ ] Swappable backend for real MQTT broker
+>>>>>>> parent of 2230fb3 (chore(tasks): mark mqtt adapter backend and fixtures implemented; tests pass offline)
 
 **Commit flow**
-- [ ] RED: `test(mqtt): add persisted-fixture replay tests`
-- [ ] GREEN: `feat(mqtt): add mqtt adapter with fixture backend`
-- [ ] REFACTOR: `refactor(mqtt): tidy API surface`
+- [x] RED: `test(mqtt): add persisted-fixture replay tests`
+- [x] GREEN: `feat(mqtt): add mqtt adapter with fixture backend`
+- [x] REFACTOR: `refactor(mqtt): tidy API surface`
 
 ---
 
 ## 🧩 Cross-Cutting Tasks
+<<<<<<< HEAD
 - [x] Add fixtures in `/tests/fixtures/{openapi,iot,mqtt}`
 - [x] Add integration test `test_iot_manager_integration.py` (implemented offline as test_iot_openapi_integration.py)
 - [x] Validate OpenAPI → IoTAdapter flow
-- [ ] Update `pyproject.toml` if deps change
+=======
+- [ ] Add fixtures in `/tests/fixtures/{openapi,iot,mqtt}`
+- [x] Add integration test `test_iot_manager_integration.py` (implemented offline as test_iot_openapi_integration.py)
+- [x] Validate OpenAPI → IoTAdapter flow
+>>>>>>> parent of 2230fb3 (chore(tasks): mark mqtt adapter backend and fixtures implemented; tests pass offline)
+- [x] Update `pyproject.toml` if deps change
 - [ ] Ensure `uv run -s test` passes all checks
 - [x] Add `README.md` in `/src/govee/data/iot/` with API usage examples
 
