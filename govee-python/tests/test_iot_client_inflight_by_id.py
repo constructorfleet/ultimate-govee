@@ -1,4 +1,3 @@
-import asyncio
 import pytest
 
 from govee.data.iot.iot_client import IoTClient, AsyncIotMessage

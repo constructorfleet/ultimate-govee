@@ -1,6 +1,3 @@
-import time
-import pytest
-
 from govee.data.common.paho_adapter import PahoBackend
 
 

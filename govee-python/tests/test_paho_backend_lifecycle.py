@@ -1,5 +1,3 @@
-import pytest
-
 import govee.data.common.paho_adapter as pa
 
 
