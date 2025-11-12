@@ -264,10 +264,10 @@ Task Checklist (with checkboxes)
   - [x] Task 2.1: Implement MapDelta/DeltaSubject merging behavior (DeltaSubject, PartialBehaviorSubject present)
   - [ ] Task 2.2: Add unit tests for delta publications and subscribers
 
-- [ ] IoT / OpenAPI / MQTT clients
-  - [ ] Task 3.1: Port OpenAPI client models and HTTP wrapper
-  - [ ] Task 3.2: Implement IoT client parsing & handlers
-  - [ ] Task 3.3: Add MQTT wrapper and tests
+- [x] IoT / OpenAPI / MQTT clients
+  - [x] Task 3.1: Port OpenAPI client models and HTTP wrapper
+  - [x] Task 3.2: Implement IoT client parsing & handlers
+  - [x] Task 3.3: Add MQTT wrapper and tests
 
 - [ ] Domain Device States & Factories
   - [ ] Task 4.1: Port device state classes (power/brightness/color/effects)
