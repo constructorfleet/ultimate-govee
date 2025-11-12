@@ -67,9 +67,13 @@ def pack_raw_frame(op_code: int, values: List[int], model: str | None = None) ->
     from govee.common.op_code import as_op_code
 
     raw = as_op_code(op_code, *values)
-    # drop the original opcode byte from as_op_code core and its checksum
-    # then prepend the 0xAA leading byte used in persisted frames
+    # Default core: use the padded bytes from as_op_code excluding its checksum
     core = list(raw[:-1])
+    # Model-specific truncation: some persisted frames include only the
+    # first N bytes of the padded as_op_code. For H601 family we observed
+    # the persisted frames use only the first 18 bytes of the core.
+    if model and model.upper().startswith('H601'):
+        core = core[:18]
     frame = [0xAA] + core
     # model-specific tweaks
     if model and model.upper().startswith("H601") and op_code == 0x12:
