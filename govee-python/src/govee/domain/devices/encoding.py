@@ -69,7 +69,7 @@ def pack_raw_frame(op_code: int, values: List[int], model: str | None = None) ->
     raw = as_op_code(op_code, *values)
     # drop the original opcode byte from as_op_code core and its checksum
     # then prepend the 0xAA leading byte used in persisted frames
-    core = list(raw[1:-1])
+    core = list(raw[:-1])
     frame = [0xAA] + core
     # model-specific tweaks
     if model and model.upper().startswith("H601") and op_code == 0x12:
