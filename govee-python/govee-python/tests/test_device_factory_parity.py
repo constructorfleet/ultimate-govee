@@ -112,13 +112,18 @@ def test_parity_basic():
     products = load_json('govee.products.json')
     devices = load_json('govee.devices.json')
     ts_mappings = load_ts_matchers()
+    # import Python matcher
+    from govee.domain.devices.matcher import match_product as py_match
     # pick a handful of products and assert our TS-based matcher returns something sensible
     # choose first 50 products
     count = 0
     for model, product in list(products.items())[:50]:
         expected = ts_expected_matches(product, ts_mappings)
-        # just ensure the function runs and returns a list
+        actual = py_match(product)
+        # both should be lists
         assert isinstance(expected, list)
+        assert isinstance(actual, list)
+        # ensure python matcher returns same factories as TS expected for this sample
+        assert set(expected) == set(actual), f"Mismatch for {model}: expected {expected} got {actual}"
         count += 1
     assert count == 50
-
