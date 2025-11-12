@@ -11,6 +11,7 @@ from typing import Any, Dict, List, Optional
 
 from ..device import Device
 from ..models import DeviceState
+from ..encoding import encode_power, encode_brightness, encode_rgb
 
 
 class RGBDevice(Device):
@@ -40,24 +41,9 @@ class RGBDevice(Device):
           - {'color': {'r':R,'g':G,'b':B}} -> [{'op':'rgb','r':R,'g':G,'b':B}]
         """
         frames: List[Dict[str, Any]] = []
-        if "power" in command:
-            frames.append({"op": "power", "v": 1 if bool(command.get("power")) else 0})
-        if "brightness" in command:
-            try:
-                v = int(command.get("brightness"))
-            except Exception:
-                v = 0
-            frames.append({"op": "bright", "v": max(0, min(100, v))})
-        if "color" in command and isinstance(command.get("color"), dict):
-            c = command.get("color")
-            frames.append(
-                {
-                    "op": "rgb",
-                    "r": int(c.get("r", 0)),
-                    "g": int(c.get("g", 0)),
-                    "b": int(c.get("b", 0)),
-                }
-            )
+        frames.extend(encode_power(command))
+        frames.extend(encode_brightness(command))
+        frames.extend(encode_rgb(command))
         return frames
 
 
