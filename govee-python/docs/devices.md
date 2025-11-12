@@ -70,3 +70,38 @@ Testing
   MQTTAdapter (using FakeMQTTBackend fixtures) to exercise the IoT
   pipeline.
 
+Encoding parity and IoT adapter integration
+
+- Goal: device.encode_command must produce frames matching the TypeScript
+  implementation for representative models. Integration tests should
+  publish those frames via MQTTAdapter and assert handlers receive the
+  expected payloads.
+
+- Behavioral vs Golden parity:
+  - Behavioral parity asserts op names, parameter keys and numeric types/ranges
+    (recommended, robust).
+  - Golden-frame parity asserts exact byte/JSON equality against TypeScript
+    golden frames extracted from dist/ (strict; more brittle).
+
+- Integration example (behavioral):
+  - Create a FakeMQTTBackend pointing at persisted/mqtt_fixtures/replay_1.jsonl
+  - Create a MQTTAdapter(backend) and a handler that records messages
+  - Publish device.encode_command frames to topics like govee/device/<id>/command
+  - Replay the backend and ensure handler receives expected frames
+
+Tests: realistic vectors
+
+- Use persisted/govee.devices.json and persisted/mqtt_fixtures/ for realistic
+  sample vectors. Write tests that iterate a small sample of persisted
+  devices, construct an implementation via factory.make_device_from_advert,
+  apply a realistic payload (family-specific) and assert encode_command
+  produces expected ops/params. This file lives at tests/test_realistic_vectors.py.
+
+Documentation & examples
+
+- Document the canonical payload shapes and topic formats for each family
+  (White, RGB, RGBIC, Sensor). Include sample code showing:
+  - Constructing a device via the factory
+  - Applying a payload and reading get_state()
+  - Encoding a command and publishing via MQTTAdapter
+
