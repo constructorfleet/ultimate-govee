@@ -139,13 +139,13 @@ If dist or JS code references additional device classes (RGBICLightDevice, RGBLi
   - Commit message: docs(devices): document device API & examples
 
 ## H. Lint/format and finalize
-- [ ] H1 — Run format/lint and fix everything:
+- [x] H1 — Run format/lint and fix everything:
   - Commands:
     - . govee-python/.venv/bin/activate
     - uv --directory govee-python run -s format_check
     - uv --directory govee-python run -s test
   - Commit message: chore(format): apply formatting & lint fixes
-- [ ] H2 — REFACTOR: run full test+CI
+- [x] H2 — REFACTOR: run full test+CI
   - uv --directory govee-python run -s all_checks
   - Ensure no warnings or failing tests
   - Commit message: chore(ci): finalize device parity & run all checks
