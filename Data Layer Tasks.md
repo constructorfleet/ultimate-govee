@@ -71,20 +71,20 @@
 - [x] `test_register_callback_and_unregister`
 
 ### Implementation (GREEN)
-- [ ] Extend/fix IoTClient logic
-- [ ] Ensure deterministic async behavior
-- [ ] Add metrics & inspection methods
-- [ ] Use fake handlers for stable tests
+- [x] Extend/fix IoTClient logic
+- [x] Ensure deterministic async behavior
+- [x] Add metrics & inspection methods
+- [x] Use fake handlers for stable tests
 
 ### Acceptance
-- [ ] All IoT tests pass
-- [ ] Deterministic behavior
-- [ ] `metrics_text()` and count methods work
+- [x] All IoT tests pass
+- [x] Deterministic behavior
+- [x] `metrics_text()` and count methods work
 
 **Commit flow**
-- [ ] RED: `test(iot-client): add queueing and retained message tests`
-- [ ] GREEN: `feat(iot-client): implement retry/backoff scheduling`
-- [ ] REFACTOR: `fix(iot-client): ensure retained delivery consistency`
+- [x] RED: `test(iot-client): add queueing and retained message tests`
+- [x] GREEN: `feat(iot-client): implement retry/backoff scheduling`
+- [x] REFACTOR: `fix(iot-client): ensure retained delivery consistency`
 
 ---
 
