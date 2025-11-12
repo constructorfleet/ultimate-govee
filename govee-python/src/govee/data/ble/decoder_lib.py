@@ -108,7 +108,10 @@ def post_processing(value: Any, operations: List[Any], calibration: Optional[int
     if operant == Calibration:
         operant_val = calibration or 0
     else:
-        operant_val = operant if isinstance(operant, (int, float)) else 0
+        try:
+            operant_val = float(operant)
+        except:
+            operant_val = 0
 
     # arithmetic / bitwise operations
     if oper == BitwiseAnd:
