@@ -1,0 +1,100 @@
+{
+  "mappings": [
+    {
+      "pattern": "H5106",
+      "impl": "rgb"
+    },
+    {
+      "pattern": "H5121",
+      "impl": "rgb"
+    },
+    {
+      "pattern": "H5127",
+      "impl": "rgb"
+    },
+    {
+      "pattern": "H5179",
+      "impl": "rgb"
+    },
+    {
+      "pattern": "H5198",
+      "impl": "rgb"
+    },
+    {
+      "pattern": "H601B",
+      "impl": "white"
+    },
+    {
+      "pattern": "H6042",
+      "impl": "rgbic"
+    },
+    {
+      "pattern": "H6054",
+      "impl": "white"
+    },
+    {
+      "pattern": "H6072",
+      "impl": "white"
+    },
+    {
+      "pattern": "H611A",
+      "impl": "white"
+    },
+    {
+      "pattern": "H6141",
+      "impl": "white"
+    },
+    {
+      "pattern": "H61A0",
+      "impl": "white"
+    },
+    {
+      "pattern": "H61A8",
+      "impl": "white"
+    },
+    {
+      "pattern": "H6602",
+      "impl": "white"
+    },
+    {
+      "pattern": "H6604",
+      "impl": "white"
+    },
+    {
+      "pattern": "H6641",
+      "impl": "white"
+    },
+    {
+      "pattern": "H7055",
+      "impl": "white"
+    },
+    {
+      "pattern": "H7090",
+      "impl": "white"
+    },
+    {
+      "pattern": "H7105",
+      "impl": "white"
+    },
+    {
+      "pattern": "H7121",
+      "impl": "white"
+    },
+    {
+      "pattern": "H7126",
+      "impl": "white"
+    },
+    {
+      "pattern": "H7141",
+      "impl": "white"
+    },
+    {
+      "pattern": "H7142",
+      "impl": "white"
+    },
+    {
+      "pattern": "H7172",
+      "impl": "white"
+    }
+  ]
+}
