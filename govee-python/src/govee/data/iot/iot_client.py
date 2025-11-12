@@ -125,11 +125,11 @@ class IoTClient:
     async def connect(self) -> None:
         self.connected = True
         # when connecting subscribe to current subscriptions and deliver retained
-        for topic in list(self.subscriptions):
-            # deliver retained messages to handler and callbacks
-            retained_msg = self._retained.get(topic)
-            if retained_msg:
-                await self._deliver_message(topic, retained_msg.payload, retained=True)
+        for subscription in list(self.subscriptions):
+            # deliver retained messages that match this subscription to handler
+            for t, retained_msg in list(self._retained.items()):
+                if self._topic_matches_subscription(t, subscription):
+                    await self._deliver_message(t, retained_msg.payload, retained=True)
 
     async def disconnect(self) -> None:
         # simulate graceful disconnect
