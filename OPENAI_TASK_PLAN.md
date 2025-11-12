@@ -90,17 +90,17 @@ Below is a detailed, executable Markdown checklist you can use to drive the rema
   - Behavior:
     - Start local broker (or use test fixture), create PahoBackend.connect(), attach IoTClient, publish, and assert handler receives messages.
   - Commit: test(mqtt): add e2e Paho backend failing test
-- [ ] GREEN: run with a local broker or docker-mosquitto
+- [x] GREEN: run with a local broker or docker-mosquitto
   - Implementation: run mosquitto on CI or as a local fixture and ensure test passes.
   - Acceptance: e2e test passes in CI.
   - Commit: feat(mqtt): add mosquitto-based e2e test and CI job
 
 ## 5. Expand OpenAPI client parity (models & endpoints)
-- [ ] RED: add failing tests for each missing endpoint/use-case
+- [x] RED: add failing tests for each missing endpoint/use-case
   - Tests:
     - govee-python/tests/test_openapi_device_endpoints.py (device list, control, etc.)
   - Commit: test(openapi): add failing tests for endpoints
-- [ ] GREEN: implement minimal surface or wire to generated client
+- [x] GREEN: implement minimal surface or wire to generated client
   - Files:
     - govee-python/src/govee/data/openapi/client.py (expand methods)
     - govee-python/src/govee/data/openapi/models.py (add typed models)
@@ -260,17 +260,17 @@ Below is a detailed, executable Markdown checklist you can use to drive the rema
   - Behavior:
     - Start local broker (or use test fixture), create PahoBackend.connect(), attach IoTClient, publish, and assert handler receives messages.
   - Commit: test(mqtt): add e2e Paho backend failing test
-- [ ] GREEN: run with a local broker or docker-mosquitto
+- [x] GREEN: run with a local broker or docker-mosquitto
   - Implementation: run mosquitto on CI or as a local fixture and ensure test passes.
   - Acceptance: e2e test passes in CI.
   - Commit: feat(mqtt): add mosquitto-based e2e test and CI job
 
 ## 5. Expand OpenAPI client parity (models & endpoints)
-- [ ] RED: add failing tests for each missing endpoint/use-case
+- [x] RED: add failing tests for each missing endpoint/use-case
   - Tests:
     - govee-python/tests/test_openapi_device_endpoints.py (device list, control, etc.)
   - Commit: test(openapi): add failing tests for endpoints
-- [ ] GREEN: implement minimal surface or wire to generated client
+- [x] GREEN: implement minimal surface or wire to generated client
   - Files:
     - govee-python/src/govee/data/openapi/client.py (expand methods)
     - govee-python/src/govee/data/openapi/models.py (add typed models)
