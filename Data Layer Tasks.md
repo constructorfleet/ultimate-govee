@@ -55,7 +55,7 @@
 **Goal:** Full IoT client semantics (queueing, retry, retained, QoS, etc.)
 
 ### Files
-- [ ] `src/govee/data/iot/iot_client.py`
+- [x] `src/govee/data/iot/iot_client.py`
 - [x] `tests/test_iot_client_queueing.py`
 - [x] `tests/test_iot_client_inflight.py`
 - [x] `tests/fixtures/iot/`
@@ -67,8 +67,8 @@
 - [x] `test_queue_bound_and_drop_callbacks`
 - [x] `test_qos_inflight_ack_and_retry`
 - [x] `test_send_with_retry_schedules_backoff`
-- [ ] `test_interruption_queueing`
-- [ ] `test_register_callback_and_unregister`
+- [x] `test_interruption_queueing`
+- [x] `test_register_callback_and_unregister`
 
 ### Implementation (GREEN)
 - [ ] Extend/fix IoTClient logic
@@ -100,7 +100,7 @@
 ### Tests (RED)
 - [x] `test_mqtt_adapter_delivers_persisted_fixture_messages`
 - [x] `test_mqtt_adapter_retained_and_clear`
-- [ ] `test_mqtt_adapter_qos_and_ack`
+- [x] `test_mqtt_adapter_qos_and_ack`
 - [x] `test_mqtt_adapter_reconnect_and_resume_subscriptions`
 
 ### Implementation (GREEN)
