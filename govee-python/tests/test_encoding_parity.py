@@ -14,7 +14,9 @@ import json
 
 
 def _load_sample_devices(n=5):
-    p = Path('persisted/govee.devices.json')
+    # resolve persisted path relative to repository root
+    repo_root = Path(__file__).resolve().parents[2]
+    p = repo_root / 'persisted' / 'govee.devices.json'
     obj = json.loads(p.read_text())
     devices = []
     for d in obj.get('devices', [])[:n]:
