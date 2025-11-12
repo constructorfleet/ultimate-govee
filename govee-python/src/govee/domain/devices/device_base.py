@@ -32,7 +32,11 @@ class DeviceBase(Device):
         Default implementation stores nothing; concrete classes should
         populate self._state and other attributes.
         """
-        raise NotImplementedError()
+        # default behavior: parse into DeviceState using parse_state
+        from .models import parse_state
+
+        st = parse_state(payload or {})
+        self._state = st
 
     def get_state(self) -> DeviceState:
         return self._state
@@ -43,7 +47,17 @@ class DeviceBase(Device):
         Concrete implementations should provide encoding logic; default
         returns an empty list.
         """
-        return []
+        # default: encode common fields: power and brightness (helpers)
+        frames: List[Dict[str, Any]] = []
+        if "power" in command:
+            frames.append({"op": "power", "v": 1 if bool(command.get("power")) else 0})
+        if "brightness" in command:
+            try:
+                v = int(command.get("brightness"))
+            except Exception:
+                v = 0
+            frames.append({"op": "bright", "v": max(0, min(100, v))})
+        return frames
 
 
 __all__ = ["DeviceBase"]
