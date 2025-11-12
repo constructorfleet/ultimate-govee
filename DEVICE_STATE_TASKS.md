@@ -90,7 +90,7 @@ Task list (markdown)
   - Document behavior and add example payloads in docs/devices.md
   - Commit: docs(devices): add white-temp examples (REFACTOR)
 
-- [ ] D. Simple White / On-Off lights
+- [x] D. Simple White / On-Off lights
 - RED
   - Add tests: govee-python/tests/test_white_device.py
     - test on/off + brightness only
@@ -106,7 +106,7 @@ Task list (markdown)
   - Factor shared code with WhiteTempDevice where possible.
   - Commit: refactor(devices): unify white & white-temp helpers (REFACTOR)
 
-- [ ] E. Night light / special modes
+- [x] E. Night light / special modes
 - RED
   - Add tests for night mode (color + night flag) if persisted fixtures indicate such fields.
   - Example payloads from persisted fixtures: check deviceExt or deviceData for 'night' keys and add as sample payloads.
