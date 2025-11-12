@@ -1,18 +1,18 @@
 # ✅ IoT / OpenAPI / MQTT Clients Implementation Checklist
 
 ## 🏁 High-Level Goal
-- [ ] Implement production-capable OpenAPI HTTP client (models + wrapper)
-- [ ] Implement robust IoT client (parsing, reconnect, queueing, inflight/QoS)
-- [ ] Implement real MQTT adapter (wrapper)
-- [ ] Ensure tests are deterministic, fast, and offline (fixtures only)
+- [x] Implement production-capable OpenAPI HTTP client (models + wrapper)
+- [x] Implement robust IoT client (parsing, reconnect, queueing, inflight/QoS)
+- [x] Implement real MQTT adapter (wrapper)
+- [x] Ensure tests are deterministic, fast, and offline (fixtures only)
 
 ---
 
 ## ⚙️ Setup / Dev Environment
-- [ ] Activate venv: `. govee-python/.venv/bin/activate`
-- [ ] Run tests: `python govee-python/run_tests.py` or `pytest -q govee-python/tests/<testfile>.py`
-- [ ] Use `uv`: `cd govee-python && uv run -s test`
-- [ ] Install dependencies with `uv tool pip install <dep>`
+- [x] Activate venv: `. govee-python/.venv/bin/activate`
+- [x] Run tests: `python govee-python/run_tests.py` or `pytest -q govee-python/tests/<testfile>.py`
+- [x] Use `uv`: `cd govee-python && uv run -s test`
+- [x] Install dependencies with `uv tool pip install <dep>`
 
 ---
 
@@ -46,7 +46,7 @@
 **Commit flow**
 - [x] RED: `test(openapi): add tests for iot credentials parsing and error handling`
 - [x] GREEN: `feat(openapi): add minimal async OpenAPI client and iot credentials model`
-- [ ] REFACTOR: `refactor(openapi): cleanup and add docstring`
+- [x] REFACTOR: `refactor(openapi): cleanup and add docstring`
 
 ---
 
@@ -61,8 +61,8 @@
 - [x] `tests/fixtures/iot/`
 
 ### Tests (RED)
-- [ ] `test_publish_and_deliver_with_connected_handler`
-- [ ] `test_retained_delivered_on_subscribe`
+- [x] `test_publish_and_deliver_with_connected_handler`
+- [x] `test_retained_delivered_on_subscribe`
 - [x] `test_queueing_while_disconnected`
 - [x] `test_queue_bound_and_drop_callbacks`
 - [x] `test_qos_inflight_ack_and_retry`
@@ -125,18 +125,18 @@
 - [x] Add integration test `test_iot_manager_integration.py` (implemented offline as test_iot_openapi_integration.py)
 - [x] Validate OpenAPI → IoTAdapter flow
 - [x] Update `pyproject.toml` if deps change
-- [ ] Ensure `uv run -s test` passes all checks
+- [x] Ensure `uv run -s test` passes all checks
 - [x] Add `README.md` in `/src/govee/data/iot/` with API usage examples
 
 ---
 
 ## 🧪 TDD Loop (Apply to All Subtasks)
-- [ ] **RED:** write failing test  
-- [ ] **GREEN:** implement minimal code to pass  
-- [ ] **REFACTOR:** clean & commit  
-- [ ] Run:
-  - [ ] `uv run -s test`
-  - [ ] `uv run -s format_check`
+- [x] **RED:** write failing test  
+- [x] **GREEN:** implement minimal code to pass  
+- [x] **REFACTOR:** clean & commit  
+- [x] Run:
+  - [x] `uv run -s test`
+  - [x] `uv run -s format_check`
 
 ---
 
