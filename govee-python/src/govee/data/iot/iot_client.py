@@ -5,6 +5,7 @@ TypeScript lib/data/iot client. It supports connect/disconnect,
 subscribe, publish (with retained and qos=1 inflight tracking),
 callbacks and simple retry/ack semantics used by the test-suite.
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -40,7 +41,9 @@ class IoTHandler(Protocol):
     Methods are optional; if present they may be sync or async callables.
     """
 
-    def onMessage(self, topic: str, payload: Any, dup: bool, qos: int, retain: bool) -> Any:  # pragma: no cover - interface
+    def onMessage(
+        self, topic: str, payload: Any, dup: bool, qos: int, retain: bool
+    ) -> Any:  # pragma: no cover - interface
         ...
 
     def onError(self, data: Any) -> Any:  # pragma: no cover - interface
@@ -96,7 +99,9 @@ class IoTClient:
         # scheduled retries: list of tuples (msg, remaining_intervals)
         self._scheduled_retries: List[tuple[AsyncIotMessage, List[float]]] = []
 
-    async def create(self, iot_data: IoTData, handler: Optional[IoTHandler] = None) -> "IoTClient":
+    async def create(
+        self, iot_data: IoTData, handler: Optional[IoTHandler] = None
+    ) -> "IoTClient":
         """Initialize client with connection details and a handler object.
 
         The handler is expected to provide onMessage(topic, payload, dup, qos, retain)
@@ -174,7 +179,13 @@ class IoTClient:
 
         Returns the internal AsyncIotMessage instance for qos/ack testing.
         """
-        msg = AsyncIotMessage(topic=topic, payload=payload, qos=qos, retained=retained, max_retries=max_retries)
+        msg = AsyncIotMessage(
+            topic=topic,
+            payload=payload,
+            qos=qos,
+            retained=retained,
+            max_retries=max_retries,
+        )
         msg.send_attempts = 1
         self.published.append(msg)
 
@@ -194,7 +205,9 @@ class IoTClient:
         await self._deliver_message(topic, payload, retained=retained)
         return msg
 
-    async def _deliver_message(self, topic: str, payload: Any, retained: bool = False) -> None:
+    async def _deliver_message(
+        self, topic: str, payload: Any, retained: bool = False
+    ) -> None:
         # deliver to handler first
         if self._handler and hasattr(self._handler, "onMessage"):
             try:
@@ -229,24 +242,23 @@ class IoTClient:
         return len(self._inflight)
 
     def _topic_matches_subscription(self, topic: str, subscription: str) -> bool:
-        if subscription == '#':
+        if subscription == "#":
             return True
-        t_levels = topic.split('/')
-        s_levels = subscription.split('/')
+        t_levels = topic.split("/")
+        s_levels = subscription.split("/")
         i = 0
         while i < len(s_levels):
             s = s_levels[i]
-            if s == '#':
+            if s == "#":
                 return True
             if i >= len(t_levels):
                 return False
-            if s == '+':
+            if s == "+":
                 pass
             elif s != t_levels[i]:
                 return False
             i += 1
         return i == len(t_levels)
-
 
     def simulate_incoming(self, msg: AsyncIotMessage) -> None:
         """Simulate an incoming message from the broker.
@@ -256,7 +268,9 @@ class IoTClient:
         when messages are evicted.
         """
         # only consider subscribing topics
-        matched = any(self._topic_matches_subscription(msg.topic, s) for s in self.subscriptions)
+        matched = any(
+            self._topic_matches_subscription(msg.topic, s) for s in self.subscriptions
+        )
         if not matched:
             return
 
@@ -266,7 +280,11 @@ class IoTClient:
             # (self._callbacks), which meant handler-only consumers would not
             # receive messages delivered by simulate_incoming. Ensure we
             # always deliver to the handler when connected.
-            asyncio.create_task(self._deliver_message(msg.topic, msg.payload, retained=getattr(msg, 'retained', False)))
+            asyncio.create_task(
+                self._deliver_message(
+                    msg.topic, msg.payload, retained=getattr(msg, "retained", False)
+                )
+            )
             # also handle possible ack semantics
             self._process_auto_ack(msg.payload)
             return
@@ -298,7 +316,9 @@ class IoTClient:
         are handled by background tasks which will attempt resend after each
         backoff interval. Background retry tasks are cancelled on disconnect.
         """
-        msg = await self.publish(topic, payload, qos=qos, retained=retained, max_retries=max_retries)
+        msg = await self.publish(
+            topic, payload, qos=qos, retained=retained, max_retries=max_retries
+        )
         msg.send_attempts = 1
         msg.max_retries = max_retries
         if backoff_intervals:
@@ -309,20 +329,20 @@ class IoTClient:
             # remaining testable because tasks are tracked and can be
             # inspected or awaited if necessary.
             msg.backoff_intervals = list(backoff_intervals)
-            if not hasattr(self, '_retry_tasks'):
+            if not hasattr(self, "_retry_tasks"):
                 self._retry_tasks: List[asyncio.Task] = []
 
             async def _retry_task(m: AsyncIotMessage):
-                intervals = list(getattr(m, 'backoff_intervals', []) or [])
-                while intervals and not getattr(m, 'acked', False):
+                intervals = list(getattr(m, "backoff_intervals", []) or [])
+                while intervals and not getattr(m, "acked", False):
                     delay = intervals.pop(0)
                     await asyncio.sleep(delay)
                     # attempt resend: in a real client this would republish
                     # to the broker. For this in-memory client, trigger the
                     # retry logic by ensuring the message remains inflight or
                     # by invoking drop callbacks when max retries exceeded.
-                    m.send_attempts = getattr(m, 'send_attempts', 0) + 1
-                    if m.send_attempts > getattr(m, 'max_retries', 3):
+                    m.send_attempts = getattr(m, "send_attempts", 0) + 1
+                    if m.send_attempts > getattr(m, "max_retries", 3):
                         # move to dropped
                         if m in self._inflight:
                             try:
@@ -357,8 +377,8 @@ class IoTClient:
         Convention: payload may contain {'ack_for': matching_payload} to
         indicate acknowledgement.
         """
-        if isinstance(payload, dict) and 'ack_for' in payload:
-            ack_for = payload['ack_for']
+        if isinstance(payload, dict) and "ack_for" in payload:
+            ack_for = payload["ack_for"]
             # find first inflight message whose payload matches
             for msg in list(self._inflight):
                 if msg.payload == ack_for:
@@ -367,15 +387,15 @@ class IoTClient:
 
     async def retry_inflight(self) -> None:
         # process scheduled retries first
-        if hasattr(self, '_scheduled_retries') and self._scheduled_retries:
+        if hasattr(self, "_scheduled_retries") and self._scheduled_retries:
             # decrease intervals and trigger retry attempts
             new_sched = []
             for msg, intervals in list(self._scheduled_retries):
                 if intervals:
                     intervals.pop(0)
                 # perform an attempt now
-                msg.send_attempts = getattr(msg, 'send_attempts', 0) + 1
-                if msg.send_attempts > getattr(msg, 'max_retries', 3):
+                msg.send_attempts = getattr(msg, "send_attempts", 0) + 1
+                if msg.send_attempts > getattr(msg, "max_retries", 3):
                     # drop
                     if msg in self._inflight:
                         try:
@@ -399,7 +419,7 @@ class IoTClient:
                     self._inflight.remove(msg)
                 continue
             # if message is scheduled then skip here
-            if any(smsg is msg for smsg, _ in getattr(self, '_scheduled_retries', [])):
+            if any(smsg is msg for smsg, _ in getattr(self, "_scheduled_retries", [])):
                 continue
             msg.send_attempts = getattr(msg, "send_attempts", 0) + 1
             if msg.send_attempts > getattr(msg, "max_retries", 3):
@@ -461,12 +481,20 @@ class IoTClient:
             for queued in list(self._incoming_queue):
                 for sub in self.subscriptions:
                     if self._topic_matches_subscription(queued.topic, sub):
-                        asyncio.create_task(self._deliver_message(queued.topic, queued.payload, getattr(queued, 'retained', False)))
+                        asyncio.create_task(
+                            self._deliver_message(
+                                queued.topic,
+                                queued.payload,
+                                getattr(queued, "retained", False),
+                            )
+                        )
                         break
             self._incoming_queue.clear()
 
     def run_scheduled_retries(self, steps: int = 1) -> None:
-        raise RuntimeError("run_scheduled_retries is no longer synchronous; use await retry_inflight() or rely on background retry tasks")
+        raise RuntimeError(
+            "run_scheduled_retries is no longer synchronous; use await retry_inflight() or rely on background retry tasks"
+        )
 
     def metrics(self) -> dict:
         return {
