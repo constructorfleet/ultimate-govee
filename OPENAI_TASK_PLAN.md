@@ -61,7 +61,7 @@ Below is a detailed, executable Markdown checklist you can use to drive the rema
   - Commit: refactor(iot-client): parametrize backoff policy
 
 ## 3. PahoBackend production hardening (MQTT adapter)
-- [ ] RED: add failing test that shows reconnect behavior is expected
+- [x] RED: add failing test that shows reconnect behavior is expected
   - Test file: govee-python/tests/test_paho_backend_reconnect.py
   - Behavior:
     - Use a mock or fake paho client that simulates connect failure then success; assert PahoBackend.connect retries and eventually returns or sets connected state.
@@ -78,13 +78,13 @@ Below is a detailed, executable Markdown checklist you can use to drive the rema
     - Test passes (mocked connect path).
     - No leaked threads after test completion.
   - Commit: feat(mqtt): implement paho reconnect with backoff and TLS options
-- [ ] REFACTOR: add logging and lifecycle control
+- [x] REFACTOR: add logging and lifecycle control
   - Add more tests to ensure unsubscribe on disconnect, reconnect subscription resumption.
   - Run full test suite.
   - Commit: refactor(mqtt): improve lifecycle & logging
 
 ## 4. Integration test against a local MQTT broker (optional but recommended)
-- [ ] RED: add failing e2e test that publishes/subscribes to a real broker
+- [x] RED: add failing e2e test that publishes/subscribes to a real broker
   - Test file: govee-python/tests/test_iot_paho_e2e.py
   - Requires a local broker (mosquitto) in CI or a test fixture.
   - Behavior:
@@ -231,7 +231,7 @@ Below is a detailed, executable Markdown checklist you can use to drive the rema
   - Commit: refactor(iot-client): parametrize backoff policy
 
 ## 3. PahoBackend production hardening (MQTT adapter)
-- [ ] RED: add failing test that shows reconnect behavior is expected
+- [x] RED: add failing test that shows reconnect behavior is expected
   - Test file: govee-python/tests/test_paho_backend_reconnect.py
   - Behavior:
     - Use a mock or fake paho client that simulates connect failure then success; assert PahoBackend.connect retries and eventually returns or sets connected state.
@@ -248,13 +248,13 @@ Below is a detailed, executable Markdown checklist you can use to drive the rema
     - Test passes (mocked connect path).
     - No leaked threads after test completion.
   - Commit: feat(mqtt): implement paho reconnect with backoff and TLS options
-- [ ] REFACTOR: add logging and lifecycle control
+- [x] REFACTOR: add logging and lifecycle control
   - Add more tests to ensure unsubscribe on disconnect, reconnect subscription resumption.
   - Run full test suite.
   - Commit: refactor(mqtt): improve lifecycle & logging
 
 ## 4. Integration test against a local MQTT broker (optional but recommended)
-- [ ] RED: add failing e2e test that publishes/subscribes to a real broker
+- [x] RED: add failing e2e test that publishes/subscribes to a real broker
   - Test file: govee-python/tests/test_iot_paho_e2e.py
   - Requires a local broker (mosquitto) in CI or a test fixture.
   - Behavior:
