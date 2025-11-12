@@ -33,7 +33,8 @@ async def _run():
     sent_count = 0
     for d in devices:
         model = d.get('deviceExt', {}).get('deviceSettings', {}).get('model') or d.get('sku')
-        advert = {'id': d.get('device'), 'name': d.get('deviceName')}
+        # include deviceExt in advert so factory heuristics can inspect ic/settings
+        advert = {'id': d.get('device'), 'name': d.get('deviceName'), 'deviceExt': d.get('deviceExt', {})}
         dev = make_device_from_advert(model, advert)
         if not dev or not hasattr(dev, 'encode_command'):
             continue
