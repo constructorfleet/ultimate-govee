@@ -104,13 +104,13 @@
 - [x] `test_mqtt_adapter_reconnect_and_resume_subscriptions`
 
 ### Implementation (GREEN)
-- [ ] Implement adapter compatible with IoTClient
-- [ ] Backend abstraction (FakeBackend for tests)
-- [ ] Optional paho-mqtt backend
-- [ ] Use JSONL fixtures for simulated messages
+- [x] Implement adapter compatible with IoTClient
+- [x] Backend abstraction (FakeBackend for tests)
+- [x] Optional paho-mqtt backend
+- [x] Use JSONL fixtures for simulated messages
 
 ### Acceptance
-- [ ] Tests pass offline
+- [x] Tests pass offline
 - [ ] Swappable backend for real MQTT broker
 
 **Commit flow**
@@ -121,7 +121,7 @@
 ---
 
 ## 🧩 Cross-Cutting Tasks
-- [ ] Add fixtures in `/tests/fixtures/{openapi,iot,mqtt}`
+- [x] Add fixtures in `/tests/fixtures/{openapi,iot,mqtt}`
 - [ ] Add integration test `test_iot_manager_integration.py`
 - [ ] Validate OpenAPI → IoTAdapter flow
 - [ ] Update `pyproject.toml` if deps change
