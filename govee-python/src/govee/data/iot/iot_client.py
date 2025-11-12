@@ -303,11 +303,42 @@ class IoTClient:
         msg.max_retries = max_retries
         if backoff_intervals:
             msg.backoff_intervals = list(backoff_intervals)
-            # schedule a background retry task: maintain a simple scheduled
-            # retries list using the same shape used by retry_inflight(); this
-            # keeps the implementation test-friendly without background
-            # daemons that complicate test timing.
-            self._scheduled_retries.append((msg, list(msg.backoff_intervals)))
+            # schedule a background retry task: spawn a background coroutine
+            # that will attempt resends using the provided backoff intervals.
+            # This more closely matches a production retry driver while
+            # remaining testable because tasks are tracked and can be
+            # inspected or awaited if necessary.
+            msg.backoff_intervals = list(backoff_intervals)
+            if not hasattr(self, '_retry_tasks'):
+                self._retry_tasks: List[asyncio.Task] = []
+
+            async def _retry_task(m: AsyncIotMessage):
+                intervals = list(getattr(m, 'backoff_intervals', []) or [])
+                while intervals and not getattr(m, 'acked', False):
+                    delay = intervals.pop(0)
+                    await asyncio.sleep(delay)
+                    # attempt resend: in a real client this would republish
+                    # to the broker. For this in-memory client, trigger the
+                    # retry logic by ensuring the message remains inflight or
+                    # by invoking drop callbacks when max retries exceeded.
+                    m.send_attempts = getattr(m, 'send_attempts', 0) + 1
+                    if m.send_attempts > getattr(m, 'max_retries', 3):
+                        # move to dropped
+                        if m in self._inflight:
+                            try:
+                                self._inflight.remove(m)
+                            except ValueError:
+                                pass
+                        for cb in list(self._drop_callbacks):
+                            try:
+                                cb(m)
+                            except Exception:
+                                pass
+                        return
+                return
+
+            task = asyncio.create_task(_retry_task(msg))
+            self._retry_tasks.append(task)
         return msg
 
     def _process_auto_ack(self, payload: Any) -> None:
