@@ -87,3 +87,18 @@ class AsyncOpenApiClient:
                 continue
 
         raise OpenApiError(f"failed to get iot credentials: {last_exc}")
+
+
+    __doc__ = """AsyncOpenApiClient provides a minimal async-compatible wrapper
+    around a synchronous HTTP session callable. Example usage:
+
+    >>> async def example():
+    ...     def session(method, url, **kwargs):
+    ...         return {"status": 200, "data": {"endpoint": "mqtt://example", "clientId": "c1", "topic": "govee/device/#"}}
+    ...     client = AsyncOpenApiClient(base_url='http://api', session=session)
+    ...     creds = await client.get_iot_credentials('device-1')
+    ...     assert 'topic' in creds
+
+    The client supports configurable retries and timeouts and will raise
+    OpenApiTimeout for timeouts and OpenApiNotFound for 404 responses.
+    """
