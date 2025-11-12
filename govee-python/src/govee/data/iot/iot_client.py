@@ -11,8 +11,7 @@ from __future__ import annotations
 import asyncio
 import random
 import time
-from typing import (Any, Awaitable, Callable, Dict, List, Optional, Protocol,
-                    TypedDict)
+from typing import Any, Awaitable, Callable, Dict, List, Optional, Protocol, TypedDict
 
 
 class AsyncIotMessage:
@@ -204,8 +203,14 @@ class IoTClient:
         max_attempts is exhausted. On failure the last exception is raised.
         """
         attempt = 0
-        backoff = initial_backoff if initial_backoff is not None else self._reconnect_initial_backoff
-        max_attempts = max_attempts if max_attempts is not None else self._reconnect_max_attempts
+        backoff = (
+            initial_backoff
+            if initial_backoff is not None
+            else self._reconnect_initial_backoff
+        )
+        max_attempts = (
+            max_attempts if max_attempts is not None else self._reconnect_max_attempts
+        )
         jitter = jitter if jitter is not None else self._reconnect_jitter
         rng = rng if rng is not None else self._reconnect_rng
         if rng is None:
@@ -592,7 +597,6 @@ class IoTClient:
             f"govee_iot_inflight_count {m['inflight_count']}",
         ]
         return "\n".join(lines) + "\n"
-
 
     def configure_reconnect_policy(
         self,

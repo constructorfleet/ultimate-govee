@@ -1,5 +1,4 @@
 import pytest
-
 from govee.data.openapi.openapi_service import OpenAPIService
 
 

@@ -1,6 +1,9 @@
 from govee.common.delta_map import DeltaMap
-from govee.common.observables import (DeltaSubject, ForwardBehaviorSubject,
-                                      PartialBehaviorSubject)
+from govee.common.observables import (
+    DeltaSubject,
+    ForwardBehaviorSubject,
+    PartialBehaviorSubject,
+)
 
 
 def test_delta_map_ts_api_aliases_exist_and_work():

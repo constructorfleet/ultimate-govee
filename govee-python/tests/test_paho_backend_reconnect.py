@@ -23,12 +23,13 @@ def test_paho_backend_retries_and_connects(monkeypatch):
     # monkeypatch the mqtt.Client to our fake
     import govee.data.common.paho_adapter as pa
 
-    monkeypatch.setattr(pa, 'mqtt', type('M', (), {'Client': lambda *a, **k: FakeClient()}))
+    monkeypatch.setattr(
+        pa, "mqtt", type("M", (), {"Client": lambda *a, **k: FakeClient()})
+    )
 
-    backend = PahoBackend(host='localhost', port=1883, topics=['test/#'])
+    backend = PahoBackend(host="localhost", port=1883, topics=["test/#"])
 
     # should not raise and should eventually connect
     backend.connect(max_attempts=5, initial_backoff=0.001)
 
-    assert getattr(backend, '_connected', False) is True
-
+    assert getattr(backend, "_connected", False) is True

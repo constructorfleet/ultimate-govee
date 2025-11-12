@@ -1,7 +1,6 @@
 import base64
 
 import pytest
-
 from govee.data.api.effect.models import LightEffect, rebuild_light_op_code
 from govee.data.api.effect.service import GoveeEffectService
 

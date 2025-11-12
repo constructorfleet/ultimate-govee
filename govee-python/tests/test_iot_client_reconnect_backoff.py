@@ -1,5 +1,4 @@
 import pytest
-
 from govee.data.iot.iot_client import IoTClient
 
 
@@ -38,5 +37,6 @@ async def test_connect_with_backoff_fails_when_exhausted():
     client.connect = always_fail
 
     with pytest.raises(RuntimeError):
-        await client.connect_with_backoff(initial_backoff=0.001, max_attempts=3, jitter=0)
-
+        await client.connect_with_backoff(
+            initial_backoff=0.001, max_attempts=3, jitter=0
+        )

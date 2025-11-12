@@ -16,6 +16,7 @@ BLACK = os.path.join(ROOT, "govee-python", ".venv", "bin", "black")
 ISORT = os.path.join(ROOT, "govee-python", ".venv", "bin", "isort")
 RUFF = os.path.join(ROOT, "govee-python", ".venv", "bin", "ruff")
 
+
 def run(cmd, env=None, check=True):
     print("+", " ".join(cmd))
     return subprocess.run(cmd, env=env, check=check)
@@ -25,7 +26,14 @@ def main():
     env = os.environ.copy()
     env["XDG_CACHE_HOME"] = os.path.join(ROOT, ".uv_cache")
 
-    if os.path.isfile(BLACK) and os.access(BLACK, os.X_OK) and os.path.isfile(ISORT) and os.access(ISORT, os.X_OK) and os.path.isfile(RUFF) and os.access(RUFF, os.X_OK):
+    if (
+        os.path.isfile(BLACK)
+        and os.access(BLACK, os.X_OK)
+        and os.path.isfile(ISORT)
+        and os.access(ISORT, os.X_OK)
+        and os.path.isfile(RUFF)
+        and os.access(RUFF, os.X_OK)
+    ):
         print("running black --check...")
         run([BLACK, "--check", "govee-python"], env=env)
         print("running isort --check-only...")
@@ -33,7 +41,9 @@ def main():
         print("running ruff check...")
         run([RUFF, "check", "govee-python/src", "govee-python/tests"], env=env)
     else:
-        print("format/lint tools not available in govee-python/.venv; skipping format_check")
+        print(
+            "format/lint tools not available in govee-python/.venv; skipping format_check"
+        )
 
     # Run tests: prefer pytest in the venv so we can run coverage checks. If
     # pytest isn't available, fall back to the lightweight run_tests.py
@@ -43,7 +53,17 @@ def main():
         print("running pytest with coverage checks...")
         # enforce a coverage gate; adjust threshold here if needed
         try:
-            run([pytest_bin, "--maxfail=1", "--disable-warnings", "-q", "--cov=govee", "--cov-fail-under=90"], env=env)
+            run(
+                [
+                    pytest_bin,
+                    "--maxfail=1",
+                    "--disable-warnings",
+                    "-q",
+                    "--cov=govee",
+                    "--cov-fail-under=90",
+                ],
+                env=env,
+            )
         except subprocess.CalledProcessError:
             # pytest returned non-zero (failures or coverage); re-raise to
             # propagate the failure to CI
@@ -55,7 +75,10 @@ def main():
         run([VENV_PY, os.path.join(ROOT, "govee-python", "run_tests.py")], env=env)
     else:
         print("python interpreter not found in venv; attempting system python")
-        run([sys.executable, os.path.join(ROOT, "govee-python", "run_tests.py")], env=env)
+        run(
+            [sys.executable, os.path.join(ROOT, "govee-python", "run_tests.py")],
+            env=env,
+        )
 
 
 if __name__ == "__main__":

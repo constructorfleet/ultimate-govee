@@ -1,6 +1,10 @@
-from govee.data.ble.decoder_lib import (Calibration, bcf_value_from_hex_string,
-                                        post_processing, reverse_hex_data,
-                                        value_from_hex_string)
+from govee.data.ble.decoder_lib import (
+    Calibration,
+    bcf_value_from_hex_string,
+    post_processing,
+    reverse_hex_data,
+    value_from_hex_string,
+)
 
 
 def test_reverse_hex_data_odd_length():

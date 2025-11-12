@@ -18,8 +18,7 @@ from typing import Any, Callable, Dict, Optional
 
 from govee.persist.service import PersistService
 
-from .configuration import (AUTH_URL, COMMUNITY_AUTH_URL, IOT_CERT_URL,
-                            REFRESH_TOKEN_URL)
+from .configuration import AUTH_URL, COMMUNITY_AUTH_URL, IOT_CERT_URL, REFRESH_TOKEN_URL
 from .models import GoveeAccount, IoTData, OAuthData
 
 logger = logging.getLogger(__name__)
@@ -36,8 +35,9 @@ class GoveeAccountService:
         # request can be a convenience wrapper that delegates to the
         # govee.data.utils.request.request factory. If None, the factory's
         # default session will be used when the service performs network calls.
-        from govee.data.utils.request import \
-            request as request_factory  # local import to avoid cycle
+        from govee.data.utils.request import (
+            request as request_factory,  # local import to avoid cycle
+        )
 
         # Support two invocation styles for tests and callers:
         # 1) request is a factory: request(url, headers, payload) -> Request

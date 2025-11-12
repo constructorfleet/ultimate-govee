@@ -1,5 +1,4 @@
 import pytest
-
 from govee.data.api.diy.service import GoveeDiyService
 
 

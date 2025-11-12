@@ -1,5 +1,4 @@
 import pytest
-
 from govee.data.ble.decoder_lib import Decoder
 from govee.data.ble.decoder_service import DecoderService
 

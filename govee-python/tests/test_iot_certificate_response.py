@@ -1,5 +1,7 @@
 from govee.data.api.account.iot_certificate_response import (
-    IoTCertificateData, IoTCertificateResponse)
+    IoTCertificateData,
+    IoTCertificateResponse,
+)
 
 
 def test_iot_certificate_standard_keys():

@@ -1,5 +1,4 @@
-from govee.domain.devices.states.light_effect import (EffectStore,
-                                                      parse_light_effect_op)
+from govee.domain.devices.states.light_effect import EffectStore, parse_light_effect_op
 
 
 def test_light_effect_op_matching_identifier():

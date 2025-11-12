@@ -3,7 +3,6 @@ import base64
 import json
 
 import pytest
-
 from govee.data.api.account import configuration
 from govee.data.api.account import jwt as jwt_mod
 from govee.data.ble.client import BleClient

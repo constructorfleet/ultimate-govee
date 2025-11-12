@@ -136,7 +136,7 @@ class PahoBackend:
             try:
                 for t in list(self.topics):
                     try:
-                        if hasattr(self._client, 'unsubscribe'):
+                        if hasattr(self._client, "unsubscribe"):
                             self._client.unsubscribe(t)
                     except Exception:
                         pass

@@ -1,5 +1,7 @@
 from govee.domain.devices.states.night_light import (
-    parse_night_light, state_to_command_nightlight)
+    parse_night_light,
+    state_to_command_nightlight,
+)
 
 
 def test_parse_night_light_op_and_state():

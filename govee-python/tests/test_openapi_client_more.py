@@ -2,9 +2,11 @@ import asyncio
 import time
 
 import pytest
-
-from govee.data.openapi.client import (AsyncOpenApiClient, OpenApiNotFound,
-                                       OpenApiTimeout)
+from govee.data.openapi.client import (
+    AsyncOpenApiClient,
+    OpenApiNotFound,
+    OpenApiTimeout,
+)
 
 
 def test_get_iot_credentials_404_raises():

@@ -1,7 +1,6 @@
 import asyncio
 
 import pytest
-
 from govee.data.iot import IoTClient
 
 

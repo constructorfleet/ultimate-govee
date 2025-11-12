@@ -19,7 +19,7 @@ class FakeClient:
 
     def connect(self, host, port, keepalive):
         # simulate immediate on_connect call
-        if hasattr(self, 'on_connect') and callable(self.on_connect):
+        if hasattr(self, "on_connect") and callable(self.on_connect):
             # call on_connect callback if set
             try:
                 self.on_connect(self, None, None, 0)
@@ -38,9 +38,11 @@ class FakeClient:
 
 def test_paho_backend_unsubscribe_and_resubscribe(monkeypatch):
     # replace mqtt.Client with our fake client
-    monkeypatch.setattr(pa, 'mqtt', type('M', (), {'Client': lambda *a, **k: FakeClient()}))
+    monkeypatch.setattr(
+        pa, "mqtt", type("M", (), {"Client": lambda *a, **k: FakeClient()})
+    )
 
-    backend = pa.PahoBackend(host='localhost', port=1883, topics=['a/#', 'b/#'])
+    backend = pa.PahoBackend(host="localhost", port=1883, topics=["a/#", "b/#"])
 
     # attach no-op iot client (not used in this test)
     backend.attach(None)
@@ -48,8 +50,8 @@ def test_paho_backend_unsubscribe_and_resubscribe(monkeypatch):
     # first connect should subscribe
     backend.connect(max_attempts=1, initial_backoff=0.001)
     assert backend._connected is True
-    assert hasattr(backend, '_client')
-    assert backend._client.subscribed == ['a/#', 'b/#']
+    assert hasattr(backend, "_client")
+    assert backend._client.subscribed == ["a/#", "b/#"]
 
     # stop should unsubscribe
     backend.stop()
@@ -57,5 +59,4 @@ def test_paho_backend_unsubscribe_and_resubscribe(monkeypatch):
 
     # reconnect should resubscribe
     backend.connect(max_attempts=1, initial_backoff=0.001)
-    assert backend._client.subscribed == ['a/#', 'b/#']
-
+    assert backend._client.subscribed == ["a/#", "b/#"]
