@@ -132,7 +132,7 @@ If dist or JS code references additional device classes (RGBICLightDevice, RGBLi
   - Commit message: feat(devices): ensure device command frames integrate with IoTAdapter (GREEN)
 
 ## G. Documentation & examples
-- [ ] G1 — REFACTOR: add device docs
+- [x] G1 — REFACTOR: add device docs
   - Files:
     - govee-python/docs/devices.md — describe DeviceBase API and example implementation (RGBDevice)
     - README.md snippet + example code for applying payloads and encoding commands
