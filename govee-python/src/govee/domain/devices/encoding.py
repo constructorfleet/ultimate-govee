@@ -60,7 +60,10 @@ def pack_raw_frame(op_code: int, values: List[int], model: str | None = None) ->
     leading 0xAA and recomputes/appends checksum. Model-specific tweaks can
     be applied to reproduce exact persisted frames (e.g., fixed bytes for H601B).
     """
-    from ..common.op_code import as_op_code
+    # import op_code helper from package root (govee.common.op_code)
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from govee.common.op_code import as_op_code
 
     raw = as_op_code(op_code, *values)
     # core (without as_op_code checksum)
@@ -78,4 +81,3 @@ def pack_raw_frame(op_code: int, values: List[int], model: str | None = None) ->
         checksum ^= b
     frame.append(checksum)
     return frame
-
