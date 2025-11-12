@@ -97,18 +97,18 @@ If dist or JS code references additional device classes (RGBICLightDevice, RGBLi
 - [x] D2 — GREEN: implement sensor device
   - File: implementations/sensor.py
   - Commit message: feat(devices): add SensorDevice (GREEN)
-- [ ] D3 — REFACTOR: unify parsing with DeviceState, add calibration handling
+- [x] D3 — REFACTOR: unify parsing with DeviceState, add calibration handling
   - Commit message: refactor(devices): unify sensor state handling & calibration
 
 ## E. Common base / utilities (applies across A–D)
-- [ ] E1 — RED: failing tests for DeviceBase behavior
+- [x] E1 — RED: failing tests for DeviceBase behavior
   - Test file: govee-python/tests/test_device_base.py
   - Tests:
     - default get_state() returns DeviceState
     - default apply_payload merges values
     - encode_command contract (list of frames)
   - Commit message: test(devices): add base class contract tests (RED)
-- [ ] E2 — GREEN: implement DeviceBase
+- [x] E2 — GREEN: implement DeviceBase
   - File: govee-python/src/govee/domain/devices/device_base.py
   - Provide:
     - apply_payload(payload) default merge
