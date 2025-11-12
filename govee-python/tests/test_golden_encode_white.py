@@ -25,8 +25,8 @@ def pack_white_command(power=None, brightness=None, ct=None):
         checksum = 0
         for b in frame:
             checksum ^= b
-        # set last byte to checksum to match persisted frame layout
-        frame[-1] = checksum
+        # append the checksum byte so final layout matches persisted frames.
+        frame.append(checksum)
         return frame
 
     if power is not None:
