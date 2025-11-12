@@ -59,6 +59,10 @@ class RGBICDevice(DeviceBase):
             c = s.get("color") or {}
             frames.append(encode_segment(idx, {"r": int(c.get("r", 0)), "g": int(c.get("g", 0)), "b": int(c.get("b", 0))}))
 
+        # pixel array encoding (simple frame with op 'pixels')
+        if "pixels" in command and isinstance(command.get("pixels"), list):
+            frames.append({"op": "pixels", "pixels": [list(map(int, p)) for p in command.get("pixels")]})
+
         if "effect" in command and isinstance(command.get("effect"), dict):
             e = command.get("effect")
             frames.append({"op": "effect", "name": e.get("name"), "speed": e.get("speed")})
