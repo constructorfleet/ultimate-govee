@@ -11,6 +11,7 @@ from typing import Optional
 
 from .device import Device
 from .implementations.rgbic import RGBICDevice
+from .implementations.hygrometer import HygrometerDevice
 
 
 def make_device_from_advert(model: str, payload: dict) -> Optional[Device]:
@@ -44,6 +45,12 @@ def make_device_from_advert(model: str, payload: dict) -> Optional[Device]:
         pass
 
     if m.startswith(("H", "M")):
+        # Basic mapping heuristics: instantiate specific sensor/device classes
+        # for known categories found in product JSON. For hygrometers, if
+        # the model or name contains 'hygrometer' return HygrometerDevice.
+        if 'hygrometer' in (str(model or '') + ' ' + str(payload.get('productName') or '')).lower():
+            return HygrometerDevice(id=payload.get('id') or payload.get('device'), model=model, name=payload.get('name'))
+
         return Device(
             id=payload.get("id") or payload.get("device"),
             model=model,

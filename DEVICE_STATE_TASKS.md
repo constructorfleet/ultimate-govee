@@ -8,22 +8,25 @@ ExecPlan (high-level)
 Task list (check off as you complete each item)
 
 1) Design & Investigation
-- [ ] Review any existing TypeScript implementation (if available in repo or upstream) and record supported device types and mapping rules.
-  - Files to inspect: (repo-specific) -> note where TypeScript file lives or existing python device classes.
+- [x] Review any existing TypeScript implementation (if available in repo or upstream) and record supported device types and mapping rules.
+  - Files to inspect: lib/domain/devices/impl (TypeScript DeviceFactory implementations)
   - Expected outcome: mapping table (product json -> concrete Python class) to use as canonical reference.
-- Commit message: chore(device-factory): add design notes and mapping table
+  - Notes: extracted the TypeScript DeviceFactory matchers and saved them to govee-python/tests/fixtures/typescript_device_mappings.json. Extraction and comparison utilities are added at govee-python/tools/extract_ts_matchers.py and govee-python/tools/compare_ts_python_matchers.py.
+  - Commit message: chore(device-factory): add design notes and mapping table
 
 2) Add realistic product JSON fixtures
-- [ ] Copy the REAL raw product and device json files from persisted to the test fixtures directory
+- [x] Copy the REAL raw product and device json files from persisted to the test fixtures directory
   - Path: tests/fixtures/govee_products.json and tests/fixtures/govee_devices.json
+  - Notes: persisted/govee.products.json and persisted/govee.devices.json were copied to govee-python/tests/fixtures/govee.products.json and govee-python/tests/fixtures/govee.devices.json and committed.
 
 3) Add tests for DeviceFactory (write tests before implementation)
-- [ ] Add unit tests that assert:
+- [x] Add unit tests that assert:
   - Factory returns the correct concrete class for a given model.
   - The device instance has capability metadata (brightness, color, etc.).
   - Unsupported/unknown model are logged and ignored.
   - The factory handles missing fields gracefully (e.g., missing capabilities => defaults).
-- Test file: tests/test_device_factory.py
+  - Test file: tests/test_device_factory.py
+  - Notes: added parity tests at govee-python/tests/test_device_factory_parity.py which compare the Python matcher (src/govee/domain/devices/matcher.py) against the extracted TypeScript matchers. A compare script (tools/compare_ts_python_matchers.py) verified 0 mismatches across all products (447 products). Parity tests pass.
 
 4) Add minimal device base class and device stubs
 - [ ] Add a Device base class with attributes that will be populated by the factory.
