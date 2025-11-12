@@ -22,7 +22,7 @@ async def _run():
         def onMessage(self, topic, payload, dup, qos, retain):
             received.append((topic, payload, retain))
 
-    client = await adapter.create({"topic": "govee/device/#"}, Handler())
+    await adapter.create({"topic": "govee/device/#"}, Handler())
     await adapter.connect()
 
     # create a device and ask it to encode a command
