@@ -300,3 +300,81 @@ Next (short-term)
   - [x] decoder_lib parity: The Python decoder_lib reproduces outputs for the ported TypeScript decoder.spec cases. This subtask is considered complete. Remaining work: expand coverage to additional specs/models as needed to claim broader parity.
 - Port additional device specs and add fixture-driven tests for representative models.
 
+
+
+
+## Parity assessment vs. TypeScript (detailed)
+
+This section documents which IoT/OpenAPI/MQTT client tasks from this ExecPlan
+have reached functional parity with the TypeScript implementation, and which
+remain partial. Parity here means: the Python implementation reproduces the
+observable behaviors exercised by the TypeScript code for the features the
+higher-level code depends on, and those behaviors are covered by deterministic
+unit tests in govee-python/tests.
+
+Assessment summary
+- OpenAPI client: PARTIAL PARITY
+  - What is matched:
+    - Async credential retrieval with retries, timeout handling and 4xx/5xx handling.
+    - Typed parsing for IoT credential payloads (IoTCredentialModel).
+    - Unit tests: govee-python/tests/test_openapi_client.py and test_openapi_client_more.py.
+  - What is missing for full parity:
+    - Generated OpenAPI client surface (full models/endpoints) and deeper
+      integration behaviors present in the TypeScript-generated client.
+  - Conclusion: Python covers the credential path needed by IoT flow; not a
+    full generated OpenAPI client replacement.
+
+- IoT client: PARTIAL PARITY
+  - What is matched:
+    - publish/subscribe API, retained-message semantics, topic wildcard
+      matching (#+/+), queueing while disconnected/interrupted, queue trimming
+      and drop callbacks.
+    - basic QoS 1 inflight tracking and acks (convention-based ack payloads),
+      and a background retry mechanism for send_with_retry.
+    - Unit tests: govee-python/tests/test_iot_client_*.py (queueing, retained,
+      inflight, retry/backoff, interruption, metrics).
+  - What is missing for full parity:
+    - Packet-id based QoS mechanics, broker-level ack packet handling,
+      guaranteed delivery semantics matching AWS IoT SDK, persistent session
+      semantics across process restarts, and advanced reconnect/backoff with
+      jitter found in the TS SDK usage.
+  - Conclusion: Python IoTClient reproduces the behaviors needed by the
+    repository tests and higher-level code, but not every low-level MQTT
+    guarantee the TS SDK provides. Additional work is needed for full parity.
+
+- MQTT adapter: PARTIAL PARITY
+  - What is matched:
+    - A test-friendly FakeMQTTBackend that replays persisted JSONL fixtures
+      (persisted/mqtt_fixtures/replay_1.jsonl) and a thin MQTTAdapter that
+      delivers messages into IoTClient for offline deterministic tests.
+    - An optional PahoBackend/PahoAdapter thin wrapper that can attach to
+      an IoTClient and (optionally) start a background paho loop.
+    - Unit tests: govee-python/tests/test_mqtt_adapter_*.py, test_mqtt_swappable_backend.py.
+  - What is missing for full parity:
+    - Production-grade Paho backend with robust reconnect/jitter/backoff,
+      TLS/certificate handling wired to OpenAPI-provided credentials, and
+      exhaustive packet-level QoS testing against a broker.
+  - Conclusion: The fake backend and adapter provide test parity for the
+    Python repository; the Paho backend is a minimal adapter and requires
+    additional hardening to match the operational behavior of the TS AWS IoT
+    client.
+
+Evidence (key files/tests)
+- OpenAPI: govee-python/src/govee/data/openapi/client.py, tests/test_openapi_client*.py
+- IoT client: govee-python/src/govee/data/iot/iot_client.py, tests/test_iot_client_*.py
+- MQTT adapter: govee-python/src/govee/data/common/mqtt_adapter.py,
+  govee-python/src/govee/data/common/paho_adapter.py, persisted/mqtt_fixtures,
+  tests/test_mqtt_adapter_*.py
+
+Recommended follow-ups to reach full parity
+1. Implement MQTT QoS packet-id based ack flows and tests (unit + broker
+   integration).
+2. Harden PahoBackend with robust reconnect/backoff and TLS cert chain
+   integration; add simulated disconnect/reconnect tests.
+3. Consider integrating a generated OpenAPI client or expand the Python
+   OpenAPI surface to match endpoints used in production.
+
+Update log
+- Assessment added by automation after running the Python test-suite and
+  inspecting the implementation. All assertions in tests referenced above pass
+  in the packaged project venv.
