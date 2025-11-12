@@ -84,7 +84,7 @@ def make_device_from_advert(model: str, payload: dict) -> Optional[Device]:
             model=model,
             name=payload.get("name") or f"Govee-{model}",
             firmware=payload.get("version"),
-            addresses={"mac": payload.get("mac"), "ip": payload.get("ip")},
+            addresses={"mac": payload.get("mac") if payload.get("mac") is not None else payload.get("deviceMac"), "ip": payload.get("ip")},
         )
     return None
 
