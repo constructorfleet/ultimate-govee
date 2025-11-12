@@ -26,6 +26,14 @@ class RGBICDevice(DeviceBase):
         st = parse_state(payload or {})
         self._state = st
         segs = payload.get("segments") or []
+        # Support pixel array payloads (some firmwares report pixels directly)
+        px = payload.get("pixels")
+        if px is not None and isinstance(px, list):
+            # normalize pixels to list of [r,g,b]
+            self.pixels = [list(map(int, p)) for p in px]
+        else:
+            # ensure pixels attribute always exists
+            self.pixels = getattr(self, "pixels", [])
         # normalize simple segment shapes
         self.segments = []
         for s in segs:
