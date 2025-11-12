@@ -73,8 +73,8 @@ async def test_model_extraction_from_manufacturer_data_and_name(monkeypatch):
 
     # case 2: name contains GVH... pattern
     captured.clear()
-    p2 = {"advertisement": {}, "advertisement": {"localName": "GVH5106_2811"}}
-    await svc.decode_device({"advertisement": {"localName": "GVH5106_2811"}})
+    p2 = {"advertisement": {"localName": "GVH5106_2811"}}
+    await svc.decode_device(p2)
     assert "GVH5106" in captured
 
 
