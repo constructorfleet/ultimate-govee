@@ -21,3 +21,8 @@ def test_rgbic_manifest_present():
     assert 'PowerState' in m['state_factories']
 
 
+def test_rgbic_sample_fixture():
+    s = load_fixture('rgbic_samples.json')
+    assert isinstance(s, list)
+    assert s[0]['model'].startswith('H61')
+
