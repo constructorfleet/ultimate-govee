@@ -24,17 +24,14 @@ def load_ts_matchers():
         if not text:
             parsed.append(m)
             continue
-        # attempt to convert JS-like object text into JSON by quoting bare keys and replacing single quotes
-        t = text
-        # replace single quotes with double quotes
-        t = t.replace("'", '"')
-        # quote bare keys like { Temp: -> { "Temp":
-        t = re.sub(r'([\{,\s])(\w[\w \/-]*?)\s*:', lambda mo: f"{mo.group(1)}\"{mo.group(2)}\":", t)
-        # now load as JSON
+        # Simplest robust approach: mapping_text was produced by replacing
+        # regex literals with JSON-like dicts; outer keys are single-quoted.
+        # Convert single quotes to double quotes and load as JSON.
+        t = text.replace("'", '"')
         try:
             j = json.loads(t)
         except Exception:
-            # fallback: leave mapping_text
+            # fallback: leave mapping_text unparsed
             m['matchers'] = None
             parsed.append(m)
             continue
