@@ -12,6 +12,7 @@ from typing import Any, Dict, List, Optional
 from ..device_base import DeviceBase
 from ..models import DeviceState, parse_state
 from ..encoding import encode_power, encode_brightness, encode_segment
+from ..states.segment_color_mode import SegmentColorModeState
 
 
 class RGBICDevice(DeviceBase):
@@ -45,6 +46,10 @@ class RGBICDevice(DeviceBase):
                     "b": int(s["color"].get("b", 0)),
                 }
             self.segments.append(seg)
+        # also parse segment state
+        sc = SegmentColorModeState(self)
+        sc.parse(payload)
+        self.segment_state = sc
 
     def get_state(self) -> DeviceState:
         return self._state
