@@ -10,13 +10,13 @@ from __future__ import annotations
 from typing import Any, Dict, List, Optional
 
 from ..device import Device
+from ..device_base import DeviceBase
 from ..models import DeviceState, parse_state
 
 
-class RGBICDevice(Device):
+class RGBICDevice(DeviceBase):
     def __init__(self, id: str, model: Optional[str] = None, name: Optional[str] = None):
         super().__init__(id=id, model=model, name=name)
-        self._state: DeviceState = DeviceState()
         # segments: list of dicts with index, length, color
         self.segments: List[Dict[str, Any]] = []
 
