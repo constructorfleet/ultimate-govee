@@ -126,8 +126,10 @@
 - [x] Tests pass offline
 - [x] Swappable backend for real MQTT broker
 =======
-- [ ] Tests pass offline
-- [ ] Swappable backend for real MQTT broker
+- [x] Tests pass offline
+  - verified: all mqtt/iot/openapi tests use fixtures and pass offline in venv
+- [x] Swappable backend for real MQTT broker
+  - verified: MQTTAdapter supports backends with replay(client) or attach(client); PahoBackend provided
 >>>>>>> parent of 2230fb3 (chore(tasks): mark mqtt adapter backend and fixtures implemented; tests pass offline)
 
 **Commit flow**
@@ -143,7 +145,8 @@
 - [x] Add integration test `test_iot_manager_integration.py` (implemented offline as test_iot_openapi_integration.py)
 - [x] Validate OpenAPI → IoTAdapter flow
 =======
-- [ ] Add fixtures in `/tests/fixtures/{openapi,iot,mqtt}`
+- [x] Add fixtures in `/tests/fixtures/{openapi,iot,mqtt}`
+  - verified: govee-python/tests/fixtures and persisted/mqtt_fixtures contain fixtures used by tests
 - [x] Add integration test `test_iot_manager_integration.py` (implemented offline as test_iot_openapi_integration.py)
 - [x] Validate OpenAPI → IoTAdapter flow
 >>>>>>> parent of 2230fb3 (chore(tasks): mark mqtt adapter backend and fixtures implemented; tests pass offline)
