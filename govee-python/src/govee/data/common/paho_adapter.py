@@ -14,6 +14,7 @@ except Exception:  # pragma: no cover - optional dependency
     mqtt = None  # type: ignore
 
 import threading
+import time
 from typing import Any, Optional, Sequence
 
 from govee.data.iot.iot_client import AsyncIotMessage
