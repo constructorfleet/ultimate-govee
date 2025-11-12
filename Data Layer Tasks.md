@@ -89,8 +89,10 @@
 **Commit flow**
 - [x] RED: `test(iot-client): add queueing and retained message tests`
   - verified: tests added under govee-python/tests/test_iot_client_queueing.py and test_iot_client_retained.py and pass
-- [ ] GREEN: `feat(iot-client): implement retry/backoff scheduling`
-- [ ] REFACTOR: `fix(iot-client): ensure retained delivery consistency`
+- [x] GREEN: `feat(iot-client): implement retry/backoff scheduling`
+  - verified: background retry tasks schedule and invoke drop callbacks as tests assert
+- [x] REFACTOR: `fix(iot-client): ensure retained delivery consistency`
+  - verified: retained messages delivered on subscribe/connect (tests present)
 
 ---
 
@@ -110,7 +112,8 @@
 - [x] `test_mqtt_adapter_reconnect_and_resume_subscriptions`
 
 ### Implementation (GREEN)
-- [ ] Implement adapter compatible with IoTClient
+- [x] Implement adapter compatible with IoTClient
+  - verified: adapter compatibility test in govee-python/tests/test_iot_adapter_compat.py passes
 - [ ] Backend abstraction (FakeBackend for tests)
 - [ ] Optional paho-mqtt backend
 - [ ] Use JSONL fixtures for simulated messages
