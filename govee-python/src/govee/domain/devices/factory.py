@@ -26,6 +26,22 @@ def make_device_from_advert(model: str, payload: dict) -> Optional[Device]:
             model=model,
             name=payload.get("name"),
         )
+    # If payload contains deviceExt.deviceSettings.ic > 0, treat as RGBIC strip
+    try:
+        device_ext = payload.get("deviceExt") or {}
+        device_settings = device_ext.get("deviceSettings") if isinstance(device_ext, dict) else None
+        ic_val = None
+        if isinstance(device_settings, dict):
+            ic_val = device_settings.get("ic")
+        if ic_val is None:
+            # also accept top-level ic
+            ic_val = payload.get("ic")
+        if ic_val is not None and int(ic_val) > 0:
+            return RGBICDevice(
+                id=payload.get("id") or payload.get("device"), model=model, name=payload.get("name")
+            )
+    except Exception:
+        pass
     if "WT" in m.upper() or "WHITE" in m.upper() or "CT" in m.upper():
         # map simple white-temp model patterns to WhiteTempDevice
         from .implementations.whitetemp import WhiteTempDevice
