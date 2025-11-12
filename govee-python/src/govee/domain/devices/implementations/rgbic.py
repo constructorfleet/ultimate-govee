@@ -14,7 +14,9 @@ from ..models import DeviceState, parse_state
 
 
 class RGBICDevice(DeviceBase):
-    def __init__(self, id: str, model: Optional[str] = None, name: Optional[str] = None):
+    def __init__(
+        self, id: str, model: Optional[str] = None, name: Optional[str] = None
+    ):
         super().__init__(id=id, model=model, name=name)
         # segments: list of dicts with index, length, color
         self.segments: List[Dict[str, Any]] = []
@@ -28,7 +30,11 @@ class RGBICDevice(DeviceBase):
         for s in segs:
             seg = {"index": int(s.get("index", 0)), "length": int(s.get("length", 0))}
             if "color" in s and isinstance(s["color"], dict):
-                seg["color"] = {"r": int(s["color"].get("r", 0)), "g": int(s["color"].get("g", 0)), "b": int(s["color"].get("b", 0))}
+                seg["color"] = {
+                    "r": int(s["color"].get("r", 0)),
+                    "g": int(s["color"].get("g", 0)),
+                    "b": int(s["color"].get("b", 0)),
+                }
             self.segments.append(seg)
 
     def get_state(self) -> DeviceState:
@@ -49,12 +55,22 @@ class RGBICDevice(DeviceBase):
         for s in command.get("segments", []):
             idx = int(s.get("index", 0))
             c = s.get("color") or {}
-            frames.append({"op": "seg", "index": idx, "r": int(c.get("r", 0)), "g": int(c.get("g", 0)), "b": int(c.get("b", 0))})
+            frames.append(
+                {
+                    "op": "seg",
+                    "index": idx,
+                    "r": int(c.get("r", 0)),
+                    "g": int(c.get("g", 0)),
+                    "b": int(c.get("b", 0)),
+                }
+            )
 
         # effects
         if "effect" in command and isinstance(command.get("effect"), dict):
             e = command.get("effect")
-            frames.append({"op": "effect", "name": e.get("name"), "speed": e.get("speed")})
+            frames.append(
+                {"op": "effect", "name": e.get("name"), "speed": e.get("speed")}
+            )
 
         return frames
 

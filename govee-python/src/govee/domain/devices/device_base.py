@@ -22,7 +22,9 @@ class DeviceBase(Device):
     implementation (default None).
     """
 
-    def __init__(self, id: str, model: Optional[str] = None, name: Optional[str] = None):
+    def __init__(
+        self, id: str, model: Optional[str] = None, name: Optional[str] = None
+    ):
         super().__init__(id=id, model=model, name=name)
         self._state: DeviceState = DeviceState()
 

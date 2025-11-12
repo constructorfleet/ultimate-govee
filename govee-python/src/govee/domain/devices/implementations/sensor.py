@@ -1,5 +1,4 @@
-"""Minimal Sensor device implementation: battery, temperature, humidity.
-"""
+"""Minimal Sensor device implementation: battery, temperature, humidity."""
 
 from __future__ import annotations
 
@@ -10,7 +9,9 @@ from ..models import DeviceState, parse_state
 
 
 class SensorDevice(DeviceBase):
-    def __init__(self, id: str, model: Optional[str] = None, name: Optional[str] = None):
+    def __init__(
+        self, id: str, model: Optional[str] = None, name: Optional[str] = None
+    ):
         super().__init__(id=id, model=model, name=name)
 
     def apply_payload(self, payload: Dict[str, Any]) -> None:
