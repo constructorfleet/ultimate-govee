@@ -56,17 +56,17 @@
 
 ### Files
 - [ ] `src/govee/data/iot/iot_client.py`
-- [ ] `tests/test_iot_client_queueing.py`
-- [ ] `tests/test_iot_client_inflight.py`
-- [ ] `tests/fixtures/iot/`
+- [x] `tests/test_iot_client_queueing.py`
+- [x] `tests/test_iot_client_inflight.py`
+- [x] `tests/fixtures/iot/`
 
 ### Tests (RED)
 - [ ] `test_publish_and_deliver_with_connected_handler`
 - [ ] `test_retained_delivered_on_subscribe`
-- [ ] `test_queueing_while_disconnected`
-- [ ] `test_queue_bound_and_drop_callbacks`
-- [ ] `test_qos_inflight_ack_and_retry`
-- [ ] `test_send_with_retry_schedules_backoff`
+- [x] `test_queueing_while_disconnected`
+- [x] `test_queue_bound_and_drop_callbacks`
+- [x] `test_qos_inflight_ack_and_retry`
+- [x] `test_send_with_retry_schedules_backoff`
 - [ ] `test_interruption_queueing`
 - [ ] `test_register_callback_and_unregister`
 
@@ -99,9 +99,9 @@
 
 ### Tests (RED)
 - [x] `test_mqtt_adapter_delivers_persisted_fixture_messages`
-- [ ] `test_mqtt_adapter_retained_and_clear`
+- [x] `test_mqtt_adapter_retained_and_clear`
 - [ ] `test_mqtt_adapter_qos_and_ack`
-- [ ] `test_mqtt_adapter_reconnect_and_resume_subscriptions`
+- [x] `test_mqtt_adapter_reconnect_and_resume_subscriptions`
 
 ### Implementation (GREEN)
 - [ ] Implement adapter compatible with IoTClient
