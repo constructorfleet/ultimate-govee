@@ -14,7 +14,7 @@ import json
 
 
 def _load_sample_devices(n=5):
-    p = Path('persisted/govee.devices.raw.json')
+    p = Path('persisted/govee.devices.json')
     obj = json.loads(p.read_text())
     devices = []
     for d in obj.get('devices', [])[:n]:
