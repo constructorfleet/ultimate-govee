@@ -6,7 +6,14 @@ from govee.data.openapi import OpenAPIService
 @pytest.mark.asyncio
 async def test_missing_device_endpoint_behaviour():
     # Expect that OpenAPIService.get('/devices') returns empty list when no devices
-    svc = OpenAPIService(request=lambda path, headers=None, payload=None: {'devices': None})
+    class DummyReq:
+        def __init__(self):
+            self._resp = {'devices': None}
+
+        async def get(self):
+            return self._resp
+
+    svc = OpenAPIService(request=lambda path, headers=None, payload=None: DummyReq())
     devices = await svc.get_device_list()
     assert devices == []
 
