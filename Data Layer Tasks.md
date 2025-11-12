@@ -9,9 +9,12 @@
 ---
 
 ## ⚙️ Setup / Dev Environment
-- [ ] Activate venv: `. govee-python/.venv/bin/activate`
-- [ ] Run tests: `python govee-python/run_tests.py` or `pytest -q govee-python/tests/<testfile>.py`
-- [ ] Use `uv`: `cd govee-python && uv run -s test`
+- [x] Activate venv: `. govee-python/.venv/bin/activate`
+  - verified: VIRTUAL_ENV=/Users/tglenn/src/ultimate-govee/govee-python/.venv, python -> /Users/tglenn/src/ultimate-govee/govee-python/.venv/bin/python, Python 3.13.1
+- [x] Run tests: `python govee-python/run_tests.py` or `pytest -q govee-python/tests/<testfile>.py`
+  - verified: ran pytest in venv (python -m pytest -q govee-python/tests) -> 272 passed
+- [x] Use `uv`: `cd govee-python && uv run -s test`
+  - verified: uv --directory govee-python run -s test executed pytest successfully in venv
 - [ ] Install dependencies with `uv tool pip install <dep>`
 
 ---
