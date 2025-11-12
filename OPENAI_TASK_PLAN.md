@@ -10,7 +10,7 @@ Below is a detailed, executable Markdown checklist you can use to drive the rema
 # Parity tasks checklist (Markdown)
 
 ## 1. Inflight ack-by-message-id (IoT client)
-- [ ] RED: add failing test that expects ack-by-id behavior
+- [x] RED: add failing test that expects ack-by-id behavior
   - Test file: govee-python/tests/test_iot_client_inflight_by_id.py
   - Test vector / behavior:
     - Publish a qos=1 message that assigns message_id (new field).
@@ -18,7 +18,7 @@ Below is a detailed, executable Markdown checklist you can use to drive the rema
     - Expect inflight_count to drop and message.acked True.
   - Add test that fails initially.
   - Commit: test(iot-client): add failing test for inflight ack-by-id
-- [ ] GREEN: implement minimal code
+- [x] GREEN: implement minimal code
   - Files to modify:
     - govee-python/src/govee/data/iot/iot_client.py
       - Add message_id generation to AsyncIotMessage.
@@ -31,7 +31,7 @@ Below is a detailed, executable Markdown checklist you can use to drive the rema
     - New test passes.
     - No regression in existing inflight tests.
   - Commit: feat(iot-client): add message_id ack-by-id and ack handling
-- [ ] REFACTOR: finalize, tidy, tests
+- [x] REFACTOR: finalize, tidy, tests
   - Clean up names, docstrings, type hints.
   - Run full test suite: cd govee-python && python -m pytest -q
   - Commit: refactor(iot-client): tidy ack-by-id implementation
@@ -66,7 +66,7 @@ Below is a detailed, executable Markdown checklist you can use to drive the rema
   - Behavior:
     - Use a mock or fake paho client that simulates connect failure then success; assert PahoBackend.connect retries and eventually returns or sets connected state.
   - Commit: test(mqtt): add paho backend reconnect failing test
-- [ ] GREEN: implement minimal code to pass
+- [x] GREEN: implement minimal code to pass
   - Files:
     - govee-python/src/govee/data/common/paho_adapter.py
       - Implement connection retry with exponential backoff + jitter and TLS CA/cert integration.
@@ -180,7 +180,7 @@ Below is a detailed, executable Markdown checklist you can use to drive the rema
 # Parity tasks checklist (Markdown)
 
 ## 1. Inflight ack-by-message-id (IoT client)
-- [ ] RED: add failing test that expects ack-by-id behavior
+- [x] RED: add failing test that expects ack-by-id behavior
   - Test file: govee-python/tests/test_iot_client_inflight_by_id.py
   - Test vector / behavior:
     - Publish a qos=1 message that assigns message_id (new field).
@@ -188,7 +188,7 @@ Below is a detailed, executable Markdown checklist you can use to drive the rema
     - Expect inflight_count to drop and message.acked True.
   - Add test that fails initially.
   - Commit: test(iot-client): add failing test for inflight ack-by-id
-- [ ] GREEN: implement minimal code
+- [x] GREEN: implement minimal code
   - Files to modify:
     - govee-python/src/govee/data/iot/iot_client.py
       - Add message_id generation to AsyncIotMessage.
@@ -201,7 +201,7 @@ Below is a detailed, executable Markdown checklist you can use to drive the rema
     - New test passes.
     - No regression in existing inflight tests.
   - Commit: feat(iot-client): add message_id ack-by-id and ack handling
-- [ ] REFACTOR: finalize, tidy, tests
+- [x] REFACTOR: finalize, tidy, tests
   - Clean up names, docstrings, type hints.
   - Run full test suite: cd govee-python && python -m pytest -q
   - Commit: refactor(iot-client): tidy ack-by-id implementation
@@ -236,7 +236,7 @@ Below is a detailed, executable Markdown checklist you can use to drive the rema
   - Behavior:
     - Use a mock or fake paho client that simulates connect failure then success; assert PahoBackend.connect retries and eventually returns or sets connected state.
   - Commit: test(mqtt): add paho backend reconnect failing test
-- [ ] GREEN: implement minimal code to pass
+- [x] GREEN: implement minimal code to pass
   - Files:
     - govee-python/src/govee/data/common/paho_adapter.py
       - Implement connection retry with exponential backoff + jitter and TLS CA/cert integration.
