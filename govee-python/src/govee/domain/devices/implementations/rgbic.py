@@ -13,6 +13,12 @@ from ..device_base import DeviceBase
 from ..models import DeviceState, parse_state
 from ..encoding import encode_power, encode_brightness, encode_segment
 from ..states.segment_color_mode import SegmentColorModeState
+from ..states.color_rgb import ColorRGBState
+from ..states.scene_mode import SceneModeState
+from ..states.mic_mode import MicModeState
+from ..states.diy_mode import DiyModeState
+from ..states.rgbic_active import RGBICActiveState
+from ..states.effect import parse_effect
 
 
 class RGBICDevice(DeviceBase):
@@ -50,6 +56,28 @@ class RGBICDevice(DeviceBase):
         sc = SegmentColorModeState(self)
         sc.parse(payload)
         self.segment_state = sc
+        # parse color state
+        cst = ColorRGBState(self)
+        cst.parse(payload)
+        self.color_state = cst
+        # parse scene/mode
+        sm = SceneModeState(self)
+        sm.parse(payload)
+        self.scene_state = sm
+        # parse mic mode
+        mm = MicModeState(self)
+        mm.parse(payload)
+        self.mic_state = mm
+        # parse diy mode
+        dm = DiyModeState(self)
+        dm.parse(payload)
+        self.diy_state = dm
+        act = RGBICActiveState(self)
+        act.parse(payload)
+        self.active_state = act
+        # parse effect
+        eff = parse_effect(payload)
+        self.effect_state = eff
 
     def get_state(self) -> DeviceState:
         return self._state
@@ -58,6 +86,9 @@ class RGBICDevice(DeviceBase):
         frames: List[Dict[str, Any]] = []
         frames.extend(encode_power(command))
         frames.extend(encode_brightness(command))
+        # support whole-device RGB color
+        from ..encoding import encode_rgb
+        frames.extend(encode_rgb(command))
 
         for s in command.get("segments", []):
             idx = int(s.get("index", 0))

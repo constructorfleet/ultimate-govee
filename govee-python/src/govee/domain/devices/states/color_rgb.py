@@ -1,45 +1,51 @@
-"""Color RGB state parsing (minimal port).
-
-Parses color state payloads with keys state.color.{red,green,blue} and
-simple op-code arrays [op, identifier, subid, r, g, b]. This is a small
-subset to match unit tests ported from the TypeScript suite.
-"""
-
+"""Color RGB parsing helpers and minimal state for devices."""
 from __future__ import annotations
 
 from typing import Any, Dict, Optional
 
 
-def parse_color_rgb(payload: Optional[Dict[str, Any]]) -> Optional[Dict[str, int]]:
-    if payload is None:
+def parse_color_rgb(payload: Dict[str, Any]) -> Optional[Dict[str, int]]:
+    """Parse an RGB color from a payload.
+
+    Accepts a dict {'r':R,'g':G,'b':B} or a hex string like '#RRGGBB' or 'RRGGBB'.
+    Returns a dict with integer r,g,b keys or None if not present/parsable.
+    """
+    if not payload:
         return None
-    st = payload.get("state") if isinstance(payload, dict) else None
-    if isinstance(st, dict):
-        color = st.get("color")
-        if isinstance(color, dict):
-            try:
-                r = int(color.get("red"))
-                g = int(color.get("green"))
-                b = int(color.get("blue"))
-                if 0 <= r <= 255 and 0 <= g <= 255 and 0 <= b <= 255:
-                    return {"red": r, "green": g, "blue": b}
-            except Exception:
-                return None
-    # op-code handling: look for op.command arrays
-    op = payload.get("op") if isinstance(payload, dict) else None
-    if isinstance(op, dict):
-        cmds = op.get("command")
-        if isinstance(cmds, list) and cmds:
-            cmd = cmds[0]
-            if isinstance(cmd, list) and len(cmd) >= 6:
-                # [opType, identifier, subid, r, g, b]
-                _, _, _, r, g, b = cmd[:6]
+    # direct dict
+    c = payload.get('color') or payload.get('rgb')
+    if isinstance(c, dict):
+        try:
+            return { 'r': int(c.get('r',0)), 'g': int(c.get('g',0)), 'b': int(c.get('b',0)) }
+        except Exception:
+            return None
+    # try hex string in payload keys
+    for key in ('colorHex','color_hex','colorHexString','hex'):
+        h = payload.get(key)
+        if isinstance(h, str):
+            s = h.strip().lstrip('#')
+            if len(s) == 6:
                 try:
-                    if 0 <= r <= 255 and 0 <= g <= 255 and 0 <= b <= 255:
-                        return {"red": r, "green": g, "blue": b}
+                    r = int(s[0:2],16)
+                    g = int(s[2:4],16)
+                    b = int(s[4:6],16)
+                    return {'r': r, 'g': g, 'b': b}
                 except Exception:
                     return None
     return None
 
 
-__all__ = ["parse_color_rgb"]
+class ColorRGBState:
+    def __init__(self, device: Any):
+        self.device = device
+        self.color: Optional[Dict[str,int]] = None
+
+    def parse(self, payload: Dict[str,Any]) -> None:
+        self.color = parse_color_rgb(payload)
+
+    def get(self) -> Optional[Dict[str,int]]:
+        return self.color
+
+
+__all__ = ['parse_color_rgb','ColorRGBState']
+

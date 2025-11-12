@@ -1,0 +1,43 @@
+{
+  "device": "RGBLightDevice",
+  "factory": "RGBLightFactory",
+  "state_factories": [
+    "PowerState",
+    "ConnectedState",
+    "ActiveState",
+    "BrightnessState",
+    "ColorRGBState",
+    "ColorTempState"
+  ],
+  "constructor": "super(RGBLightDevice, {\n      'LED Strip Light': {\n        'RGB Strip Lights': true,",
+  "getters": [
+    [
+      "PowerStateName",
+      "PowerState"
+    ],
+    [
+      "ConnectedStateName",
+      "ConnectedState"
+    ],
+    [
+      "BrightnessStateName",
+      "BrightnessState"
+    ],
+    [
+      "ColorRGBStateName",
+      "ColorRGBState"
+    ],
+    [
+      "ColorTempStateName",
+      "ColorTempState"
+    ],
+    [
+      "SceneModeStateName",
+      "SceneModeState"
+    ],
+    [
+      "ActiveStateName",
+      "ActiveState"
+    ]
+  ]
+}
