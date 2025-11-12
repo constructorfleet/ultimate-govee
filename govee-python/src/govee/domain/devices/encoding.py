@@ -72,7 +72,11 @@ def pack_raw_frame(op_code: int, values: List[int], model: str | None = None) ->
     # Model-specific truncation: some persisted frames include only the
     # first N bytes of the padded as_op_code. For H601 family we observed
     # the persisted frames use only the first 18 bytes of the core.
-    if model and model.upper().startswith('H601'):
+    # Many H6xxx family devices (observed in persisted raw fixtures)
+    # truncate the padded opcode to reproduce the exact captured layout.
+    # Historically we applied this to H601 models; extend to the broader
+    # H6 family so H6042 and similar variants match persisted frames.
+    if model and model.upper().startswith('H6'):
         core = core[:18]
     frame = [0xAA] + core
     # model-specific tweaks

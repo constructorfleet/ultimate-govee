@@ -52,49 +52,68 @@ def extract():
             text = f.read_text()
         except Exception:
             continue
-        # files may contain concatenated JSON objects; split by '}{' safely
-        parts = []
-        if '\n}{\n' in text:
-            parts = text.split('\n}{\n')
-            parts = [p if i == 0 else '{' + p if not p.startswith('{') else p for i,p in enumerate(parts)]
-            # fix: re-add separators
-            fixed = []
-            for i,p in enumerate(parts):
-                if i == 0:
-                    fixed.append(p)
+        # persisted logs may contain concatenated JSON objects without separators
+        # attempt to locate JSON object boundaries by finding leading '{' and
+        # splitting accordingly. This is robust for the current persisted layout.
+        buf = text
+        objs = []
+        i = 0
+        while i < len(buf):
+            start = buf.find('{', i)
+            if start == -1:
+                break
+            # find next '{' that likely begins a new object by scanning for a '}{' pattern
+            next_start = buf.find('\n}{\n', start)
+            if next_start != -1:
+                candidate = buf[start:next_start+1]
+                i = next_start+1
+            else:
+                # fallback: try to parse until the next '}' that yields valid JSON
+                # naive but sufficient for logs
+                end = buf.find('}\n{', start)
+                if end != -1:
+                    candidate = buf[start:end+1]
+                    i = end+1
                 else:
-                    fixed.append('{' + p)
-            parts = fixed
-        else:
-            parts = [text]
-        for part in parts:
-            for ln in part.split('\n'):
-                ln = ln.strip()
-                if not ln:
-                    continue
-                try:
-                    obj = json.loads(ln)
-                except Exception:
-                    # try to skip
-                    continue
+                    candidate = buf[start:]
+                    i = len(buf)
+            try:
+                obj = json.loads(candidate)
+            except Exception:
+                # try line-wise fallback
+                for ln in candidate.splitlines():
+                    ln = ln.strip()
+                    if not ln:
+                        continue
+                    try:
+                        obj = json.loads(ln)
+                    except Exception:
+                        continue
+                    objs.append(obj)
+                continue
+            objs.append(obj)
+        # process extracted objects
+        for obj in objs:
+            dev = None
+            if isinstance(obj, dict):
                 dev = obj.get('device') or obj.get('id')
-                model = dev_map.get(dev)
-                if not model:
-                    # try sku
-                    model = obj.get('sku')
-                if not model:
-                    continue
-                op = obj.get('op') or {}
-                cmds = op.get('command') or []
-                if isinstance(cmds, list):
-                    for c in cmds:
-                        if isinstance(c, str):
-                            ints = decode_b64_to_ints(c)
-                            if ints:
-                                frames_by_model.setdefault(model, []).append(ints)
-                        elif isinstance(c, list):
-                            # already ints
-                            frames_by_model.setdefault(model, []).append([int(x) for x in c])
+            model = dev_map.get(dev)
+            if not model:
+                # try sku
+                model = obj.get('sku') if isinstance(obj, dict) else None
+            if not model:
+                continue
+            op = obj.get('op') or {}
+            cmds = op.get('command') or []
+            if isinstance(cmds, list):
+                for c in cmds:
+                    if isinstance(c, str):
+                        ints = decode_b64_to_ints(c)
+                        if ints:
+                            frames_by_model.setdefault(model, []).append(ints)
+                    elif isinstance(c, list):
+                        # already ints
+                        frames_by_model.setdefault(model, []).append([int(x) for x in c])
 
     # write out fixtures for a few representative models only (non-empty)
     for model, frames in frames_by_model.items():
@@ -116,4 +135,3 @@ def extract():
 
 if __name__ == '__main__':
     extract()
-
