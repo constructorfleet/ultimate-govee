@@ -339,6 +339,16 @@ class IoTClient:
 
             task = asyncio.create_task(_retry_task(msg))
             self._retry_tasks.append(task)
+            # also register in the simpler scheduled retries list so the
+            # legacy retry_inflight() logic can observe and manage retries
+            # for messages scheduled via send_with_retry. Storing a copy of
+            # the intervals allows retry_inflight to decrement intervals and
+            # drop messages when exhausted.
+            try:
+                self._scheduled_retries.append((msg, list(msg.backoff_intervals)))
+            except Exception:
+                # ensure robustness if scheduled_retries is not present
+                self._scheduled_retries = [(msg, list(msg.backoff_intervals))]
         return msg
 
     def _process_auto_ack(self, payload: Any) -> None:
