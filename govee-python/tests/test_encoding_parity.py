@@ -49,6 +49,9 @@ async def _run():
         dev = make_device_from_advert(model, advert)
         if not dev:
             continue
+        # some factory results are plain Device dataclasses without apply_payload
+        if not hasattr(dev, 'apply_payload'):
+            continue
         # apply a sample payload to set state
         dev.apply_payload({'power': True, 'brightness': 50})
         frames = dev.encode_command({'power': False, 'brightness': 20})
