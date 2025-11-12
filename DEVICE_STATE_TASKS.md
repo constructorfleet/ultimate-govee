@@ -306,3 +306,11 @@ Acceptance: mark family complete in DEVICE_STATE_TASKS.md only when
   - Device factory maps persisted model strings for that family to the correct implementation
 
 ---
+
+
+Completed work:
+- H: Encoding parity and IoT adapter integration: pack_raw_frame was extended for H6 truncation; encoding helpers live in govee-python/src/govee/domain/devices/encoding.py. MQTTAdapter/FakeMQTTBackend and IoTClient replay integration tested via govee-python/tests/test_golden_iot_integration.py and related golden fixtures.
+- I: Realistic vectors: tests use persisted/govee.devices.json and persisted/mqtt_fixtures to exercise realistic device payloads in tests under govee-python/tests (test_realistic_vectors.py, test_encoding_parity.py).
+
+Remaining:
+- J: Documentation and examples must reach 100% feature parity with the TypeScript implementation before being marked complete. Current docs exist at govee-python/docs/devices.md and provide examples; further expansion and golden-parity examples may be required.
