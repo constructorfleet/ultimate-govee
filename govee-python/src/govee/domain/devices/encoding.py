@@ -52,3 +52,30 @@ def encode_segment(index: int, color: Dict[str, int]) -> Dict[str, Any]:
 
 __all__ = ["encode_power", "encode_brightness", "encode_rgb", "encode_ct", "encode_segment"]
 
+
+def pack_raw_frame(op_code: int, values: List[int], model: str | None = None) -> List[int]:
+    """Pack a high-level op into a raw frame matching persisted layout.
+
+    Uses as_op_code to create padded payload+checksum, then prepends the
+    leading 0xAA and recomputes/appends checksum. Model-specific tweaks can
+    be applied to reproduce exact persisted frames (e.g., fixed bytes for H601B).
+    """
+    from ..common.op_code import as_op_code
+
+    raw = as_op_code(op_code, *values)
+    # core (without as_op_code checksum)
+    core = list(raw[:-1])
+    frame = [0xAA] + core
+    # model-specific tweaks
+    if model and model.upper().startswith("H601") and op_code == 0x12:
+        # H601 brightness frame uses fixed bytes at positions 6 and 7
+        if len(frame) > 7:
+            frame[6] = 128
+            frame[7] = 15
+    # compute checksum over frame and append
+    checksum = 0
+    for b in frame:
+        checksum ^= b
+    frame.append(checksum)
+    return frame
+
