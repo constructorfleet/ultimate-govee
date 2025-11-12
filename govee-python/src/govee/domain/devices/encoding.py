@@ -62,6 +62,7 @@ def pack_raw_frame(op_code: int, values: List[int], model: str | None = None) ->
     """
     # import op_code helper from package root (govee.common.op_code)
     import sys
+    from pathlib import Path
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
     from govee.common.op_code import as_op_code
 
