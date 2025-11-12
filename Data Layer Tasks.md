@@ -21,27 +21,27 @@
 **Goal:** Async OpenAPI client for IoT credentials.
 
 ### Files
-- [ ] `src/govee/data/openapi/client.py`
-- [ ] `src/govee/data/openapi/models.py`
-- [ ] `tests/test_openapi_client.py`
-- [ ] `tests/fixtures/openapi/`
+ - [x] `src/govee/data/openapi/client.py`
+ - [x] `src/govee/data/openapi/models.py`
+ - [x] `tests/test_openapi_client.py`
+ - [x] `tests/fixtures/openapi/`
 
 ### Tests (RED)
-- [ ] `test_get_iot_credentials_parses_response`
-- [ ] `test_get_iot_credentials_handles_404`
-- [ ] `test_retry_on_500_then_success`
-- [ ] `test_timeout_raises`
+ - [x] `test_get_iot_credentials_parses_response`
+ - [x] `test_get_iot_credentials_handles_404`
+ - [x] `test_retry_on_500_then_success`
+ - [x] `test_timeout_raises`
 
 ### Implementation (GREEN)
-- [ ] Async HTTP wrapper with retries, timeouts, and domain errors
-- [ ] Define `IoTCredentialModel` (TypedDict/dataclass)
-- [ ] Configurable base_url and session injection
-- [ ] Raise custom errors for 4xx/5xx/timeouts
+ - [x] Async HTTP wrapper with retries, timeouts, and domain errors
+ - [x] Define `IoTCredentialModel` (TypedDict/dataclass)
+ - [x] Configurable base_url and session injection
+ - [x] Raise custom errors for 4xx/5xx/timeouts
 
 ### Acceptance
-- [ ] All tests pass
-- [ ] No network IO
-- [ ] Docstring + usage example
+ - [x] All tests pass (targeted OpenAPI tests pass)
+ - [x] No network IO in tests
+ - [ ] Docstring + usage example
 
 **Commit flow**
 - [ ] RED: `test(openapi): add tests for iot credentials parsing and error handling`
