@@ -35,7 +35,7 @@ async def test_spec_top_level_condition_blocks_spec(monkeypatch):
     # monkeypatch _load_spec_from_dirs to return a spec with a top-level condition
     spec = {'properties': {}, 'condition': ['manufacturerdata', '=', 'NOPE']}
 
-    async def fake_load(model, dirs=None):
+    def fake_load(model, dirs=None):
         return spec
 
     svc._load_spec_from_dirs = fake_load
@@ -79,7 +79,7 @@ async def test_iot_manager_called_with_expected_device_info(monkeypatch):
     # spec indicates iot_manager True
     spec = {'properties': {}, 'iot_manager': True}
 
-    async def fake_load(model, dirs=None):
+    def fake_load(model, dirs=None):
         return spec
 
     svc._load_spec_from_dirs = fake_load
