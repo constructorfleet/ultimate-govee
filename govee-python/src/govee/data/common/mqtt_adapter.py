@@ -11,8 +11,19 @@ class FakeMQTTBackend:
     """A simple replay backend that reads JSONL fixtures and replays messages."""
 
     def __init__(self, fixture_path: str):
-        self.fixture_path = fixture_path
+        from pathlib import Path
+
         self._messages = []
+        # accept fixture_path as provided; if it doesn't exist resolve it
+        # relative to the repository root (two levels up from govee-python/src).
+        p = Path(fixture_path)
+        if not p.exists():
+            # compute repo-root relative path
+            repo_root = Path(__file__).resolve().parents[5]
+            alt = repo_root / fixture_path
+            if alt.exists():
+                p = alt
+        self.fixture_path = str(p)
         self._load()
 
     def _load(self):
