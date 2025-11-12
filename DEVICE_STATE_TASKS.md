@@ -1,183 +1,196 @@
-Below is a concrete, actionable Markdown task list you can copy into a ticket or the repo plan. It breaks the overall work into small RED → GREEN → REFACTOR steps (TDD-style) and includes filenames, test names, commands to run, acceptance criteria and suggested commit messages. I focused on device classes that are commonly missing/partial in parity efforts (RGBIC / addressable strips, additional light variants, and common base refactors). Adjust the list to match exact models you want to support.
 
-Note: run all commands from the repository root. Use the project venv and uv as documented:
-- Activate venv: . govee-python/.venv/bin/activate
-- Run tests: uv --directory govee-python run -s test -- tests/<testfile.py>
-- Run format/lint: uv --directory govee-python run -s format_check
+High-level goal
+- Finish device-class parity so the Python domain supports the common device families used by the persisted fixtures and TypeScript code: addressable strips (RGBIC), RGB lights, white-temperature lights (CT), simple white lights, night-lights, sensors, and improved factory mapping and encoding parity. Each step is tested and committed.
 
----
-# Device classes parity — TDD task list
-
-## Inventory / prep
-- [x] RED: add a small audit test showing what device implementations are currently present/used by tests
-  - Test file: govee-python/tests/test_device_implementations_inventory.py
-  - Behavior: import domain factory & implementations and assert a mapping/list of implemented classes (e.g., RGBDevice) and assert expected missing names (RGBICDevice, StripDevice)
-  - Command: uv --directory govee-python run -s test -- tests/test_device_implementations_inventory.py
-  - Commit message: test(devices): add inventory test for device implementations (RED)
-  - Acceptance: test should fail or indicate which implementations are missing (this guides next tasks)
-
-## A. RGBIC / Addressable LED device (high priority)
-Many parity projects lack addressable-LED (IC) variant. Implement an RGBIC device class similar api to RGBDevice.
-
-- [x] A1 — RED: failing unit tests for RGBIC behavior
-  - Test file: govee-python/tests/test_rgbic_device.py
-  - Tests:
-    - test_rgbic_apply_payload_and_get_state
-      - Create RGBICDevice, apply payload with per-segment color or full array, assert state fields (power, brightness, segments/colors).
-    - test_rgbic_encode_command
-      - Call encode_command with changes and assert returned frames include expected op codes (e.g., 'rgbic', 'mode', 'segment') and parameters.
-    - test_rgbic_effects
-      - Apply effect payload and assert the device encodes the effect frame.
-  - Commands:
-    - uv --directory govee-python run -s test -- tests/test_rgbic_device.py
-  - Commit message: test(devices): add failing tests for RGBICDevice (RED)
-
-- [x] A2 — GREEN: minimal class implementation to satisfy tests
-  - File to add: govee-python/src/govee/domain/devices/implementations/rgbic.py
-  - Implement:
-    - class RGBICDevice(DeviceBase) or stand-alone class with:
-      - __init__(id, model, name)
-      - apply_payload(payload) — populate internal state for segments/colors/brightness/power
-      - get_state() — return DeviceState (use domain/devices/models.DeviceState)
-      - encode_command(command) — return list of frames matching test expectations
-    - Keep implementation minimal (only fields used by tests)
-  - Tests to run:
-    - uv --directory govee-python run -s test -- tests/test_rgbic_device.py
-  - Commit message: feat(devices): add minimal RGBICDevice implementation (GREEN)
-
-- [x] A3 — REFACTOR: finalize and extend
-  - Goals:
-    - Move shared logic to a common base (DeviceBase) if not existing.
-    - Add type hints and docstrings.
-    - Add more tests: edgecases, invalid payloads, compatibility with IoT adapter (simulate publishing encoded frames).
-    - Ensure coverage and run full test suite.
-  - Commands:
-    - uv --directory govee-python run -s test
-    - uv --directory govee-python run -s format_check
-  - Commit message: refactor(devices): tidy RGBICDevice, add base class & docs
-
-## B. RGBIC -> RGB parity improvements & other light variants
-If dist or JS code references additional device classes (RGBICLightDevice, RGBLightDevice, etc.), implement them.
-
-- [x] B1 — RED: add failing tests that expect parity device names to be constructible via factory
-  - Test file: govee-python/tests/test_device_factory_names.py
-  - Behavior:
-    - request factory to construct devices for model names used in dist (e.g., 'RGBLight', 'RGBICLight') and assert Device subclass returned.
-  - Commit message: test(devices): add failing tests for device constructors (RED)
-
-- [x] B2 — GREEN: implement small mapping & constructors
-  - Files:
-    - govee-python/src/govee/domain/devices/factory.py (extend mapping/model heuristics)
-    - govee-python/src/govee/domain/devices/implementations/<rgbic.py,rgb_light.py>
-  - Acceptance: factory returns implementations; tests pass.
-  - Commit message: feat(devices): map models to new implementations (GREEN)
-
-- [x] B3 — REFACTOR: merge shared encoding, add docs & examples
-  - Turn shared encoding utilities into helpers (e.g., encode_rgb, encode_brightness).
-  - Add README snippet docs in govee-python/docs/devices.md
-  - Commit message: refactor(devices): unify encoding helpers and document device implementation patterns
-
-## C. White-temperature & simple white devices (if missing)
-- [x] C1 — RED: failing tests for white-temperature (CT) device
-  - Test file: govee-python/tests/test_white_temp_device.py
-  - Tests: apply_payload with ct, brightness; encode command; get_state
-  - Commit message: test(devices): add failing tests for white-temp devices (RED)
-- [x] C2 — GREEN: implement minimal WhiteTempDevice class
-  - File: implementations/white_temp.py
-  - Commit message: feat(devices): add WhiteTempDevice (GREEN)
-- [x] C3 — REFACTOR: integrate into factory and docs
-  - Update factory mapping, add tests for IoT adapter path.
-  - Commit message: refactor(devices): add WhiteTempDevice to factory and docs
-
-## D. Generic Sensor / Probe devices (temperature/humidity)
-- [x] D1 — RED: failing tests for sensor device (battery, temperature, humidity)
-  - Test file: govee-python/tests/test_sensor_device.py
-  - Tests: apply sensor payload, get_state, boundary values
-  - Commit message: test(devices): add failing tests for sensor device (RED)
-- [x] D2 — GREEN: implement sensor device
-  - File: implementations/sensor.py
-  - Commit message: feat(devices): add SensorDevice (GREEN)
-- [x] D3 — REFACTOR: unify parsing with DeviceState, add calibration handling
-  - Commit message: refactor(devices): unify sensor state handling & calibration
-
-## E. Common base / utilities (applies across A–D)
-- [x] E1 — RED: failing tests for DeviceBase behavior
-  - Test file: govee-python/tests/test_device_base.py
-  - Tests:
-    - default get_state() returns DeviceState
-    - default apply_payload merges values
-    - encode_command contract (list of frames)
-  - Commit message: test(devices): add base class contract tests (RED)
-- [x] E2 — GREEN: implement DeviceBase
-  - File: govee-python/src/govee/domain/devices/device_base.py
-  - Provide:
-    - apply_payload(payload) default merge
-    - get_state() default synthesizer
-    - encode_command(command) abstract (raise NotImplementedError)
-  - Make RGBDevice and new classes inherit from DeviceBase
-  - Commit message: feat(devices): add DeviceBase and refactor implementations (GREEN)
-- [x] E3 — REFACTOR: strong typing, docs, examples
-  - Add type stubs, docstrings, examples in docs/devices.md
-  - Commit message: refactor(devices): type-hint DeviceBase & document API
-
-## F. Integration tests (IoT path)
-- [x] F1 — RED: failing integration tests that ensure device encodes commands & IoT pipeline sends expected payloads
-  - Test file: govee-python/tests/test_device_iot_integration.py
-  - Behavior:
-    - Create device instance, call encode_command, feed frames to IoTAdapter/FakeMQTTBackend, assert targeted topic and payload are produced/forwarded.
-  - Commit message: test(devices): add iot-integration tests (RED)
-- [x] F2 — GREEN: ensure adapter compatibility
-  - Fix any adapter wiring needed (topic formats, payload shapes)
-  - Acceptance: tests pass and no regressions in existing iot tests
-  - Commit message: feat(devices): ensure device command frames integrate with IoTAdapter (GREEN)
-
-## G. Documentation & examples
-- [x] G1 — REFACTOR: add device docs
-  - Files:
-    - govee-python/docs/devices.md — describe DeviceBase API and example implementation (RGBDevice)
-    - README.md snippet + example code for applying payloads and encoding commands
-  - Commit message: docs(devices): document device API & examples
-
-## H. Lint/format and finalize
-- [x] H1 — Run format/lint and fix everything:
-  - Commands:
-    - . govee-python/.venv/bin/activate
-    - uv --directory govee-python run -s format_check
-    - uv --directory govee-python run -s test
-  - Commit message: chore(format): apply formatting & lint fixes
-- [x] H2 — REFACTOR: run full test+CI
-  - uv --directory govee-python run -s all_checks
-  - Ensure no warnings or failing tests
-  - Commit message: chore(ci): finalize device parity & run all checks
-
----
-
-# Suggested order of work (priority)
-1. Inventory (quick failing test) — to know exactly what’s missing.
-2. Implement DeviceBase and minimal RGBIC (A & E combined) — high value for strips.
-3. Add factory mappings and tests to construct new classes (B).
-4. Implement White-temp & Sensor if required (C & D).
-5. Add integration IoT tests (F).
-6. Documentation and tidy (G).
-7. Format/lint + full checks (H).
-
-# Commit etiquette & workflow notes
-- [ ] Commit after every GREEN task using conventional commit format:
-  - test(...): for adding failing tests (RED)
-  - feat(...): for minimal implementations (GREEN)
-  - refactor(...)/docs(...)/chore(...): for cleanup and docs (REFACTOR)
-- [ ] Use realistic test vectors in tests (use sample payloads found in persisted fixtures/persisted directory).
-- [ ] Use uv for tests and format_check:
-  - uv --directory govee-python run -s test -- tests/test_xyz.py
+How we will work
+- Work RED → GREEN → REFACTOR for each small change.
+- Use the project's venv and uv wrapper for tests and checks:
+  - . govee-python/.venv/bin/activate
+  - uv --directory govee-python run -s test -- tests/<testfile.py>
   - uv --directory govee-python run -s format_check
+  - uv --directory govee-python run -s all_checks
+- Commit after every GREEN task with conventional commit format.
 
-# Example concrete changes for one device (RGBIC)
-- [x] Add tests: govee-python/tests/test_rgbic_device.py (failing at first)
-- [x] Implement: govee-python/src/govee/domain/devices/implementations/rgbic.py
-- [x] Use DeviceBase: govee-python/src/govee/domain/devices/device_base.py
-- [x] Update factory: govee-python/src/govee/domain/devices/factory.py (map model patterns to RGBICDevice)
-- [x] Run: uv --directory govee-python run -s test -- tests/test_rgbic_device.py
-- [x] Commit messages:
-  - test(devices): add failing tests for RGBICDevice (RED)
-  - feat(devices): implement minimal RGBICDevice (GREEN)
-  - refactor(devices): extract DeviceBase and move shared logic (REFACTOR)
+Task list (markdown)
+
+1) Inventory / quick audit (if you want to re-run)
+- test: govee-python/tests/test_device_implementations_inventory.py (already added)
+- Command:
+  - . govee-python/.venv/bin/activate
+  - uv --directory govee-python run -s test -- tests/test_device_implementations_inventory.py
+- Acceptance: shows which implementations are present; use this to prioritize families to implement.
+
+2) Must-have device families (per persisted samples)
+- Real device models present in persisted/govee.devices.json include (examples): H601B, H6042, H5072/H5179 classes, many H6xxx H5xxx — treat these families as:
+  - RGB/RGB Light family
+  - RGBIC / addressable strip family (already added)
+  - White-temp (CT) family (already added)
+  - Simple white lights (on/off + brightness)
+  - Night lights (on/off, brightness, maybe night-mode)
+  - Sensor devices (battery/temp/humidity — already added)
+  - (Optional) Model-specific special devices (RGBIC variants with segments, IC counts)
+
+3) Implement per-family tasks
+- For each family below follow this micro-workflow:
+  - RED: add unit tests that define the required behavior (failing).
+  - GREEN: implement minimal class to satisfy tests.
+  - REFACTOR: extract shared helpers, update docs, update factory.
+  - Commit after each GREEN.
+
+- [x] A. RGB (non-addressable) light family
+- RED
+  - Add tests: govee-python/tests/test_rgb_light_device.py
+  - Tests:
+    - test_rgb_apply_payload_and_get_state: apply payload {"power":1,"brightness":85,"color":{"r":10,"g":20,"b":30}} assert DeviceState fields
+    - test_rgb_encode_command: encode {'power':True,'brightness':70,'color':{'r':255,'g':128,'b':0}} → expect frames [{'op':'power','v':1},{'op':'bright','v':70},{'op':'rgb','r':255,'g':128,'b':0}]
+  - Command: uv --directory govee-python run -s test -- tests/test_rgb_light_device.py
+  - Commit: test(devices): add failing tests for RGBLightDevice (RED)
+- GREEN
+  - Add implementation: govee-python/src/govee/domain/devices/implementations/rgb_light.py
+    - class RGBLightDevice(DeviceBase)
+    - apply_payload(payload) → parse_state(), keep any color in state
+    - encode_command(command) → produce power/bright/rgb frames (reuse DeviceBase for power/bright)
+  - Command: uv --directory govee-python run -s test -- tests/test_rgb_light_device.py
+  - Commit: feat(devices): add minimal RGBLightDevice implementation (GREEN)
+- REFACTOR
+  - If multiple devices repeat encode logic, extract encode helpers (encode_power, encode_brightness, encode_rgb) to govee-python/src/govee/domain/devices/encoding.py
+  - Update docs & examples.
+  - Commit: refactor(devices): extract encoding helpers & update docs (REFACTOR)
+
+- [x] B. RGBIC (addressable) — confirm parity & expand
+- RED (if additional behaviors missing)
+  - Add test(s) for segment array payloads and full-pixel-array payloads:
+    - govee-python/tests/test_rgbic_more.py
+    - Example payloads:
+      - segments variant: {"power":1,"brightness":80,"segments":[{"index":0,"length":10,"color":{"r":12,"g":34,"b":56}}, {"index":1,"length":20,"color":{"r":200,"g":120,"b":0}}]}
+      - raw pixel array variant: {"power":1,"brightness":100,"pixels":[[r,g,b],[...],...]} (if TS supports)
+  - Check effects: test that encode_command({'effect':{'name':'rainbow','speed':3}}) emits {'op':'effect',...}
+  - Command: uv --directory govee-python run -s test -- tests/test_rgbic_more.py
+  - Commit: test(devices): add RGBIC edge-case tests (RED)
+- GREEN
+  - Enhance implementation govee-python/src/govee/domain/devices/implementations/rgbic.py to support any missing behavior required by tests (pixel arrays, multi-segment encoding, effect parameters).
+  - Command: uv --directory govee-python run -s test -- tests/test_rgbic_more.py
+  - Commit: feat(devices): extend RGBICDevice to support pixel-array & effects (GREEN)
+- REFACTOR
+  - Move shared segment/pixel encoding helpers to encoding module.
+  - Document in docs/devices.md specifics for segments / op codes.
+  - Commit: refactor(devices): unify rgbic encoding helpers & docs (REFACTOR)
+
+- [x] C. White-temperature (CT) family (complete checklist)
+- RED (if additional behaviors needed)
+  - Add tests for CT limits and transitions:
+    - govee-python/tests/test_whitetemp_edgecases.py
+    - Examples: {"color_temp":2700}, {"color_temp":6500}, invalid values ignored
+  - Command: uv --directory govee-python run -s test -- tests/test_whitetemp_edgecases.py
+  - Commit: test(devices): add failing CT edgecase tests (RED)
+- GREEN
+  - Extend WhiteTempDevice implementation if tests show gaps: validate bounds, clamp, encode {'op':'ct','v':XXX}
+  - Commit: feat(devices): ensure WhiteTempDevice clamps and encodes CT (GREEN)
+- REFACTOR
+  - Document behavior and add example payloads in docs/devices.md
+  - Commit: docs(devices): add white-temp examples (REFACTOR)
+
+- [ ] D. Simple White / On-Off lights
+- RED
+  - Add tests: govee-python/tests/test_white_device.py
+    - test on/off + brightness only
+    - example payload: {"power":0,"brightness":0}
+  - Command: uv --directory govee-python run -s test -- tests/test_white_device.py
+  - Commit: test(devices): add failing tests for SimpleWhiteDevice (RED)
+- GREEN
+  - Add govee-python/src/govee/domain/devices/implementations/white.py
+    - Minimal DeviceBase subclass: apply_payload parse_state, encode power/bright frames
+  - Command: uv --directory govee-python run -s test -- tests/test_white_device.py
+  - Commit: feat(devices): add minimal SimpleWhiteDevice (GREEN)
+- REFACTOR
+  - Factor shared code with WhiteTempDevice where possible.
+  - Commit: refactor(devices): unify white & white-temp helpers (REFACTOR)
+
+- [ ] E. Night light / special modes
+- RED
+  - Add tests for night mode (color + night flag) if persisted fixtures indicate such fields.
+  - Example payloads from persisted fixtures: check deviceExt or deviceData for 'night' keys and add as sample payloads.
+  - Commit: test(devices): add failing tests for NightLightDevice (RED)
+- GREEN
+  - Add minimal implementation that supports night-mode payloads and encoding (may be subclass of RGBLight or WhiteLight depending on features).
+  - Commit: feat(devices): add NightLightDevice (GREEN)
+- REFACTOR
+  - Document special modes in docs/devices.md
+  - Commit: docs(devices): document night-mode behavior (REFACTOR)
+
+- [ ] F. Sensor family (battery, temperature, humidity) — already added but expand
+- RED
+  - Add tests for multi-probe temperature payloads and calibration:
+    - govee-python/tests/test_sensor_multi_probe.py
+    - Example payload: {"tempc":22.1,".cal":2,"tempc1":22.1,"tempc2":21.8,"battery":92,"hum":55}
+  - Command: uv --directory govee-python run -s test -- tests/test_sensor_multi_probe.py
+  - Commit: test(devices): add failing tests for SensorDevice probes/calibration (RED)
+- GREEN
+  - Extend SensorDevice to parse temperature calibration and temp_probes into DeviceState (temperature_calibration, temp_probes map)
+  - Commit: feat(devices): SensorDevice parse calibration & probes (GREEN)
+- REFACTOR
+  - Add docs examples and factory mapping for typical sensor model IDs.
+  - Commit: docs(devices): sensor examples (REFACTOR)
+
+- [ ] G. Device factory & model mapping (central)
+- RED
+  - Add failing tests: govee-python/tests/test_device_factory_models.py
+    - Provide a list of model strings from persisted/govee.devices.json and assert make_device_from_advert returns expected implementation classes (by model name heuristics).
+    - Use realistic advert payloads (id, model, name, version).
+  - Command: uv --directory govee-python run -s test -- tests/test_device_factory_models.py
+  - Commit: test(devices): add failing factory mapping tests (RED)
+- GREEN
+  - Implement mappings in govee-python/src/govee/domain/devices/factory.py:
+    - e.g., if model contains 'RGBIC' → RGBICDevice; contains 'H604' (ic>0) → RGBICDevice; contains 'H601'→ WhiteTempDevice etc.
+  - Use persisted/govee.devices.json to derive mapping rules and add tests verifying them.
+  - Commit: feat(devices): extend factory mappings for common models (GREEN)
+- REFACTOR
+  - Make factory data-driven: load model-to-impl map from a YAML/JSON file under persisted/ or assets/ and add a small script to regenerate mapping from persisted devices list.
+  - Commit: refactor(devices): make factory data-driven & add mapping asset (REFACTOR)
+
+- [ ] H. Encoding parity and IoT adapter integration
+- RED
+  - Add integration tests that exercise device.encode_command → adapter.publish → IoTClient delivery for representative frames and retained/qos semantics. (We already added one; expand with realistic payloads).
+  - Tests: govee-python/tests/test_iot_integration_device_encoding.py (expand)
+  - Use persisted/mqtt_fixtures/replay_1.jsonl as a realistic path.
+  - Command: uv --directory govee-python run -s test -- tests/test_iot_integration_device_encoding.py
+  - Commit: test(iot): add failing integration tests for device->adapter pipeline (RED)
+- GREEN
+  - Ensure all device .encode_command produce frames that the adapter will publish and IoTClient will receive in expected topic/payload forms.
+  - Validate retained messages and ack frames where relevant.
+  - Commit: feat(iot): ensure device frames publish and adapter receives (GREEN)
+- REFACTOR
+  - Add and document canonical topic formats and payload shapes for each device type in docs/devices.md
+  - Commit: docs(iot): document device-to-iot publish formats (REFACTOR)
+
+- [ ] I. Tests: realistic vectors
+- For every test use realistic vectors from persisted fixtures:
+  - Use persisted/govee.devices.json deviceExt.deviceSettings.model and deviceExt.deviceSettings fields, persisted/mqtt_fixtures for mqtt flows, and persisted BLE/iot raw logs if tests need real encoded payloads.
+- Example realistic payloads:
+  - RGB: {"power":1,"brightness":85,"color":{"r":12,"g":34,"b":56}}
+  - RGBIC segments: {"power":1,"brightness":75,"segments":[{"index":0,"length":10,"color":{"r":10,"g":20,"b":30}},{"index":1,"length":20,"color":{"r":255,"g":128,"b":0}}]}
+  - WhiteTemp: {"power":1,"brightness":60,"color_temp":3500}
+  - Sensor with calibration: {"tempc":21.5,".cal":2,"tempc1":21.5,"tempc2":21.2,"battery":85,"hum":55}
+
+- [ ] J. Documentation and examples
+- Update govee-python/docs/devices.md with:
+  - Example payloads for each family (use the vectors above)
+  - encode_command examples and expected MQTT topics/payloads
+  - How to add new device implementations and map them in the factory.
+- Commit: docs(devices): add examples for each device family (REFACTOR)
+
+- [ ] K. CI & final checks
+- Make sure every GREEN task is followed by:
+  - uv --directory govee-python run -s format_check
+  - uv --directory govee-python run -s test
+  - uv --directory govee-python run -s all_checks (if present)
+- Commit message patterns:
+  - test(scope): add failing tests ... (RED)
+  - feat(scope): add minimal ... implementation (GREEN)
+  - refactor(scope): extract helpers / docs (REFACTOR)
+  - chore(format): apply formatting fixes etc.
+
+Estimated ordering and effort
+- Highest priority: RGB family, factory mapping, device->IoT integration (these unlock many higher-level tests).
+- Medium priority: Night-light and special modes, expand RGBIC parity.
+- Low priority: Data-driven factory mapping asset, full model-version fidelity.
