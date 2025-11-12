@@ -25,7 +25,8 @@ async def _run():
     client = await adapter.create({"topic": "govee/device/#"}, Handler())
     await adapter.connect()
 
-    fixtures_dir = Path('govee-python/tests/fixtures/golden/raw')
+    repo_root = Path(__file__).resolve().parents[2]
+    fixtures_dir = repo_root / 'govee-python' / 'tests' / 'fixtures' / 'golden' / 'raw'
     for f in sorted(fixtures_dir.glob('*.json')):
         model = f.stem
         data = json.loads(f.read_text())
@@ -49,7 +50,8 @@ def test_golden_iot_integration():
     received = asyncio.get_event_loop().run_until_complete(_run())
     assert received, "No messages received by handler"
     # verify at least one received payload decodes to a golden frame
-    fixtures_dir = Path('govee-python/tests/fixtures/golden/raw')
+    repo_root = Path(__file__).resolve().parents[2]
+    fixtures_dir = repo_root / 'govee-python' / 'tests' / 'fixtures' / 'golden' / 'raw'
     golden = {}
     for f in sorted(fixtures_dir.glob('*.json')):
         golden[f.stem] = json.loads(f.read_text())
