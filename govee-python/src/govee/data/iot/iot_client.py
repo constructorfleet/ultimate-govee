@@ -143,6 +143,19 @@ class IoTClient:
     async def disconnect(self) -> None:
         # simulate graceful disconnect
         self.connected = False
+        # cancel any background retry tasks to avoid pending tasks on shutdown
+        if hasattr(self, "_retry_tasks"):
+            tasks = list(self._retry_tasks)
+            for t in tasks:
+                try:
+                    t.cancel()
+                except Exception:
+                    pass
+            try:
+                await asyncio.gather(*tasks, return_exceptions=True)
+            except Exception:
+                pass
+            self._retry_tasks = []
         # clear handler registration
         self._handler = None
 
