@@ -36,8 +36,17 @@ class FakeMQTTBackend:
                 self._messages.append(obj)
 
     def replay(self, client: IoTClient):
+        # Replay JSONL into the provided client. This keeps the backend
+        # abstraction minimal: the backend needs only to provide a replay(client)
+        # method. The client is expected to implement simulate_incoming(AysncIotMessage).
         for m in self._messages:
-            msg=AsyncIotMessage(topic=m.get('topic'), payload=m.get('payload'), qos=m.get('qos',0), retained=m.get('retained', False))
+            msg = AsyncIotMessage(
+                topic=m.get('topic'),
+                payload=m.get('payload'),
+                qos=m.get('qos', 0),
+                retained=m.get('retained', False),
+            )
+            # Deliver as if broker pushed the message
             client.simulate_incoming(msg)
 
 
