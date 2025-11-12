@@ -1,11 +1,13 @@
 import asyncio
+import pytest
 from govee.data.iot.iot_client import IoTClient, AsyncIotMessage
 
 
-def test_queueing_while_disconnected():
+@pytest.mark.asyncio
+async def test_queueing_while_disconnected():
     client = IoTClient()
     # subscribe to topic
-    asyncio.get_event_loop().run_until_complete(client.subscribe('govee/device/#'))
+    await client.subscribe('govee/device/#')
 
     # simulate disconnected
     client.connected = False
@@ -19,17 +21,21 @@ def test_queueing_while_disconnected():
     assert client.queued_count == 2
 
     # connect and resume
-    asyncio.get_event_loop().run_until_complete(client.connect())
+    await client.connect()
     client.resume()
 
     # allow tasks to run
-    asyncio.get_event_loop().run_until_complete(asyncio.sleep(0.01))
+    await asyncio.sleep(0.01)
 
     assert client.queued_count == 0
 
 
-def test_queue_bound_and_drop_callbacks():
+@pytest.mark.asyncio
+async def test_queue_bound_and_drop_callbacks():
+    # ensure subscribed so simulate_incoming matches:
     client = IoTClient()
+    await client.subscribe('govee/device/#')
+    client.set_incoming_queue_max(1)
     client.set_incoming_queue_max(1)
     dropped = []
 
