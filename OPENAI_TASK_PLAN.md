@@ -107,13 +107,13 @@ Below is a detailed, executable Markdown checklist you can use to drive the rema
   - Run tests and iterate.
   - Acceptance: tests pass.
   - Commit: feat(openapi): implement device endpoints & models
-- [ ] REFACTOR: integrate with code that needs these endpoints (e.g., OpenAPI service), update docs.
+- [x] REFACTOR: integrate with code that needs these endpoints (e.g., OpenAPI service), update docs.
   - Commit: refactor(openapi): tidy models & examples
 
 ## 6. General lint/format and CI (all_checks)
-- [ ] RED: run uv run -s format_check and capture failures
+- [x] RED: run uv run -s format_check and capture failures
   - Command: uv --directory govee-python run -s format_check
-- [ ] GREEN: fix formatting and lint issues
+- [x] GREEN: fix formatting and lint issues
   - Commands:
     - cd govee-python
     - black .
@@ -277,13 +277,13 @@ Below is a detailed, executable Markdown checklist you can use to drive the rema
   - Run tests and iterate.
   - Acceptance: tests pass.
   - Commit: feat(openapi): implement device endpoints & models
-- [ ] REFACTOR: integrate with code that needs these endpoints (e.g., OpenAPI service), update docs.
+- [x] REFACTOR: integrate with code that needs these endpoints (e.g., OpenAPI service), update docs.
   - Commit: refactor(openapi): tidy models & examples
 
 ## 6. General lint/format and CI (all_checks)
-- [ ] RED: run uv run -s format_check and capture failures
+- [x] RED: run uv run -s format_check and capture failures
   - Command: uv --directory govee-python run -s format_check
-- [ ] GREEN: fix formatting and lint issues
+- [x] GREEN: fix formatting and lint issues
   - Commands:
     - cd govee-python
     - black .
