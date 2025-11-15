@@ -40,15 +40,31 @@ class IceMakerScheduledStart(DeviceOpState):
             return frames
         # create timestamp seconds UTC for next start time approximated to today/hour/minute
         # Use time.time() as a simple approximation; convert hour/minute to a unix timestamp
-        now = time.time()
-        t = int(now)
-        # pack opcodes similar to TS: leading 0x01, 2 bytes of minutes until start, 4 bytes timestamp, nugget code
-        minutes = int(ms + hs * 60)
-        ts_bytes = unpadded_hex_to_array(hex(int(t))[2:]) or []
+        # Compute exact start time using today's date and desired hour/minute.
+        # This mirrors the TypeScript getStartTimeUTC behavior: pick the
+        # next occurrence of the provided hour/minute (tomorrow if in the past)
+        # and use its UTC timestamp.
+        from datetime import datetime, timedelta, timezone
+
+        now_dt = datetime.now(timezone.utc)
+        start_dt = now_dt.replace(hour=int(hs), minute=int(ms), second=0, microsecond=0)
+        if start_dt <= now_dt:
+            start_dt = start_dt + timedelta(days=1)
+        t = int(start_dt.timestamp())
+        # timestamp encoded as 4 bytes big-endian (unpadded hex array)
+        # ensure hex string length even
+        hex_ts = format(int(t), 'x')
+        ts_bytes = unpadded_hex_to_array(hex_ts) or []
         map_rev = {'SMALL': 3, 'MEDIUM': 2, 'LARGE': 1}
         code = map_rev.get(str(ng).upper()) if isinstance(ng, str) else int(ng)
-        opcodes = [0x01, minutes & 0xFF, (minutes >> 8) & 0xFF] + ts_bytes + [int(code & 0xFF)]
-        frames.append({'op': 'op', 'code': as_op_code(0x33, opcodes)})
+        # minutes are provided low-byte first per TS implementation slice(-2)
+        min_low = minutes & 0xFF
+        min_high = (minutes >> 8) & 0xFF
+        opcodes = [0x01, min_low, min_high] + ts_bytes + [int(code & 0xFF)]
+        # produce as_op_code with OpType.COMMAND (0x33) and include the device identifier
+        # In the TS implementation, asOpCode(OpType.COMMAND, this.identifier!, opCodes)
+        # where this.identifier is [35]; we will mimic that by passing 35 first.
+        frames.append({'op': 'op', 'code': as_op_code(0x33, 35, opcodes)})
         return frames
 
 
