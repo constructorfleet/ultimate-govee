@@ -52,9 +52,10 @@ class RGBICDevice(DeviceBase):
                     "b": int(s["color"].get("b", 0)),
                 }
             self.segments.append(seg)
-        # register and parse all state factories in bulk
-        # instantiate standard state classes and let base parse iterate them
-        # register state classes directly
+        # register and parse all state factories in bulk. We rely on the
+        # individual state objects to parse and also to provide encode
+        # methods so RGBICDevice can delegate encoding responsibility to
+        # states instead of handling encoding itself.
         self.register_state_factories([
             SegmentColorModeState,
             ColorRGBState,
@@ -73,22 +74,33 @@ class RGBICDevice(DeviceBase):
         return self._state
 
     def encode_command(self, command: Dict[str, Any]) -> List[Dict[str, Any]]:
+        # Prefer delegating encoding to registered states. This lets states
+        # encapsulate the mapping from high-level command keys to low-level
+        # frames and keeps the device class focused on composition.
         frames: List[Dict[str, Any]] = []
+        # Common shared encoders still handled here for power/brightness
         frames.extend(encode_power(command))
         frames.extend(encode_brightness(command))
-        # support whole-device RGB color
-        from ..encoding import encode_rgb
-        frames.extend(encode_rgb(command))
 
-        for s in command.get("segments", []):
-            idx = int(s.get("index", 0))
-            c = s.get("color") or {}
-            frames.append(encode_segment(idx, {"r": int(c.get("r", 0)), "g": int(c.get("g", 0)), "b": int(c.get("b", 0))}))
+        # Let states encode their portion of the command when they expose
+        # an `encode(command)` method. This mirrors parse_states which calls
+        # each state's parse(payload).
+        for st in getattr(self, '_states', []):
+            try:
+                enc = getattr(st, 'encode', None)
+                if callable(enc):
+                    sframes = enc(command or {})
+                    if isinstance(sframes, list):
+                        frames.extend(sframes)
+            except Exception:
+                # swallow encoding errors per-device
+                continue
 
         # pixel array encoding (simple frame with op 'pixels')
         if "pixels" in command and isinstance(command.get("pixels"), list):
             frames.append({"op": "pixels", "pixels": [list(map(int, p)) for p in command.get("pixels")]})
 
+        # effect encoding remains ad-hoc
         if "effect" in command and isinstance(command.get("effect"), dict):
             e = command.get("effect")
             frames.append({"op": "effect", "name": e.get("name"), "speed": e.get("speed")})
