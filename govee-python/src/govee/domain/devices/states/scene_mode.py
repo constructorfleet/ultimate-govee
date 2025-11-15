@@ -40,5 +40,24 @@ class SceneModeState:
         return {'scene': self.scene, 'mode_id': self.mode_id}
 
 
+    def encode(self, command: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Encode scene/mode related command into a frame.
+
+        Recognizes command['scene'] or command['mode'] and emits a simple
+        scene frame usable by RGBICDevice.encode_command delegation.
+        """
+        frames: List[Dict[str, Any]] = []
+        if not command:
+            return frames
+        if 'scene' in command and isinstance(command.get('scene'), str):
+            frames.append({'op': 'scene', 'name': command.get('scene')})
+        elif 'mode' in command:
+            v = command.get('mode')
+            try:
+                frames.append({'op': 'scene', 'id': int(v)})
+            except Exception:
+                frames.append({'op': 'scene', 'name': str(v)})
+        return frames
+
 __all__ = ['SceneModeState']
 
