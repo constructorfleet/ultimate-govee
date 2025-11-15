@@ -19,6 +19,8 @@ from ..states.mic_mode import MicModeState
 from ..states.diy_mode import DiyModeState
 from ..states.rgbic_active import RGBICActiveState
 from ..states.effect import parse_effect
+from ..states.power import PowerState
+from ..states.brightness import BrightnessState
 
 
 class RGBICDevice(DeviceBase):
@@ -28,6 +30,20 @@ class RGBICDevice(DeviceBase):
         super().__init__(id=id, model=model, name=name)
         # segments: list of dicts with index, length, color
         self.segments: List[Dict[str, Any]] = []
+        # register state factories upfront so encode_command can delegate
+        # even when no payload has been applied yet.
+        self.register_state_factories([
+            SegmentColorModeState,
+            ColorRGBState,
+            SceneModeState,
+            MicModeState,
+            DiyModeState,
+            RGBICActiveState,
+            PowerState,
+            BrightnessState,
+        ])
+        # initialize parsed states with empty payload
+        self.parse_states({})
 
     def apply_payload(self, payload: Dict[str, Any]) -> None:
         st = parse_state(payload or {})
@@ -52,19 +68,7 @@ class RGBICDevice(DeviceBase):
                     "b": int(s["color"].get("b", 0)),
                 }
             self.segments.append(seg)
-        # register and parse all state factories in bulk. We rely on the
-        # individual state objects to parse and also to provide encode
-        # methods so RGBICDevice can delegate encoding responsibility to
-        # states instead of handling encoding itself.
-        self.register_state_factories([
-            SegmentColorModeState,
-            ColorRGBState,
-            SceneModeState,
-            MicModeState,
-            DiyModeState,
-            RGBICActiveState,
-        ])
-        # parse registered states
+        # parse registered states (registered in __init__)
         self.parse_states(payload)
         # effect parse remains ad-hoc (returns dict)
         eff = parse_effect(payload)
