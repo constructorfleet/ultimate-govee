@@ -36,6 +36,7 @@ class IceMakerScheduledStart(DeviceOpState):
         hs = v.get('hourStart')
         ms = v.get('minuteStart')
         ng = v.get('nuggetSize')
+        minutes = int(ms + hs * 60)
         if hs is None or ms is None or ng is None:
             return frames
         # create timestamp seconds UTC for next start time approximated to today/hour/minute
