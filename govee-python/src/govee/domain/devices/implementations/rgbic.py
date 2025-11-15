@@ -104,15 +104,6 @@ class RGBICDevice(DeviceBase):
                 # swallow encoding errors per-device
                 continue
 
-        # pixel array encoding (simple frame with op 'pixels')
-        if "pixels" in command and isinstance(command.get("pixels"), list):
-            frames.append({"op": "pixels", "pixels": [list(map(int, p)) for p in command.get("pixels")]})
-
-        # effect encoding remains ad-hoc
-        if "effect" in command and isinstance(command.get("effect"), dict):
-            e = command.get("effect")
-            frames.append({"op": "effect", "name": e.get("name"), "speed": e.get("speed")})
-
         return frames
 
 
