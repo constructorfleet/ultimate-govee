@@ -40,3 +40,33 @@ def parse_brightness(payload: dict) -> Optional[int]:
 
 
 __all__ = ["parse_brightness"]
+
+
+class BrightnessState:
+    """Minimal Brightness state wrapper to integrate with DeviceBase.
+
+    Provides parse/get/encode so device implementations can register the
+    state class and rely on parse_states/encode delegation.
+    """
+    def __init__(self, device: object):
+        self.device = device
+        self.brightness: Optional[int] = None
+
+    def parse(self, payload: dict) -> None:
+        try:
+            self.brightness = parse_brightness(payload)
+        except Exception:
+            self.brightness = None
+
+    def get(self) -> Optional[int]:
+        return self.brightness
+
+    def encode(self, command: dict) -> list:
+        from ..encoding import encode_brightness
+
+        try:
+            return encode_brightness(command or {})
+        except Exception:
+            return []
+
+__all__.append('BrightnessState')
