@@ -46,6 +46,19 @@ class ColorRGBState:
     def get(self) -> Optional[Dict[str,int]]:
         return self.color
 
+    def encode(self, command: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Encode whole-device RGB color commands into frames.
+
+        Recognizes command['color'] dict with r,g,b and delegates to shared
+        encoding helpers so device implementations can remain minimal.
+        """
+        frames: List[Dict[str, Any]] = []
+        if not command:
+            return frames
+        from ..encoding import encode_rgb
+        frames.extend(encode_rgb(command))
+        return frames
+
 
 __all__ = ['parse_color_rgb','ColorRGBState']
 
