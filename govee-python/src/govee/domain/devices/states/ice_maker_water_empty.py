@@ -10,7 +10,15 @@ class IceMakerWaterEmpty:
         self.empty: Optional[bool] = None
 
     def parse(self, payload: Dict[str, Any]) -> None:
-        v = payload.get('waterEmpty') or payload.get('water_empty')
+        # preserve falsy numeric values (0) by checking key presence
+        if not isinstance(payload, dict):
+            return
+        if 'waterEmpty' in payload:
+            v = payload.get('waterEmpty')
+        else:
+            v = payload.get('water_empty')
+        if v is None:
+            return
         if isinstance(v, (int, bool)):
             self.empty = bool(v)
 
