@@ -9,6 +9,12 @@ from ..states.connected import parse_connected
 from ..states.active import parse_active
 from ..states.temperature import parse_temperature
 from ..states.ice_maker_nugget_size import IceMakerNuggetSizeState
+from ..states.ice_maker_basket_full import IceMakerBasketFull
+from ..states.ice_maker_water_empty import IceMakerWaterEmpty
+from ..states.ice_maker_status import IceMakerStatusState
+from ..states.ice_maker_scheduled_start import IceMakerScheduledStart
+from ..states.ice_maker_make_ice import IceMakerMakingIceState
+from ..states.ice_maker_temperature import IceMakerTemperatureState
 
 
 class IceMakerDevice(DeviceBase):
@@ -18,6 +24,13 @@ class IceMakerDevice(DeviceBase):
         self.register_state_factories([
             PowerState,
             IceMakerNuggetSizeState,
+            # additional ice maker states
+            IceMakerBasketFull,
+            IceMakerWaterEmpty,
+            IceMakerStatusState,
+            IceMakerScheduledStart,
+            IceMakerMakingIceState,
+            IceMakerTemperatureState,
         ])
         self.parse_states({})
 
