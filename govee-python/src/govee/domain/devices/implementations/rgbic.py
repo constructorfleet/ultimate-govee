@@ -82,9 +82,9 @@ class RGBICDevice(DeviceBase):
         # encapsulate the mapping from high-level command keys to low-level
         # frames and keeps the device class focused on composition.
         frames: List[Dict[str, Any]] = []
-        # Common shared encoders still handled here for power/brightness
-        frames.extend(encode_power(command))
-        frames.extend(encode_brightness(command))
+        # Encoding is delegated to registered states (each may implement
+        # encode(command)). This includes power/brightness which are
+        # provided by PowerState/BrightnessState wrappers.
 
         # Let states encode their portion of the command when they expose
         # an `encode(command)` method. This mirrors parse_states which calls
