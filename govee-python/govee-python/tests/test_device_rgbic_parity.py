@@ -134,6 +134,9 @@ def test_rgbic_encoding_power_brightness_rgb_segment_pixels_effect():
     # rgb
     frames = d.encode_command({'color': {'r': 1, 'g': 2, 'b': 3}})
     assert any(f.get('op') == 'rgb' and f.get('r') == 1 and f.get('g') == 2 and f.get('b') == 3 for f in frames)
+    # scene encode via scene_state
+    frames = d.encode_command({'scene': 'party'})
+    assert any(f.get('op') == 'scene' and (f.get('name') == 'party' or f.get('id') is not None) for f in frames)
     # segment
     frames = d.encode_command({'segments': [{'index': 0, 'color': {'r':10,'g':20,'b':30}}]})
     assert any(f.get('op') == 'seg' and f.get('index') == 0 for f in frames)
