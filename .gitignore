@@ -46,3 +46,5 @@ ble/
 **/.pytest_cache/
 **/__pycache__/
 **/venv/
+
+**/*.jsonl
