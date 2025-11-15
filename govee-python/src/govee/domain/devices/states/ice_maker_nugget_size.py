@@ -2,8 +2,8 @@
 from __future__ import annotations
 
 from typing import Any, Dict, Optional, List
-from ..encoding import pack_raw_frame
-from ..common.op_code import as_op_code
+from govee.domain.devices.encoding import pack_raw_frame
+from govee.common.op_code import as_op_code
 
 class IceMakerNuggetSizeState:
     def __init__(self, device: Any):
