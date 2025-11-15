@@ -24,5 +24,23 @@ class DiyModeState:
         return {'enabled': self.enabled, 'pattern': self.pattern}
 
 
+    def encode(self, command: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Encode DIY mode commands into frames.
+
+        Accepts {'diy': {'enabled': bool, 'pattern': str}} or shorthand booleans.
+        Emits a simple 'diy' op frame describing the requested DIY state.
+        """
+        frames: List[Dict[str, Any]] = []
+        if not command:
+            return frames
+        v = command.get('diy') or command.get('diyMode')
+        if v is None:
+            return frames
+        if isinstance(v, dict):
+            frames.append({'op': 'diy', 'enabled': bool(v.get('enabled', False)), 'pattern': v.get('pattern')})
+        else:
+            frames.append({'op': 'diy', 'enabled': bool(v)})
+        return frames
+
 __all__ = ['DiyModeState']
 
