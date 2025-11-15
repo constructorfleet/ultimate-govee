@@ -30,5 +30,23 @@ class MicModeState:
         return {'enabled': self.enabled, 'sensitivity': self.sensitivity}
 
 
+    def encode(self, command: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Encode mic-related command into frames.
+
+        Accepts {'mic': {'enabled': bool, 'sensitivity': int}} or legacy
+        {'mic': True/False} and produces a small frame describing the mic
+        configuration.
+        """
+        frames: List[Dict[str, Any]] = []
+        if not command:
+            return frames
+        if 'mic' in command:
+            v = command.get('mic')
+            if isinstance(v, dict):
+                frames.append({'op': 'mic', 'enabled': bool(v.get('enabled', False)), 'sensitivity': v.get('sensitivity')})
+            else:
+                frames.append({'op': 'mic', 'enabled': bool(v)})
+        return frames
+
 __all__ = ['MicModeState']
 
