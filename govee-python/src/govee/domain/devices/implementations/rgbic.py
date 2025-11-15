@@ -19,6 +19,8 @@ from ..states.mic_mode import MicModeState
 from ..states.diy_mode import DiyModeState
 from ..states.rgbic_active import RGBICActiveState
 from ..states.effect import parse_effect
+from ..states.pixels import PixelsState
+from ..states.effect_state import EffectState
 from ..states.power import PowerState
 from ..states.brightness import BrightnessState
 
@@ -41,6 +43,8 @@ class RGBICDevice(DeviceBase):
             RGBICActiveState,
             PowerState,
             BrightnessState,
+            PixelsState,
+            EffectState,
         ])
         # initialize parsed states with empty payload
         self.parse_states({})
