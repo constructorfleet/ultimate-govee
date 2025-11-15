@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from typing import Any, Dict, Optional, List
-from ..device_op_state import DeviceOpState
+from govee.domain.devices.states.device_op_state import DeviceOpState
 
 class IceMakerMakingIceState(DeviceOpState):
     def __init__(self, device: Any):

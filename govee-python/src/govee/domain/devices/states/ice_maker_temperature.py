@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from typing import Any, Dict, Optional, List
-from ..device_op_state import DeviceOpState
+from govee.domain.devices.states.device_op_state import DeviceOpState
 from ..temperature import parse_temperature
 
 class IceMakerTemperatureState(DeviceOpState):
