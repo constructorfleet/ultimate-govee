@@ -24,10 +24,12 @@ class RGBDevice(DeviceBase):
     ):
         super().__init__(id=id, model=model, name=name)
         self._state: DeviceState = DeviceState()
-        # register state factories inline for automatic parsing
+        # register state factories inline for automatic parsing and encoding
         from ..states.color_rgb import ColorRGBState as _ColorRGBState
-        # simple list of classes to instantiate and later parse
-        self.register_state_factories([_ColorRGBState])
+        from ..states.power import PowerState as _PowerState
+        from ..states.brightness import BrightnessState as _BrightnessState
+        # simple list of classes to instantiate and later parse/encode
+        self.register_state_factories([_ColorRGBState, _PowerState, _BrightnessState])
         # parse any registered states
         self.parse_states({})
 
@@ -38,22 +40,8 @@ class RGBDevice(DeviceBase):
 
         st = parse_state(payload or {})
         self._state = st
-        # parse derived helper states for parity
-        cst = ColorRGBState(self)
-        cst.parse(payload)
-        self.color_state = cst
-        # brightness helper
-        try:
-            b = parse_brightness(payload)
-        except Exception:
-            b = None
-        self.brightness_parsed = b
-        # power helper
-        try:
-            p = parse_power(payload)
-        except Exception:
-            p = None
-        self.power_parsed = p
+        # parse derived helper states for parity (registered above)
+        self.parse_states(payload)
         # color temperature state
         try:
             ct = ColorTempState()
@@ -74,9 +62,16 @@ class RGBDevice(DeviceBase):
           - {'color': {'r':R,'g':G,'b':B}} -> [{'op':'rgb','r':R,'g':G,'b':B}]
         """
         frames: List[Dict[str, Any]] = []
-        frames.extend(encode_power(command))
-        frames.extend(encode_brightness(command))
-        frames.extend(encode_rgb(command))
+        # delegate to registered states for encoding (power/brightness/color)
+        for st in getattr(self, '_states', []):
+            try:
+                enc = getattr(st, 'encode', None)
+                if callable(enc):
+                    sframes = enc(command or {})
+                    if isinstance(sframes, list):
+                        frames.extend(sframes)
+            except Exception:
+                continue
         return frames
 
 
