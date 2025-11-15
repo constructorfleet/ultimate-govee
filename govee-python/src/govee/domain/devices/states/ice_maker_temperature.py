@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, Optional, List
 from govee.domain.devices.states.device_op_state import DeviceOpState
-from ..temperature import parse_temperature
+from govee.domain.devices.states.temperature import parse_temperature
 
 class IceMakerTemperatureState(DeviceOpState):
     def __init__(self, device: Any):
