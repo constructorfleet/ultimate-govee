@@ -2,7 +2,8 @@
 from __future__ import annotations
 
 from typing import Any, Dict, Optional, List
-
+from ..encoding import pack_raw_frame
+from ..common.op_code import as_op_code
 
 class IceMakerNuggetSizeState:
     def __init__(self, device: Any):
@@ -31,7 +32,18 @@ class IceMakerNuggetSizeState:
             return frames
         v = command.get('nuggetSize') or command.get('nugget_size')
         if v is not None:
-            frames.append({'op': 'nugget_size', 'v': v})
+            # map well-known string names to numeric codes if provided
+            map_rev = {'SMALL': 3, 'MEDIUM': 2, 'LARGE': 1}
+            code = None
+            if isinstance(v, str):
+                code = map_rev.get(v.upper())
+            elif isinstance(v, (int, float)):
+                code = int(v)
+            if code is not None:
+                # create packed opcode frame using as_op_code (OpType not required here)
+                frames.append({'op': 'op', 'code': as_op_code(0x33, code)})
+            else:
+                frames.append({'op': 'nugget_size', 'v': v})
         return frames
 
 
