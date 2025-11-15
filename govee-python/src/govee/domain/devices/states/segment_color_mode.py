@@ -24,6 +24,26 @@ class SegmentColorModeState:
     def get(self) -> List[Dict[str, Any]]:
         return self.segments
 
+    def encode(self, command: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Encode segment-related parts of a command into frames.
+
+        Expects command to possibly contain a 'segments' list of dicts with
+        'index' and 'color' keys. Returns a list of segment frames using the
+        shared encoding helper.
+        """
+        frames: List[Dict[str, Any]] = []
+        if not command:
+            return frames
+        from ..encoding import encode_segment
+        for s in command.get('segments', []):
+            try:
+                idx = int(s.get('index', 0))
+                c = s.get('color') or {}
+                frames.append(encode_segment(idx, { 'r': int(c.get('r',0)), 'g': int(c.get('g',0)), 'b': int(c.get('b',0)) }))
+            except Exception:
+                continue
+        return frames
+
 
 __all__ = ['SegmentColorModeState']
 

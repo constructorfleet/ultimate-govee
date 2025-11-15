@@ -33,7 +33,7 @@ def test_rgbic_device_parsing():
     sample = s[0]['payload']
     d = RGBICDevice(id='test', model=s[0]['model'], name=s[0]['productName'])
     d.apply_payload(sample)
-    # ensure segment state parsed
+    # ensure states added by register_state_factories are present
     assert hasattr(d, 'segment_state')
     segs = d.segment_state.get()
     assert isinstance(segs, list)

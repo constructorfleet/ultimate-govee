@@ -52,30 +52,20 @@ class RGBICDevice(DeviceBase):
                     "b": int(s["color"].get("b", 0)),
                 }
             self.segments.append(seg)
-        # also parse segment state
-        sc = SegmentColorModeState(self)
-        sc.parse(payload)
-        self.segment_state = sc
-        # parse color state
-        cst = ColorRGBState(self)
-        cst.parse(payload)
-        self.color_state = cst
-        # parse scene/mode
-        sm = SceneModeState(self)
-        sm.parse(payload)
-        self.scene_state = sm
-        # parse mic mode
-        mm = MicModeState(self)
-        mm.parse(payload)
-        self.mic_state = mm
-        # parse diy mode
-        dm = DiyModeState(self)
-        dm.parse(payload)
-        self.diy_state = dm
-        act = RGBICActiveState(self)
-        act.parse(payload)
-        self.active_state = act
-        # parse effect
+        # register and parse all state factories in bulk
+        # instantiate standard state classes and let base parse iterate them
+        # register state classes directly
+        self.register_state_factories([
+            SegmentColorModeState,
+            ColorRGBState,
+            SceneModeState,
+            MicModeState,
+            DiyModeState,
+            RGBICActiveState,
+        ])
+        # parse registered states
+        self.parse_states(payload)
+        # effect parse remains ad-hoc (returns dict)
         eff = parse_effect(payload)
         self.effect_state = eff
 

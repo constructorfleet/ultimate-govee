@@ -1,0 +1,9 @@
+[
+  {
+    "deviceId": "01:23:45:67:89:AB",
+    "model": "H6107",
+    "productName": "H6107 RGB Strip",
+    "payload": {"power": 1, "brightness": 80, "color": {"r":10,"g":20,"b":30}}
+  }
+]
+

@@ -9,17 +9,27 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
 
-from ..device import Device
+from ..device_base import DeviceBase
 from ..models import DeviceState
 from ..encoding import encode_power, encode_brightness, encode_rgb
+from ..states.color_rgb import ColorRGBState
+from ..states.brightness import parse_brightness
+from ..states.power import parse_power
+from ..states.color_temp import ColorTempState
 
 
-class RGBDevice(Device):
+class RGBDevice(DeviceBase):
     def __init__(
         self, id: str, model: Optional[str] = None, name: Optional[str] = None
     ):
         super().__init__(id=id, model=model, name=name)
         self._state: DeviceState = DeviceState()
+        # register state factories inline for automatic parsing
+        from ..states.color_rgb import ColorRGBState as _ColorRGBState
+        # simple list of classes to instantiate and later parse
+        self.register_state_factories([_ColorRGBState])
+        # parse any registered states
+        self.parse_states({})
 
     def apply_payload(self, payload: Dict[str, Any]) -> None:
         """Merge an incoming payload into internal state using existing parsers."""
@@ -28,6 +38,29 @@ class RGBDevice(Device):
 
         st = parse_state(payload or {})
         self._state = st
+        # parse derived helper states for parity
+        cst = ColorRGBState(self)
+        cst.parse(payload)
+        self.color_state = cst
+        # brightness helper
+        try:
+            b = parse_brightness(payload)
+        except Exception:
+            b = None
+        self.brightness_parsed = b
+        # power helper
+        try:
+            p = parse_power(payload)
+        except Exception:
+            p = None
+        self.power_parsed = p
+        # color temperature state
+        try:
+            ct = ColorTempState()
+            ct.parse_state(payload)
+            self.color_temp_state = ct
+        except Exception:
+            self.color_temp_state = None
 
     def get_state(self) -> DeviceState:
         return self._state

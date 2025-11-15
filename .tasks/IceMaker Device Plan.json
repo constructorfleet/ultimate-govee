@@ -1,0 +1,16 @@
+{
+  "metadata": {},
+  "tasks": [
+    {
+      "id": "7fd252b4-999f-482e-a66f-7c4aca35d492",
+      "title": "Document IceMaker parity requirements",
+      "status": "pending",
+      "summary": "Review TypeScript implementation/tests for IceMaker to pinpoint commands, telemetry, and behaviors that need reproduction in Python",
+      "details": "Open `typescript/src/...` (exact path) and catalog public methods, states, telemetry keys, and fixtures that the Python port must mirror; note I/O shapes and expected responses for RED/GREEN planning.",
+      "createdAt": "2025-11-14T13:20:57.432Z",
+      "updatedAt": "2025-11-14T13:20:57.432Z"
+    }
+  ],
+  "createdAt": "2025-11-14T13:20:57.432Z",
+  "updatedAt": "2025-11-14T13:20:57.432Z"
+}
